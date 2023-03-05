@@ -1,0 +1,17 @@
+
+body {
+  padding-bottom: 20px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.logo {
+  margin-right: 1%;
+}
+
+.nav-link {
+  color: white;
+}
