@@ -27,3 +27,4 @@ Route::get('/signin', [SignInController::class,'index'])->name('signin');
 Route::post('/signin', [SignInController::class,'store']);
 
 Route::get('/dashboard', [PagesController::class,'index'])->name('dashboard');
+
