@@ -10,4 +10,8 @@ class StudentController extends Controller
         return view('pages.students.home');
     }
 
+    public function borrow(){
+        return view('pages.students.home');
+    }
+
 }
