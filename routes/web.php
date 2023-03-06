@@ -48,6 +48,6 @@ Route::middleware(['auth','user-role:student'])->group(function(){
 });
 
 //unapproved
-Route::middleware(['auth','user-role:queue'])->group(function(){
+Route::middleware(['auth','user-role:queued'])->group(function(){
     Route::get('/approve', [PagesController::class,'approve'])->name('approval');
 });

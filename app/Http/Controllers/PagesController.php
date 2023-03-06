@@ -17,6 +17,6 @@ class PagesController extends Controller
 
     public function approve(){
         //unapproved
-        return view('others.approve');
+        return view('pages.others.approve');
     }
 }
