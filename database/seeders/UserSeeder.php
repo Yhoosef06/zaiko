@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -16,7 +17,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         //
-        $users = [
+        $user = [
             [
                 'id_number' => 8888,
                 'first_name' => 'admin',
@@ -27,6 +28,6 @@ class UserSeeder extends Seeder
                 'back_of_id' => 'null'
             ]
         ];
-        DB::table('users')->insert($users); 
+        DB::table('users')->insert($user); 
     }
 }
