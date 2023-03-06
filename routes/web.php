@@ -37,3 +37,4 @@ Route::group(['middleware' => 'is.admin'], function(){
 
 //students
 Route::get('/student-dashboard',[StudentController::class, 'index']);
+//aaa
