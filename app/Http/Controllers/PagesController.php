@@ -11,6 +11,12 @@ class PagesController extends Controller
     public function index()
     {
         // dd(auth()->user());
+        //admin
         return view('pages.home');
+    }
+
+    public function approve(){
+        //unapproved
+        return view('others.approve');
     }
 }

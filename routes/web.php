@@ -27,14 +27,27 @@ Route::post('/register', [RegisterController::class,'store']);
 Route::get('/signin', [SignInController::class,'index'])->name('signin');
 Route::post('/signin', [SignInController::class,'store']);
 
-Route::group(['middleware' => 'is.admin'], function(){
-    Route::get('/dashboard', [PagesController::class,'index'])->name('dashboard');
+// Route::group(['middleware' => 'auth','is.admin'], function(){
+//     Route::get('/dashboard', [PagesController::class,'index'])->name('dashboard');
+// });
+
+// //students
+// Route::group(['middlewawre' => 'is.student'], function(){
+//     Route::get('/student-dashboard',[StudentController::class, 'index']);
+// });
+
+
+//admin
+Route::middleware(['auth','user-role:admin'])->group(function(){
+    Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
 });
 
-// Route::get('/dashboard', [PagesController::class,'index'])->name('dashboard');
+//student
+Route::middleware(['auth','user-role:student'])->group(function(){
+    Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');
+});
 
-
-
-//students
-Route::get('/student-dashboard',[StudentController::class, 'index']);
-//aaa
+//unapproved
+Route::middleware(['auth','user-role:queue'])->group(function(){
+    Route::get('/approve', [PagesController::class,'approve'])->name('approval');
+});

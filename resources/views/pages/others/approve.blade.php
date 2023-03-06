@@ -1,0 +1,1 @@
+Please have the admin approve your registration
