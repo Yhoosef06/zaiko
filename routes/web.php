@@ -27,4 +27,13 @@ Route::post('/register', [RegisterController::class,'store']);
 Route::get('/signin', [SignInController::class,'index'])->name('signin');
 Route::post('/signin', [SignInController::class,'store']);
 
-Route::get('/dashboard', [PagesController::class,'index'])->name('dashboard');
+Route::group(['middleware' => 'is.admin'], function(){
+    Route::get('/dashboard', [PagesController::class,'index'])->name('dashboard');
+});
+
+// Route::get('/dashboard', [PagesController::class,'index'])->name('dashboard');
+
+
+
+//students
+Route::get('/student-dashboard',[StudentController::class, 'index']);
