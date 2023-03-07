@@ -19,4 +19,10 @@ class PagesController extends Controller
         //unapproved
         return view('pages.others.approve');
     }
+
+    public function test(){
+        return view('pages.students.test');
+    }
+        
+
 }

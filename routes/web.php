@@ -51,3 +51,5 @@ Route::middleware(['auth','user-role:student'])->group(function(){
 Route::middleware(['auth','user-role:queued'])->group(function(){
     Route::get('/approve', [PagesController::class,'approve'])->name('approval');
 });
+
+Route::get('/test',[PagesController::class,'test']);
