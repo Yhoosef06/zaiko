@@ -2,7 +2,8 @@
 
 {{-- nav --}}
 @section('nav')
-    @include('layouts.students.nav')
+    @include('layouts.students.mainnav')
+    @include('layouts.students.sidenav')
 @endsection
 
 {{-- footer --}}
