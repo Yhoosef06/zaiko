@@ -152,7 +152,7 @@
                                             <li class="nav-item">
                                                 <a href="#" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>Update An Item</p>
+                                                    <p>List of Items</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
@@ -198,13 +198,13 @@
                                             <li class="nav-item">
                                                 <a href="#" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>Add User</p>
+                                                    <p>Add New User</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="#" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>List</p>
+                                                    <p>List of Users</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
