@@ -40,6 +40,7 @@ Route::post('/signin', [SignInController::class,'store']);
 //admin
 Route::middleware(['auth','user-role:admin'])->group(function(){
     Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
+    
 });
 
 //student

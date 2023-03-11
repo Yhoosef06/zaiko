@@ -22,6 +22,7 @@ class CreateItemsTable extends Migration
             $table->string('status');
             $table->boolean('borrowed');
             $table->string('inventory_tag');
+            $table->string('room');
             $table->timestamps();
         });
     }
