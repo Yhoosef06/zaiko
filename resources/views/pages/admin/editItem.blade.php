@@ -8,15 +8,16 @@
     @endif
     <div class="col-lg-10 bg-light shadow-sm p-3">
         <label for="adding new item">
-            <h1>Adding New Item</h1>
+            <h1>Edit Item Details</h1>
         </label>
-        <form action="{{ route('save_new_item') }}" method="POST">
+        <form action="{{ route('update_item_details', $item->serial_number) }}" method="POST">
             @csrf
+            @method('PUT')
             <div class="row">
                 <div class="col">
                     <label for="location">Location:</label>
                     <select id="location" name="location" class="form-control col-sm-5">
-                        <option value="option_select" disabled selected>Select a location</option>
+                        <option value="{{ $item->location }}" selected>{{ $item->location }}</option>
                         @foreach ($rooms as $room)
                             <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
                         @endforeach
@@ -29,7 +30,7 @@
                     @enderror
 
                     <label for="Item name/description">Item Name/Description:</label>
-                    <input type="text" id="item_description" name="item_description" value="{{ old('item_description') }}"
+                    <input type="text" id="item_description" name="item_description" value="{{ $item->item_description }}"
                         class="form-control @error('item_description')
                     border-danger
                     @enderror"
@@ -42,13 +43,13 @@
 
                     <label for="aquisition date">Aquisition Date:</label>
                     <input type="date" id="aquisition_date" name="aquisition_date" class="form-control"
-                        placeholder="Aquistion Date">
+                        placeholder="Aquistion Date" value="{{ $item->aquisition_date }}">
 
                     <label for="unit number">Unit Number:</label>
                     <input type="text" id="unit_number" name="unit_number"
                         class="form-control col-sm-4 @error('unit_number')
                     border-danger @enderror"
-                        value="{{ old('unit_number') }}" placeholder="Unit Number">
+                        value="{{ $item->unit_number }}" placeholder="Unit Number">
                         <p class="text-sm font-italic" style="font:italic">Type N/A or None if no unit number.</p>
                     @error('unit_number')
                         <div class="text-danger">
@@ -73,7 +74,7 @@
                     <input type="text" id="serial_number" name="serial_number"
                         class="form-control @error('serial_number')
                     border-danger @enderror"
-                        value="{{ old('serial_number') }}" placeholder="Serial Number">
+                        value="{{ $item->serial_number }}" placeholder="Serial Number">
                     @error('serial_number')
                         <div class="text-danger">
                             {{ $message }}
@@ -84,7 +85,7 @@
                     <input type="text" id="quantity" name="quantity"
                         class="form-control col-sm-3 @error('quantity')
                     border-danger @enderror"
-                        value="{{ old('quantity') }}" placeholder="Quantity">
+                        value="{{ $item->quantity }}" placeholder="Quantity">
                     @error('quantity')
                         <div class="text-danger">
                             {{ $message }}
@@ -92,7 +93,7 @@
                     @enderror
 
                     <label for="status">Status:</label>
-                    <select name="status" id="status" name="status" class="form-control">
+                    <select value="{{ $item->status }}" name="status" id="status" name="status" class="form-control">
                         <option value="Active">Active</option>
                         <option value="For Repair">For Repair</option>
                         <option value="Obsolete">Obsolete</option>
@@ -109,8 +110,8 @@
                         Yes
                     </label>
                     <hr>
-                    <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                    <Button type="submit" class="btn btn-success">Submit</Button>
+                    <a href="{{ route('view_items') }}" class="btn btn-outline-dark">Cancel</a>
+                    <Button type="submit" class="btn btn-success">Save</Button>
                 </div>
             </div>
         </form>

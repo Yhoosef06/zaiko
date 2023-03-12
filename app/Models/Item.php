@@ -21,6 +21,7 @@ class Item extends Model
         'aquisition_date',
         'status',
         'borrowed',
-        'inventory_tag'
+        'inventory_tag',
+        'location'
     ];
 }
