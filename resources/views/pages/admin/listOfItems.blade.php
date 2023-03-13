@@ -1,14 +1,17 @@
 @extends('pages.admin.home')
 
 @section('content')
-    @if (session('status'))
-        <div class="container alert text-center">
-            <h4>{{ session('status') }}</h4>
-        </div>
-    @endif
     <div class="content shadow-sm p-2">
         @if ($items->count())
+        <span>
+            <strong>List Of All ITems</strong>
+        </span>
             <table class="table table-striped">
+                @if (session('status'))
+                    <div class="container alert text-center">
+                        <h4>{{ session('status') }}</h4>
+                    </div>
+                @endif
                 <form action="#" method="GET">
                     <div class="input-group mb-3 d-flex flex-row-reverse">
                         <div class="input-group-append">
@@ -23,7 +26,7 @@
                         <th scope="col">Item Description</th>
                         <th scope="col">Qty.</th>
                         <th scope="col">Location</th>
-                        <th scope="col">Options</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>

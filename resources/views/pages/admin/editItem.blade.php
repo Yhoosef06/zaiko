@@ -30,7 +30,8 @@
                     @enderror
 
                     <label for="Item name/description">Item Name/Description:</label>
-                    <input type="text" id="item_description" name="item_description" value="{{ $item->item_description }}"
+                    <input type="text" id="item_description" name="item_description"
+                        value="{{ $item->item_description }}"
                         class="form-control @error('item_description')
                     border-danger
                     @enderror"
@@ -50,7 +51,7 @@
                         class="form-control col-sm-4 @error('unit_number')
                     border-danger @enderror"
                         value="{{ $item->unit_number }}" placeholder="Unit Number">
-                        <p class="text-sm font-italic" style="font:italic">Type N/A or None if no unit number.</p>
+                    <p class="text-sm font-italic" style="font:italic">Type N/A or None if no unit number.</p>
                     @error('unit_number')
                         <div class="text-danger">
                             {{ $message }}
@@ -58,15 +59,28 @@
                     @enderror
 
                     <label for="borrowed or not">Inventory Tag:</label>
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
-                        With
-                    </label>
-                    /
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
-                        Without
-                    </label>
+                    @if ($item->inventory_tag == 'with')
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="with" checked>
+                            With
+                        </label>
+                        /
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="without">
+                            Without
+                        </label>
+                    @else
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
+                            With
+                        </label>
+                        /
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
+                            Without
+                        </label>
+                    @endif
+
                 </div>
 
                 <div class="col">
@@ -93,22 +107,36 @@
                     @enderror
 
                     <label for="status">Status:</label>
-                    <select value="{{ $item->status }}" name="status" id="status" name="status" class="form-control">
+                    <select name="status" id="status" name="status" class="form-control">
+                        <option value="{{ $item->status }}">{{ $item->status }}</option>
                         <option value="Active">Active</option>
                         <option value="For Repair">For Repair</option>
                         <option value="Obsolete">Obsolete</option>
                     </select>
 
                     <label for="borrowed or not">Is it borrowed or not?</label>
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='borrowed' name="borrowed" value="no" checked>
-                        No
-                    </label>
-                    /
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='borrowed' name="borrowed" value="yes">
-                        Yes
-                    </label>
+                    @if ($item->borrowed == 'no')
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='borrowed' name="borrowed" value="no" checked>
+                            No
+                        </label>
+                        /
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='borrowed' name="borrowed" value="yes">
+                            Yes
+                        </label>
+                    @else
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='borrowed' name="borrowed" value="no">
+                            No
+                        </label>
+                        /
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='borrowed' name="borrowed" value="yes" checked>
+                            Yes
+                        </label>
+                    @endif
+
                     <hr>
                     <a href="{{ route('view_items') }}" class="btn btn-outline-dark">Cancel</a>
                     <Button type="submit" class="btn btn-success">Save</Button>

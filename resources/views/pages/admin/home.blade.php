@@ -152,7 +152,7 @@
                                             <li class="nav-item">
                                                 <a href="{{route('view_items')}}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>List of Items</p>
+                                                    <p>View All Items</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
