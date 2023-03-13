@@ -6,7 +6,7 @@
         <span>
             <strong>List Of All ITems</strong>
         </span>
-            <table class="table table-striped">
+            <table class="table">
                 @if (session('status'))
                     <div class="container alert text-center">
                         <h4>{{ session('status') }}</h4>

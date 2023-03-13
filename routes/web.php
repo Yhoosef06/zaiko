@@ -42,7 +42,7 @@ Route::post('/signin', [SignInController::class,'store']);
 Route::middleware(['auth','user-role:admin'])->group(function(){
     Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
     Route::get('adding-new-item', [PagesController::class,'addItem'])->name('add_item');
-    
+    Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
     // FOR ITEMS
     Route::get('list-of-items', [ItemsController::class,'index'])->name('view_items');
     Route::post('saving-new-item', [ItemsController::class,'saveNewItem'])->name('save_new_item');
@@ -50,6 +50,8 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
     Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
     Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
     Route::post('deleting-item-{serial_number}', [ItemsController::class,'deleteItem'])->name('delete_item');
+    Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
+    Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
 });
 
 //student
