@@ -20,6 +20,7 @@ class RegisterController extends Controller
             'id_number' => 'required|numeric',
             'first_name' => 'required',
             'last_name' => 'required',
+            'password' => 'required|confirmed',
             'front_of_id' => 'required',
             'back_of_id' => 'required'
         ]);
@@ -28,12 +29,16 @@ class RegisterController extends Controller
             'id_number' => $request->id_number,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'password' => Hash::make('usjrscs-123'),
+            'password' => Hash::make($request->password),
             'front_of_id' => $request->file('front_of_id')->store(('ids')),
             'back_of_id' => $request->file('back_of_id')->store(('ids')),
             'status' => 'queued'
         ]);
 
         return redirect('/signin')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
+    }
+
+    public function create_admin(){
+        //
     }
 }
