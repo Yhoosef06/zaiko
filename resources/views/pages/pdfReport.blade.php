@@ -33,6 +33,18 @@
     .signees {
         column-count: 2;
     }
+
+    .column {
+        float: left;
+        width: 50%;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 </style>
 
 <body>
@@ -68,19 +80,42 @@
                 @foreach ($items as $item)
                     @if ($item->location == $location)
                         <tr>
-                            <th>{{ $item->serial_number }}</th>
+                            <td>{{ $item->serial_number }}</td>
                             <td>{{ $item->item_description }}</td>
                             <td>{{ $item->quantity }}</td>
                             <td>{{ $item->unit_number }}</td>
                             <td>{{ $item->aquisition_date }}</td>
-                            <td>{{ $item->status }}</td>
+                            <td style="font-size: 12px"><b>{{ $item->status }}</b></td>
                             <td>{{ $item->inventory_tag }}</td>
                         </tr>
                     @endif
                 @endforeach
             </tbody>
         </table>
-        
+        <div class="row">
+            <div class="column">
+                Prepared By: <br>
+                <br>
+                ________________________ <br>
+                Main Office <br>
+                <br>
+                Noted By: <br>
+                <br>
+                _________________________ <br>
+                Laboratory OIC
+            </div>
+            <div class="column">
+                Verified By: <br>
+                <br>
+                ________________________ <br>
+                Main Office <br>
+                <br>
+                <br>
+                <br>
+                _________________________ <br>
+                IT Specialist
+            </div>
+        </div>
     </div>
 
 </html>

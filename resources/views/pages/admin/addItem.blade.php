@@ -2,7 +2,7 @@
 
 @section('content')
     @if (session('status'))
-        <div class="container alert text-center">
+        <div class="container alert text-center text-success">
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
@@ -15,7 +15,8 @@
             <div class="row">
                 <div class="col">
                     <label for="location">Location:</label>
-                    <select id="location" name="location" class="form-control col-sm-5 @error('location')
+                    <select id="location" name="location"
+                        class="form-control col-sm-5 @error('location')
                         border-danger @enderror">
                         <option value="option_select" disabled selected>Select a location</option>
                         @foreach ($rooms as $room)
@@ -74,8 +75,12 @@
                     <label for="serial number"> Serial Number:</label>
                     <input type="text" id="serial_number" name="serial_number"
                         class="form-control @error('serial_number')
-                    border-danger @enderror"
-                        value="{{ old('serial_number') }}" placeholder="Serial Number">
+                    border-danger @enderror" value="{{ old('serial_number') }}" placeholder="Serial Number">
+                    @if (session()->has('message'))
+                        <div class="text-danger">
+                            {{ session()->get('message') }}
+                        </div>
+                    @endif
                     @error('serial_number')
                         <div class="text-danger">
                             {{ $message }}

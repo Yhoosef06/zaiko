@@ -13,7 +13,7 @@ class ItemsController extends Controller
     public function index()
     {
         //admin
-        $items = Item::orderBy('created_at', 'DESC')->paginate(10);
+        $items = Item::paginate(10);
         return view('pages.admin.listOfItems', [
             'items' => $items
         ]);
@@ -72,24 +72,19 @@ class ItemsController extends Controller
             'borrowed' => 'required'
         ]);
 
-        $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
-        if ($item === null) {
-            Item::create([
-                'serial_number' => $request->serial_number,
-                'location' => $request->location,
-                'item_description' => $request->item_description,
-                'aquisition_date' => $request->aquisition_date,
-                'unit_number' => $request->unit_number,
-                'inventory_tag' => $request->inventory_tag,
-                'quantity' => $request->quantity,
-                'status' => $request->status,
-                'borrowed' => $request->borrowed
-            ]);
+        Item::create([
+            'serial_number' => $request->serial_number,
+            'location' => $request->location,
+            'item_description' => $request->item_description,
+            'aquisition_date' => $request->aquisition_date,
+            'unit_number' => $request->unit_number,
+            'inventory_tag' => $request->inventory_tag,
+            'quantity' => $request->quantity,
+            'status' => $request->status,
+            'borrowed' => $request->borrowed
+        ]);
 
-            return redirect('/adding-new-item')->with('status', 'Item Successfully Added! Do you want to add another item?');
-        } else {
-            return redirect('/adding-new-item')->with('status', 'Serial Number Already Exist.');
-        }
+        return redirect('/adding-new-item')->with('status', 'Item Successfully Added! Do you want to add another item?');
     }
 
     public function generateReportPage()
@@ -101,26 +96,25 @@ class ItemsController extends Controller
     public function downloadReport(Request $request)
     {
         $this->validate(
-            $request,
-            [
+            $request, [
                 'location' => 'required',
                 'purpose' => 'nullable',
                 'department' => 'required'
-            ]
-        );
+            ]);
 
         $purpose = $request->purpose;
         $department = $request->department;
         $location = $request->location;
         $items = Item::orderBy('unit_number', 'ASC')->get();
 
-        if ($request->has('download')) {
+        if($request->has('download'))
+        {
             $pdf = App::make('dompdf.wrapper');
-            $pdf->loadView('pages.pdfReport', compact('items', 'purpose', 'location', 'department'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+            $pdf->loadView('pages.pdfReport', compact('items','purpose','location','department'))->setOptions(['defaultFont' => 'sans-serif' ])->setPaper('a4');
 
-            return $pdf->download('InventoryReport' . $location . '.pdf');
+            return $pdf->download('InventoryReport'.$location.'.pdf');
         }
 
-        return view('pages.pdfReport')->with(compact('items', 'location', 'purpose', 'department'));
+        return view('pages.pdfReport')->with(compact('items','location', 'purpose', 'department'));
     }
 }

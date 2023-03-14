@@ -31,7 +31,7 @@
                     @enderror
 
                     <label for="Purpose">Purpose:</label>
-                    <input type="text" id="purpose" name="purpose"
+                    <input type="text" id="purpose" name="purpose" value="FOR SOFE, COMPUTER & PERI., TOOLS, LAB. EQUIP., VEHICLE, ETC."
                         class="form-control @error('purpose')
                     border-danger
                     @enderror"
