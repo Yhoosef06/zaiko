@@ -105,7 +105,7 @@ class ItemsController extends Controller
         $purpose = $request->purpose;
         $department = $request->department;
         $location = $request->location;
-        $items = Item::all();
+        $items = Item::orderBy('unit_number', 'ASC')->get();
 
         if($request->has('download'))
         {
