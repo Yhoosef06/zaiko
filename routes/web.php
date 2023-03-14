@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,18 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
         Route::get('/admin-dashboard','index')->name('admin.dashboard');
     });
     // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
+    // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
+    Route::get('adding-new-item', [PagesController::class,'addItem'])->name('add_item');
+    Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
+    // FOR ITEMS
+    Route::get('list-of-items', [ItemsController::class,'index'])->name('view_items');
+    Route::post('saving-new-item', [ItemsController::class,'saveNewItem'])->name('save_new_item');
+    Route::get('viewing-item-{serial_number}', [ItemsController::class,'viewItemDetails'])->name('view_item_details');
+    Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
+    Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
+    Route::post('deleting-item-{serial_number}', [ItemsController::class,'deleteItem'])->name('delete_item');
+    Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
+    Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
 });
 
 //student
