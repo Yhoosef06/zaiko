@@ -189,6 +189,12 @@
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Generate Report</p>
                                                 </a>
+                                                {{-- <li class="nav-item">
+                                                    <a href="#" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Download LIAMS</p>
+                                                    </a>
+                                                </li> --}}
                                             </li>
                                         </ul>
                                     </li>
