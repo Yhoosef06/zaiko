@@ -18,9 +18,6 @@ use App\Http\Controllers\Auth\RegisterController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('pages.landing');
-// });
 
 Route::get('/register', [RegisterController::class,'index'])->name('register');
 Route::post('/register', [RegisterController::class,'store']);
@@ -28,19 +25,14 @@ Route::post('/register', [RegisterController::class,'store']);
 Route::get('/signin', [SignInController::class,'index'])->name('signin');
 Route::post('/signin', [SignInController::class,'store']);
 
-// Route::group(['middleware' => 'auth','is.admin'], function(){
-//     Route::get('/dashboard', [PagesController::class,'index'])->name('dashboard');
-// });
-
-// //students
-// Route::group(['middlewawre' => 'is.student'], function(){
-//     Route::get('/student-dashboard',[StudentController::class, 'index']);
-// });
-
 
 //admin
 Route::middleware(['auth','user-role:admin'])->group(function(){
-    Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
+    Route::controller(PagesController::class)->group(function(){
+        Route::get('/admin-dashboard','index')->name('admin.dashboard');
+    });
+    // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
+    // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
     Route::get('adding-new-item', [PagesController::class,'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
     // FOR ITEMS
@@ -56,10 +48,16 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
 
 //student
 Route::middleware(['auth','user-role:student'])->group(function(){
-    Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');
+    Route::controller(StudentController::class)->group(function(){
+        Route::get('/student-dashboard','index')->name('student.dashboard');
+        Route::get('/items','items')->name('student.items');
+    });
+    // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');
 });
 
 //unapproved
-Route::middleware(['auth','user-role:queue'])->group(function(){
+Route::middleware(['auth','user-role:queued'])->group(function(){
     Route::get('/approve', [PagesController::class,'approve'])->name('approval');
 });
+
+Route::get('/test',[PagesController::class,'test']);

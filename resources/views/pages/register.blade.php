@@ -39,6 +39,24 @@
             </div>
         @enderror
 
+        <label for="" class="sr-only">Password</label>
+        <input type="password" name="password" id="password"
+            class="form-control @error('password') border-danger @enderror" placeholder="Password">
+        @error('password')
+            <div class="text-danger">
+                {{ $message }}
+            </div>
+        @enderror
+
+        <label for="" class="sr-only">Re Enter Password</label>
+        <input type="password" name="password_confirmation" id="password_confirmation"
+            class="form-control @error('password_confirmation') border-danger @enderror" placeholder="Confirm Password">
+        @error('password_confirmation')
+            <div class="text-danger">
+                {{ $message }}
+            </div>
+        @enderror
+
         <label for="" class="sr-only">Upload Front of ID</label>
         <input type="file" name="front_of_id" id="front_of_id"
             class="form-control @error('front_of_id') border-danger @enderror" placeholder="Upload Front of ID">
