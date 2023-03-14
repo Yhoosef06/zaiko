@@ -2,7 +2,7 @@
 
 @section('content')
     @if (session('status'))
-        <div class="container alert text-center text-success">
+        <div class="container alert text-center">
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
@@ -15,7 +15,8 @@
             <div class="row">
                 <div class="col">
                     <label for="location">Location:</label>
-                    <select id="location" name="location" class="form-control col-sm-5 @error('location')
+                    <select id="location" name="location"
+                        class="form-control col-sm-5 @error('location')
                         border-danger
                     @enderror">
                         <option value="option_select" disabled selected>Select a location</option>
@@ -31,7 +32,8 @@
                     @enderror
 
                     <label for="Item name/description">Item Name/Description:</label>
-                    <input type="text" id="item_description" name="item_description" value="{{ old('item_description') }}"
+                    <input type="text" id="item_description" name="item_description"
+                        value="{{ old('item_description') }}"
                         class="form-control @error('item_description')
                     border-danger
                     @enderror"
@@ -51,12 +53,12 @@
                         class="form-control col-sm-4 @error('unit_number')
                     border-danger @enderror"
                         value="{{ old('unit_number') }}" placeholder="Unit Number">
-                        <p class="text-sm font-italic" style="font:italic">Type N/A or None if no unit number.</p>
                     @error('unit_number')
                         <div class="text-danger">
                             {{ $message }}
                         </div>
                     @enderror
+                    <p class="text-sm font-italic" style="font:italic">Type N/A or None if no unit number.</p>
 
                     <label for="borrowed or not">Inventory Tag:</label>
                     <label for="" class="radio-inline">
