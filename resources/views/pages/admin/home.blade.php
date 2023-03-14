@@ -125,7 +125,7 @@
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                             data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                                               with font-awesome or any other icon font library -->
+                                                   with font-awesome or any other icon font library -->
                             <li class="nav-item menu-open">
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
@@ -150,7 +150,7 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="{{route('view_items')}}" class="nav-link">
+                                                <a href="{{ route('view_items') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>View All Items</p>
                                                 </a>
@@ -159,7 +159,7 @@
                                                 <a href="#" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>
-                                                        Report
+                                                        Manage Borrowings
                                                         <i class="right fas fa-angle-left"></i>
                                                     </p>
                                                 </a>
@@ -241,6 +241,35 @@
                                                         </a>
                                                     </li>
                                                 </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fas fa-circle nav-icon"></i>
+                                            <p>
+                                                Manage Borrowings
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    <i class="fas fa-dot-circle nav-icon"></i>
+                                                    <p>Option 1</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    <i class="fas fa-dot-circle nav-icon"></i>
+                                                    <p>Option 2</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    <i class="fas fa-dot-circle nav-icon"></i>
+                                                    <p>Option 3</p>
+                                                </a>
                                             </li>
                                         </ul>
                                     </li>
