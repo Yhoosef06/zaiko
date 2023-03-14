@@ -148,7 +148,7 @@
                             <div class="inner">
                                 <h3>2</h3>
 
-                                <p>Notifications</p>
+                                <p>Notificationstestest</p>
                             </div>
                             <div class="icon">
                             <i class="ion ion-person-add"></i>
