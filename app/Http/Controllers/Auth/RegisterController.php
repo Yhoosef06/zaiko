@@ -34,7 +34,7 @@ class RegisterController extends Controller
             'front_of_id' => $request->file('front_of_id')->store(('ids')),
             'back_of_id' => $request->file('back_of_id')->store(('ids')),
             'account_type' => 'student',
-            'account_status' => 'for_approval'
+            'account_status' => 'pending'
         ]);
 
         return redirect('/signin')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');

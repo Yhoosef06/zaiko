@@ -50,7 +50,7 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
 //student
 Route::middleware(['auth','user-role:student'])->group(function(){
 
-    Route::middleware(['account_status:for_approval'])->group(function(){
+    Route::middleware(['account_status:pending'])->group(function(){
         Route::get('/approve', [PagesController::class,'approve'])->name('approval');
     });
 
