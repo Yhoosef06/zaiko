@@ -63,6 +63,7 @@ class ItemsController extends Controller
         $this->validate($request, [
             'serial_number' => 'required|max:20',
             'location' => 'required',
+            'item_name' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'nullable',
             'unit_number' => 'required',
@@ -75,6 +76,7 @@ class ItemsController extends Controller
         Item::create([
             'serial_number' => $request->serial_number,
             'location' => $request->location,
+            'item_name' => $request->item_name,
             'item_description' => $request->item_description,
             'aquisition_date' => $request->aquisition_date,
             'unit_number' => $request->unit_number,
@@ -96,25 +98,49 @@ class ItemsController extends Controller
     public function downloadReport(Request $request)
     {
         $this->validate(
-            $request, [
+            $request,
+            [
                 'location' => 'required',
                 'purpose' => 'nullable',
                 'department' => 'required'
-            ]);
+            ]
+        );
 
         $purpose = $request->purpose;
         $department = $request->department;
         $location = $request->location;
         $items = Item::orderBy('unit_number', 'ASC')->get();
 
-        if($request->has('download'))
-        {
+        if ($request->has('download')) {
             $pdf = App::make('dompdf.wrapper');
-            $pdf->loadView('pages.pdfReport', compact('items','purpose','location','department'))->setOptions(['defaultFont' => 'sans-serif' ])->setPaper('a4');
+            $pdf->loadView('pages.pdfReport', compact('items', 'purpose', 'location', 'department'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
 
-            return $pdf->download('InventoryReport'.$location.'.pdf');
+            return $pdf->download('InventoryReport' . $location . '.pdf');
         }
 
-        return view('pages.pdfReport')->with(compact('items','location', 'purpose', 'department'));
+        return view('pages.pdfReport')->with(compact('items', 'location', 'purpose', 'department'));
+    }
+
+    public function searchItem(Request $request)
+    {
+        //     ['location', '!=', Null],
+        //     [function ($query) use ($request){
+        //         if (($variable = $request->variable)) {
+        //             $query->orWhere('location', 'LIKE', '%'.$variable.'%')->get();
+        //         }
+        //     }]
+        // ])
+        // ->orderBy('unit_number','asc')
+        // ->paginate(5); 
+
+        $items = Item::query();
+        dd($items);
+        if ($request->item) {
+            $items->where('location', 'LIKE', $request->item)
+                ->orderBy('serial_number', 'DESC')
+                ->paginate(5);
+            dd($items);
+            return view('pages.admin.listOfItems', compact('items'));
+        }
     }
 }

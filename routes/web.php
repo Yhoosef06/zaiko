@@ -35,8 +35,10 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
     // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
     Route::get('adding-new-item', [PagesController::class,'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
+    
     // FOR ITEMS
     Route::get('list-of-items', [ItemsController::class,'index'])->name('view_items');
+    Route::get('list-of-items-filtered', [ItemsController::class,'searchItem'])->name('filtered_view');
     Route::post('saving-new-item', [ItemsController::class,'saveNewItem'])->name('save_new_item');
     Route::get('viewing-item-{serial_number}', [ItemsController::class,'viewItemDetails'])->name('view_item_details');
     Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');

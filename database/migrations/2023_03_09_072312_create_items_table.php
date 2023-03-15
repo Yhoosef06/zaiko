@@ -15,6 +15,7 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->string('serial_number')->primary();
+            $table->string('item_name');
             $table->string('item_description');
             $table->integer('quantity');
             $table->string('unit_number');

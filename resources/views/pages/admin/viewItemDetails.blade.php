@@ -6,7 +6,7 @@
             <div class="row text-lg">
                 <div class="col">
                     <strong>Serial Number:</strong> {{ $item->serial_number }} <br>
-                    <strong>Item Description:</strong> {{ $item->item_description }} <br>
+                    <strong>Item Name:</strong> {{ $item->item_name }} <br>
                     <strong>Quantity:</strong> {{ $item->quantity }} <br>
                     <strong>Aquisition Date:</strong> {{ $item->aquisition_date }} <br>
                     <strong>Unit Number:</strong> {{ $item->unit_number }} <br>
@@ -14,6 +14,7 @@
 
                 <div class="col">
                     <strong>Location:</strong> {{ $item->location }} <br>
+                    <strong>Item Description:</strong> {{ $item->item_description }} <br>
                     <strong>Inventory Tag:</strong> {{ $item->inventory_tag }} <br>
                     <strong>Borrowed?:</strong> {{ $item->borrowed }} <br>
                     <strong>Status:</strong> {{ $item->status }}

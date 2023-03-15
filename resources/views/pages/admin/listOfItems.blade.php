@@ -12,12 +12,13 @@
                         <h4>{{ session('status') }}</h4>
                     </div>
                 @endif
-                <form action="#" method="GET">
+                <form action="{{ route('filtered_view') }}" method="get" role="search">
+                    @csrf
                     <div class="input-group mb-3 d-flex flex-row-reverse">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button">Search</button>
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
                         </div>
-                        <input type="text" class="form-control col-2" placeholder="">
+                        <input type="text" class="form-control col-2" name="item" id="item" placeholder="">
                     </div>
                 </form>
                 <thead>

@@ -29,14 +29,14 @@
                         </div>
                     @enderror
 
-                    <label for="Item name/description">Item Name/Description:</label>
-                    <input type="text" id="item_description" name="item_description"
-                        value="{{ $item->item_description }}"
-                        class="form-control @error('item_description')
+                    <label for="Item name">Item Name:</label>
+                    <input type="text" id="item_name" name="item_name"
+                        value="{{ $item->item_name }}"
+                        class="form-control @error('item_name')
                     border-danger
                     @enderror"
-                        placeholder="Item Name/Description">
-                    @error('item_description')
+                        placeholder="Item Name">
+                    @error('item_name')
                         <div class="text-danger">
                             {{ $message }}
                         </div>
@@ -90,6 +90,19 @@
                     border-danger @enderror"
                         value="{{ $item->serial_number }}" placeholder="Serial Number">
                     @error('serial_number')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="Item Description">Item Description:</label>
+                    <input type="text" id="item_description" name="item_description"
+                        value="{{ $item->item_description }}"
+                        class="form-control @error('item_description')
+                    border-danger
+                    @enderror"
+                        placeholder="Item Name/Description">
+                    @error('item_description')
                         <div class="text-danger">
                             {{ $message }}
                         </div>

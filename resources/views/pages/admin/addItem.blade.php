@@ -30,14 +30,13 @@
                         </div>
                     @enderror
 
-                    <label for="Item name/description">Item Name/Description:</label>
-                    <input type="text" id="item_description" name="item_description"
-                        value="{{ old('item_description') }}"
-                        class="form-control @error('item_description')
+                    <label for="Item name">Item Name:</label>
+                    <input type="text" id="item_name" name="item_name" value="{{ old('item_name') }}"
+                        class="form-control @error('item_name')
                     border-danger
                     @enderror"
-                        placeholder="Item Name/Description">
-                    @error('item_description')
+                        placeholder="Item Name">
+                    @error('item_name')
                         <div class="text-danger">
                             {{ $message }}
                         </div>
@@ -75,13 +74,27 @@
                     <label for="serial number"> Serial Number:</label>
                     <input type="text" id="serial_number" name="serial_number"
                         class="form-control @error('serial_number')
-                    border-danger @enderror" value="{{ old('serial_number') }}" placeholder="Serial Number">
+                    border-danger @enderror"
+                        value="{{ old('serial_number') }}" placeholder="Serial Number">
                     @if (session()->has('message'))
                         <div class="text-danger">
                             {{ session()->get('message') }}
                         </div>
                     @endif
                     @error('serial_number')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="Item description">Item Description:</label>
+                    <input type="text" id="item_description" name="item_description"
+                        value="{{ old('item_description') }}"
+                        class="form-control @error('item_description')
+                    border-danger
+                    @enderror"
+                        placeholder="Item Description">
+                    @error('item_description')
                         <div class="text-danger">
                             {{ $message }}
                         </div>
