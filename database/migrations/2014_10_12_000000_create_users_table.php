@@ -20,7 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('front_of_id');
             $table->string('back_of_id');
-            $table->string('status');
+            $table->string('account_type');
+            $table->string('account_status');
             $table->rememberToken();
             $table->timestamps();
         });
