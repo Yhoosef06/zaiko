@@ -4,7 +4,7 @@
     <div class="content shadow-sm p-2">
         @if ($items->count())
         <span>
-            <strong>List Of All ITems</strong>
+            <strong>List Of All Items</strong>
         </span>
             <table class="table">
                 @if (session('status'))
