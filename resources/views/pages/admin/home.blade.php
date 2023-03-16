@@ -84,7 +84,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('signin') }}" role="button">
+                        <a class="nav-link" href="{{ route('signin.page') }}" role="button">
                             <strong>Logout</strong>
                         </a>
                     </li>

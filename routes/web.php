@@ -22,8 +22,8 @@ use App\Http\Controllers\Auth\RegisterController;
 Route::get('/register', [RegisterController::class,'index'])->name('register');
 Route::post('/register', [RegisterController::class,'store']);
 
-Route::get('/signin', [SignInController::class,'index'])->name('signin');
-Route::post('/signin', [SignInController::class,'store']);
+Route::get('/', [SignInController::class,'index'])->name('signin.page');
+Route::post('/signin', [SignInController::class,'store'])->name('signin');
 
 
 //admin
