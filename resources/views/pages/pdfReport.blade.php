@@ -77,21 +77,36 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($items as $item)
-                    @if ($item->location == $location)
-                        <tr>
-                            <td>{{ $item->serial_number }}</td>
-                            <td>{{ $item->item_description }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>{{ $item->unit_number }}</td>
-                            <td>{{ $item->aquisition_date }}</td>
-                            <td style="font-size: 12px"><b>{{ $item->status }}</b></td>
-                            <td>{{ $item->inventory_tag }}</td>
-                        </tr>
-                    @endif
+                @foreach ($items->groupBy('unit_number') as $item)
+                    @foreach ($item as $index => $unit)
+                        @if ($unit->location == $location)
+                            @if ($index == 0)
+                                <tr>
+                                    <td>{{ $unit->serial_number }}</td>
+                                    <td>{{ $unit->item_description }}</td>
+                                    <td>{{ $unit->quantity }}</td>
+                                    <td class="align-middle text-center" rowspan="{{ count($item) }}">
+                                        {{ $unit->unit_number }}</td>
+                                    <td>{{ $unit->aquisition_date }}</td>
+                                    <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
+                                    <td>{{ $unit->inventory_tag }}</td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td>{{ $unit->serial_number }}</td>
+                                    <td>{{ $unit->item_description }}</td>
+                                    <td>{{ $unit->quantity }}</td>
+                                    <td>{{ $unit->aquisition_date }}</td>
+                                    <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
+                                    <td>{{ $unit->inventory_tag }}</td>
+                                </tr>
+                            @endif
+                        @endif
+                    @endforeach
                 @endforeach
             </tbody>
         </table>
+
         <div class="row">
             <div class="column">
                 Prepared By: <br>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 
