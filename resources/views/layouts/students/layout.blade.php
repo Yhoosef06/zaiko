@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+
+    
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -70,5 +72,7 @@
 <script src="dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="dist/js/pages/dashboard.js"></script>
+
+<script src="dist/js/bootstrap.bundle.min.js"></script>
 
 </html

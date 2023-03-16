@@ -143,4 +143,6 @@ class ItemsController extends Controller
             return view('pages.admin.listOfItems', compact('items'));
         }
     }
+
+    
 }

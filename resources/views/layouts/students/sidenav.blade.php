@@ -52,15 +52,15 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('student.borrow.items') }}" class="nav-link">
+                                    <a href="{{ route('student.items') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Borrow Item</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('view_items') }}" class="nav-link">
+                                    <a href="{{ route('student.borrow.items') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Check Borrowed Items</p>
+                                        <p>Your Borrowed Items</p>
                                     </a>
                                 </li>    
                             </ul>
