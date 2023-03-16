@@ -27,7 +27,8 @@ class User extends Authenticatable
         'password',
         'front_of_id',
         'back_of_id',
-        'status'
+        'account_type',
+        'account_status'
     ];
 
     /**

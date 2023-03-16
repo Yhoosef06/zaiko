@@ -16,6 +16,7 @@ class RegisterController extends Controller
 
     public function store(Request $request)
     {
+        // @dd($request);
         $this->validate($request, [
             'id_number' => 'required|numeric',
             'first_name' => 'required',
@@ -32,7 +33,8 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
             'front_of_id' => $request->file('front_of_id')->store(('ids')),
             'back_of_id' => $request->file('back_of_id')->store(('ids')),
-            'status' => 'queued'
+            'account_type' => 'student',
+            'account_status' => 'pending'
         ]);
 
         return redirect('/signin')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');

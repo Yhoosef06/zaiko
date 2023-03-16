@@ -43,12 +43,14 @@ class SignInController extends Controller
         
 
         if (auth()->attempt(['id_number' => $input['id_number'], 'password' => $input['password']])){
-            if(auth()->user()->status == 'admin'){
+            if(auth()->user()->account_type == 'admin'){
                 return redirect()->route('admin.dashboard');
-            }else if(auth()->user()->status == 'student'){
-                return redirect()->route('student.dashboard');
-            }else{
-                return redirect()->route('approval');
+            }else if(auth()->user()->account_type == 'student'){
+                if(auth()->user()->account_status == 'approved'){
+                    return redirect()->route('student.dashboard');
+                }else{
+                    return redirect()->route('approval');
+                }
             }
         };
 

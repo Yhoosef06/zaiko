@@ -32,7 +32,6 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
         Route::get('/admin-dashboard','index')->name('admin.dashboard');
     });
     // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
-    // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
     Route::get('adding-new-item', [PagesController::class,'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
     
@@ -50,16 +49,24 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
 
 //student
 Route::middleware(['auth','user-role:student'])->group(function(){
-    Route::controller(StudentController::class)->group(function(){
-        Route::get('/student-dashboard','index')->name('student.dashboard');
-        Route::get('/items','items')->name('student.items');
+
+    Route::middleware(['account_status:pending'])->group(function(){
+        Route::get('/approve', [PagesController::class,'approve'])->name('approval');
+    });
+
+    Route::middleware(['account_status:approved'])->group(function(){
+
+        Route::controller(StudentController::class)->group(function(){
+            Route::get('/student-dashboard','index')->name('student.dashboard');
+            Route::get('/items','items')->name('student.items');
+        });
     });
     // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');
 });
 
 //unapproved
-Route::middleware(['auth','user-role:queued'])->group(function(){
-    Route::get('/approve', [PagesController::class,'approve'])->name('approval');
-});
+// Route::middleware(['auth','account_status:for_approval'])->group(function(){
+//     Route::get('/approve', [PagesController::class,'approve'])->name('approval');
+// });
 
 Route::get('/test',[PagesController::class,'test']);
