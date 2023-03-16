@@ -56,7 +56,16 @@
             </div>
         @else
             <div class="text-center">
-                No items listed yet.
+                <form action="{{ route('filtered_view') }}" type="get" method="get" role="search">
+                    @csrf
+                    <div class="input-group mb-3 d-flex flex-row-reverse">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                        </div>
+                        <input type="text" class="form-control col-2" name="query" id="query" placeholder="">
+                    </div>
+                </form>
+                Data not found.
             </div>
         @endif
     </div>
