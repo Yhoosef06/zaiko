@@ -44,7 +44,6 @@ class ItemsController extends Controller
         $item->unit_number = $request->unit_number;
         $item->quantity = $request->quantity;
         $item->status = $request->status;
-        $item->borrowed = $request->borrowed;
         $item->inventory_tag = $item->inventory_tag;
         $item->update();
 
@@ -71,7 +70,6 @@ class ItemsController extends Controller
             'inventory_tag' => 'required',
             'quantity' => 'required|numeric',
             'status' => 'required',
-            'borrowed' => 'required'
         ]);
 
         Item::create([
@@ -84,7 +82,7 @@ class ItemsController extends Controller
             'inventory_tag' => $request->inventory_tag,
             'quantity' => $request->quantity,
             'status' => $request->status,
-            'borrowed' => $request->borrowed
+            'borrowed' => 'no'
         ]);
 
         return redirect('/adding-new-item')->with('status', 'Item Successfully Added! Do you want to add another item?');
@@ -110,16 +108,23 @@ class ItemsController extends Controller
         $purpose = $request->purpose;
         $department = $request->department;
         $location = $request->location;
+        $prepared_by = $request->prepared_by;
+        $verified_by = $request->verified_by;
+        $lab_oic = $request->lab_oic;
+        $it_specialist = $request->it_specialist;
+
         $items = Item::orderBy('unit_number', 'ASC')->get();
 
         if ($request->has('download')) {
             $pdf = App::make('dompdf.wrapper');
-            $pdf->loadView('pages.pdfReport', compact('items', 'purpose', 'location', 'department'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+            $pdf->loadView('pages.pdfReport', compact('items', 'purpose', 'location', 
+            'prepared_by','verified_by','lab_oic','it_specialist','department'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
 
             return $pdf->download('InventoryReport' . $location . '.pdf');
         }
 
-        return view('pages.pdfReport')->with(compact('items', 'location', 'purpose', 'department'));
+        return view('pages.pdfReport')->with(compact('items', 'location', 'purpose', 
+        'prepared_by','verified_by','lab_oic','it_specialist','department'));
     }
     public function searchItem(Request $request)
     {

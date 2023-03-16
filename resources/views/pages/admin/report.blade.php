@@ -52,6 +52,47 @@
                         </div>
                     @enderror
 
+                    
+                    <label for="prepared_by">Prepared By:</label>
+                    <input placeholder="Name of staff/faculty member" type="text" id="prepared_by" name="prepared_by"
+                        class="form-control @error('preparedby')
+                    border-danger @enderror">
+                    @error('prepared_by')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="verified_by">Verified By:</label>
+                    <input placeholder="Name of staff/faculty member" type="text" id="verified_by" name="verified_by"
+                        class="form-control @error('verifiedby')
+                    border-danger @enderror">
+                    @error('verified_by')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                    
+                    <label for="lab_oic">Laboratory OIC:</label>
+                    <input placeholder="Name of staff/faculty member" type="text" id="lab_oic" name="lab_oic"
+                        class="form-control @error('lab_oic')
+                    border-danger @enderror">
+                    @error('lab_oic')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                    
+                    <label for="it_specialist">IT Specialist:</label>
+                    <input placeholder="Name of staff/faculty member" type="text" id="it_specialist" name="it_specialist"
+                        class="form-control @error('it_specialist')
+                    border-danger @enderror">
+                    @error('it_specialist')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                    
                     <hr>
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                     <Button type="submit" class="btn btn-success">Generate</Button>

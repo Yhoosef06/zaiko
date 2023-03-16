@@ -30,8 +30,8 @@
         margin-bottom: 20px;
     }
 
-    .signees {
-        column-count: 2;
+    .signee {
+        text-decoration: underline;
     }
 
     .column {
@@ -85,9 +85,9 @@
                                     <td>{{ $unit->serial_number }}</td>
                                     <td>{{ $unit->item_description }}</td>
                                     <td>{{ $unit->quantity }}</td>
-                                    <td class="align-middle text-center" rowspan="{{ count($item) }}">
+                                    <td rowspan="{{ count($item) }}">
                                         {{ $unit->unit_number }}</td>
-                                    <td>{{ $unit->aquisition_date }}</td>
+                                    <td rowspan="{{ count($item) }}">{{ $unit->aquisition_date }}</td>
                                     <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
                                     <td>{{ $unit->inventory_tag }}</td>
                                 </tr>
@@ -96,7 +96,6 @@
                                     <td>{{ $unit->serial_number }}</td>
                                     <td>{{ $unit->item_description }}</td>
                                     <td>{{ $unit->quantity }}</td>
-                                    <td>{{ $unit->aquisition_date }}</td>
                                     <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
                                     <td>{{ $unit->inventory_tag }}</td>
                                 </tr>
@@ -111,23 +110,27 @@
             <div class="column">
                 Prepared By: <br>
                 <br>
-                ________________________ <br>
+                <span class="signee">{{ $prepared_by }}</span>
+                <br>
                 Main Office <br>
                 <br>
                 Noted By: <br>
                 <br>
-                _________________________ <br>
+                <span class="signee">{{ $lab_oic }}</span>
+                <br>
                 Laboratory OIC
             </div>
             <div class="column">
                 Verified By: <br>
                 <br>
-                ________________________ <br>
+                <span class="signee">{{ $verified_by }}</span>
+                <br>
                 Main Office <br>
                 <br>
                 <br>
                 <br>
-                _________________________ <br>
+                <span class="signee">{{ $it_specialist }}</span>
+                <br>
                 IT Specialist
             </div>
         </div>

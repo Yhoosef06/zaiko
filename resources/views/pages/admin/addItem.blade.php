@@ -57,17 +57,6 @@
                         </div>
                     @enderror
                     <p class="text-sm font-italic" style="font:italic">Type N/A or None if no unit number.</p>
-
-                    <label for="borrowed or not">Inventory Tag:</label>
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
-                        With
-                    </label>
-                    /
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
-                        Without
-                    </label>
                 </div>
 
                 <div class="col">
@@ -118,7 +107,7 @@
                         <option value="Obsolete">Obsolete</option>
                     </select>
 
-                    <label for="borrowed or not">Is it borrowed or not?</label>
+                    {{-- <label for="borrowed or not">Is it borrowed or not?</label>
                     <label for="" class="radio-inline">
                         <input type="radio" id='borrowed' name="borrowed" value="no" checked>
                         No
@@ -127,7 +116,19 @@
                     <label for="" class="radio-inline">
                         <input type="radio" id='borrowed' name="borrowed" value="yes">
                         Yes
+                    </label> --}}
+
+                             <label for="borrowed or not">Inventory Tag:</label>
+                    <label for="" class="radio-inline">
+                        <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
+                        With
                     </label>
+                    /
+                    <label for="" class="radio-inline">
+                        <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
+                        Without
+                    </label>
+
                     <hr>
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                     <Button type="submit" class="btn btn-success">Submit</Button>
