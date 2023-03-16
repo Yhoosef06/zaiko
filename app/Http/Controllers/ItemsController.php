@@ -121,27 +121,15 @@ class ItemsController extends Controller
 
         return view('pages.pdfReport')->with(compact('items', 'location', 'purpose', 'department'));
     }
-
     public function searchItem(Request $request)
     {
-        //     ['location', '!=', Null],
-        //     [function ($query) use ($request){
-        //         if (($variable = $request->variable)) {
-        //             $query->orWhere('location', 'LIKE', '%'.$variable.'%')->get();
-        //         }
-        //     }]
-        // ])
-        // ->orderBy('unit_number','asc')
-        // ->paginate(5); 
+        $search_text = $_GET['query'];
 
-        $items = Item::query();
-        dd($items);
-        if ($request->item) {
-            $items->where('location', 'LIKE', $request->item)
-                ->orderBy('serial_number', 'DESC')
-                ->paginate(5);
-            dd($items);
-            return view('pages.admin.listOfItems', compact('items'));
-        }
+        $items = Item::where('item_name', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('location', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('item_description', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')->paginate(5);
+
+        return view('pages.admin.listOfItems', compact('items'));
     }
 }

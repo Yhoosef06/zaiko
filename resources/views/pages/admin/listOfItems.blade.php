@@ -12,18 +12,19 @@
                         <h4>{{ session('status') }}</h4>
                     </div>
                 @endif
-                <form action="{{ route('filtered_view') }}" method="get" role="search">
+                <form action="{{ route('filtered_view') }}" type="get" method="get" role="search">
                     @csrf
                     <div class="input-group mb-3 d-flex flex-row-reverse">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="submit">Search</button>
                         </div>
-                        <input type="text" class="form-control col-2" name="item" id="item" placeholder="">
+                        <input type="text" class="form-control col-2" name="query" id="query" placeholder="">
                     </div>
                 </form>
                 <thead>
                     <tr>
                         <th scope="col">Serial #</th>
+                        <th scope="col">Item Name</th>
                         <th scope="col">Item Description</th>
                         <th scope="col">Qty.</th>
                         <th scope="col">Location</th>
@@ -34,6 +35,7 @@
                     @foreach ($items as $item)
                         <tr>
                             <th>{{ $item->serial_number }}</th>
+                            <td>{{ $item->item_name }}</td>
                             <td>{{ Str::limit($item->item_description, 20, '...') }}</td>
                             <td>{{ $item->quantity }}</td>
                             <td>{{ $item->location }}</td>
