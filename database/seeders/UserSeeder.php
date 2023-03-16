@@ -23,7 +23,8 @@ class UserSeeder extends Seeder
                 'first_name' => 'admin',
                 'last_name' => 'usjr',
                 'password' => Hash::make('usjrscs-123'),
-                'status' => 'admin',
+                'account_status' => 'approved',
+                'account_type' => 'admin',
                 'front_of_id' => 'null',
                 'back_of_id' => 'null'
             ]
