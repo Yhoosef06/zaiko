@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class ItemsController extends Controller
 {
@@ -101,7 +102,11 @@ class ItemsController extends Controller
             [
                 'location' => 'required',
                 'purpose' => 'nullable',
-                'department' => 'required'
+                'department' => 'required',
+                'prepared_by' => 'required',
+                'verified_by' => 'required',
+                'lab_oic' => 'required',
+                'it_specialist' => 'required'
             ]
         );
 

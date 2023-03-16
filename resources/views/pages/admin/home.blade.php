@@ -216,7 +216,7 @@
                                             <li class="nav-item">
                                                 <a href="#" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>List of Users</p>
+                                                    <p>View All Users</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">

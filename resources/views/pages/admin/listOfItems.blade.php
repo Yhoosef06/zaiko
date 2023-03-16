@@ -1,11 +1,9 @@
 @extends('pages.admin.home')
 
 @section('content')
+<h4>List of All Items</h4>
     <div class="content shadow-sm p-2">
         @if ($items->count())
-        <span>
-            <strong>List Of All Items</strong>
-        </span>
             <table class="table">
                 @if (session('status'))
                     <div class="container alert text-center">
