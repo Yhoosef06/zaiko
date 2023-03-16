@@ -58,7 +58,7 @@ Route::middleware(['auth','user-role:student'])->group(function(){
 
         Route::controller(StudentController::class)->group(function(){
             Route::get('/student-dashboard','index')->name('student.dashboard');
-            Route::get('/items','items')->name('student.items');
+            Route::get('/student-items','items')->name('student.borrow.items');
         });
     });
     // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');

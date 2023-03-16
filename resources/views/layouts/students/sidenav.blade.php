@@ -37,16 +37,35 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/items" class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
-                                <p>View Items</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./index3.html" class="nav-link">
+                            {{-- <a href="./index3.html" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Borrow Item</p>
+                            </a> --}}
+
+
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-circle"></i>
+                                <p>
+                                    Borrowing
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('student.borrow.items') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Borrow Item</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('view_items') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Check Borrowed Items</p>
+                                    </a>
+                                </li>    
+                            </ul>
+
+
                         </li>
                     </ul>
                 </li>
