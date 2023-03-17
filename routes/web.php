@@ -6,6 +6,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +46,15 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
     Route::post('deleting-item-{serial_number}', [ItemsController::class,'deleteItem'])->name('delete_item');
     Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
     Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
-});
+
+    // FOR USERS
+    Route::get('add-new-user', [UserController::class,'addUser'])->name('add_user');
+    Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
+    Route::get('list-of-users-filtered', [UserController::class,'searchUser'])->name('filtered_view_users');
+    Route::get('viewing-user-{id_number}', [UserController::class,'viewUserInfo'])->name('view_user_info');
+    Route::post('saving-new-user', [UserController::class,'saveNewUser'])->name('save_new_user');
+    Route::post('deleting-user-{id_number}', [UserController::class,'deleteUser'])->name('delete_user');
+}); 
 
 //student
 Route::middleware(['auth','user-role:student'])->group(function(){
