@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Rules\MatchOldPassword;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         //admin
@@ -80,10 +86,29 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->account_type = $request->account_type;
         $user->account_status = $request->account_status;
-        $user->password = $request->password;
         $user->update();
 
         return redirect('list-of-users')->with('status', 'User ' . $id_number . ' has been updated.');
     }
+
+    public function changeUserPassword($id_number)
+    {   
+        $user = User::find($id_number);
+        return view('pages.admin.changeUserPassword')->with('user', $user);
+    }
+
+    public function saveUserNewPassword(Request $request)
+    {   
+        $request->validate([
+            // 'current_password' => ['required', new MatchOldPassword],
+            'new_password' => 'required',
+            'password_confirmation' => ['same:new_password'],
+        ]);
+        
+        User::find(auth()->user()->id_number)->update(['password'=> Hash::make($request->new_password)]);
+       
+        return redirect('signin')->with('status', 'Password updated. Please login with new password.');
+    }
+    
 
 }

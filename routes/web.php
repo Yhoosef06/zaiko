@@ -56,6 +56,8 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
     Route::get('edit-user-{id_number}', [UserController::class,'editUserInfo'])->name('edit_user_info');
     Route::put('updating-user-{id_number}', [UserController::class, 'saveEditedUserInfo'])->name('update_user_info');
     Route::post('deleting-user-{id_number}', [UserController::class,'deleteUser'])->name('delete_user');
+    Route::get('change-user-{id_number}-password', [UserController::class,'changeUserPassword'])->name('change_user_password');
+    Route::post('updating-user-{id_number}-password', [UserController::class, 'saveUserNewPassword'])->name('save_user_new_password');
 }); 
 
 //student

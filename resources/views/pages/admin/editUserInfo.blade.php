@@ -9,7 +9,7 @@
     <div class="container m-5">
         <div class="col-lg-10 bg-light shadow-sm p-5">
             <label for="adding new item">
-                <h1>Adding New User</h1>
+                <h1>Edit User Info</h1>
             </label>
             <form action="{{ route('update_user_info', $user->id_number) }}" method="POST">
                 @csrf
@@ -72,36 +72,18 @@
                             @endif
                         </select>
 
-
+                        <a class="btn btn-dark" style="margin-top: 10px;"
+                            href="{{ route('change_user_password', $user->id_number) }}">Change Password</a>
+                        
+                            <hr>
+                        <a href="{{ route('view_users') }}" class="btn btn-outline-dark">Cancel</a>
+                        <Button type="submit" class="btn btn-success">Submit</Button>
                     </div>
 
                     <div class="col">
-                        <input type="checkbox" id="change_pass" onclick="changepass()"> Change password
-                        <br>
-                        <label for="">Password</label>
-                        <input type="password" name="password" id="password"
-                            class="form-control password @error('password') border-danger @enderror"
-                            value="{{ $user->password }}" placeholder="Password" disabled>
-                        @error('password')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
 
-                        <label for="">Confirm Password</label>
-                        <input type="password" name="password_confirmation" id="password_confirmation"
-                            class="form-control password @error('password_confirmation') border-danger @enderror"
-                            value="{{ $user->password }}" placeholder="Confirm Password" disabled>
-                        @error('password_confirmation')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                        <hr>
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                        <Button type="submit" class="btn btn-success">Submit</Button>
                     </div>
+
                 </div>
             </form>
         </div>
@@ -109,16 +91,6 @@
 @endsection
 
 <script>
-    function changepass() {
-        if ($("#change_pass").is(":checked")) {
-            document.getElementById("password").disabled = false;
-            document.getElementById("password_confirmation").disabled = false;
-        } else {
-            document.getElementById("password").disabled = true;
-            document.getElementById("password_confirmation").disabled = true;
-        }
-    }
-
     function edit() {
         if ($("#edit_id").is(":checked")) {
             document.getElementById("id_number").disabled = false;
