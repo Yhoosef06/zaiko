@@ -45,7 +45,7 @@ class ItemsController extends Controller
         $item->unit_number = $request->unit_number;
         $item->quantity = $request->quantity;
         $item->status = $request->status;
-        $item->inventory_tag = $item->inventory_tag;
+        $item->inventory_tag = $request->inventory_tag;
         $item->update();
 
         return redirect('list-of-items')->with('status', 'Item ' . $serial_number . ' has been updated.');
