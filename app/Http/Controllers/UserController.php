@@ -65,4 +65,25 @@ class UserController extends Controller
         return redirect('list-of-users')->with('status', 'User ' . $id_number . ' removed successfully.');
     }
 
+    public function editUserInfo($id_number){
+        $user = User::find($id_number);
+
+        return view('pages.admin.editUserInfo')->with('user', $user);
+    }
+
+    public function saveEditedUserInfo(Request $request, $id_number)
+    {
+
+        $user = User::find($id_number);
+        $user->id_number = $request->id_number;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->account_type = $request->account_type;
+        $user->account_status = $request->account_status;
+        $user->password = $request->password;
+        $user->update();
+
+        return redirect('list-of-users')->with('status', 'User ' . $id_number . ' has been updated.');
+    }
+
 }
