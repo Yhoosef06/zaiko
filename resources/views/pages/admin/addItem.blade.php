@@ -14,15 +14,55 @@
             @csrf
             <div class="row">
                 <div class="col">
-                    <label for="location">Location:</label>
-                    <select id="location" name="location"
-                        class="form-control col-sm-5 @error('location')
-                        border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a location</option>
-                        @foreach ($rooms as $room)
-                            <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
-                        @endforeach
-                    </select>
+                    <label for="location">Location: </label>
+                    <div style="display:flex">
+                        <div>
+                            <select id="location" name="location"
+                                class="form-control @error('location')
+                                        border-danger @enderror">
+                                <option value="option_select" disabled selected>Select a location </option>
+                                @foreach ($rooms as $room)
+                                    <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <button type="button" class="btn border-0" data-toggle="modal" data-target="#myModal">
+                                <i class="fa fa-plus-circle text-primary"></i>
+                            </button>
+                            {{-- <a class="btn text-blue" href=""><i class="fa fa-plus-circle"></i></a> --}}
+
+                            <div class="modal" id="myModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Adding a room</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <label for="">Room Name:</label>
+                                            <input type="text" name="room_name" id="room_name">
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <form action="#" method="POST"
+                                                class="form-check-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     @error('location')
                         <div class="text-danger">
@@ -118,7 +158,7 @@
                         Yes
                     </label> --}}
 
-                             <label for="borrowed or not">Inventory Tag:</label>
+                    <label for="borrowed or not">Inventory Tag:</label>
                     <label for="" class="radio-inline">
                         <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
                         With
