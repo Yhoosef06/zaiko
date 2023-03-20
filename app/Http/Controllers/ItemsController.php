@@ -40,6 +40,7 @@ class ItemsController extends Controller
         $item = Item::find($serial_number);
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
+        $item->item_name = $request->item_name;
         $item->item_description = $request->item_description;
         $item->aquisition_date = $request->aquisition_date;
         $item->unit_number = $request->unit_number;
