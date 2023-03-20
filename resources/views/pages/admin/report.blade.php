@@ -16,7 +16,7 @@
                 <div class="col">
                     <label for="location">Room / Location:</label>
                     <select id="location" name="location"
-                        class="form-control col-sm-5 @error('location')
+                        class="form-control col-sm-8 @error('location')
                         border-danger @enderror">
                         <option value="option_select" disabled selected>Select a location</option>
                         @foreach ($rooms as $room)
