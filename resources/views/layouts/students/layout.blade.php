@@ -37,7 +37,7 @@
     @yield('nav')
     @yield('content')
     @yield('footer')
-
+    @yield('script')
 </body>
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -75,5 +75,8 @@
 <script src="dist/js/pages/dashboard.js"></script>
 
 <script src="dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </html

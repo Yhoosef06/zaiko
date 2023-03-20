@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth']], function(){
             //cart
             Route::get('/student-cart/{serial_number}',[BorrowController::class, 'addToCart'])->name('student.cart');
             Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
+            Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
         
         });
         // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');

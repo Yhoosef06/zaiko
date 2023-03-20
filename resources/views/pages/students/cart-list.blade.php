@@ -30,7 +30,9 @@
                             <td class="text-wrap">{{ $item['unit_number'] }}</td>
                             <td class="text-wrap">{{ $item['item_name'] }}</td>
                             <td class="text-wrap">{{ $item['item_description'] }}</td>
-                            <td class="text-center"><button class="btn btn-danger btn-sm"><i class="bi bi-x-circle"></i> Remove</button></td>
+                            <td class="text-center">
+                                <button class="btn btn-danger btn-sm cart_remove"><i class="bi bi-x-circle"></i> Remove</button>
+                            </td>
                         </tr>
                         @endforeach
                     @endif
@@ -46,5 +48,31 @@
             </table>
         </div>
     </div>
+
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+
+        $(".cart_remove").click(function (e){
+            e.preventDefault();
+
+            var ele = $(this);
+
+            if(confirm("Do you really want to remove?")){
+                $.ajax({
+                    url: '{{ route('remove.from.cart') }}',
+                    method: "DELETE",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: ele.parents("tr").attr("data-id")
+                    },
+                    success: function(response){
+                        window.location.reload();
+                    }
+                })
+            }
+        });
+    </script>
 
 @endsection

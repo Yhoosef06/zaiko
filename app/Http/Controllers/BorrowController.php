@@ -29,4 +29,15 @@ class BorrowController extends Controller
     public function cartList(){
         return view('pages.students.cart-list');
     }
+
+    public function remove(Request $request){
+        if($request->serial_number){
+            $cart = session()->get('cart');
+            if(isset($cart[$request->serial_number])){
+                unset($cart[$request->serial_number]);
+                session()->put('cart',$cart);
+            }
+            session()->flash('success','Item suceessfully removed.');
+        }
+    }
 }
