@@ -66,6 +66,7 @@ Route::middleware(['auth','user-role:student'])->group(function(){
         });
         //cart
         Route::get('/student-cart/{serial_number}',[BorrowController::class, 'addToCart'])->name('student.cart');
+        Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
     
     });
     // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');

@@ -25,4 +25,8 @@ class BorrowController extends Controller
         session()->put('cart', $cart);
         return redirect()->back()->with('success', "Item added to cart successfully");
     }
+
+    public function cartList(){
+        return view('pages.students.cart-list');
+    }
 }
