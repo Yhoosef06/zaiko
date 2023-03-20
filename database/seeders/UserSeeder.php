@@ -27,7 +27,57 @@ class UserSeeder extends Seeder
                 'account_type' => 'admin',
                 'front_of_id' => 'null',
                 'back_of_id' => 'null'
-            ]
+            ],
+            [
+                'id_number' => 2015012123,
+                'first_name' => 'John Jones',
+                'last_name' => 'Indiana',
+                'password' => Hash::make('usjrscs-123'),
+                'account_status' => 'pending',
+                'account_type' => 'student',
+                'front_of_id' => 'null',
+                'back_of_id' => 'null'
+            ],
+            [
+                'id_number' => 2012321404,
+                'first_name' => 'Julius Ceasar',
+                'last_name' => 'Milan',
+                'password' => Hash::make('usjrscs-123'),
+                'account_status' => 'pending',
+                'account_type' => 'student',
+                'front_of_id' => 'null',
+                'back_of_id' => 'null'
+            ],
+            [
+                'id_number' => 2016331404,
+                'first_name' => 'Alexander',
+                'last_name' => 'De Grate',
+                'password' => Hash::make('usjrscs-123'),
+                'account_status' => 'pending',
+                'account_type' => 'student',
+                'front_of_id' => 'null',
+                'back_of_id' => 'null'
+            ],
+            [
+                'id_number' => 2014571321,
+                'first_name' => 'Divine',
+                'last_name' => 'Alilis',
+                'password' => Hash::make('usjrscs-123'),
+                'account_status' => 'pending',
+                'account_type' => 'student',
+                'front_of_id' => 'null',
+                'back_of_id' => 'null'
+            ],
+            [
+                'id_number' => 2014175231,
+                'first_name' => 'Minerva Jane',
+                'last_name' => 'Austin',
+                'password' => Hash::make('usjrscs-123'),
+                'account_status' => 'pending',
+                'account_type' => 'student',
+                'front_of_id' => 'null',
+                'back_of_id' => 'null'
+            ],
         ];
         DB::table('users')->insert($user); 
     }
