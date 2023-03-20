@@ -119,7 +119,7 @@ class UserController extends Controller
     {
         $request->validate([
             // 'current_password' => ['required', new MatchOldPassword],
-            'new_password' => 'required',
+            'new_password' => 'required|min:7',
             'password_confirmation' => ['same:new_password'],
         ]);
 
