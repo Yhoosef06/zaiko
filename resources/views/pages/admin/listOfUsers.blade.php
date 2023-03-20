@@ -16,7 +16,7 @@
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="submit">Search</button>
                         </div>
-                        <input type="search" class="form-control col-2" name="query" id="query" placeholder="">
+                        <input type="search" class="form-control col-2" name="search" id="search" placeholder="">
                         <a class="btn" href="{{ route('view_users') }}"><svg xmlns="http://www.w3.org/2000/svg"
                                 width="18" height="18" fill="currentColor" class="bi bi-repeat" viewBox="0 0 16 16">
                                 <path
@@ -55,14 +55,45 @@
                                 </td>
                             @endif
 
-                            <td><a href="{{ route('view_user_info', $user->id_number) }}" class="text-success">View</a>/
-                                <a href="{{ route('edit_user_info', $user->id_number) }}">Edit</a>/
-                                <form action="{{ route('delete_user', $user->id_number) }}" method="POST"
-                                    class="form-check-inline">
-                                    @csrf
-                                    <button type="submit"
-                                        class="border-0 text-danger text-decoration-underline">Delete</button>
-                                </form>
+                            <td>
+                                <a href="{{ route('view_user_info', $user->id_number) }}">
+                                    <i class="fa fa-eye"></i></a>
+                                <a href="{{ route('edit_user_info', $user->id_number) }}">
+                                    <i class="fa fa-edit"></i></a>
+                                <!-- Button to Open the Modal -->
+                                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                                    data-target="#myModal">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+
+                                <!-- The Modal -->
+                                <div class="modal" id="myModal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Deleting User</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                Are you sure you want to delete user?
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <form action="{{ route('delete_user', $user->id_number) }}" method="POST"
+                                                    class="form-check-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-danger">Confirm</button>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -80,6 +111,11 @@
                             <button class="btn btn-outline-secondary" type="submit">Search</button>
                         </div>
                         <input type="text" class="form-control col-2" name="query" id="query" placeholder="">
+                        <a class="btn" href="{{ route('view_users') }}"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="18" height="18" fill="currentColor" class="bi bi-repeat" viewBox="0 0 16 16">
+                                <path
+                                    d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192Zm3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z" />
+                            </svg></a>
                     </div>
                 </form>
                 Data not found.

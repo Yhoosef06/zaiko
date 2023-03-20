@@ -2,7 +2,7 @@
 
 @section('content')
     @if (session('status'))
-        <div class="container alert text-center text-success">
+        <div class="container alert text-center">
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
