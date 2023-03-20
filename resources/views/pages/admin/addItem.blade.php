@@ -2,7 +2,7 @@
 
 @section('content')
     @if (session('status'))
-        <div class="container alert bg-gradient-lightblue text-center">
+        <div class="container alert bg-gradient-lightblue text-center text-sm">
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
@@ -28,39 +28,7 @@
                         </div>
 
                         <div>
-                            <button type="button" class="btn border-0" data-toggle="modal" data-target="#myModal">
-                                <i class="fa fa-plus-circle text-primary"></i>
-                            </button>
-                            {{-- <a class="btn text-blue" href=""><i class="fa fa-plus-circle"></i></a> --}}
-
-                            <div class="modal" id="myModal">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Adding a room</h4>
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            <label for="">Room Name:</label>
-                                            <input type="text" name="room_name" id="room_name">
-                                        </div>
-
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <form action="#" method="POST"
-                                                class="form-check-inline">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-success">Save</button>
-                                            </form>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
+                            <a class="btn text-blue" href="{{route('adding_new_room')}}"><i class="fa fa-plus-circle"></i></a>
                         </div>
                     </div>
 
@@ -146,17 +114,6 @@
                         <option value="For Repair">For Repair</option>
                         <option value="Obsolete">Obsolete</option>
                     </select>
-
-                    {{-- <label for="borrowed or not">Is it borrowed or not?</label>
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='borrowed' name="borrowed" value="no" checked>
-                        No
-                    </label>
-                    /
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='borrowed' name="borrowed" value="yes">
-                        Yes
-                    </label> --}}
 
                     <label for="borrowed or not">Inventory Tag:</label>
                     <label for="" class="radio-inline">

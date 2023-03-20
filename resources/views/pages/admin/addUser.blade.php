@@ -2,7 +2,7 @@
 
 @section('content')
     @if (session('status'))
-        <div class="container alert bg-gradient-lightblue text-center">
+        <div class="container alert bg-gradient-lightblue text-center text-sm">
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
@@ -61,7 +61,7 @@
                             <option value="pending">Pending</option>
                         </select>
 
-                  
+
                     </div>
 
                     <div class="col">
@@ -76,7 +76,8 @@
 
                         <label for="">Confirm Password</label>
                         <input type="password" name="password_confirmation" id="password_confirmation"
-                            class="form-control @error('password_confirmation') border-danger @enderror" placeholder="Confirm Password">
+                            class="form-control @error('password_confirmation') border-danger @enderror"
+                            placeholder="Confirm Password">
                         @error('password_confirmation')
                             <div class="text-danger">
                                 {{ $message }}

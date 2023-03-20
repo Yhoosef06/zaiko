@@ -6,6 +6,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -58,6 +59,10 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
     Route::post('deleting-user-{id_number}', [UserController::class,'deleteUser'])->name('delete_user');
     Route::get('change-user-{id_number}-password', [UserController::class,'changeUserPassword'])->name('change_user_password');
     Route::post('updating-user-{id_number}-password', [UserController::class, 'saveUserNewPassword'])->name('save_user_new_password');
+
+    // FOR ROOM
+    Route::get('adding-room', [RoomController::class, 'addNewRoom'])->name('adding_new_room');
+    Route::post('storing-new-room', [RoomController::class,'storeNewRoom'])->name('store_new_room');
 }); 
 
 //student

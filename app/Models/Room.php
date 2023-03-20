@@ -9,6 +9,10 @@ class Room extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'room_name';
+
+    public $incrementing = false;
+
     protected $fillable = [
         'room_name'
     ];
