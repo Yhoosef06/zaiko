@@ -2,7 +2,7 @@
 
 @section('content')
     @if (session('status'))
-        <div class="container alert text-center">
+        <div class="container alert bg-gradient-lightblue text-center">
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
@@ -31,7 +31,7 @@
                         <input type="text" id="first_name" name="first_name"
                             class="form-control @error('first_name')
                         border-danger @enderror"
-                            value="{{ old('first_name') }}" placeholder="Unit Number">
+                            value="{{ old('first_name') }}" placeholder="First Name">
                         @error('first_name')
                             <div class="text-danger">
                                 {{ $message }}
@@ -42,7 +42,7 @@
                         <input type="text" id="last_name" name="last_name"
                             class="form-control @error('last_name')
                         border-danger @enderror"
-                            value="{{ old('last_name') }}" placeholder="Unit Number">
+                            value="{{ old('last_name') }}" placeholder="Last Name">
                         @error('last_name')
                             <div class="text-danger">
                                 {{ $message }}

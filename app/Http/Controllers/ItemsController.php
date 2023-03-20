@@ -60,7 +60,6 @@ class ItemsController extends Controller
 
     public function saveNewItem(Request $request)
     {
-        // dd($request->inventory_tag);
         $this->validate($request, [
             'serial_number' => 'required|max:20',
             'location' => 'required',

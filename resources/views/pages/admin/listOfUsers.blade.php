@@ -16,7 +16,7 @@
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="submit">Search</button>
                         </div>
-                        <input type="search" class="form-control col-2" name="search" id="search" placeholder="">
+                        <input type="search" class="form-control col-2" name="query" id="query" placeholder="">
                         <a class="btn" href="{{ route('view_users') }}"><svg xmlns="http://www.w3.org/2000/svg"
                                 width="18" height="18" fill="currentColor" class="bi bi-repeat" viewBox="0 0 16 16">
                                 <path

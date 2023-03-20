@@ -25,7 +25,7 @@ class UserController extends Controller
 
     public function searchUser(Request $request)
     {
-        $search_text =$request->search;
+        $search_text =request('query');
 
         $users = User::where('id_number', 'LIKE', '%' . $search_text . '%')
             ->orWhere('first_name', 'LIKE', '%' . $search_text . '%')
@@ -48,7 +48,20 @@ class UserController extends Controller
     }
 
     public function saveNewUser(Request $request)
-    {
+    {    
+     
+        $this->validate(
+            $request,
+            [
+                'id_number' => 'required',
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'account_type' => 'required',
+                'account_status' => 'required',
+                'password' => 'required|confirmed',
+            ]
+        );
+
         $user = User::where('id_number', '=', $request->input('id_number'))->first();
         if ($user === null) {
             User::create([
