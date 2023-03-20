@@ -38,7 +38,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="10" class="text-right">
-                            <a href="" class="btn btn-danger"><i class="fa fa-arrow-left"></i>Continue Browsing Items</a>
+                            <a href="" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Continue Browsing Items</a>
                             <button class="btn btn-success"><i class="bi bi-check2"></i> Borrow Items</button>
                         </td>
                     </tr>

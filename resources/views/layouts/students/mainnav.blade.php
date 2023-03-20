@@ -52,13 +52,15 @@
             </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('signin.page') }}" role="button">
-                <strong>Logout</strong>
-            </a>
+            <form action="/logout" method="POST">
+                @csrf 
+                <button class="btn btn-link text-white" href="{{ route('logout') }}" role="button"> 
+                    <strong>Logout</strong>
+                </button>
+            </form>
+           
         </li>
         <li class="nav-item">
-
-
         </li>
     </ul>
 </nav>
