@@ -6,6 +6,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\BorrowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +62,11 @@ Route::middleware(['auth','user-role:student'])->group(function(){
             Route::get('/student-items','items')->name('student.items');
             Route::get('/student-borrowed-items', 'borrow')->name('student.borrow.items');
             Route::get('/view-item-{serial_number}','viewItemDetails')->name('student.view.item');
+
         });
+        //cart
+        Route::get('/student-cart/{serial_number}',[BorrowController::class, 'addToCart'])->name('student.cart');
+    
     });
     // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');
 });

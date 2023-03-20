@@ -1,3 +1,12 @@
+
+<div class="container">
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
+</div>
+
 <footer class="main-footer">
     <strong>Copyright &copy; 2022-2023 Zaiko.</strong>
     All rights reserved.

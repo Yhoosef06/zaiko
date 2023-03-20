@@ -19,6 +19,8 @@
             </div>
             <hr>
             <a href="{{ route('student.items') }}" class="btn btn-outline-dark">Back</a>
+            <a href="{{ route('student.cart', $item->serial_number) }}" class="btn btn-outline-dark">Add to borrow cart</a>
+
         </div>
     </div>
 @endsection
