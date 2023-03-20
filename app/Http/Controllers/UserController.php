@@ -97,17 +97,22 @@ class UserController extends Controller
         return view('pages.admin.changeUserPassword')->with('user', $user);
     }
 
-    public function saveUserNewPassword(Request $request)
+    public function saveUserNewPassword(Request $request, $id_number)
     {   
         $request->validate([
             // 'current_password' => ['required', new MatchOldPassword],
             'new_password' => 'required',
             'password_confirmation' => ['same:new_password'],
         ]);
-        
-        User::find(auth()->user()->id_number)->update(['password'=> Hash::make($request->new_password)]);
-       
-        return redirect('signin')->with('status', 'Password updated. Please login with new password.');
+    
+        User::find($id_number)->update(['password'=> Hash::make($request->new_password)]);
+
+        if ($id_number == auth()->user()->id_number) {
+            return redirect('signin')->with('status', 'Password updated. Please login with new password.');
+        } else {
+            return redirect('list-of-users')->with('status', 'User '.$id_number.' password updated successfully.');
+        }
+    
     }
     
 

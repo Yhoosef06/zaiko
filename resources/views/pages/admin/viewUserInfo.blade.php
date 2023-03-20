@@ -8,8 +8,17 @@
                     <strong>I.D. Number:</strong> {{ $user->id_number }} <br>
                     <strong>First Name:</strong> {{ $user->first_name }} <br>
                     <strong>Last Name:</strong> {{ $user->last_name }} <br>
-                    <strong>Account Type:</strong> {{ $user->account_type }} <br>
-                    <strong>Account Status:</strong> {{ $user->account_status }} <br>
+                    @if ($user->account_type == 'student')
+                        <strong>Account Type:</strong> {{ 'Student' }} <br>
+                    @else
+                        <strong>Account Type:</strong> {{ 'Admin' }} <br>
+                    @endif
+
+                    @if ($user->account_type == 'pending')
+                        <strong>Account Status:</strong> {{ 'Pending' }} <br>
+                    @else
+                        <strong>Account Status:</strong> {{ 'Approved' }} <br>
+                    @endif
                 </div>
 
                 <div class="col">
