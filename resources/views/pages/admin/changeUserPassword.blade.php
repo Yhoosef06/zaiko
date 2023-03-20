@@ -1,7 +1,7 @@
 @extends('pages.admin.home')
 
 @section('content')
-    <div class="col-lg-3 bg-light shadow-sm p-3">
+    <div class="col-lg-4 bg-light shadow-sm p-3">
         <label for="adding new item">
             <h1>Change Password</h1>
         </label>

@@ -2,7 +2,7 @@
 
 @section('content')
     <h4>List of All Items</h4>
-    <div class="content shadow-sm p-2">
+    <div class="content shadow-lg p-2">
         @if ($items->count())
             <table class="table">
                 @if (session('status'))

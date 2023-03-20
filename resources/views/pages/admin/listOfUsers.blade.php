@@ -2,7 +2,7 @@
 
 @section('content')
     <h4>List of Users</h4>
-    <div class="content shadow-sm p-2">
+    <div class="content shadow-lg p-2">
         @if ($users->count())
             <table class="table">
                 @if (session('status'))
@@ -54,15 +54,6 @@
                                 <td><span class="bg-success p-1 m-1" style="padding:10px">{{ 'Approved' }}</span>
                                 </td>
                             @endif
-
-                            {{-- btn user for status bg --}}
-                            {{-- @if ($user->account_status == 'pending')
-                                <td><span class="btn bg-warning p-1 m-1"
-                                        style="padding:10px">{{ $user->account_status }}</span></td>
-                            @else
-                                <td><span class="btn bg-success p-1 m-1"
-                                        style="padding:10px">{{ $user->account_status }}</span></td>
-                            @endif --}}
 
                             <td><a href="{{ route('view_user_info', $user->id_number) }}" class="text-success">View</a>/
                                 <a href="{{ route('edit_user_info', $user->id_number) }}">Edit</a>/

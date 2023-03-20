@@ -7,7 +7,7 @@
         </div>
     @endif
     <div class="container m-5">
-        <div class="col-lg-10 bg-light shadow-sm p-5">
+        <div class="col-lg-10 bg-light shadow-sm p-sm-2">
             <label for="adding new item">
                 <h1>Edit User Info</h1>
             </label>
@@ -16,17 +16,19 @@
                 @method('PUT')
                 <div class="row">
                     <div class="col">
-                        <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br>
-                        <label for="I.D. Number">I.D. Number:</label>
-                        <input type="text" id="id_number" name="id_number" value="{{ $user->id_number }}" disabled
-                            class="form-control col-sm-4 @error('id_number')
-                        border-danger
-                        @enderror">
-                        @error('id_number')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                        <span class="col-lg-3">
+                            <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br>
+                            <label for="I.D. Number">I.D. Number:</label>
+                            <input type="text" id="id_number" name="id_number" value="{{ $user->id_number }}" disabled
+                                class="form-control col-sm-4 @error('id_number')
+                            border-danger
+                            @enderror">
+                            @error('id_number')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </span>
 
                         <label for="first name">First Name:</label>
                         <input type="text" id="first_name" name="first_name"
@@ -34,17 +36,6 @@
                         border-danger @enderror"
                             value="{{ $user->first_name }}" placeholder="Unit Number">
                         @error('first_name')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                        <label for="last name">Last Name:</label>
-                        <input type="text" id="last_name" name="last_name"
-                            class="form-control @error('last_name')
-                        border-danger @enderror"
-                            value="{{ $user->last_name }}" placeholder="Unit Number">
-                        @error('last_name')
                             <div class="text-danger">
                                 {{ $message }}
                             </div>
@@ -61,6 +52,25 @@
                             @endif
                         </select>
 
+
+
+                        <hr>
+                        <a href="{{ route('view_users') }}" class="btn btn-outline-dark">Cancel</a>
+                        <Button type="submit" class="btn btn-success">Save</Button>
+                    </div>
+
+                    <div class="col">
+                        <label for="last name">Last Name:</label>
+                        <input type="text" id="last_name" name="last_name"
+                            class="form-control @error('last_name')
+                        border-danger @enderror"
+                            value="{{ $user->last_name }}" placeholder="Unit Number">
+                        @error('last_name')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                         <label for="account status">Account Status:</label>
                         <select id="account_status" name="account_status" class="form-control">
                             @if ($user->account_status == 'pending')
@@ -74,13 +84,6 @@
 
                         <a class="btn btn-dark" style="margin-top: 10px;"
                             href="{{ route('change_user_password', $user->id_number) }}">Change Password</a>
-                        
-                            <hr>
-                        <a href="{{ route('view_users') }}" class="btn btn-outline-dark">Cancel</a>
-                        <Button type="submit" class="btn btn-success">Submit</Button>
-                    </div>
-
-                    <div class="col">
 
                     </div>
 
