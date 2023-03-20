@@ -58,7 +58,7 @@ class UserController extends Controller
                 'last_name' => 'required',
                 'account_type' => 'required',
                 'account_status' => 'required',
-                'password' => 'required|confirmed',
+                'password' => 'required|confirmed|min:7',
             ]
         );
 

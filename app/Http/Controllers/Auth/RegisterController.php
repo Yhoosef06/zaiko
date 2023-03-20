@@ -21,7 +21,7 @@ class RegisterController extends Controller
             'id_number' => 'required|numeric',
             'first_name' => 'required',
             'last_name' => 'required',
-            'password' => 'required|confirmed',
+            'password' => 'required|confirmed|min:7',
             'front_of_id' => 'required',
             'back_of_id' => 'required'
         ]);
