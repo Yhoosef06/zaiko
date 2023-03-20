@@ -16,19 +16,18 @@
                 @method('PUT')
                 <div class="row">
                     <div class="col">
-                        <span class="col-lg-3">
-                            <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br>
-                            <label for="I.D. Number">I.D. Number:</label>
-                            <input type="text" id="id_number" name="id_number" value="{{ $user->id_number }}" disabled
-                                class="form-control col-sm-4 @error('id_number')
+                        <label for="I.D. Number">I.D. Number:</label>
+                        <input type="text" id="id_number" name="id_number" value="{{ $user->id_number }}" disabled
+                            class="form-control col-sm-4 @error('id_number')
                             border-danger
                             @enderror">
-                            @error('id_number')
-                                <div class="text-danger">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </span>
+                            <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br>
+                        @error('id_number')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
 
                         <label for="first name">First Name:</label>
                         <input type="text" id="first_name" name="first_name"
