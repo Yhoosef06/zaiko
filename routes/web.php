@@ -60,6 +60,7 @@ Route::middleware(['auth','user-role:student'])->group(function(){
             Route::get('/student-dashboard','index')->name('student.dashboard');
             Route::get('/student-items','items')->name('student.items');
             Route::get('/student-borrowed-items', 'borrow')->name('student.borrow.items');
+            Route::get('/view-item-{serial_number}','viewItemDetails')->name('student.view.item');
         });
     });
     // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');

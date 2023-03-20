@@ -24,4 +24,10 @@ class StudentController extends Controller
         return view('pages.students.borrowitems');
     }
 
+    public function viewItemDetails($serial_number)
+    {
+        $item = Item::find($serial_number);
+        return view('pages.students.viewItem')->with('item', $item);
+    }
+
 }
