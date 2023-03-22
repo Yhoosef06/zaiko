@@ -26,12 +26,12 @@
                 <tbody>
                     @if(session('cart'))
                         @foreach(session('cart') as $serial_number => $item)
-                        <tr data-id="{{ $serial_number }}">
+                        <tr data-id="{{ $serial_number}}">
                             <td class="text-wrap">{{ $item['unit_number'] }}</td>
                             <td class="text-wrap">{{ $item['item_name'] }}</td>
                             <td class="text-wrap">{{ $item['item_description'] }}</td>
-                            <td class="text-center">
-                                <button class="btn btn-danger btn-sm cart_remove"><i class="bi bi-x-circle"></i> Remove</button>
+                            <td class="text-center actions" data-id=" ">
+                                <button class="btn btn-danger btn-sm" id="cart_remove"><i class="bi bi-x-circle"></i> Remove</button>
                             </td>
                         </tr>
                         @endforeach
@@ -40,7 +40,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="10" class="text-right">
-                            <a href="" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Continue Browsing Items</a>
+                            <a href="{{ route('student.items') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Continue Browsing Items</a>
                             <button class="btn btn-success"><i class="bi bi-check2"></i> Borrow Items</button>
                         </td>
                     </tr>
