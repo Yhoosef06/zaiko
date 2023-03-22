@@ -32,12 +32,14 @@ class BorrowController extends Controller
 
     public function remove(Request $request){
         if($request->serial_number){
-            $cart = session()->get('cart');
-            if(isset($cart[$request->serial_number])){
-                unset($cart[$request->serial_number]);
-                session()->put('cart',$cart);
-            }
+            // $cart = session()->get('cart');
+            // if(isset($cart[$request->serial_number])){
+            //     unset($cart[$request->serial_number]);
+            //     session()->put('cart',$cart);
+            $request->session()->forget($request->serial_number);
+
             session()->flash('success','Item suceessfully removed.');
+            return redirect()->route('student.cart.list')->with('status', 'Item ' . ' removed successfully.');
         }
     }
 }

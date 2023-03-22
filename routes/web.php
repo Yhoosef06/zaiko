@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,10 +66,14 @@ Route::group(['middleware' => ['auth']], function(){
                 Route::get('/view-item-{serial_number}','viewItemDetails')->name('student.view.item');
     
             });
+
             //cart
-            Route::get('/student-cart/{serial_number}',[BorrowController::class, 'addToCart'])->name('student.cart');
+            Route::post('/student-add-cart/{serial_number}',[CartController::class, 'add_cart'])->name('add.cart');
+
+
             Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
             Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
+            Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
         
         });
         // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');
