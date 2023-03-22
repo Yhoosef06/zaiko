@@ -22,7 +22,7 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <span class="dropdown-item dropdown-header">{{ count((array) session('cart'))}} Items in cart</span> 
+                <span class="dropdown-item dropdown-header">{{ Cart::count(Auth::user()->id_number) }} Items in cart</span> 
 
                 @if(session('cart'))
                     @foreach(session('cart') as $serial_number => $item)

@@ -18,8 +18,13 @@
                 </div>
             </div>
             <hr>
+            <form action="{{ route('add.cart',$item->serial_number) }}" method="POST">
+                @csrf
+
+                <input type="submit" class="btn btn-outline-dark" value="Add to cart">
+            </form>
             <a href="{{ route('student.items') }}" class="btn btn-outline-dark">Back</a>
-            <a href="{{ route('student.cart', $item->serial_number) }}" class="btn btn-outline-dark">Add to borrow cart</a>
+            {{-- <a href="{{ route('student.cart', $item->serial_number) }}" class="btn btn-outline-dark">Add to borrow cart</a> --}}
 
         </div>
     </div>
