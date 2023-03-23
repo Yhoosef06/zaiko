@@ -10,7 +10,7 @@
             <br>
             <label for="">New Password:</label>
             <input type="password" name="new_password" id="new_password"
-                class="form-control password @error('new_password') border-danger @enderror" placeholder="Password">
+                class="form-control password @error('new_password') border-danger @enderror" placeholder="New Password">
             @error('new_password')
                 <div class="text-danger">
                     {{ $message }}
