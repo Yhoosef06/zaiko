@@ -18,7 +18,7 @@ class RoomController extends Controller
         $this->validate(
             $request,
             [
-                'room_name' => 'required'
+                'room_name' => 'required|regex:/[A-Z]/|min:3'
             ]
         );
         $room = Room::where('room_name', '=', $request->input('room_name'))->first();
