@@ -62,16 +62,16 @@ Route::group(['middleware' => ['auth']], function(){
             Route::controller(StudentController::class)->group(function(){
                 Route::get('/student-dashboard','index')->name('student.dashboard');
                 Route::get('/student-items','items')->name('student.items');
-                Route::get('/student-borrowed-items', 'borrow')->name('student.borrow.items');
                 Route::get('/view-item-{serial_number}','viewItemDetails')->name('student.view.item');
     
             });
 
             //cart
             Route::post('/student-add-cart/{serial_number}',[CartController::class, 'add_cart'])->name('add.cart');
+            Route::get('/student-cart-list',[CartController::class, 'cart_list'])->name('cart.list');
+            Route::get('/remove-cart/{serial_number}',[CartController::class, 'remove_cart'])->name('remove.cart');
 
-
-            Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
+            // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
             Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
             Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
         

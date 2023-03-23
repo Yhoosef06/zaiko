@@ -58,9 +58,9 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('student.borrow.items') }}" class="nav-link">
+                                    <a href="{{ route('cart.list') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Your Borrowed Items</p>
+                                        <p>Cart</p>
                                     </a>
                                 </li>    
                             </ul>

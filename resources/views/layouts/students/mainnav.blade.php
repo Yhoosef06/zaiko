@@ -11,7 +11,7 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <!-- Notifications Dropdown Menu -->
-        <li class="nav-item dropdown">
+        {{-- <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 @if(count((array) session('cart')) == 0 )
                     <i class="bi bi-cart"></i>
@@ -23,6 +23,7 @@
 
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <span class="dropdown-item dropdown-header">{{ Cart::count(Auth::user()->id_number) }} Items in cart</span> 
+                <span class="dropdown-item dropdown-header">{{ Cart::count() }} Items in cart</span> 
 
                 @if(session('cart'))
                     @foreach(session('cart') as $serial_number => $item)
@@ -42,15 +43,15 @@
                     @endforeach
                 @endif
                 <div class="dropdown-divider"></div>
-                <a href="{{ route('student.cart.list') }}" class="dropdown-item dropdown-footer">See All Items In Cart</a>
+                <a href="{{ route('cart.list') }}" class="dropdown-item dropdown-footer">See All Items In Cart</a>
 
                 {{-- <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                     <i class="fas fa-users mr-2"></i> 8 friend requests
                     <span class="float-right text-muted text-sm">12 hours</span>
                 </a> --}}
-            </div>
-        </li>
+            {{-- </div>
+        </li> --}}
         <li class="nav-item">
             <form action="/logout" method="POST">
                 @csrf 

@@ -32,4 +32,27 @@ class CartController extends Controller
 
         return redirect()->back();      
     }
+
+    public function cart_list(){
+
+        $id = Auth::user()->id_number;
+        $cart = Cart::where('id_number','=',$id)->get();
+
+        return view('pages.students.cart-list')->with(compact('cart'));
+
+    }
+
+    public function remove_cart($id){
+        
+        Cart::where('serial_number','=',$id)->delete();
+
+        session()->flash('success','Item suceessfully removed.');
+        return redirect()->back();
+    }
+
+    public function cart_notif(){
+
+        $id = Auth::user()->id_number;
+        $cart = Cart::where('id_number','=',$id)->count();
+    }
 }
