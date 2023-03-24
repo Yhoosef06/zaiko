@@ -54,5 +54,7 @@ class CartController extends Controller
 
         $id = Auth::user()->id_number;
         $cart = Cart::where('id_number','=',$id)->count();
+
+        
     }
 }
