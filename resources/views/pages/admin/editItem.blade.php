@@ -58,29 +58,6 @@
                         </div>
                     @enderror
 
-                    <label for="borrowed or not">Inventory Tag:</label>
-                    @if ($item->inventory_tag == 'with')
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='inventory_tag' name="inventory_tag" value="with" checked>
-                            With
-                        </label>
-                        /
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='inventory_tag' name="inventory_tag" value="without">
-                            Without
-                        </label>
-                    @else
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
-                            With
-                        </label>
-                        /
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
-                            Without
-                        </label>
-                    @endif
-
                 </div>
 
                 <div class="col">
@@ -127,7 +104,7 @@
                         <option value="Obsolete">Obsolete</option>
                     </select>
 
-                    <label for="borrowed or not">Is it borrowed or not?</label>
+                    {{-- <label for="borrowed or not">Is it borrowed or not?</label>
                     @if ($item->borrowed == 'no')
                         <label for="" class="radio-inline">
                             <input type="radio" id='borrowed' name="borrowed" value="no" checked>
@@ -147,6 +124,29 @@
                         <label for="" class="radio-inline">
                             <input type="radio" id='borrowed' name="borrowed" value="yes" checked>
                             Yes
+                        </label>
+                    @endif --}}
+
+                    <label for="borrowed or not">Inventory Tag:</label>
+                    @if ($item->inventory_tag == 'with')
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="with" checked>
+                            With
+                        </label>
+                        /
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="without">
+                            Without
+                        </label>
+                    @else
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
+                            With
+                        </label>
+                        /
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
+                            Without
                         </label>
                     @endif
 

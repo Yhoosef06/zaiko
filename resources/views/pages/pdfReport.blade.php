@@ -30,8 +30,9 @@
         margin-bottom: 20px;
     }
 
-    .signees {
-        column-count: 2;
+    .signee {
+        text-decoration: underline;
+        margin-top: 50px;
     }
 
     .column {
@@ -77,42 +78,60 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($items as $item)
-                    @if ($item->location == $location)
-                        <tr>
-                            <td>{{ $item->serial_number }}</td>
-                            <td>{{ $item->item_description }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>{{ $item->unit_number }}</td>
-                            <td>{{ $item->aquisition_date }}</td>
-                            <td style="font-size: 12px"><b>{{ $item->status }}</b></td>
-                            <td>{{ $item->inventory_tag }}</td>
-                        </tr>
-                    @endif
+                @foreach ($items->groupBy('unit_number') as $item)
+                    @foreach ($item as $index => $unit)
+                        @if ($unit->location == $location)
+                            @if ($index == 0)
+                                <tr>
+                                    <td>{{ $unit->serial_number }}</td>
+                                    <td>{{ $unit->item_description }}</td>
+                                    <td>{{ $unit->quantity }}</td>
+                                    <td rowspan="{{ count($item) }}">
+                                        {{ $unit->unit_number }}</td>
+                                    <td rowspan="{{ count($item) }}">{{ $unit->aquisition_date }}</td>
+                                    <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
+                                    <td>{{ $unit->inventory_tag }}</td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td>{{ $unit->serial_number }}</td>
+                                    <td>{{ $unit->item_description }}</td>
+                                    <td>{{ $unit->quantity }}</td>
+                                    <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
+                                    <td>{{ $unit->inventory_tag }}</td>
+                                </tr>
+                            @endif
+                        @endif
+                    @endforeach
                 @endforeach
             </tbody>
         </table>
+
         <div class="row">
             <div class="column">
                 Prepared By: <br>
                 <br>
-                ________________________ <br>
+                <span class="signee">{{ $prepared_by }}</span>
+                <br>
                 Main Office <br>
                 <br>
                 Noted By: <br>
                 <br>
-                _________________________ <br>
+                <span class="signee">{{ $lab_oic }}</span>
+                <br>
                 Laboratory OIC
             </div>
             <div class="column">
                 Verified By: <br>
                 <br>
-                ________________________ <br>
+                <span class="signee">{{ $verified_by }}</span>
+                <br>
                 Main Office <br>
                 <br>
                 <br>
                 <br>
-                _________________________ <br>
+                <span class="signee">{{ $it_specialist }}</span>
+                <br>
                 IT Specialist
             </div>
         </div>

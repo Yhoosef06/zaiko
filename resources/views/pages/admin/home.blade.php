@@ -99,7 +99,7 @@
             <!-- Main Sidebar Container -->
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
-                <a href="index3.html" class="brand-link">
+                <a href="#" class="brand-link">
                     <span class="brand-text text-center font-weight-light">
                         <H1>Zaiko.</H1>
                     </span>
@@ -129,7 +129,7 @@
                             <li class="nav-item menu-open">
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="./index.html" class="nav-link">
+                                        <a href="{{route('admin.dashboard')}}" class="nav-link">
                                             <i class="fas fa-circle nav-icon"></i>
                                             <p>Dashboard</p>
                                         </a>
@@ -208,18 +208,18 @@
                                         </a>
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
-                                                <a href="#" class="nav-link">
+                                                <a href="{{ route('add_user') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Add New User</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="#" class="nav-link">
+                                                <a href="{{ route('view_users') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>List of Users</p>
+                                                    <p>View All Users</p>
                                                 </a>
                                             </li>
-                                            <li class="nav-item">
+                                            {{-- <li class="nav-item">
                                                 <a href="#" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>
@@ -247,7 +247,7 @@
                                                         </a>
                                                     </li>
                                                 </ul>
-                                            </li>
+                                            </li> --}}
                                         </ul>
                                     </li>
                                     <li class="nav-item">
@@ -261,30 +261,30 @@
                                         <ul class="nav nav-treeview">
                                             <li class="nav-item">
                                                 <a href="#" class="nav-link">
-                                                    <i class="fas fa-dot-circle nav-icon"></i>
+                                                    <i class="far fa-circle nav-icon"></i>
                                                     <p>Option 1</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="#" class="nav-link">
-                                                    <i class="fas fa-dot-circle nav-icon"></i>
+                                                    <i class="far fa-circle nav-icon"></i>
                                                     <p>Option 2</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="#" class="nav-link">
-                                                    <i class="fas fa-dot-circle nav-icon"></i>
+                                                    <i class="far fa-circle nav-icon"></i>
                                                     <p>Option 3</p>
                                                 </a>
                                             </li>
                                         </ul>
                                     </li>
-                                    <li class="nav-item">
+                                    {{-- <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fas fa-circle nav-icon"></i>
                                             <p>Master List</p>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                             </li>
                         </ul>

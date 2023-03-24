@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class ItemsController extends Controller
 {
@@ -38,13 +40,13 @@ class ItemsController extends Controller
         $item = Item::find($serial_number);
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
+        $item->item_name = $request->item_name;
         $item->item_description = $request->item_description;
         $item->aquisition_date = $request->aquisition_date;
         $item->unit_number = $request->unit_number;
         $item->quantity = $request->quantity;
         $item->status = $request->status;
-        $item->borrowed = $request->borrowed;
-        $item->inventory_tag = $item->inventory_tag;
+        $item->inventory_tag = $request->inventory_tag;
         $item->update();
 
         return redirect('list-of-items')->with('status', 'Item ' . $serial_number . ' has been updated.');
@@ -59,7 +61,6 @@ class ItemsController extends Controller
 
     public function saveNewItem(Request $request)
     {
-        // dd($request->inventory_tag);
         $this->validate($request, [
             'serial_number' => 'required|max:20',
             'location' => 'required',
@@ -70,23 +71,28 @@ class ItemsController extends Controller
             'inventory_tag' => 'required',
             'quantity' => 'required|numeric',
             'status' => 'required',
-            'borrowed' => 'required'
         ]);
 
-        Item::create([
-            'serial_number' => $request->serial_number,
-            'location' => $request->location,
-            'item_name' => $request->item_name,
-            'item_description' => $request->item_description,
-            'aquisition_date' => $request->aquisition_date,
-            'unit_number' => $request->unit_number,
-            'inventory_tag' => $request->inventory_tag,
-            'quantity' => $request->quantity,
-            'status' => $request->status,
-            'borrowed' => $request->borrowed
-        ]);
+        $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
+        if ($item === null) {
 
-        return redirect('/adding-new-item')->with('status', 'Item Successfully Added! Do you want to add another item?');
+            Item::create([
+                'serial_number' => $request->serial_number,
+                'location' => $request->location,
+                'item_name' => $request->item_name,
+                'item_description' => $request->item_description,
+                'aquisition_date' => $request->aquisition_date,
+                'unit_number' => $request->unit_number,
+                'inventory_tag' => $request->inventory_tag,
+                'quantity' => $request->quantity,
+                'status' => $request->status,
+                'borrowed' => 'no'
+            ]);
+
+            return redirect('/adding-new-item')->with('status', 'Item Successfully Added! Do you want to add another item?');
+        } else {
+            return redirect('/adding-new-item')->with('status', 'Serial number is already been used.');
+        }
     }
 
     public function generateReportPage()
@@ -102,46 +108,62 @@ class ItemsController extends Controller
             [
                 'location' => 'required',
                 'purpose' => 'nullable',
-                'department' => 'required'
+                'department' => 'required',
+                'prepared_by' => 'required',
+                'verified_by' => 'required',
+                'lab_oic' => 'required',
+                'it_specialist' => 'required'
             ]
         );
 
         $purpose = $request->purpose;
         $department = $request->department;
         $location = $request->location;
+        $prepared_by = $request->prepared_by;
+        $verified_by = $request->verified_by;
+        $lab_oic = $request->lab_oic;
+        $it_specialist = $request->it_specialist;
+
         $items = Item::orderBy('unit_number', 'ASC')->get();
 
         if ($request->has('download')) {
             $pdf = App::make('dompdf.wrapper');
-            $pdf->loadView('pages.pdfReport', compact('items', 'purpose', 'location', 'department'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+            $pdf->loadView('pages.pdfReport', compact(
+                'items',
+                'purpose',
+                'location',
+                'prepared_by',
+                'verified_by',
+                'lab_oic',
+                'it_specialist',
+                'department'
+            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
 
             return $pdf->download('InventoryReport' . $location . '.pdf');
         }
 
-        return view('pages.pdfReport')->with(compact('items', 'location', 'purpose', 'department'));
+        return view('pages.pdfReport')->with(compact(
+            'items',
+            'location',
+            'purpose',
+            'prepared_by',
+            'verified_by',
+            'lab_oic',
+            'it_specialist',
+            'department'
+        ));
     }
-
     public function searchItem(Request $request)
     {
-        //     ['location', '!=', Null],
-        //     [function ($query) use ($request){
-        //         if (($variable = $request->variable)) {
-        //             $query->orWhere('location', 'LIKE', '%'.$variable.'%')->get();
-        //         }
-        //     }]
-        // ])
-        // ->orderBy('unit_number','asc')
-        // ->paginate(5); 
+        $search_text = request('query');
 
-        $items = Item::query();
-        dd($items);
-        if ($request->item) {
-            $items->where('location', 'LIKE', $request->item)
-                ->orderBy('serial_number', 'DESC')
-                ->paginate(5);
-            dd($items);
-            return view('pages.admin.listOfItems', compact('items'));
-        }
+        $items = Item::where('item_name', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('location', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('item_description', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')->orderBy('location', 'desc')->paginate(5);
+
+        // dd($items);
+        return view('pages.admin.listOfItems', compact('items', $items));
     }
 
     

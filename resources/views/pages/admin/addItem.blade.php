@@ -2,7 +2,7 @@
 
 @section('content')
     @if (session('status'))
-        <div class="container alert text-center text-success">
+        <div class="container alert bg-gradient-lightblue text-center text-sm">
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
@@ -14,15 +14,23 @@
             @csrf
             <div class="row">
                 <div class="col">
-                    <label for="location">Location:</label>
-                    <select id="location" name="location"
-                        class="form-control col-sm-5 @error('location')
-                        border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a location</option>
-                        @foreach ($rooms as $room)
-                            <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
-                        @endforeach
-                    </select>
+                    <label for="location">Location: </label>
+                    <div style="display:flex">
+                        <div>
+                            <select id="location" name="location"
+                                class="form-control @error('location')
+                                        border-danger @enderror">
+                                <option value="option_select" disabled selected>Select a location </option>
+                                @foreach ($rooms as $room)
+                                    <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <a class="btn text-blue" href="{{route('adding_new_room')}}"><i class="fa fa-plus-circle"></i></a>
+                        </div>
+                    </div>
 
                     @error('location')
                         <div class="text-danger">
@@ -57,17 +65,6 @@
                         </div>
                     @enderror
                     <p class="text-sm font-italic" style="font:italic">Type N/A or None if no unit number.</p>
-
-                    <label for="borrowed or not">Inventory Tag:</label>
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
-                        With
-                    </label>
-                    /
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
-                        Without
-                    </label>
                 </div>
 
                 <div class="col">
@@ -118,16 +115,17 @@
                         <option value="Obsolete">Obsolete</option>
                     </select>
 
-                    <label for="borrowed or not">Is it borrowed or not?</label>
+                    <label for="borrowed or not">Inventory Tag:</label>
                     <label for="" class="radio-inline">
-                        <input type="radio" id='borrowed' name="borrowed" value="no" checked>
-                        No
+                        <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
+                        With
                     </label>
                     /
                     <label for="" class="radio-inline">
-                        <input type="radio" id='borrowed' name="borrowed" value="yes">
-                        Yes
+                        <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
+                        Without
                     </label>
+
                     <hr>
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                     <Button type="submit" class="btn btn-success">Submit</Button>

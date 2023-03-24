@@ -10,13 +10,13 @@
         <label for="adding new item">
             <h1>Generate Inventory Report</h1>
         </label>
-        <form action="{{ route('download_pdf', ['download'=>'pdf']) }}" method="POST">
+        <form action="{{ route('download_pdf', ['download' => 'pdf']) }}" method="POST">
             @csrf
-            <div class="container">
-                <div class="wrapper p-3">
+            <div class="row">
+                <div class="col">
                     <label for="location">Room / Location:</label>
                     <select id="location" name="location"
-                        class="form-control col-sm-5 @error('location')
+                        class="form-control col-sm-8 @error('location')
                         border-danger @enderror">
                         <option value="option_select" disabled selected>Select a location</option>
                         @foreach ($rooms as $room)
@@ -31,7 +31,8 @@
                     @enderror
 
                     <label for="Purpose">Purpose:</label>
-                    <input type="text" id="purpose" name="purpose" value="FOR SOFE, COMPUTER & PERI., TOOLS, LAB. EQUIP., VEHICLE, ETC."
+                    <input type="text" id="purpose" name="purpose"
+                        value="FOR SOFE, COMPUTER & PERI., TOOLS, LAB. EQUIP., VEHICLE, ETC."
                         class="form-control @error('purpose')
                     border-danger
                     @enderror"
@@ -55,6 +56,47 @@
                     <hr>
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                     <Button type="submit" class="btn btn-success">Generate</Button>
+                </div>
+                <div class="col">
+                    <label for="prepared_by">Prepared By:</label>
+                    <input placeholder="Name of staff/faculty member" type="text" id="prepared_by" name="prepared_by"
+                    value="{{ old('prepared_by') }}"    class="form-control @error('prepared_by')
+                    border-danger @enderror">
+                    @error('prepared_by')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="verified_by">Verified By:</label>
+                    <input placeholder="Name of staff/faculty member" type="text" id="verified_by" name="verified_by"
+                    value="{{ old('verified_by') }}"    class="form-control @error('verified_by')
+                    border-danger @enderror">
+                    @error('verified_by')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="lab_oic">Laboratory OIC:</label>
+                    <input placeholder="Name of staff/faculty member" type="text" id="lab_oic" name="lab_oic"
+                    value="{{ old('lab_oic') }}"    class="form-control @error('lab_oic')
+                    border-danger @enderror">
+                    @error('lab_oic')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="it_specialist">IT Specialist:</label>
+                    <input placeholder="Name of staff/faculty member" type="text" id="it_specialist" name="it_specialist"
+                    value="{{ old('it_specialist') }}"    class="form-control @error('it_specialist')
+                    border-danger @enderror">
+                    @error('it_specialist')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
             </div>
         </form>
