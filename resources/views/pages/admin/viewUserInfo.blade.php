@@ -14,7 +14,7 @@
                         <strong>Account Type:</strong> {{ 'Admin' }} <br>
                     @endif
 
-                    @if ($user->account_type == 'pending')
+                    @if ($user->account_status == 'pending')
                         <strong>Account Status:</strong> {{ 'Pending' }} <br>
                     @else
                         <strong>Account Status:</strong> {{ 'Approved' }} <br>
