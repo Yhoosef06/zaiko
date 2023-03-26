@@ -131,7 +131,7 @@
 
                     <hr>
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                    <Button type="submit" class="btn btn-success">Submit</Button>
+                    <Button type="submit" class="btn btn-success">Add to Inventory</Button>
                 </div>
             </div>
         </form>

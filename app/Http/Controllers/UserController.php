@@ -39,7 +39,7 @@ class UserController extends Controller
     public function viewUserInfo($id_number)
     {
         $user = User::find($id_number);
-        return view('pages.admin.viewUserInfo')->with('user', $user);
+        return view('pages.admin.viewUserInfo')->with(compact('user'));
     }
 
     public function addUser()

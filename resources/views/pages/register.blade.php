@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
     <style>
         body {
@@ -19,6 +18,11 @@
                 {{ $message }}
             </div>
         @enderror
+        @if (session('status'))
+            <div class="text-danger">
+                {{ session('status') }}
+            </div>
+        @endif
 
 
         <label for="" class="sr-only">First Name</label>
@@ -67,7 +71,8 @@
         @enderror
 
         <label for="" class="sr-only">Upload Back of ID</label>
-        <input type="file" name="back_of_id" id="back_of_id" class="form-control @error('back_of_id') border-danger @enderror" placeholder="Upload Back of ID">
+        <input type="file" name="back_of_id" id="back_of_id"
+            class="form-control @error('back_of_id') border-danger @enderror" placeholder="Upload Back of ID">
         @error('back_of_id')
             <div class="text-danger">
                 {{ $message }}
@@ -75,7 +80,7 @@
         @enderror
 
         <hr>
-        <a href="{{ route('signin') }}" class="btn btn-md btn-outline-success">Cancel</a>
+        <a href="{{ route('signin.page') }}" class="btn btn-md btn-outline-success">Cancel</a>
         <button class="btn btn-md btn-success btn-block" type="submit">Submit</button>
     </form>
 @endsection

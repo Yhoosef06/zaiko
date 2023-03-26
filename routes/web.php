@@ -21,7 +21,7 @@ use App\Http\Controllers\UserController;
 
 
 Route::get('/register', [RegisterController::class,'index'])->name('register');
-Route::post('/register', [RegisterController::class,'store']);
+Route::post('/register', [RegisterController::class,'store'])->name('register_user');
 
 Route::get('/signin', [SignInController::class,'index'])->name('signin');
 Route::post('/signin', [SignInController::class,'store']);

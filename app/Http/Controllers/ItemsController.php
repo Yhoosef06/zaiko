@@ -140,6 +140,10 @@ class ItemsController extends Controller
             ->orWhere('item_description', 'LIKE', '%' . $search_text . '%')
             ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')->paginate(5);
 
+<<<<<<< Updated upstream
+=======
+        // dd($items);
+>>>>>>> Stashed changes
         return view('pages.admin.listOfItems', compact('items'));
     }
 }

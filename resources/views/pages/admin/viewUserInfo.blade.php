@@ -14,7 +14,8 @@
 
                 <div class="col">
                     <strong>Front of ID:</strong> {{ $user->front_of_id }} <br>
-                    <strong>Back of ID:</strong> {{ $user->back_of_id }} <br>
+                    <img src="{{ asset('storage/'.$user->front_of_id) }}" style="max-width: 200px">
+                    
                 </div>
             </div>
             <hr>
