@@ -22,7 +22,7 @@
                 </div>
             @endif
             <hr>
-            <a href="{{ route('add_item') }}" class="btn btn-outline-dark">Go Back</a>
+            <a href="{{ route('add_item') }}" class="btn btn-outline-dark">Back</a>
             <Button type="submit" class="btn btn-success">Save</Button>
         </form>
     </div>
