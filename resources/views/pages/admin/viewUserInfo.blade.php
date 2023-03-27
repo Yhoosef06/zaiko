@@ -14,7 +14,7 @@
                         <strong>Account Type:</strong> {{ 'Admin' }} <br>
                     @endif
 
-                    @if ($user->account_type == 'pending')
+                    @if ($user->account_status == 'pending')
                         <strong>Account Status:</strong> {{ 'Pending' }} <br>
                     @else
                         <strong>Account Status:</strong> {{ 'Approved' }} <br>
@@ -22,7 +22,8 @@
                 </div>
 
                 <div class="col">
-                    <strong>Front of ID:</strong> {{ $user->front_of_id }} <br>
+                    {{-- <strong>Front of ID:</strong> {{ $user->front_of_id }} <br> --}}
+                    <strong>Front of ID:</strong> <img src="storage/app/{{$user->front_of_id}}" style="width: 150px" alt=""> <br>
                     <strong>Back of ID:</strong> {{ $user->back_of_id }} <br>
                 </div>
             </div>

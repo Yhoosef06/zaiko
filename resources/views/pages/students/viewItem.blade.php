@@ -1,4 +1,4 @@
-@extends('layouts.students.yields')
+@extends('layouts.pages.yields')
 
 @section('content')
     <div class="container shadow-lg">

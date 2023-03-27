@@ -21,7 +21,7 @@
                         
                     </div>
                     
-                    <a href="/signin"><button class="w-100 btn btn-lg btn-success" type="submit">Sign In</button></a>
+                    <a href="/"><button class="w-100 btn btn-lg btn-success" type="submit">Sign In</button></a>
                     <hr>
             </div>
         </div>

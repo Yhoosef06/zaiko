@@ -30,6 +30,7 @@
        with font-awesome or any other icon font library -->
                 <li class="nav-item menu-open">
                     <ul class="nav nav-treeview">
+                        @if( \Auth::user()->account_type == 'student' )
                         <li class="nav-item">
                             <a href="/student-dashboard" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
@@ -64,9 +65,8 @@
                                     </a>
                                 </li>    
                             </ul>
-
-
                         </li>
+                        @endif
                     </ul>
                 </li>
 </aside>

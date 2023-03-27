@@ -37,7 +37,7 @@ class RegisterController extends Controller
             'account_status' => 'pending'
         ]);
 
-        return redirect('/signin')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
+        return redirect('/')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
     }
 
     public function create_admin(){
