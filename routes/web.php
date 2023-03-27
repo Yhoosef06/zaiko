@@ -1,16 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ItemsController;
-use App\Http\Controllers\PagesController;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\Auth\SignInController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\BorrowController;
-use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\QRController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\PagesController;
+use App\Http\Controllers\BorrowController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\Auth\SignInController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------

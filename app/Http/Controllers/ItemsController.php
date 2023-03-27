@@ -140,6 +140,7 @@ class ItemsController extends Controller
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
 
             return $pdf->download('InventoryReport' . $location . '.pdf');
+
         }
 
         return view('pages.pdfReport')->with(compact(
