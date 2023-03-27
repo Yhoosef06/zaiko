@@ -30,6 +30,8 @@ Route::post('/register', [RegisterController::class,'store']);
 Route::get('/', [SignInController::class,'index'])->name('signin.page');
 Route::post('/signin', [SignInController::class,'store'])->name('signin');
 
+Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
+
 
 Route::group(['middleware' => ['auth']], function(){
     // Route::middleware(['user-role:admin'])->group(function(){
@@ -129,11 +131,6 @@ Route::group(['middleware' => ['auth']], function(){
             });
             // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');
         });
-
-
-        //LOGOUT
-        Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
-
 
     });
 

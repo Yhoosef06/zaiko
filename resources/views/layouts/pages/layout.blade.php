@@ -35,7 +35,13 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     {{-- display content --}}
     @yield('nav')
-    @yield('content')
+    <div class="content-wrapper p-5">
+        <div class="content-header">
+            <div class="container-fluid"> 
+                @yield('content')
+            </div>
+        </div>
+    </div>
     @yield('footer')
     @yield('script')
 </body>

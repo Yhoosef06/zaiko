@@ -1,4 +1,4 @@
-@extends('pages.admin.home')
+@extends('layouts.pages.yields')
 
 @section('content')
     <h4>List of Users</h4>

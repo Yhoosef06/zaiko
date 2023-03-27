@@ -13,7 +13,7 @@ class PagesController extends Controller
     public function index()
     {
         //admin
-        return view('pages.admin.home');
+        return view('pages.admin.dashboard');
     }
 
     public function approve(){

@@ -1,4 +1,4 @@
-@extends('pages.admin.home')
+@extends('layouts.pages.yields')
 
 @section('content')
     <div class="container shadow-lg">

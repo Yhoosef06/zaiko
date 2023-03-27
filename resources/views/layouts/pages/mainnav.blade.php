@@ -53,6 +53,10 @@
             {{-- </div>
         </li> --}}
         <li class="nav-item">
+            {{-- <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Welcome</a> --}}
+            <span class="navbar-brand">{{Auth::user()->first_name}}  {{Auth::user()->last_name}}</span>
+          </li>
+        <li class="nav-item">
             <form action="/logout" method="POST">
                 @csrf 
                 <button class="btn btn-link text-white" href="{{ route('logout') }}" role="button"> 
