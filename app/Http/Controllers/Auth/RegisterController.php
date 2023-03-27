@@ -27,7 +27,7 @@ class RegisterController extends Controller
         ]);
 
 
-        
+
         $user = User::where('id_number', '=', $request->input('id_number'))->first();
 
         if ($user === null) {
@@ -36,19 +36,25 @@ class RegisterController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'password' => Hash::make($request->password),
-                'front_of_id' => $request->file('front_of_id')->store(('ids')),
-                'back_of_id' => $request->file('back_of_id')->store(('ids')),
+
+                'front_of_id' =>  $request->file('front_of_id')->storeAs(
+                    'ids',
+                    $request->id_number . 'frontID.' . $request->file('front_of_id')->getClientOriginalExtension(),
+                    'public',
+                ),
+
+                'back_of_id' =>  $request->file('back_of_id')->storeAs(
+                    'ids',
+                    $request->id_number . 'backID.' . $request->file('back_of_id')->getClientOriginalExtension(),
+                    'public',
+                ),
                 'account_type' => 'student',
                 'account_status' => 'pending'
             ]);
-    
+
             return redirect('/')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
         } else {
             return redirect('register')->with('status', 'That ID number has already been registered');
         }
-    }
-
-    public function create_admin(){
-        //
     }
 }

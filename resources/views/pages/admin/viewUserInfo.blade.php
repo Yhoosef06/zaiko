@@ -22,8 +22,29 @@
                 </div>
 
                 <div class="col">
-                    <strong>Front of ID:</strong> {{ $user->front_of_id }} <br>
-                    <strong>Back of ID:</strong> {{ $user->back_of_id }} <br>
+                    <strong>Front of ID:</strong><br>
+                    @if ($user->front_of_id === 'null')
+                        <div class="border border-1" style="height: 120px; width:100px">
+                            <p class="mt-5 text-sm text-center">
+                                No image.
+                            </p>
+                        </div>
+                    @else
+                        <img src="{{ asset('storage/ids/' . $user->id_number . 'frontID.jpg') }}"
+                            style="height:120px; width: 100px">
+                    @endif
+                    <br>
+                    <strong>Back of ID:</strong> <br>
+                    @if ($user->back_of_id === 'null')
+                        <div class="border border-1" style="height: 120px; width:100px">
+                            <p class="mt-5 text-sm text-center">
+                                No image.
+                            </p>
+                        </div>
+                    @else
+                        <img src="{{ asset('storage/ids/' . $user->id_number . 'backID.jpg') }}"
+                            style="height:120px; width: 100px">
+                    @endif
                 </div>
             </div>
             <hr>
