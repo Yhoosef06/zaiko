@@ -106,7 +106,6 @@
                 @endforeach
             </tbody>
         </table>
-
         <div class="row">
             <div class="column">
                 Prepared By: <br>
