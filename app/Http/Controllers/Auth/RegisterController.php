@@ -48,6 +48,7 @@ class RegisterController extends Controller
                     $request->id_number . 'backID.' . $request->file('back_of_id')->getClientOriginalExtension(),
                     'public',
                 ),
+                
                 'account_type' => 'student',
                 'account_status' => 'pending'
             ]);
