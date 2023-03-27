@@ -26,18 +26,26 @@ class RegisterController extends Controller
             'back_of_id' => 'required'
         ]);
 
-        User::create([
-            'id_number' => $request->id_number,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'password' => Hash::make($request->password),
-            'front_of_id' => $request->file('front_of_id')->store(('ids')),
-            'back_of_id' => $request->file('back_of_id')->store(('ids')),
-            'account_type' => 'student',
-            'account_status' => 'pending'
-        ]);
 
-        return redirect('/signin')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
+        
+        $user = User::where('id_number', '=', $request->input('id_number'))->first();
+
+        if ($user === null) {
+            User::create([
+                'id_number' => $request->id_number,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'password' => Hash::make($request->password),
+                'front_of_id' => $request->file('front_of_id')->store(('ids')),
+                'back_of_id' => $request->file('back_of_id')->store(('ids')),
+                'account_type' => 'student',
+                'account_status' => 'pending'
+            ]);
+    
+            return redirect('/')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
+        } else {
+            return redirect('register')->with('status', 'That ID number has already been registered');
+        }
     }
 
     public function create_admin(){
