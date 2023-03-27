@@ -1,4 +1,4 @@
-@extends('pages.admin.home')
+@extends('layouts.pages.yields')
 
 @section('content')
     <div class="col-lg-4 bg-light shadow-sm p-3">
