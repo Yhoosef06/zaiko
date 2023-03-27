@@ -1,18 +1,18 @@
 @extends('layouts.pages.yields')
 
-
-@section('content')
-    <div class="wrapper">
-        <div class="content-wrapper">
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Items in Cart</h1>
-                        </div>
-                    </div>
+@section('content-header')
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Items in Cart</h1>
                 </div>
             </div>
+        </div>
+    </div>
+@endsection
+
+@section('content')
             <table id="cart" class="table">
 
                 <thead>
@@ -47,7 +47,5 @@
                     </tr>
                 </tfoot>
             </table>
-        </div>
-    </div>
 
 @endsection
