@@ -164,7 +164,7 @@ class ItemsController extends Controller
             ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')->orderBy('location', 'desc')->paginate(5);
 
         // dd($items);
-        return view('pages.admin.listOfItems', compact('items', $items));
+        return view('pages.admin.listOfItems', compact('items'));
     }
     
 }
