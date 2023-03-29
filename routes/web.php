@@ -123,10 +123,12 @@ Route::group(['middleware' => ['auth']], function(){
                 Route::post('/student-add-cart/{serial_number}',[CartController::class, 'add_cart'])->name('add.cart');
                 Route::get('/student-cart-list',[CartController::class, 'cart_list'])->name('cart.list');
                 Route::get('/remove-cart/{serial_number}',[CartController::class, 'remove_cart'])->name('remove.cart');
+                Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
+
 
                 // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
-                Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
-                Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
+                // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
+                // Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
             
             });
             // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');
