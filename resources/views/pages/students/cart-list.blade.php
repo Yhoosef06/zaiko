@@ -1,18 +1,18 @@
 @extends('layouts.pages.yields')
 
-
-@section('content')
-    <div class="wrapper">
-        <div class="content-wrapper">
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Items in Cart</h1>
-                        </div>
-                    </div>
+@section('content-header')
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Items in Cart</h1>
                 </div>
             </div>
+        </div>
+    </div>
+@endsection
+
+@section('content')
             <table id="cart" class="table">
 
                 <thead>
@@ -42,12 +42,11 @@
                     <tr>
                         <td colspan="10" class="text-right">
                             <a href="{{ route('student.items') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Continue Browsing Items</a>
-                            <button class="btn btn-success"><i class="bi bi-check2"></i> Borrow Items</button>
+                            <a href="{{ route('order.cart') }}" class="btn btn-success"><i class="fa fa-arrow-right"></i> Borrow Items</a>
+                           
                         </td>
                     </tr>
                 </tfoot>
             </table>
-        </div>
-    </div>
 
 @endsection
