@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class BorrowController extends Controller
@@ -41,5 +42,25 @@ class BorrowController extends Controller
             session()->flash('success','Item suceessfully removed.');
             return redirect()->route('student.cart.list')->with('status', 'Item ' . ' removed successfully.');
         }
+    }
+   
+
+
+    public function borrowed(){
+        $borrows = ORDER::where('order_status', '=', 'borrowed')->get();
+
+        return view('pages.admin.borrowed')->with(compact('borrows'));
+    }
+
+    public function pending(){
+        $pendings = ORDER::where('order_status', '=', 'pending')->get();
+
+        return view('pages.admin.pending')->with(compact('pendings'));
+    }
+
+    public function forReturn(){
+        $forReturns = ORDER::where('order_status', '=', 'for return')->get();
+
+        return view('pages.admin.for-return')->with(compact('forReturns'));
     }
 }
