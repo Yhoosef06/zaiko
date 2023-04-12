@@ -1,7 +1,8 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    <h4>List of All Items</h4>
+<div class="content-header">
+    <h4>Return Items</h4>
     <div class="content shadow-lg p-2">
         @if ($forReturns->count())
             <table class="table">
@@ -107,5 +108,6 @@
                 Data not found.
             </div>
         @endif
+    </div>
     </div>
 @endsection

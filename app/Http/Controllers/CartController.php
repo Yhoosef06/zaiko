@@ -63,6 +63,8 @@ class CartController extends Controller
     public function order_cart(){
 
         $user = Auth::user()->id_number;
+        $usernames = Auth::user();
+        // dd($usernames);
 
         $data = Cart::where('id_number', '=', $user)->get();
 
@@ -72,15 +74,21 @@ class CartController extends Controller
                     $order = new Order;
     
                     $order->id_number = $data->id_number;
+                    $order->first_name = $usernames->first_name;
+                    $order->last_name = $usernames->last_name;
                     $order->serial_number = $data->serial_number;
                     $order->item_name = $data->item_name;
                     $order->item_description = $data->item_description;
                     $order->order_status = "pending";
                     
                     $data->ordered = "yes";
+
+                    // dd($order);
                     
                     $data->update();
                     $order->save();
+
+                    
 
                     session()->flash('success','Your borrowing order is already in process.. Please go to the SCS office within 1 day to proceed to your borrowing process');
                 }else{
@@ -90,6 +98,8 @@ class CartController extends Controller
                 }
                
             }
+
+           
 
         return redirect()->route('student.dashboard');
     }

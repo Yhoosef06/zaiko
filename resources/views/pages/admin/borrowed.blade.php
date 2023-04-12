@@ -1,50 +1,53 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    <h4>List of All Items</h4>
-    <div class="content shadow-lg p-2">
-        @if ($borrows->count())
-            <table class="table">
-                @if (session('status'))
-                    <div class="container alert text-center">
-                        <h4>{{ session('status') }}</h4>
-                    </div>
-                @endif
-                <form action="{{ route('filtered_view') }}" type="get" method="get" role="search">
-                    @csrf
-                    <div class="input-group mb-3 d-flex flex-row-reverse">
 
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit">Search</button>
-                        </div>
-                        <input type="search" class="form-control col-2" name="query" id="query" placeholder="">
+<section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Manage Borrowings</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+</section>
 
-                        <a class="btn" href="{{ route('view_items') }}"><svg xmlns="http://www.w3.org/2000/svg"
-                                width="18" height="18" fill="currentColor" class="bi bi-repeat" viewBox="0 0 16 16">
-                                <path
-                                    d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192Zm3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z" />
-                            </svg></a>
-                    </div>
-                </form>
-                <thead>
-                    <tr>
-                        <th scope="col">Serial #</th>
-                        <th scope="col">Item Name</th>
-                        <th scope="col">Item Description</th>
-                        <!-- <th scope="col">Qty.</th> -->
-                        <!-- <th scope="col">Location</th> -->
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($borrows as $borrow)
-                        <tr>
-                            <th>{{ $borrow->serial_number }}</th>
-                            <td>{{ $borrow->item_name }}</td>
-                            <td>{{ Str::limit($borrow->item_description, 20, '...') }}</td>
-                            <td><a href="#">
+<section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+           
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Borrowed Items</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>Serial #</th>
+                    <th>Name</th>
+            
+                    <th>Item Name</th>
+                    <th>Item Description</th>
+                    <th>Actions</th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                 
+                  @foreach ($borrows as $borrow)
+                      <tr>
+                          <td>{{ $borrow->serial_number }}</td>
+                          <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
+                          <td>{{ $borrow->item_name }}</td>
+                          <td>{{ Str::limit($borrow->item_description, 20, '...') }}</td>
+                      
+                          <td><a href="#" class="btn btn-sm btn-primary">
                                     <i class="fa fa-eye"></i></a>
-                                <a href="3">
+                                <a href="3" class="btn btn-sm btn-warning">
                                     <i class="fa fa-edit"></i></a>
 
                                 <!-- Button to Open the Modal -->
@@ -83,29 +86,25 @@
                                 </div>
 
                             </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-           
-        @else
-            <div class="text-center">
-                <form action="{{ route('filtered_view') }}" type="get" method="get" role="search">
-                    @csrf
-                    <div class="input-group mb-3 d-flex flex-row-reverse">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit">Search</button>
-                        </div>
-                        <input type="text" class="form-control col-2" name="query" id="query" placeholder="">
-                        <a class="btn" href="{{ route('view_items') }}"><svg xmlns="http://www.w3.org/2000/svg"
-                                width="18" height="18" fill="currentColor" class="bi bi-repeat" viewBox="0 0 16 16">
-                                <path
-                                    d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192Zm3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z" />
-                            </svg></a>
-                    </div>
-                </form>
-                Data not found.
+                      </tr>
+                  @endforeach
+                  </tbody>
+                 
+                </table>
+              </div>
+              <!-- /.card-body -->
             </div>
-        @endif
-    </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+
+
+
+
+    
 @endsection

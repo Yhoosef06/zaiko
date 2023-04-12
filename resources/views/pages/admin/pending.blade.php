@@ -1,7 +1,8 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    <h4>List of All Items</h4>
+<div class="content-header">
+    <h4>Pending Items</h4>
     <div class="content shadow-lg p-2">
         @if ($pendings->count())
             <table class="table">
@@ -31,8 +32,7 @@
                         <th scope="col">Serial #</th>
                         <th scope="col">Item Name</th>
                         <th scope="col">Item Description</th>
-                        <!-- <th scope="col">Qty.</th> -->
-                        <!-- <th scope="col">Location</th> -->
+                       
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -108,4 +108,5 @@
             </div>
         @endif
     </div>
+ </div>
 @endsection
