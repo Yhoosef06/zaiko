@@ -155,7 +155,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('for-return') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Return</p>
+                                        <p>Returned</p>
                                     </a>
                                 </li>
                             </ul>
