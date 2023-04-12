@@ -126,6 +126,9 @@ Route::group(['middleware' => ['auth']], function(){
                 Route::get('/remove-cart/{serial_number}',[CartController::class, 'remove_cart'])->name('remove.cart');
                 Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
 
+                //agreement
+                Route::get('/agreement', [StudentController::class, 'agreement'])->name('agreement');
+
 
                 // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
                 // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');

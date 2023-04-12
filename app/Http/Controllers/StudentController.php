@@ -30,4 +30,8 @@ class StudentController extends Controller
         return view('pages.students.viewItem')->with('item', $item);
     }
 
+    public function agreement(){
+        return view('pages.students.agreement');
+    }
+
 }

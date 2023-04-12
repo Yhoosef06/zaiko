@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('back_of_id');
             $table->string('account_type');
             $table->string('account_status');
+            $table->boolean('agreement');
             $table->rememberToken();
             $table->timestamps();
         });
