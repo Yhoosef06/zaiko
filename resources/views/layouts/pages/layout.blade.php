@@ -48,6 +48,11 @@
    
     <div class="wrapper">
         <div class="content-wrapper">
+        @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
             @yield('content-header')
             @yield('content')
         </div>
@@ -58,6 +63,15 @@
     @yield('footer')
     @yield('script')
 </body>
+<!-- <script>
+@if(Session::has('success'))
+    $(document).ready(function(){
+        $('#success-message').addClass('alert alert-success').html('{{ Session::get('success') }}');
+        $('#success-message').delay(5000).fadeOut('slow');
+    });
+@endif
+</script> -->
+
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->

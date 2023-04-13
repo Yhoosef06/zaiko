@@ -67,12 +67,10 @@ class CartController extends Controller
         // dd($usernames);
 
         $data = Cart::where('id_number', '=', $user)->get();
-
-
             foreach($data as $data){
-                if($data->ordered == 'no'){
+                
+                // if($data->ordered == 'no'){
                     $order = new Order;
-    
                     $order->id_number = $data->id_number;
                     $order->first_name = $usernames->first_name;
                     $order->last_name = $usernames->last_name;
@@ -81,21 +79,22 @@ class CartController extends Controller
                     $order->item_description = $data->item_description;
                     $order->order_status = "pending";
                     
-                    $data->ordered = "yes";
-
+                    $affectedRows = Item::where('serial_number','=',$data->serial_number)->update(['borrowed' => 'pending']);
+                    
                     // dd($order);
                     
-                    $data->update();
                     $order->save();
+                    $data->delete();
 
                     
 
                     session()->flash('success','Your borrowing order is already in process.. Please go to the SCS office within 1 day to proceed to your borrowing process');
-                }else{
-                    session()->flash('success','You have already submitted a borrow request.');
-                    break;
+                // }
+                // else{
+                //     session()->flash('success','You have already submitted a borrow request.');
+                //     break;
                     
-                }
+                // }
                
             }
 
