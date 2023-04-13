@@ -67,7 +67,7 @@ class CartController extends Controller
 
         $data = Cart::where('id_number', '=', $user)->get();
 
-        if(!($usernames->agreement)){
+        if(($usernames->agreement == true)){
             foreach($data as $data){
                 if($data->ordered == 'no'){
                     $order = new Order;
@@ -98,4 +98,6 @@ class CartController extends Controller
 
         return redirect()->route('student.dashboard');
     }
+
+    
 }
