@@ -16,10 +16,11 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('id_number');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('serial_number');
             $table->string('item_name');
             $table->string('item_description');
-
             $table->string('order_status');
             $table->timestamps();
         });

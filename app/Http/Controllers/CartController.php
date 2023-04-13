@@ -63,15 +63,18 @@ class CartController extends Controller
     public function order_cart(){
 
         $user = Auth::user()->id_number;
+        $usernames = Auth::user();
 
         $data = Cart::where('id_number', '=', $user)->get();
 
-
+        if(($usernames->agreement == true)){
             foreach($data as $data){
                 if($data->ordered == 'no'){
                     $order = new Order;
     
                     $order->id_number = $data->id_number;
+                    $order->first_name = $usernames->first_name;
+                    $order->last_name = $usernames->last_name;
                     $order->serial_number = $data->serial_number;
                     $order->item_name = $data->item_name;
                     $order->item_description = $data->item_description;
@@ -87,10 +90,14 @@ class CartController extends Controller
                     session()->flash('success','You have already submitted a borrow request.');
                     break;
                     
-                }
-               
+                }              
             }
+        }else{
+            return redirect()->route('agreement');
+        }
 
         return redirect()->route('student.dashboard');
     }
+
+    
 }
