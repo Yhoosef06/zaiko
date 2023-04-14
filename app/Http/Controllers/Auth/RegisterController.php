@@ -19,8 +19,8 @@ class RegisterController extends Controller
         // @dd($request);
         $this->validate($request, [
             'id_number' => 'required|numeric',
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|regex:/^([^0-9]*)$/',
+            'last_name' => 'required|regex:/^([^0-9]*)$/',
             'password' => 'required|confirmed|min:7',
             'front_of_id' => 'required',
             'back_of_id' => 'required'

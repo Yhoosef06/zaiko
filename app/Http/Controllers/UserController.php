@@ -53,9 +53,9 @@ class UserController extends Controller
         $this->validate(
             $request,
             [
-                'id_number' => 'required',
-                'first_name' => 'required',
-                'last_name' => 'required',
+                'id_number' => 'required|numeric',
+                'first_name' => 'required|regex:/^([^0-9]*)$/',
+                'last_name' => 'required|regex:/^([^0-9]*)$/',
                 'account_type' => 'required',
                 'account_status' => 'required',
                 'password' => 'required|confirmed|min:7',
