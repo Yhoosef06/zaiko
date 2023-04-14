@@ -40,6 +40,7 @@
                             <div class="row">
                                 @foreach ($items as $item)
                                     @if($item->item_name == 'PC')
+                                        @if($item->borrowed == 'no')
                                         <div class="col-lg-3 col-6">
                                             <!-- small box -->
                                             <div class="small-box bg-info bg-gradient">
@@ -53,7 +54,7 @@
                                                 class="fas fa-arrow-circle-right"></i></a>
                                             </div>
                                         </div>
-                                    
+                                        @endif
                                     @endif
                                 @endforeach 
                             </div>
@@ -66,6 +67,7 @@
                             <div class="row">
                                 @foreach ($items as $item)
                                     @if($item->item_name == 'Monitor')
+                                        @if($item->borrowed == 'no')
                                         <div class="col-lg-3 col-6">
                                             <!-- small box -->
                                             <div class="small-box bg-success bg-gradient">
@@ -80,7 +82,7 @@
 
                                             </div>
                                         </div>
-                                    
+                                        @endif
                                     @endif
                                 @endforeach 
                             </div>
@@ -93,6 +95,7 @@
                             <div class="row">
                                 @foreach ($items as $item)
                                     @if($item->item_name == 'Mouse')
+                                        @if($item->borrowed == 'no')
                                         <div class="col-lg-3 col-6">
                                             <!-- small box -->
                                             <div class="small-box bg-danger bg-gradient">
@@ -106,7 +109,7 @@
                                                 class="fas fa-arrow-circle-right"></i></a>
                                             </div>
                                         </div>
-                                    
+                                        @endif
                                     @endif
                                 @endforeach 
                             </div>

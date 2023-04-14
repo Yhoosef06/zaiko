@@ -73,6 +73,14 @@ Route::group(['middleware' => ['auth']], function(){
         // FOR ROOM
         Route::get('adding-room', [RoomController::class, 'addNewRoom'])->name('adding_new_room');
         Route::post('storing-new-room', [RoomController::class,'storeNewRoom'])->name('store_new_room');
+
+        //FOR Manage Borrowings
+        Route::get('borrowed',[BorrowController::class, 'borrowed'])->name('borrowed');
+        Route::get('pending',[BorrowController::class, 'pending'])->name('pending');
+        Route::get('for-return', [BorrowController::class, 'forReturn'])->name('for-return');
+        Route::get('pending-item-{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
+        Route::get('borrow-item-{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
+        Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
     }); 
 
     //student

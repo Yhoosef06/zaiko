@@ -55,7 +55,7 @@
                                     <li class="nav-item">
                                         <a href="{{ route('student.items') }}" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Borrow Item</p>
+                                            <p>Items List</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -64,6 +64,12 @@
                                             <p>Cart</p>
                                         </a>
                                     </li>    
+                                    <li class="nav-item">
+                                        <a href="{{ route('cart.list') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Borrowing List</p>
+                                        </a>
+                                    </li>   
                                 </ul>
                             </li>
                         @elseif( \Auth::user()->account_type == 'admin' )
@@ -140,22 +146,23 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                            <li class="nav-item">
+                                    <a href="{{ route('pending') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Option 1</p>
+                                        <p>Pending</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('borrowed') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Option 2</p>
+                                        <p>Borrowed</p>
                                     </a>
                                 </li>
+                               
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('for-return') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Option 3</p>
+                                        <p>Returned</p>
                                     </a>
                                 </li>
                             </ul>

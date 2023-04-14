@@ -2,6 +2,10 @@
 
 return [
 
+    'providers' => [
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -67,7 +71,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Singapore',
 
     /*
     |--------------------------------------------------------------------------
@@ -233,6 +237,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        
     ],
 
 ];
