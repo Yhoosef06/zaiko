@@ -55,8 +55,13 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
         Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
         Route::post('deleting-item-{serial_number}', [ItemsController::class,'deleteItem'])->name('delete_item');
+        //reports
         Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
         Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
+        Route::get('/returned-items',[ItemsController::class, 'generateReturned'])->name('returned_items');
+        Route::post('/download-returned-items-report',[ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
+        Route::get('/report-test',[ItemsController::class, 'reportTest']);
+        Route::get('/unreturned-items',[ItemsController::class, 'generateUnreturned'])->name('unreturned_items');
 
         // FOR USERS
         Route::get('add-new-user', [UserController::class,'addUser'])->name('add_user');
@@ -84,34 +89,7 @@ Route::group(['middleware' => ['auth']], function(){
     }); 
 
     //student
-    Route::middleware(['auth','user-role:student'])->group(function(){
-
-        // Route::middleware(['account_status:pending'])->group(function(){
-        //     Route::get('/approve', [PagesController::class,'approve'])->name('approval');
-        // });
-
-        // Route::middleware(['account_status:approved'])->group(function(){
-
-        //     Route::controller(StudentController::class)->group(function(){
-        //         Route::get('/student-dashboard','index')->name('student.dashboard');
-        //         Route::get('/items','items')->name('student.items');
-        //     });
-        //     // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
-        //     Route::get('adding-new-item', [PagesController::class,'addItem'])->name('add_item');
-        //     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
-            
-        //     // FOR ITEMS
-        //     Route::get('list-of-items', [ItemsController::class,'index'])->name('view_items');
-        //     Route::get('list-of-items-filtered', [ItemsController::class,'searchItem'])->name('filtered_view');
-        //     Route::post('saving-new-item', [ItemsController::class,'saveNewItem'])->name('save_new_item');
-        //     Route::get('viewing-item-{serial_number}', [ItemsController::class,'viewItemDetails'])->name('view_item_details');
-        //     Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
-        //     Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
-        //     Route::post('deleting-item-{serial_number}', [ItemsController::class,'deleteItem'])->name('delete_item');
-        //     Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
-        //     Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
-        // });
-        
+    Route::middleware(['auth','user-role:student'])->group(function(){      
         //student
         Route::middleware(['user-role:student'])->group(function(){
         

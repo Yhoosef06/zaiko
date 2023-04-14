@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Room;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\App;
@@ -99,6 +100,59 @@ class ItemsController extends Controller
     {
         $rooms = Room::all();
         return view('pages.admin.report')->with(compact('rooms'));
+    }
+
+    public function generateReturned()
+    {
+        $data = Order::where('order_status', '=', 'returned')->get();
+        return view('pages.admin.returnedItems')->with(compact('data'));
+    }
+
+    public function reportTest(){
+
+        $borrows = Order::where('order_status', '=', 'returned')->get();
+        return view('pages.pdfReturnedItems')->with(compact('borrows'));
+    }
+
+    // public function downloadReturnedReport()
+    // {
+    //     $items = Item::orderBy('unit_number', 'ASC')->get();
+
+    //     if ($request->has('download')) {
+    //         $pdf = App::make('dompdf.wrapper');
+    //         $pdf->loadView('pages.pdfReport', compact(
+    //             'items',
+    //             'purpose',
+    //             'location',
+    //             'prepared_by',
+    //             'verified_by',
+    //             'lab_oic',
+    //             'it_specialist',
+    //             'department'
+    //         ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+
+    //         return $pdf->download('InventoryReport' . $location . '.pdf');
+
+    //     }
+
+    //     return view('pages.pdfReport')->with(compact(
+    //         'items',
+    //         'location',
+    //         'purpose',
+    //         'prepared_by',
+    //         'verified_by',
+    //         'lab_oic',
+    //         'it_specialist',
+    //         'department'
+    //     ));
+    // }
+
+    
+
+    public function generateUnreturned()
+    {
+        $data = Order::where('order_status', '=', 'borrowed')->get();
+        return view('pages.admin.report')->with(compact('data'));
     }
 
     public function downloadReport(Request $request)
