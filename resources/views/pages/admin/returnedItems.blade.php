@@ -29,9 +29,13 @@
                   <thead>
                   <tr>
                     <th>Name Of Borrower</th>
-                    <th>Serial #</th>           
                     <th>Item Name</th>
+                    <th>Serial #</th>           
                     <th>Item Description</th>
+                    <th>Released By</th>
+                    <th>Returned To</th>
+                    <th>Date Borrowed</th>
+                    <th>Date Returned</th>
 
                   </tr>
                   </thead>
@@ -40,9 +44,13 @@
                   @foreach ($data as $borrow)
                       <tr>
                         <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
-                        <td>{{ $borrow->serial_number }}</td>
                         <td>{{ $borrow->item_name }}</td>
+                        <td>{{ $borrow->serial_number }}</td>
                         <td>{{ Str::limit($borrow->item_description, 20, '...') }}</td>
+                        <td>{{ $borrow->release_by }}</td>
+                        <td>{{ $borrow->return_to }}</td>
+                        <td>TBD</td>
+                        <td>TBD</td>
                       </tr>
                   @endforeach
                   </tbody>

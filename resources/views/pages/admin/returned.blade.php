@@ -28,25 +28,27 @@
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>Serial #</th>
-                    <th>Name</th>
+                    <th>Name Of Borrower</th>
                     <th>Item Name</th>
-                    <th>Release BY</th>
-                    <th>Return TO</th>
-                    <th>Date Return</th>
-
+                    <th>Serial #</th>           
+                    <th>Item Description</th>
+                    <th>Released By</th>
+                    <th>Returned To</th>
+                    <th>Date Borrowed</th>
+                    <th>Date Returned</th>
                   </tr>
                   </thead>
                   <tbody>
                  
                   @foreach ($forReturns as $forReturn)
                       <tr>
-                          <td>{{ $forReturn->serial_number }}</td>
                           <td>{{ $forReturn->first_name }} {{ $forReturn->last_name }}</td>
                           <td>{{ $forReturn->item_name }}</td>
+                          <td>{{ $forReturn->serial_number }}</td>
+                          <td>{{ Str::limit($forReturn->item_description, 20, '...') }}</td>
                           <td>{{ $forReturn->release_by }}</td>
                           <td>{{ $forReturn->return_to }}</td>
-                      
+                          <td>{{ $forReturn->created_at }}</td>
                           <td>{{ $forReturn->updated_at }}</td>
                       </tr>
                   @endforeach

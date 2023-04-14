@@ -82,7 +82,7 @@ Route::group(['middleware' => ['auth']], function(){
         //FOR Manage Borrowings
         Route::get('borrowed',[BorrowController::class, 'borrowed'])->name('borrowed');
         Route::get('pending',[BorrowController::class, 'pending'])->name('pending');
-        Route::get('for-return', [BorrowController::class, 'forReturn'])->name('for-return');
+        Route::get('returned', [BorrowController::class, 'returned'])->name('returned');
         Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
         Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
         Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');

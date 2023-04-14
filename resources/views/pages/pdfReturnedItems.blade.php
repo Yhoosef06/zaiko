@@ -61,19 +61,27 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">Serial #</th>
-                    <th scope="col">Description of Item</th>
-                    <th scope="col">QTY</th>
-                    <th scope="col">UNIT #</th>
+                    <th>Name Of Borrower</th>
+                    <th>Item Name</th>
+                    <th>Serial #</th>           
+                    <th>Item Description</th>
+                    <th>Released By</th>
+                    <th>Returned To</th>
+                    <th>Date Borrowed</th>
+                    <th>Date Returned</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($borrows as $borrow)
                       <tr>
-                          <td>{{ $borrow->serial_number }}</td>
-                          <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
-                          <td>{{ $borrow->item_name }}</td>
-                          <td>{{ Str::limit($borrow->item_description, 20, '...') }}</td>
+                        <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
+                        <td>{{ $borrow->item_name }}</td>
+                        <td>{{ $borrow->serial_number }}</td>
+                        <td>{{ Str::limit($borrow->item_description, 20, '...') }}</td>
+                        <td>{{ $borrow->release_by }}</td>
+                        <td>{{ $borrow->return_to }}</td>
+                        <td>{{ $borrow->created_at }}</td>
+                        <td>{{ $borrow->updated_at }}</td>
                       </tr>
                   @endforeach
             </tbody>
