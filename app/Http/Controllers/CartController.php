@@ -64,9 +64,10 @@ class CartController extends Controller
 
         $user = Auth::user()->id_number;
         $usernames = Auth::user();
-        // dd($usernames);
 
         $data = Cart::where('id_number', '=', $user)->get();
+
+        if(($usernames->agreement == true)){
             foreach($data as $data){
                 
                 // if($data->ordered == 'no'){
@@ -97,9 +98,14 @@ class CartController extends Controller
                 // }
                
             }
+        }else{
+            return redirect()->route('agreement');
+        }
 
            
 
         return redirect()->route('student.dashboard');
     }
+
+    
 }

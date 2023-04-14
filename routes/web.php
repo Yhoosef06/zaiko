@@ -1,16 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ItemsController;
-use App\Http\Controllers\PagesController;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\Auth\SignInController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\BorrowController;
-use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\QRController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\PagesController;
+use App\Http\Controllers\BorrowController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\Auth\SignInController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +133,10 @@ Route::group(['middleware' => ['auth']], function(){
                 Route::get('/student-cart-list',[CartController::class, 'cart_list'])->name('cart.list');
                 Route::get('/remove-cart/{serial_number}',[CartController::class, 'remove_cart'])->name('remove.cart');
                 Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
+
+                //agreement
+                Route::get('/agreement', [StudentController::class, 'agreement'])->name('agreement');
+                Route::get('agreement-approve/{id}', [StudentController::class, 'agreement_approve'])->name('agreement.approve');
 
 
                 // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');

@@ -28,7 +28,9 @@ class User extends Authenticatable
         'front_of_id',
         'back_of_id',
         'account_type',
-        'account_status'
+        'account_status',
+        'agreement',
+        'agreement_date'
     ];
 
     /**

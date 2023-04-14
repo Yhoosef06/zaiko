@@ -21,7 +21,6 @@ class CreateOrdersTable extends Migration
             $table->string('serial_number');
             $table->string('item_name');
             $table->string('item_description');
-
             $table->string('order_status');
             $table->timestamps();
         });

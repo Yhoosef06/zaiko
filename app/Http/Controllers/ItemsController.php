@@ -140,6 +140,7 @@ class ItemsController extends Controller
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
 
             return $pdf->download('InventoryReport' . $location . '.pdf');
+
         }
 
         return view('pages.pdfReport')->with(compact(
@@ -163,7 +164,7 @@ class ItemsController extends Controller
             ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')->orderBy('location', 'desc')->paginate(5);
 
         // dd($items);
-        return view('pages.admin.listOfItems', compact('items', $items));
+        return view('pages.admin.listOfItems', compact('items'));
     }
     
 }
