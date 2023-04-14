@@ -114,7 +114,7 @@ class ItemsController extends Controller
         return view('pages.pdfReturnedItems')->with(compact('borrows'));
     }
 
-    // public function downloadReturnedReport()
+    // public function downloadReturnedReport(Request $request)
     // {
     //     $items = Item::orderBy('unit_number', 'ASC')->get();
 
