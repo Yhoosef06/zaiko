@@ -42,15 +42,16 @@
                  
                   @foreach ($pendings as $pending)
                       <tr>
+                          <td class="d-none">{{ $pending->id }}</td>
                           <td>{{ $pending->serial_number }}</td>
                           <td>{{ $pending->first_name }} {{ $pending->last_name }}</td>
                           <td>{{ $pending->item_name }}</td>
                           <td>{{ Str::limit($pending->item_description, 20, '...') }}</td>
                       
                           <td>
-                            <a href="{{ route('pending_item', $pending->serial_number) }}" class="btn btn-sm btn-success" title="Approved">
+                            <a href="{{ route('pending_item', $pending->id) }}" class="btn btn-sm btn-success" title="Approved">
                                     <i class="fa fa-check"></i></a>
-                            <a href="{{ route('remove_borrow', $pending->serial_number) }}" class="btn btn-sm btn-danger" title="Disregard">
+                            <a href="{{ route('remove_borrow', $pending->id) }}" class="btn btn-sm btn-danger" title="Disregard">
                                     <i class="fa fa-trash"></i></a>
                         </td>
                       </tr>
