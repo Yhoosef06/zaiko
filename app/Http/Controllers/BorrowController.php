@@ -64,25 +64,38 @@ class BorrowController extends Controller
     }
 
     public function forReturn(){
-        $forReturns = ORDER::where('order_status', '=', 'for return')->get();
+        $forReturns = ORDER::where('order_status', '=', 'returned')->get();
 
         return view('pages.admin.for-return')->with(compact('forReturns'));
     }
 
-    public function pendingItem($serial_number){
+    public function pendingItem($id,$serial_number){
+        $user = auth()->user();
+        if($user){
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
 
-        $affectedRows = Order::where('serial_number','=',$serial_number)->update(['order_status' => 'borrowed']);
-        $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'yes']);
-        Session::flash('success', 'Borrow has been Approved.');
-        return redirect('pending');
+            $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'borrowed', 'release_by' => $firstName .' '. $lastName]);
+            $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'yes']);
+            Session::flash('success', 'Borrow has been Approved.');
+            return redirect('pending');
+        }
+        
     }
 
-    public function borrowItem($serial_number){
+    public function borrowItem($id,$serial_number){
+        $user = auth()->user();
+        if($user){
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
+
+            $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'returned', 'returnfor return_to' => $firstName .' '. $lastName]);
+            $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
+            Session::flash('success', 'Successfuly Return Borrowed Item.');
+            return redirect('borrowed');
+        }
        
-        $affectedRows = Order::where('serial_number','=',$serial_number)->update(['order_status' => 'returned']);
-        $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
-        Session::flash('success', 'Successfuly Return Borrowed Item.');
-        return redirect('borrowed');
+       
     }
 
     public function removeBorrow($serial_number){

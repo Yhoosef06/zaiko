@@ -78,8 +78,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('borrowed',[BorrowController::class, 'borrowed'])->name('borrowed');
         Route::get('pending',[BorrowController::class, 'pending'])->name('pending');
         Route::get('for-return', [BorrowController::class, 'forReturn'])->name('for-return');
-        Route::get('pending-item-{id}', [BorrowController::class, 'pendingItem'])->name('pending_item');
-        Route::get('borrow-item-{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
+        Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
+        Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
         Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
     }); 
 
@@ -125,6 +125,7 @@ Route::group(['middleware' => ['auth']], function(){
                     Route::get('/student-dashboard','index')->name('student.dashboard');
                     Route::get('/student-items','items')->name('student.items');
                     Route::get('/view-item-{serial_number}','viewItemDetails')->name('student.view.item');
+                    Route::get('/borrow-list', 'borrowList')->name('borrow_list');
         
                 });
 

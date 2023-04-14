@@ -30,9 +30,9 @@
                   <tr>
                     <th>Serial #</th>
                     <th>Name</th>
-            
                     <th>Item Name</th>
-                    <th>Item Description</th>
+                    <th>Release BY</th>
+                    <th>Return TO</th>
                     <th>Date Return</th>
 
                   </tr>
@@ -44,7 +44,8 @@
                           <td>{{ $forReturn->serial_number }}</td>
                           <td>{{ $forReturn->first_name }} {{ $forReturn->last_name }}</td>
                           <td>{{ $forReturn->item_name }}</td>
-                          <td>{{ Str::limit($forReturn->item_description, 20, '...') }}</td>
+                          <td>{{ $forReturn->release_by }}</td>
+                          <td>{{ $forReturn->return_to }}</td>
                       
                           <td>{{ $forReturn->updated_at }}</td>
                       </tr>
