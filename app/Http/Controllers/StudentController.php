@@ -57,4 +57,9 @@ class StudentController extends Controller
         // }
     }
 
+    public function borrowList(){
+        echo 'test';
+
+    }
+
 }

@@ -29,9 +29,8 @@
                   <tr>
                     <th>Serial #</th>
                     <th>Name</th>
-            
                     <th>Item Name</th>
-                    <th>Item Description</th>
+                    <th>Release BY</th>
                     <th>Actions</th>
 
                   </tr>
@@ -40,13 +39,14 @@
                  
                   @foreach ($borrows as $borrow)
                       <tr>
+                      <td class="d-none">{{ $borrow->id }}</td>
                           <td>{{ $borrow->serial_number }}</td>
                           <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
                           <td>{{ $borrow->item_name }}</td>
-                          <td>{{ Str::limit($borrow->item_description, 20, '...') }}</td>
+                          <td>{{ $borrow->release_by }}</td>
                       
                           <td>
-                            <a href="{{ route('borrow_item', $borrow->serial_number) }}" class="btn btn-sm btn-success" title="Approved">
+                            <a href="{{ route('borrow_item',['id' => $borrow->id, 'serial_number' => $borrow->serial_number]) }}" class="btn btn-sm btn-success" title="Approved">
                                     <i class="fa fa-check"></i></a>
                           </td>
                       </tr>

@@ -65,7 +65,7 @@
                                         </a>
                                     </li>    
                                     <li class="nav-item">
-                                        <a href="{{ route('cart.list') }}" class="nav-link">
+                                        <a href="{{ route('borrow_list') }}" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Borrowing List</p>
                                         </a>
