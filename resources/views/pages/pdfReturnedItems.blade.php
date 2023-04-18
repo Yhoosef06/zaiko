@@ -72,7 +72,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($borrows as $borrow)
+                @foreach ($items as $borrow)
                       <tr>
                         <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
                         <td>{{ $borrow->item_name }}</td>

@@ -55,13 +55,6 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
         Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
         Route::post('deleting-item-{serial_number}', [ItemsController::class,'deleteItem'])->name('delete_item');
-        //reports
-        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
-        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
-        Route::get('/returned-items',[ItemsController::class, 'generateReturned'])->name('returned_items');
-        Route::post('/download-returned-items-report',[ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
-        Route::get('/report-test',[ItemsController::class, 'reportTest']);
-        Route::get('/unreturned-items',[ItemsController::class, 'generateUnreturned'])->name('unreturned_items');
 
         // FOR USERS
         Route::get('add-new-user', [UserController::class,'addUser'])->name('add_user');
@@ -86,6 +79,13 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
         Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
         Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
+
+        //reports
+        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
+        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
+        Route::post('/download-returned-items-report',[ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
+        Route::get('/report-test',[ItemsController::class, 'reportTest']);
+        Route::get('/unreturned-items',[ItemsController::class, 'generateUnreturned'])->name('unreturned_items');
     }); 
 
     //student
