@@ -84,8 +84,9 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
         Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
         Route::post('/download-returned-items-report',[ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
+        Route::post('/download-borrowed-items-report',[ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
         Route::get('/report-test',[ItemsController::class, 'reportTest']);
-        Route::get('/unreturned-items',[ItemsController::class, 'generateUnreturned'])->name('unreturned_items');
+       
     }); 
 
     //student

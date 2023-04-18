@@ -26,7 +26,7 @@
                     <h3 class="card-title">Returned Items</h3>
                   </div>
                   <div class="col md-4 text-right">
-                    <Button type="submit" class="btn btn-success">Generate</Button>
+                    <Button type="submit" class="btn btn-success">Generate Report</Button>
                   </div>
                 </div>
                 <!-- /.card-header -->

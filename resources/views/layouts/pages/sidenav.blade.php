@@ -112,12 +112,6 @@
                                         </a>
                                     </li> --}}
                                 </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('unreturned_items') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Unreturned Items List</p>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -161,7 +155,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('borrowed') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Borrowed</p>
+                                        <p>Borrowed Items</p>
                                     </a>
                                 </li>
                                

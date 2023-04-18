@@ -135,13 +135,27 @@ class ItemsController extends Controller
         ));
     }
 
-    
-
-    public function generateUnreturned()
+    public function downloadBorrowedReport(Request $request)
     {
-        $data = Order::where('order_status', '=', 'borrowed')->get();
-        return view('pages.admin.report')->with(compact('data'));
+        // $items = Order::orderBy('id_number', 'ASC')->get();
+        $items = Order::where('order_status', '=', 'borrowed')->orderBy('id_number', 'ASC')->get();
+
+        if ($request->has('download')) {
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadView('pages.pdfBorrowedItems', compact(
+                'items'
+            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+
+            return $pdf->download('BorrowedItemsReport' . '.pdf');
+
+        }
+
+        return view('pages.pdfBorrowedItems')->with(compact(
+            'first_name',
+                'items'
+        ));
     }
+
 
     public function downloadReport(Request $request)
     {
