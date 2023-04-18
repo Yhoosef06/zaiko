@@ -49,12 +49,20 @@
                                   <i class="fa fa-eye"></i></a>
                               <a href="{{ route('edit_item_details', $item->serial_number) }}" class="btn btn-sm btn-warning">
                                   <i class="fa fa-edit"></i></a>
+                                  <!-- <a href="" data-id="{{ $item->serial_number }}" class="btn btn-sm btn-danger show-alert-delete-item">
+                                  <i class="fa fa-trash"></i></a> -->
+
+                                  <form class="form_delete_btn" method="POST" action="{{ route('delete_item', $item->serial_number) }}">
+                            @csrf
+                            <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                            <button type="submit" class="btn btn-sm btn-danger show-alert-delete-item" data-toggle="tooltip" title='Delete'><i class="fa fa-trash"></i></button>
+                        </form>
 
                               <!-- Button to Open the Modal -->
-                              <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                              <!-- <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
                                   data-target="#myModal">
                                   <i class="fa fa-trash"></i>
-                              </button>
+                              </button> -->
 
                               <!-- The Modal -->
                               <div class="modal" id="myModal">

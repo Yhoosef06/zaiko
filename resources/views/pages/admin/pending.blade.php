@@ -49,24 +49,19 @@
                           <td>{{ Str::limit($pending->item_description, 20, '...') }}</td>
                       
                           <td>
-                            <!-- <a href="{{ route('pending_item', ['id' => $pending->id, 'serial_number' => $pending->serial_number]) }}" class="btn btn-sm btn-success" title="Approved">
-                                    <i class="fa fa-check"></i></a> -->
-                            <div class="input-group mb-3">
+                            <a href="{{ route('pending_item', ['id' => $pending->id, 'serial_number' => $pending->serial_number]) }}" class="btn btn-sm btn-success" title="Approved">
+                                    <i class="fa fa-check"></i></a>
+                            <!-- <div class="input-group mb-3">
                               <div class="input-group-prepend">
-                                <button type="button" class="btn btn-success"><i class="fa fa-check"></i></a></button>
+                                <button type="button" class="btn btn-success"><i class="fa fa-check"></i></button>
                               </div>
-                              <!-- /btn-group -->
+                              
                               <input type="text" class="form-control">
-                            </div>
+                            </div> -->
                             <a href="{{ route('remove_borrow', $pending->id) }}" class="btn btn-sm btn-danger" title="Disregard">
                                     <i class="fa fa-trash"></i></a>
 
-                                    <div class="btn-group">
-                        <button type="button" class="btn btn-info">Number Of Days</button>
-                        <!-- <button type="button" class="btn btn-info">2</button> -->
-
-                     
-                      </div>
+                             
                         </td>
                       </tr>
                   @endforeach

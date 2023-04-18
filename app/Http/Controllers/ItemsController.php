@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 use Symfony\Contracts\Service\Attribute\Required;
 
 class ItemsController extends Controller
@@ -53,11 +54,13 @@ class ItemsController extends Controller
         return redirect('list-of-items')->with('status', 'Item ' . $serial_number . ' has been updated.');
     }
 
-    public function deleteItem($serial_number)
+    public function deleteItem(Request $request, $serial_number)
     {
-        $item = Item::find($serial_number);
+        $serial = $request->serial_number;
+        $item = Item::find($serial);
         $item->delete();
-        return redirect('list-of-items')->with('status', 'Item ' . $serial_number . ' removed successfully.');
+        Session::flash('success', 'Successfuly Removed Item:'. $serial);
+        return redirect('list-of-items');
     }
 
     public function saveNewItem(Request $request)

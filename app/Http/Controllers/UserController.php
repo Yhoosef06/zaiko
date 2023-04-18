@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -81,11 +82,15 @@ class UserController extends Controller
         }
     }
 
-    public function deleteUser($id_number)
+    public function deleteUser(Request $request,$id_number)
     {
-        $user = User::find($id_number);
+        $id = $request->id_number;
+        // echo $id;
+        // exit;
+        $user = User::find($id);
         $user->delete();
-        return redirect('list-of-users')->with('status', 'User ' . $id_number . ' removed successfully.');
+        Session::flash('success', 'Successfuly Removed User.'. $id);
+        return redirect('list-of-users');
     }
 
     public function editUserInfo($id_number)
