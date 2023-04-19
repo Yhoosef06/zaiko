@@ -112,18 +112,6 @@
                                         </a>
                                     </li> --}}
                                 </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('returned_items') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Returned Items List</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('unreturned_items') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Unreturned Items List</p>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -167,17 +155,23 @@
                                 <li class="nav-item">
                                     <a href="{{ route('borrowed') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Borrowed</p>
+                                        <p>Borrowed Items</p>
                                     </a>
                                 </li>
                                
                                 <li class="nav-item">
-                                    <a href="{{ route('for-return') }}" class="nav-link">
+                                    <a href="{{ route('returned') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Returned</p>
+                                        <p>Returned Items</p>
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('admin.dashboard')}}" class="nav-link">
+                                <i class="bi bi-qr-code-scan nav-icon"></i>
+                                <p>QR Code Scanner</p>
+                            </a>
                         </li>
                                 
                         @endif

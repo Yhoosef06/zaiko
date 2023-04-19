@@ -117,46 +117,48 @@ class ItemsController extends Controller
         return view('pages.pdfReturnedItems')->with(compact('borrows'));
     }
 
-    // public function downloadReturnedReport()
-    // {
-    //     $items = Item::orderBy('unit_number', 'ASC')->get();
-
-    //     if ($request->has('download')) {
-    //         $pdf = App::make('dompdf.wrapper');
-    //         $pdf->loadView('pages.pdfReport', compact(
-    //             'items',
-    //             'purpose',
-    //             'location',
-    //             'prepared_by',
-    //             'verified_by',
-    //             'lab_oic',
-    //             'it_specialist',
-    //             'department'
-    //         ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
-
-    //         return $pdf->download('InventoryReport' . $location . '.pdf');
-
-    //     }
-
-    //     return view('pages.pdfReport')->with(compact(
-    //         'items',
-    //         'location',
-    //         'purpose',
-    //         'prepared_by',
-    //         'verified_by',
-    //         'lab_oic',
-    //         'it_specialist',
-    //         'department'
-    //     ));
-    // }
-
-    
-
-    public function generateUnreturned()
+    public function downloadReturnedReport(Request $request)
     {
-        $data = Order::where('order_status', '=', 'borrowed')->get();
-        return view('pages.admin.report')->with(compact('data'));
+        // $items = Order::orderBy('id_number', 'ASC')->get();
+        $items = Order::where('order_status', '=', 'returned')->orderBy('id_number', 'ASC')->get();
+
+        if ($request->has('download')) {
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadView('pages.pdfReturnedItems', compact(
+                'items'
+            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+
+            return $pdf->download('ReturnedItemsReport' . '.pdf');
+
+        }
+
+        return view('pages.pdfReturnedItems')->with(compact(
+            'first_name',
+                'items'
+        ));
     }
+
+    public function downloadBorrowedReport(Request $request)
+    {
+        // $items = Order::orderBy('id_number', 'ASC')->get();
+        $items = Order::where('order_status', '=', 'borrowed')->orderBy('id_number', 'ASC')->get();
+
+        if ($request->has('download')) {
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadView('pages.pdfBorrowedItems', compact(
+                'items'
+            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+
+            return $pdf->download('BorrowedItemsReport' . '.pdf');
+
+        }
+
+        return view('pages.pdfBorrowedItems')->with(compact(
+            'first_name',
+                'items'
+        ));
+    }
+
 
     public function downloadReport(Request $request)
     {
