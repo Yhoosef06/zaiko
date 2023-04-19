@@ -60,36 +60,42 @@
                               <a href="{{ route('edit_user_info', $user->id_number) }}" class="btn btn-sm btn-warning">
                                   <i class="fa fa-edit"></i></a>
 
+                            <form class="form_delete_btn" method="POST" action="{{ route('delete_user', $user->id_number) }}">
+                            @csrf
+                            <!-- <input name="_method" type="hidden" value="DELETE"> -->
+                            <button type="submit" class="btn btn-sm btn-danger show-alert-delete-user" data-toggle="tooltip" title='Delete'><i class="fa fa-trash"></i></button>
+                        </form>
+
                               <!-- Button to Open the Modal -->
-                              <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                              <!-- <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
                                     data-target="#myModal">
                                     <i class="fa fa-trash"></i>
-                                </button>
+                                </button> -->
 
                               <!-- The Modal -->
-                              <div class="modal" id="myModal">
+                              <!-- <div class="modal" id="myModal">
                                   <div class="modal-dialog">
-                                      <div class="modal-content">
+                                      <div class="modal-content"> -->
 
                                           <!-- Modal Header -->
-                                          <div class="modal-header">
+                                          <!-- <div class="modal-header">
                                               <h4 class="modal-title">Deleting User</h4>
                                               <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                          </div>
+                                          </div> -->
 
                                           <!-- Modal body -->
-                                          <div class="modal-body">
+                                          <!-- <div class="modal-body">
                                               Are you sure you want to delete item?
-                                          </div>
+                                          </div> -->
 
                                           <!-- Modal footer -->
-                                          <div class="modal-footer">
+                                          <!-- <div class="modal-footer">
                                                 <form action="{{ route('delete_user', $user->id_number) }}" method="POST"
                                                     class="form-check-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-sm btn-danger">Confirm</button>
                                                 </form>
-                                            </div>
+                                            </div> -->
 
                                       </div>
                                   </div>

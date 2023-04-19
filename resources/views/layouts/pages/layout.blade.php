@@ -5,7 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Zaiko.</title>
-
+<style>
+    .form_delete_btn {
+    display: inline-block !important;
+}
+</style>
   
 
 
@@ -35,6 +39,8 @@
     <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet"> -->
+    <!-- <link rel="stylesheet" href="@sweetalert2/themes/dark/dark.css"> -->
 
 
 
@@ -49,9 +55,14 @@
     <div class="wrapper">
         <div class="content-wrapper">
         @if(session('success'))
-    <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  <h5><i class="icon fas fa-check"></i> Success!</h5>
+                  {{ session('success') }}
+                </div>
+    <!-- <div class="alert alert-success">
         {{ session('success') }}
-    </div>
+    </div> -->
     @endif
             @yield('content-header')
             @yield('content')
@@ -122,6 +133,11 @@
 
 <script src="dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script> -->
+<!-- <script src="sweetalert2/dist/sweetalert2.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 
 <script>
   $(function () {
@@ -131,6 +147,67 @@
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     
   });
+</script>
+
+
+<script type="text/javascript">
+   
+
+
+    $(document).ready(function(){
+        $('.show-alert-delete-user').click(function(event){
+        var form =  $(this).closest("form");
+        var name = $(this).data("name");
+        event.preventDefault();
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+
+    
+        $('.show-alert-delete-item').click(function(event){
+            var form =  $(this).closest("form");
+        var name = $(this).data("name");
+        event.preventDefault();
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+                form.submit();
+          
+            }
+        });
+    });
+         
+     });
+
+
+  
+//     Swal.fire(
+//       'Deleted!',
+//       'Your file has been deleted.',
+//       'success'
+//     )
+//   }
+// })
+
+    
 </script>
 
 </html

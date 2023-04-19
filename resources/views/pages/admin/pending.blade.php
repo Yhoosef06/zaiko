@@ -51,8 +51,17 @@
                           <td>
                             <a href="{{ route('pending_item', ['id' => $pending->id, 'serial_number' => $pending->serial_number]) }}" class="btn btn-sm btn-success" title="Approved">
                                     <i class="fa fa-check"></i></a>
+                            <!-- <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <button type="button" class="btn btn-success"><i class="fa fa-check"></i></button>
+                              </div>
+                              
+                              <input type="text" class="form-control">
+                            </div> -->
                             <a href="{{ route('remove_borrow', $pending->id) }}" class="btn btn-sm btn-danger" title="Disregard">
                                     <i class="fa fa-trash"></i></a>
+
+                             
                         </td>
                       </tr>
                   @endforeach
