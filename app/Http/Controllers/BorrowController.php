@@ -69,13 +69,17 @@ class BorrowController extends Controller
         return view('pages.admin.for-return')->with(compact('forReturns'));
     }
 
-    public function pendingItem($id,$serial_number){
+    public function pendingItem(Request $request,$id,$serial_number){
+        $num = $request->number_of_days;
+
+        // echo $id;
+        // exit;
         $user = auth()->user();
         if($user){
             $firstName = $user->first_name;
             $lastName = $user->last_name;
 
-            $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'borrowed', 'release_by' => $firstName .' '. $lastName]);
+            $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'borrowed', 'release_by' => $firstName .' '. $lastName, 'number_of_days' => $num]);
             $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'yes']);
             Session::flash('success', 'Borrow has been Approved.');
             return redirect('pending');
@@ -89,7 +93,7 @@ class BorrowController extends Controller
             $firstName = $user->first_name;
             $lastName = $user->last_name;
 
-            $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'returned', 'returnfor return_to' => $firstName .' '. $lastName]);
+            $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'returned', 'return_to' => $firstName .' '. $lastName]);
             $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
             Session::flash('success', 'Successfuly Return Borrowed Item.');
             return redirect('borrowed');

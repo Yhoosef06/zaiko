@@ -8,7 +8,23 @@
 <style>
     .form_delete_btn {
     display: inline-block !important;
-}
+    }
+    /* .form_control_approved{
+        display: inline-block !important;
+        width: 20px;
+        height: calc(2.25rem + 2px);
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        box-shadow: inset 0 0 0 transparent;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    } */
 </style>
   
 
@@ -157,7 +173,6 @@
     $(document).ready(function(){
         $('.show-alert-delete-user').click(function(event){
         var form =  $(this).closest("form");
-        var name = $(this).data("name");
         event.preventDefault();
         Swal.fire({
         title: 'Are you sure?',
@@ -175,25 +190,41 @@
     });
 
     
-        $('.show-alert-delete-item').click(function(event){
+    $('.show-alert-delete-item').click(function(event){
             var form =  $(this).closest("form");
-        var name = $(this).data("name");
-        event.preventDefault();
-        Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-        if (result.isConfirmed) {
-                form.submit();
-          
-            }
-        });
+            event.preventDefault();
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                    form.submit();
+            
+                }
+            });
     });
+
+    // $('.borrowed-approve').click(function(event){
+    //         var form =  $(this).closest("form");
+    //         event.preventDefault();
+    //         Swal.fire({
+    //         position: 'top-end',
+    //         icon: 'success',
+    //         title: 'Borow has been approved,
+    //         showConfirmButton: false,
+    //         timer: 1500
+    //         }).then((result) => {
+    //         if (result.isConfirmed) {
+    //                 form.submit();
+            
+    //             }
+    //         });
+    // });
          
      });
 
