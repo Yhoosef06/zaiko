@@ -44,8 +44,10 @@
                           <td>{{ $user->first_name }} {{ $user->last_name }}</td>
                           @if ($user->account_type == 'student')
                                 <td>{{ 'Student' }}</td>
-                            @else
+                            @elseif ($user->account_type == 'admin')
                                 <td>{{ 'Admin' }}</td>
+                            @else
+                                <td>{{ 'READS' }}</td>
                             @endif
                             @if ($user->account_status == 'pending')
                                 <td><span class="bg-warning p-1 m-1" style="padding:10px">{{ 'Pending' }}</span>

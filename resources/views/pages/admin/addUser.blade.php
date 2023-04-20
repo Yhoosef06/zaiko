@@ -53,6 +53,7 @@
                         <select id="account_type" name="account_type" class="form-control">
                             <option value="student">Student</option>
                             <option value="admin">Admin</option>
+                            <option value="reads">Reads</option>
                         </select>
 
                         <label for="account status">Account Status:</label>
