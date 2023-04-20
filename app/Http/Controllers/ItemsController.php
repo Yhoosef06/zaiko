@@ -94,7 +94,7 @@ class ItemsController extends Controller
                 'quantity' => $request->quantity,
                 'status' => $request->status,
                 'borrowed' => 'no',
-                'campus' => 'main',
+                'campus' => $request->campus,
             ]);
 
             return redirect('/adding-new-item')->with('status', 'Item Successfully Added! Do you want to add another item?');

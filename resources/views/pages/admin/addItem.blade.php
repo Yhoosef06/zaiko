@@ -32,8 +32,8 @@
                         class="form-control col-sm-5 @error('campus')
                                         border-danger @enderror">
                         <option value="option_select" disabled selected>Choose a campus</option>
-                        <option value="main">Main</option>
-                        <option value="basak">Basak</option>
+                        <option value="Main">Main</option>
+                        <option value="Basak">Basak</option>
                     </select>
 
                     <label for="location">Room: </label>
