@@ -11,16 +11,16 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        {{-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="dist/img/scs.png" class="img-circle elevation-2" alt="User Image">
             </div>
-            <div class="info">
+            <div class="info"> --}}
                 {{-- @auth
                     <a href="#" class="d-block">{{Auth::user()->first_name}}  {{Auth::user()->last_name}}</a>
                 @endauth --}}
-            </div>
-        </div>
+            {{-- </div>
+        </div> --}}
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">

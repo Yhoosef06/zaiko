@@ -16,6 +16,7 @@ class ItemSeeder extends Seeder
     {
         $item = [
             [
+                'campus' => 'Basak',
                 'location' => 'BRD2',
                 'serial_number' => 'GBRD41A013360',
                 'item_name' => 'Monitor',
@@ -28,6 +29,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no',
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BRD2',
                 'serial_number' => 'XP1321151568s',
                 'item_name' => 'Keybaord',
@@ -40,6 +42,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no',  
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BRD2',
                 'serial_number' => 'X68972707451',
                 'item_name' => 'Mouse',
@@ -53,6 +56,7 @@ class ItemSeeder extends Seeder
             ],
             
             [
+                'campus' => 'Basak',
                 'location' => 'BRD2',
                 'serial_number' => 'GBRD41A013319',
                 'item_name' => 'Monitor',
@@ -65,6 +69,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no',
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BRD2',
                 'serial_number' => 'BRD202A',
                 'item_name' => 'PC',
@@ -77,6 +82,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no', 
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BRD2',
                 'serial_number' => 'XP13211571',
                 'item_name' => 'Keybaord',
@@ -89,6 +95,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no',  
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BRD2',
                 'serial_number' => 'X68972707452',
                 'item_name' => 'Mouse',
@@ -101,6 +108,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no', 
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BRD2',
                 'serial_number' => 'BRD202B',
                 'item_name' => 'PC',
@@ -113,6 +121,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no', 
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BCL8',
                 'serial_number' => 'BCL801A',
                 'item_name' => 'PC',
@@ -125,6 +134,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no', 
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BCL8',
                 'serial_number' => 'GBRD41A013362',
                 'item_name' => 'Monitor',
@@ -137,6 +147,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no', 
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BCL8',
                 'serial_number' => 'XP1321151566',
                 'item-name' => 'Mouse',
@@ -149,6 +160,7 @@ class ItemSeeder extends Seeder
                 'borrowed' => 'no', 
             ],
             [
+                'campus' => 'Basak',
                 'location' => 'BCL8',
                 'serial_number' => '1234567899',
                 'item_name' => 'Keybaord',

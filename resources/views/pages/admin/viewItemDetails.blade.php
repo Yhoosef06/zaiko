@@ -13,10 +13,10 @@
                 </div>
 
                 <div class="col">
-                    <strong>Location:</strong> {{ $item->location }} <br>
+                    <strong>Campus:</strong> {{ $item->campus }} <br>
+                    <strong>Room:</strong> {{ $item->location }} <br>
                     <strong>Item Description:</strong> {{ $item->item_description }} <br>
                     <strong>Inventory Tag:</strong> {{ $item->inventory_tag }} <br>
-                    <strong>Borrowed?:</strong> {{ $item->borrowed }} <br>
                     <strong>Status:</strong> {{ $item->status }}
                 </div>
             </div>

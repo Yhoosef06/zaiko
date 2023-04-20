@@ -1,10 +1,8 @@
-
 <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                    class="fas fa-bars"></i></a>
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
     </ul>
 
@@ -13,7 +11,7 @@
         <!-- Notifications Dropdown Menu -->
         {{-- <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-                @if(count((array) session('cart')) == 0 )
+                @if (count((array) session('cart')) == 0)
                     <i class="bi bi-cart"></i>
                 @else
                     <i class="bi bi-cart-fill"></i>
@@ -25,8 +23,8 @@
                 <span class="dropdown-item dropdown-header">{{ Cart::count(Auth::user()->id_number) }} Items in cart</span> 
                 <span class="dropdown-item dropdown-header">{{ Cart::count() }} Items in cart</span> 
 
-                @if(session('cart'))
-                    @foreach(session('cart') as $serial_number => $item)
+                @if (session('cart'))
+                    @foreach (session('cart') as $serial_number => $item)
                         <div class="dropdown-divider"></div>
 
                         <a href="#" class="dropdown-item">
@@ -50,20 +48,25 @@
                     <i class="fas fa-users mr-2"></i> 8 friend requests
                     <span class="float-right text-muted text-sm">12 hours</span>
                 </a> --}}
-            {{-- </div>
+        {{-- </div>
+        </li> --}}
+        {{-- <li class="nav-item">
+            <a href="" class="nav-link">
+                <img src="dist/img/scs.png" class="img-circle" alt="User Image" width="25">
+            </a>
         </li> --}}
         <li class="nav-item">
             {{-- <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Welcome</a> --}}
-            <span class="navbar-brand">{{Auth::user()->first_name}}  {{Auth::user()->last_name}}</span>
-          </li>
+            <span class="navbar-brand">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span>
+        </li>
         <li class="nav-item">
             <form action="/logout" method="POST">
-                @csrf 
-                <button class="btn btn-link text-white" href="{{ route('logout') }}" role="button"> 
+                @csrf
+                <button class="btn btn-link text-white" href="{{ route('logout') }}" role="button">
                     <strong>Logout</strong>
                 </button>
             </form>
-           
+
         </li>
         <li class="nav-item">
         </li>

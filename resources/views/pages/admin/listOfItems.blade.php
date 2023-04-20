@@ -21,7 +21,7 @@
 
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">List of All Items</h3>
+                <h3 class="card-title"> <strong>List of All Items</strong> </h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -31,8 +31,8 @@
                     <th>Serial #</th>
                     <th>Item Name</th>
                     <th>Item Description(s)</th>
-                    <th>Qty.</th>
-                    <th>Location</th>
+                    <th>Campus</th>
+                    <th>Room</th>
                     <th>Actions</th>
                   </tr>
                   </thead>
@@ -43,18 +43,26 @@
                           <td>{{ $item->serial_number }}</td>
                           <td>{{ $item->item_name }}</td>
                           <td>{{ Str::limit($item->item_description, 20, '...') }}</td>
-                          <td>{{ $item->quantity }}</td>
+                          <td>{{ $item->campus }}</td>
                           <td>{{ $item->location }}</td>
                           <td><a href="{{ route('view_item_details', $item->serial_number) }}" class="btn btn-sm btn-primary">
                                   <i class="fa fa-eye"></i></a>
                               <a href="{{ route('edit_item_details', $item->serial_number) }}" class="btn btn-sm btn-warning">
                                   <i class="fa fa-edit"></i></a>
+                                  <!-- <a href="" data-id="{{ $item->serial_number }}" class="btn btn-sm btn-danger show-alert-delete-item">
+                                  <i class="fa fa-trash"></i></a> -->
+
+                                  <form class="form_delete_btn" method="POST" action="{{ route('delete_item', $item->serial_number) }}">
+                            @csrf
+                            <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                            <button type="submit" class="btn btn-sm btn-danger show-alert-delete-item" data-toggle="tooltip" title='Delete'><i class="fa fa-trash"></i></button>
+                        </form>
 
                               <!-- Button to Open the Modal -->
-                              <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                              <!-- <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
                                   data-target="#myModal">
                                   <i class="fa fa-trash"></i>
-                              </button>
+                              </button> -->
 
                               <!-- The Modal -->
                               <div class="modal" id="myModal">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -25,7 +26,7 @@ class UserController extends Controller
 
     public function searchUser(Request $request)
     {
-        $search_text =request('query');
+        $search_text = request('query');
 
         $users = User::where('id_number', 'LIKE', '%' . $search_text . '%')
             ->orWhere('first_name', 'LIKE', '%' . $search_text . '%')
@@ -48,8 +49,8 @@ class UserController extends Controller
     }
 
     public function saveNewUser(Request $request)
-    {    
-     
+    {
+
         $this->validate(
             $request,
             [
@@ -81,11 +82,15 @@ class UserController extends Controller
         }
     }
 
-    public function deleteUser($id_number)
+    public function deleteUser(Request $request, $id_number)
     {
-        $user = User::find($id_number);
+        $id = $request->id_number;
+        // echo $id;
+        // exit;
+        $user = User::find($id);
         $user->delete();
-        return redirect('list-of-users')->with('status', 'User ' . $id_number . ' removed successfully.');
+        Session::flash('success', 'Successfuly Removed User: ' . $id);
+        return redirect('list-of-users');
     }
 
     public function editUserInfo($id_number)

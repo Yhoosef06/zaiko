@@ -22,7 +22,7 @@
               <div class="card">
                 <div class="card-header row">
                   <div class="col md-8">
-                    <h3 class="card-title">List of Borrowed Items</h3>
+                    <h3 class="card-title"><strong>List of Borrowed Items</strong></h3>
                   </div>
                   <div class="col md-4 text-right">
                     <Button type="submit" class="btn btn-success">Generate Report</Button>

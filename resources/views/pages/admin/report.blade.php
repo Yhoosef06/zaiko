@@ -14,11 +14,11 @@
             @csrf
             <div class="row">
                 <div class="col">
-                    <label for="location">Room / Location:</label>
+                    <label for="location">Room:</label>
                     <select id="location" name="location"
                         class="form-control col-sm-8 @error('location')
                         border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a location</option>
+                        <option value="option_select" disabled selected>Select a room</option>
                         @foreach ($rooms as $room)
                             <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
                         @endforeach
@@ -60,7 +60,7 @@
                 <div class="col">
                     <label for="prepared_by">Prepared By:</label>
                     <input placeholder="Name of staff/faculty member" type="text" id="prepared_by" name="prepared_by"
-                    value="{{ old('prepared_by') }}"    class="form-control @error('prepared_by')
+                    value="{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}"    class="form-control @error('prepared_by')
                     border-danger @enderror">
                     @error('prepared_by')
                         <div class="text-danger">

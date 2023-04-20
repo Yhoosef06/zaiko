@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 use Symfony\Contracts\Service\Attribute\Required;
 
 class ItemsController extends Controller
@@ -41,6 +42,7 @@ class ItemsController extends Controller
         $item = Item::find($serial_number);
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
+        $item->campus = $request->campus;
         $item->item_name = $request->item_name;
         $item->item_description = $request->item_description;
         $item->aquisition_date = $request->aquisition_date;
@@ -53,18 +55,22 @@ class ItemsController extends Controller
         return redirect('list-of-items')->with('status', 'Item ' . $serial_number . ' has been updated.');
     }
 
-    public function deleteItem($serial_number)
+    public function deleteItem(Request $request, $serial_number)
     {
-        $item = Item::find($serial_number);
+        $serial = $request->serial_number;
+        $item = Item::find($serial);
         $item->delete();
-        return redirect('list-of-items')->with('status', 'Item ' . $serial_number . ' removed successfully.');
+        Session::flash('success', 'Successfuly Removed Item:'. $serial);
+        return redirect('list-of-items');
     }
 
     public function saveNewItem(Request $request)
     {
+       
         $this->validate($request, [
             'serial_number' => 'required|max:20',
             'location' => 'required',
+            'campus' => 'required',
             'item_name' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'nullable',
@@ -76,7 +82,7 @@ class ItemsController extends Controller
 
         $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
         if ($item === null) {
-
+           
             Item::create([
                 'serial_number' => $request->serial_number,
                 'location' => $request->location,
@@ -87,7 +93,8 @@ class ItemsController extends Controller
                 'inventory_tag' => $request->inventory_tag,
                 'quantity' => $request->quantity,
                 'status' => $request->status,
-                'borrowed' => 'no'
+                'borrowed' => 'no',
+                'campus' => $request->campus,
             ]);
 
             return redirect('/adding-new-item')->with('status', 'Item Successfully Added! Do you want to add another item?');
