@@ -22,7 +22,7 @@
 
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Pending Items</h3>
+                <h3 class="card-title"><strong>Pending Items</strong></h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
