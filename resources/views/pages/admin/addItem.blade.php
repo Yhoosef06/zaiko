@@ -8,15 +8,15 @@
     @endif
 
     <!-- <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Adding New Item</h1>
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1>Adding New Item</h1>
+              </div>
+             
+            </div>
           </div>
-         
-        </div>
-      </div>
-    </section> -->
+        </section> -->
 
 
     <div class="col-lg-10 bg-light shadow-sm p-3">
@@ -27,13 +27,22 @@
             @csrf
             <div class="row">
                 <div class="col">
-                    <label for="location">Location: </label>
+                    <label for="campus">Campus:</label>
+                    <select id="campus" name="campus"
+                        class="form-control col-sm-5 @error('campus')
+                                        border-danger @enderror">
+                        <option value="option_select" disabled selected>Choose a campus</option>
+                        <option value="main">Main</option>
+                        <option value="basak">Basak</option>
+                    </select>
+
+                    <label for="location">Room: </label>
                     <div style="display:flex">
                         <div>
                             <select id="location" name="location"
                                 class="form-control @error('location')
                                         border-danger @enderror">
-                                <option value="option_select" disabled selected>Select a location </option>
+                                <option value="option_select" disabled selected>Choose a room</option>
                                 @foreach ($rooms as $room)
                                     <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
                                 @endforeach
@@ -41,7 +50,8 @@
                         </div>
 
                         <div>
-                            <a class="btn text-blue" href="{{route('adding_new_room')}}"><i class="fa fa-plus-circle"></i></a>
+                            <a class="btn text-blue" href="{{ route('adding_new_room') }}"><i
+                                    class="fa fa-plus-circle"></i></a>
                         </div>
                     </div>
 
@@ -122,7 +132,7 @@
                     @enderror
 
                     <label for="status">Status:</label>
-                    <select name="status" id="status" name="status" class="form-control">
+                    <select id="status" name="status" class="form-control">
                         <option value="Active">Active</option>
                         <option value="For Repair">For Repair</option>
                         <option value="Obsolete">Obsolete</option>
