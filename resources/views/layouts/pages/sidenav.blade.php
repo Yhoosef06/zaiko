@@ -72,7 +72,7 @@
                                     </li>   
                                 </ul>
                             </li>
-                        @elseif( \Auth::user()->account_type == 'admin' )
+                        @elseif( \Auth::user()->account_type == 'admin'||'reads' )
                         <li class="nav-item">
                             <a href="{{route('admin.dashboard')}}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>

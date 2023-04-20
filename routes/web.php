@@ -34,12 +34,12 @@ Route::post('/signin', [SignInController::class,'store'])->name('signin');
 Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
 
 
-Route::group(['middleware' => ['auth']], function(){
+// Route::group(['middleware' => ['auth']], function(){
     // Route::middleware(['user-role:admin'])->group(function(){
     //     Route::controller(PagesController::class)->group(function(){
     //         Route::get('/admin-dashboard','index')->name('admin.dashboard');
 //admin
-    Route::middleware(['auth','user-role:admin'])->group(function(){
+    Route::middleware(['auth','user-role:admin|reads'])->group(function(){
         Route::controller(PagesController::class)->group(function(){
             Route::get('/admin-dashboard','index')->name('admin.dashboard');
         });
@@ -137,4 +137,4 @@ Route::group(['middleware' => ['auth']], function(){
 // });
 
 // Route::get('/test',[PagesController::class,'test']);
-});
+// });
