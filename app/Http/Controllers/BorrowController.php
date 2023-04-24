@@ -87,13 +87,16 @@ class BorrowController extends Controller
         
     }
 
-    public function borrowItem($id,$serial_number){
+    public function borrowItem(Request $request,$id,$serial_number){
+        $remarks = $request->item_remark;
+        // echo $serial_number;
+        // exit;
         $user = auth()->user();
         if($user){
             $firstName = $user->first_name;
             $lastName = $user->last_name;
 
-            $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'returned', 'return_to' => $firstName .' '. $lastName]);
+            $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'returned', 'return_to' => $firstName .' '. $lastName,'item_remark' => $remarks]);
             $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
             Session::flash('success', 'Successfuly Return Borrowed Item.');
             return redirect('borrowed');
