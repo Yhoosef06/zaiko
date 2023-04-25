@@ -229,5 +229,5 @@ class ItemsController extends Controller
         // dd($items);
         return view('pages.admin.listOfItems', compact('items'));
     }
-    
+
 }

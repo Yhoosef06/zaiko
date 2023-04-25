@@ -168,7 +168,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="{{route('admin.dashboard')}}" class="nav-link">
+                            <a href="/qr-reader" class="nav-link">
                                 <i class="bi bi-qr-code-scan nav-icon"></i>
                                 <p>QR Code Scanner</p>
                             </a>
