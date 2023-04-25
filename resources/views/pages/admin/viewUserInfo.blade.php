@@ -10,8 +10,10 @@
                     <strong>Last Name:</strong> {{ $user->last_name }} <br>
                     @if ($user->account_type == 'student')
                         <strong>Account Type:</strong> {{ 'Student' }} <br>
-                    @else
+                    @elseif($user->account_type == 'admin')
                         <strong>Account Type:</strong> {{ 'Admin' }} <br>
+                    @else
+                        <strong>Account Type:</strong> {{ 'Reads' }} <br>
                     @endif
 
                     @if ($user->account_status == 'pending')

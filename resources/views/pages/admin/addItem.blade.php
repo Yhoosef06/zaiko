@@ -21,7 +21,7 @@
 
     <div class="col-lg-10 bg-light shadow-sm p-3">
         <label for="adding new item">
-            <h1>Adding New Item</h1>
+            <h2>Adding New Item</h2>
         </label>
         <form action="{{ route('save_new_item') }}" method="POST">
             @csrf

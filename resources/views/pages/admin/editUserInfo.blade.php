@@ -9,7 +9,7 @@
     <div class="container m-5">
         <div class="col-lg-10 bg-light shadow-sm p-sm-2">
             <label for="adding new item">
-                <h1>Edit User Info</h1>
+                <h2>Edit User Info</h2>
             </label>
             <form action="{{ route('update_user_info', $user->id_number) }}" method="POST">
                 @csrf
@@ -21,7 +21,7 @@
                             class="form-control col-sm-4 @error('id_number')
                             border-danger
                             @enderror">
-                            <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br>
+                        <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br>
                         @error('id_number')
                             <div class="text-danger">
                                 {{ $message }}
@@ -45,13 +45,17 @@
                             @if ($user->account_type == 'student')
                                 <option value="student">Student</option>
                                 <option value="admin">Admin</option>
+                                <option value="reads">Reads</option>
+                            @elseif ($user->account_type == 'admin')
+                                <option value="admin">Admin</option>
+                                <option value="student">Student</option>
+                                <option value="reads">Reads</option>
                             @else
+                                <option value="reads">Reads</option>
                                 <option value="admin">Admin</option>
                                 <option value="student">Student</option>
                             @endif
                         </select>
-
-
 
                         <hr>
                         <a href="{{ route('view_users') }}" class="btn btn-outline-dark">Cancel</a>
