@@ -75,10 +75,11 @@ class UserController extends Controller
                 // 'front_of_id' => $request->file('front_of_id')->store(('ids')),
                 // 'back_of_id' => $request->file('back_of_id')->store(('ids')),
             ]);
-
-            return redirect('add-new-user')->with('status', 'User Successfully Added. Do you want to add another user?');
+            Session::flash('success', 'User Successfully Added. Do you want to add another user?');
+            return redirect('add-new-user');
         } else {
-            return redirect('add-new-user')->with('status', 'I.D. Number is already been used.');
+            Session::flash('message', 'I.D. Number has already been used.');
+            return redirect('add-new-user');
         }
     }
 
@@ -111,7 +112,8 @@ class UserController extends Controller
         $user->account_status = $request->account_status;
         $user->update();
 
-        return redirect('list-of-users')->with('status', 'User ' . $id_number . ' has been updated.');
+        Session::flash('success', 'User ' . $id_number . ' has been updated.');
+        return redirect('list-of-users');
     }
 
     public function changeUserPassword($id_number)
