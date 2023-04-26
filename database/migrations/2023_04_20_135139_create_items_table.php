@@ -24,6 +24,7 @@ class CreateItemsTable extends Migration
             $table->string('borrowed');
             $table->string('inventory_tag');
             $table->string('location');
+            $table->string('campus');
             $table->timestamps();
         });
     }

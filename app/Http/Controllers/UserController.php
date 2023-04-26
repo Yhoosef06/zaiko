@@ -26,7 +26,7 @@ class UserController extends Controller
 
     public function searchUser(Request $request)
     {
-        $search_text =request('query');
+        $search_text = request('query');
 
         $users = User::where('id_number', 'LIKE', '%' . $search_text . '%')
             ->orWhere('first_name', 'LIKE', '%' . $search_text . '%')
@@ -49,8 +49,8 @@ class UserController extends Controller
     }
 
     public function saveNewUser(Request $request)
-    {    
-     
+    {
+
         $this->validate(
             $request,
             [
@@ -75,21 +75,22 @@ class UserController extends Controller
                 // 'front_of_id' => $request->file('front_of_id')->store(('ids')),
                 // 'back_of_id' => $request->file('back_of_id')->store(('ids')),
             ]);
-
-            return redirect('add-new-user')->with('status', 'User Successfully Added. Do you want to add another user?');
+            Session::flash('success', 'User Successfully Added. Do you want to add another user?');
+            return redirect('add-new-user');
         } else {
-            return redirect('add-new-user')->with('status', 'I.D. Number is already been used.');
+            Session::flash('message', 'I.D. Number has already been used.');
+            return redirect('add-new-user');
         }
     }
 
-    public function deleteUser(Request $request,$id_number)
+    public function deleteUser(Request $request, $id_number)
     {
         $id = $request->id_number;
         // echo $id;
         // exit;
         $user = User::find($id);
         $user->delete();
-        Session::flash('success', 'Successfuly Removed User.'. $id);
+        Session::flash('success', 'Successfuly Removed User: ' . $id);
         return redirect('list-of-users');
     }
 
@@ -111,7 +112,8 @@ class UserController extends Controller
         $user->account_status = $request->account_status;
         $user->update();
 
-        return redirect('list-of-users')->with('status', 'User ' . $id_number . ' has been updated.');
+        Session::flash('success', 'User ' . $id_number . ' has been updated.');
+        return redirect('list-of-users');
     }
 
     public function changeUserPassword($id_number)

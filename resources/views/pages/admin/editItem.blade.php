@@ -8,14 +8,20 @@
     @endif
     <div class="col-lg-10 bg-light shadow-sm p-3">
         <label for="adding new item">
-            <h1>Edit Item Details</h1>
+            <h2>Edit Item Details</h2>
         </label>
         <form action="{{ route('update_item_details', $item->serial_number) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="row">
                 <div class="col">
-                    <label for="location">Location:</label>
+                    <label for="campus">Campus:</label>
+                    <select id="campus" name="campus" class="form-control col-sm-5">
+                        <option value="{{ $item->campus }}" selected>{{ $item->campus }}</option>
+                        <option value="Main">Main</option>
+                        <option value="Basak">Basak</option>
+                    </select>
+                    <label for="location">Room:</label>
                     <select id="location" name="location" class="form-control col-sm-5">
                         <option value="{{ $item->location }}" selected>{{ $item->location }}</option>
                         @foreach ($rooms as $room)
@@ -30,8 +36,7 @@
                     @enderror
 
                     <label for="Item name">Item Name:</label>
-                    <input type="text" id="item_name" name="item_name"
-                        value="{{ $item->item_name }}"
+                    <input type="text" id="item_name" name="item_name" value="{{ $item->item_name }}"
                         class="form-control @error('item_name')
                     border-danger
                     @enderror"
@@ -103,29 +108,6 @@
                         <option value="For Repair">For Repair</option>
                         <option value="Obsolete">Obsolete</option>
                     </select>
-
-                    {{-- <label for="borrowed or not">Is it borrowed or not?</label>
-                    @if ($item->borrowed == 'no')
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='borrowed' name="borrowed" value="no" checked>
-                            No
-                        </label>
-                        /
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='borrowed' name="borrowed" value="yes">
-                            Yes
-                        </label>
-                    @else
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='borrowed' name="borrowed" value="no">
-                            No
-                        </label>
-                        /
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='borrowed' name="borrowed" value="yes" checked>
-                            Yes
-                        </label>
-                    @endif --}}
 
                     <label for="borrowed or not">Inventory Tag:</label>
                     @if ($item->inventory_tag == 'with')

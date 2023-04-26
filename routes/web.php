@@ -12,6 +12,7 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Auth\RegisterController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,9 @@ use App\Http\Controllers\Auth\RegisterController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/qr-reader', function () {
+    return view('qr-reader');
+});
 
 Route::get('/register', [RegisterController::class,'index'])->name('register');
 Route::post('/register', [RegisterController::class,'store']);
@@ -34,12 +37,12 @@ Route::post('/signin', [SignInController::class,'store'])->name('signin');
 Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
 
 
-Route::group(['middleware' => ['auth']], function(){
+// Route::group(['middleware' => ['auth']], function(){
     // Route::middleware(['user-role:admin'])->group(function(){
     //     Route::controller(PagesController::class)->group(function(){
     //         Route::get('/admin-dashboard','index')->name('admin.dashboard');
 //admin
-    Route::middleware(['auth','user-role:admin'])->group(function(){
+    Route::middleware(['auth','user-role:admin|reads'])->group(function(){
         Route::controller(PagesController::class)->group(function(){
             Route::get('/admin-dashboard','index')->name('admin.dashboard');
         });
@@ -55,13 +58,6 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
         Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
         Route::post('deleting-item-{serial_number}', [ItemsController::class,'deleteItem'])->name('delete_item');
-        //reports
-        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
-        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
-        Route::get('/returned-items',[ItemsController::class, 'generateReturned'])->name('returned_items');
-        Route::post('/download-returned-items-report',[ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
-        Route::get('/report-test',[ItemsController::class, 'reportTest']);
-        Route::get('/unreturned-items',[ItemsController::class, 'generateUnreturned'])->name('unreturned_items');
 
         // FOR USERS
         Route::get('add-new-user', [UserController::class,'addUser'])->name('add_user');
@@ -82,10 +78,18 @@ Route::group(['middleware' => ['auth']], function(){
         //FOR Manage Borrowings
         Route::get('borrowed',[BorrowController::class, 'borrowed'])->name('borrowed');
         Route::get('pending',[BorrowController::class, 'pending'])->name('pending');
-        Route::get('for-return', [BorrowController::class, 'forReturn'])->name('for-return');
-        Route::post('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
-        Route::post('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
+        Route::get('returned', [BorrowController::class, 'returned'])->name('returned');
+        Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
+        Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
         Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
+
+        //reports
+        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
+        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
+        Route::post('/download-returned-items-report',[ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
+        Route::post('/download-borrowed-items-report',[ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
+        Route::get('/report-test',[ItemsController::class, 'reportTest']);
+       
     }); 
 
     //student
@@ -136,4 +140,4 @@ Route::group(['middleware' => ['auth']], function(){
 // });
 
 // Route::get('/test',[PagesController::class,'test']);
-});
+// });

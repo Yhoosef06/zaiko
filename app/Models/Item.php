@@ -23,6 +23,7 @@ class Item extends Model
         'status',
         'borrowed',
         'inventory_tag',
-        'location'
+        'location',
+        'campus'
     ];
 }

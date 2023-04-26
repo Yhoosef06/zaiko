@@ -42,6 +42,7 @@ class ItemsController extends Controller
         $item = Item::find($serial_number);
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
+        $item->campus = $request->campus;
         $item->item_name = $request->item_name;
         $item->item_description = $request->item_description;
         $item->aquisition_date = $request->aquisition_date;
@@ -51,7 +52,8 @@ class ItemsController extends Controller
         $item->inventory_tag = $request->inventory_tag;
         $item->update();
 
-        return redirect('list-of-items')->with('status', 'Item ' . $serial_number . ' has been updated.');
+        Session::flash('success', 'Item ' . $serial_number . ' has been updated.');
+        return redirect('list-of-items');
     }
 
     public function deleteItem(Request $request, $serial_number)
@@ -59,15 +61,17 @@ class ItemsController extends Controller
         $serial = $request->serial_number;
         $item = Item::find($serial);
         $item->delete();
-        Session::flash('success', 'Successfuly Removed Item:'. $serial);
+        Session::flash('success', 'Successfuly Removed Item:' . $serial);
         return redirect('list-of-items');
     }
 
     public function saveNewItem(Request $request)
     {
+
         $this->validate($request, [
             'serial_number' => 'required|max:20',
             'location' => 'required',
+            'campus' => 'required',
             'item_name' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'nullable',
@@ -90,12 +94,14 @@ class ItemsController extends Controller
                 'inventory_tag' => $request->inventory_tag,
                 'quantity' => $request->quantity,
                 'status' => $request->status,
-                'borrowed' => 'no'
+                'borrowed' => 'no',
+                'campus' => $request->campus,
             ]);
-
-            return redirect('/adding-new-item')->with('status', 'Item Successfully Added! Do you want to add another item?');
+            Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
+            return redirect('/adding-new-item');
         } else {
-            return redirect('/adding-new-item')->with('status', 'Serial number is already been used.');
+            Session::flash('message', 'Serial number has already been registered.');
+            return redirect('/adding-new-item');
         }
     }
 
@@ -111,52 +117,53 @@ class ItemsController extends Controller
         return view('pages.admin.returnedItems')->with(compact('data'));
     }
 
-    public function reportTest(){
+    public function reportTest()
+    {
 
         $borrows = Order::where('order_status', '=', 'returned')->get();
         return view('pages.pdfReturnedItems')->with(compact('borrows'));
     }
 
-    // public function downloadReturnedReport()
-    // {
-    //     $items = Item::orderBy('unit_number', 'ASC')->get();
-
-    //     if ($request->has('download')) {
-    //         $pdf = App::make('dompdf.wrapper');
-    //         $pdf->loadView('pages.pdfReport', compact(
-    //             'items',
-    //             'purpose',
-    //             'location',
-    //             'prepared_by',
-    //             'verified_by',
-    //             'lab_oic',
-    //             'it_specialist',
-    //             'department'
-    //         ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
-
-    //         return $pdf->download('InventoryReport' . $location . '.pdf');
-
-    //     }
-
-    //     return view('pages.pdfReport')->with(compact(
-    //         'items',
-    //         'location',
-    //         'purpose',
-    //         'prepared_by',
-    //         'verified_by',
-    //         'lab_oic',
-    //         'it_specialist',
-    //         'department'
-    //     ));
-    // }
-
-    
-
-    public function generateUnreturned()
+    public function downloadReturnedReport(Request $request)
     {
-        $data = Order::where('order_status', '=', 'borrowed')->get();
-        return view('pages.admin.report')->with(compact('data'));
+        // $items = Order::orderBy('id_number', 'ASC')->get();
+        $items = Order::where('order_status', '=', 'returned')->orderBy('id_number', 'ASC')->get();
+
+        if ($request->has('download')) {
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadView('pages.pdfReturnedItems', compact(
+                'items'
+            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+
+            return $pdf->download('ReturnedItemsReport' . '.pdf');
+        }
+
+        return view('pages.pdfReturnedItems')->with(compact(
+            'first_name',
+            'items'
+        ));
     }
+
+    public function downloadBorrowedReport(Request $request)
+    {
+        // $items = Order::orderBy('id_number', 'ASC')->get();
+        $items = Order::where('order_status', '=', 'borrowed')->orderBy('id_number', 'ASC')->get();
+
+        if ($request->has('download')) {
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadView('pages.pdfBorrowedItems', compact(
+                'items'
+            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+
+            return $pdf->download('BorrowedItemsReport' . '.pdf');
+        }
+
+        return view('pages.pdfBorrowedItems')->with(compact(
+            'first_name',
+            'items'
+        ));
+    }
+
 
     public function downloadReport(Request $request)
     {
@@ -197,7 +204,6 @@ class ItemsController extends Controller
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
 
             return $pdf->download('InventoryReport' . $location . '.pdf');
-
         }
 
         return view('pages.pdfReport')->with(compact(
@@ -223,5 +229,4 @@ class ItemsController extends Controller
         // dd($items);
         return view('pages.admin.listOfItems', compact('items'));
     }
-    
 }

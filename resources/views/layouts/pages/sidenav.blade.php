@@ -11,16 +11,16 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        {{-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="dist/img/scs.png" class="img-circle elevation-2" alt="User Image">
             </div>
-            <div class="info">
+            <div class="info"> --}}
                 {{-- @auth
                     <a href="#" class="d-block">{{Auth::user()->first_name}}  {{Auth::user()->last_name}}</a>
                 @endauth --}}
-            </div>
-        </div>
+            {{-- </div>
+        </div> --}}
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
@@ -72,7 +72,7 @@
                                     </li>   
                                 </ul>
                             </li>
-                        @elseif( \Auth::user()->account_type == 'admin' )
+                        @elseif( \Auth::user()->account_type == 'admin'||'reads' )
                         <li class="nav-item">
                             <a href="{{route('admin.dashboard')}}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
@@ -111,18 +111,6 @@
                                             <p>Download LIAMS</p>
                                         </a>
                                     </li> --}}
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('returned_items') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Returned Items List</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('unreturned_items') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Unreturned Items List</p>
-                                    </a>
                                 </li>
                             </ul>
                         </li>
@@ -167,17 +155,23 @@
                                 <li class="nav-item">
                                     <a href="{{ route('borrowed') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Borrowed</p>
+                                        <p>Borrowed Items</p>
                                     </a>
                                 </li>
                                
                                 <li class="nav-item">
-                                    <a href="{{ route('for-return') }}" class="nav-link">
+                                    <a href="{{ route('returned') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Returned</p>
+                                        <p>Returned Items</p>
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/qr-reader" class="nav-link">
+                                <i class="bi bi-qr-code-scan nav-icon"></i>
+                                <p>QR Code Scanner</p>
+                            </a>
                         </li>
                                 
                         @endif

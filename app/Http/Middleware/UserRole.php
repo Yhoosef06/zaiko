@@ -17,7 +17,9 @@ class UserRole
      */
     public function handle(Request $request, Closure $next, $account_type)
     {
-        if(Auth::check() && Auth::user()->account_type == $account_type){
+        
+        $account_type = explode('|', $account_type);
+        if(Auth::check() && in_array(Auth::user()->account_type, $account_type)){
             return $next($request);
         }
         return response()->json(["You don't have permission to access this page"]);

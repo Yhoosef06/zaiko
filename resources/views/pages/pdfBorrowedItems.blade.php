@@ -51,7 +51,7 @@
 <body>
     <div class="container" style="font-weight: 800; font-size:18pt; text-align:center">
         UNIVERSITY OF SAN JOSE-RECOLETOS <br>
-        RETURNED ITEMS REPORT 
+        BORROWED ITEMS REPORT 
     </div>
     <div class="container" id="intro_details">
         <strong>DATE PREPARED:</strong> {{ now()->format('m-d-Y') }} <br>
@@ -66,9 +66,7 @@
                     <th>Serial #</th>           
                     <th>Item Description</th>
                     <th>Released By</th>
-                    <th>Returned To</th>
                     <th>Date Borrowed</th>
-                    <th>Date Returned</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,9 +77,7 @@
                         <td>{{ $borrow->serial_number }}</td>
                         <td>{{ Str::limit($borrow->item_description, 20, '...') }}</td>
                         <td>{{ $borrow->release_by }}</td>
-                        <td>{{ $borrow->return_to }}</td>
                         <td>{{ $borrow->created_at }}</td>
-                        <td>{{ $borrow->updated_at }}</td>
                       </tr>
                   @endforeach
             </tbody>

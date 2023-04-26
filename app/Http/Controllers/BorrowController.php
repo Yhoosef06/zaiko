@@ -63,10 +63,10 @@ class BorrowController extends Controller
         return view('pages.admin.pending')->with(compact('pendings'));
     }
 
-    public function forReturn(){
+    public function returned(){
         $forReturns = ORDER::where('order_status', '=', 'returned')->get();
 
-        return view('pages.admin.for-return')->with(compact('forReturns'));
+        return view('pages.admin.returned')->with(compact('forReturns'));
     }
 
     public function pendingItem(Request $request,$id,$serial_number){

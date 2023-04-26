@@ -21,7 +21,7 @@
 
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">List of All Items</h3>
+                <h3 class="card-title"> <strong>List of All Items</strong> </h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -31,8 +31,8 @@
                     <th>Serial #</th>
                     <th>Item Name</th>
                     <th>Item Description(s)</th>
-                    <th>Qty.</th>
-                    <th>Location</th>
+                    <th>Campus</th>
+                    <th>Room</th>
                     <th>Actions</th>
                   </tr>
                   </thead>
@@ -43,7 +43,7 @@
                           <td>{{ $item->serial_number }}</td>
                           <td>{{ $item->item_name }}</td>
                           <td>{{ Str::limit($item->item_description, 20, '...') }}</td>
-                          <td>{{ $item->quantity }}</td>
+                          <td>{{ $item->campus }}</td>
                           <td>{{ $item->location }}</td>
                           <td><a href="{{ route('view_item_details', $item->serial_number) }}" class="btn btn-sm btn-primary">
                                   <i class="fa fa-eye"></i></a>
