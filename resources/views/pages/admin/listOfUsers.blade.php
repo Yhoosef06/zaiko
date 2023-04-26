@@ -81,7 +81,7 @@
 
                                           <!-- Modal body -->
                                           <div class="modal-body">
-                                              Are you sure you want to delete item?
+                                              Are you sure you want to delete user?
                                           </div>
 
                                           <!-- Modal footer -->
