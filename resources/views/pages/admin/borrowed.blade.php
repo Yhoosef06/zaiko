@@ -31,7 +31,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                <table id="borrowed" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>Serial #</th>
@@ -55,8 +55,7 @@
                           <td>{{ $borrow->created_at}}</td>
                       
                           <td>
-                            <a href="{{ route('borrow_item',['id' => $borrow->id, 'serial_number' => $borrow->serial_number]) }}" class="btn btn-sm btn-success" title="Approved">
-                                    <i class="fa fa-check"></i></a>
+                          
                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#returnModal">Return</button>
                           </td>
                       </tr>
