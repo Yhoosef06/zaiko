@@ -49,15 +49,19 @@
                           <td>{{ Str::limit($pending->item_description, 20, '...') }}</td>
                       
                           <td>
-                            <a href="{{ route('pending_item', ['id' => $pending->id, 'serial_number' => $pending->serial_number]) }}" class="btn btn-sm btn-success" title="Approved">
-                                    <i class="fa fa-check"></i></a>
-                            <!-- <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                <button type="button" class="btn btn-success"><i class="fa fa-check"></i></button>
-                              </div>
-                              
-                              <input type="text" class="form-control">
-                            </div> -->
+                            <!-- <a href="{{ route('pending_item', ['id' => $pending->id, 'serial_number' => $pending->serial_number]) }}" class="btn btn-sm btn-success" title="Approved">
+                                    <i class="fa fa-check"></i></a> -->
+                            <form class="form_delete_btn" method="POST" action="{{ route('pending_item', ['id' => $pending->id, 'serial_number' => $pending->serial_number]) }}">
+                            @csrf
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                            <input type="hidden" name="id" value="{{ $pending->id }}">
+                            <input type="hidden" name="serial_number" value="{{ $pending->serial_number }}">
+                              <button type="submit" class="btn btn-success borrowed-approve"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="number" placeholder="Number of Days" name="number_of_days" class="form_control">
+                          </div>
+                        </form>
                             <a href="{{ route('remove_borrow', $pending->id) }}" class="btn btn-sm btn-danger" title="Disregard">
                                     <i class="fa fa-trash"></i></a>
 

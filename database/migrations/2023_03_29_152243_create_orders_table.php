@@ -25,6 +25,7 @@ class CreateOrdersTable extends Migration
             $table->string('release_by');
             $table->string('return_to');
             $table->string('order_status');
+            $table->string('item_remark');
             $table->timestamps();
         });
     }
