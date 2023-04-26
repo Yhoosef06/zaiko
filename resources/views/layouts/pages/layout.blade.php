@@ -160,10 +160,27 @@
 
 <script>
   $(function () {
-    $("#example1").DataTable({
+    $("#borrowed").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false
       
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+    $("#pending").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false
+      
+    });
+    $("#returned").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false
+      
+    });
+    $("#listofitems").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false
+      
+    });
+    $("#listofusers").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false
+      
+    });
+    
     
   });
 </script>
