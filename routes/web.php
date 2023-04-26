@@ -12,6 +12,7 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Auth\RegisterController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,25 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 Route::get('/qr-reader', function () {
     return view('qr-reader');
+});
+
+Route::post('/serial-number', function (Request $request) {
+    $serialNumber = $request->input('serialNumber');
+    function sendSerialNumberToLaravel($serialNumber) {
+        $url = 'http://127.0.0.1:8000/serial_number';
+        $data = array('serialNumber' => $serialNumber);
+    
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        $response = curl_exec($ch);
+        curl_close($ch);
+    
+        return response()->json($response);
+    }    
 });
 
 Route::get('/register', [RegisterController::class,'index'])->name('register');

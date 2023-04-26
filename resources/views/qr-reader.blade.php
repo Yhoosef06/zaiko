@@ -4,14 +4,17 @@
     {{-- <script src="./node_modules/html5-qrcode/html5-qrcode.min.js"></script> --}}
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
-    <div class="container">
-        <div>
-            <h1>QR Scanner</h1>
-            <div id="reader"></div>
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title"><strong>QR Scanner</strong></h2>
+        </div>
+        <div class="card-body">
+            <div class="container">
+                <div id="reader"></div>
+                <div id="result"></div>
+            </div>
         </div>
     </div>
-
-    <div id="result"></div>
 
     <script>
         function onScanSuccess(decodedText, decodedResult) {

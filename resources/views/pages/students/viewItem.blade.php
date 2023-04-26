@@ -13,7 +13,6 @@
                 <div class="col">
                     <strong>Location:</strong> {{ $item->location }} <br>
                     <strong>Item Description:</strong> {{ $item->item_description }} <br>
-                    <strong>Borrowed?:</strong> {{ $item->borrowed }} <br>
                     <strong>Status:</strong> {{ $item->status }}
                 </div>
             </div>
