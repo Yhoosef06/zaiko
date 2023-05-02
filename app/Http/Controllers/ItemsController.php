@@ -71,6 +71,8 @@ class ItemsController extends Controller
 
         $this->validate($request, [
             'location' => 'required',
+            'brand' => 'required',
+            'model' => 'required',
             'item_category' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'nullable',
@@ -205,29 +207,18 @@ class ItemsController extends Controller
                 'it_specialist',
                 'department'
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
-            return view('pages.pdfReport')->with(compact(
-                'items',
-                'purpose',
-                'location',
-                'prepared_by',
-                'verified_by',
-                'lab_oic',
-                'it_specialist',
-                'department'
-            ));
-            // return $pdf->download('InventoryReport' . $location . '.pdf');
+            // return view('pages.pdfReport')->with(compact(
+            //     'items',
+            //     'purpose',
+            //     'location',
+            //     'prepared_by',
+            //     'verified_by',
+            //     'lab_oic',
+            //     'it_specialist',
+            //     'department'
+            // ));
+            return $pdf->download('InventoryReport' . $location . '.pdf');
         }
-
-        return view('pages.pdfReport')->with(compact(
-            'items',
-            'location',
-            'purpose',
-            'prepared_by',
-            'verified_by',
-            'lab_oic',
-            'it_specialist',
-            'department'
-        ));
     }
 
 
