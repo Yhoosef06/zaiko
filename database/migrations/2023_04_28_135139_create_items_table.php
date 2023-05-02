@@ -14,18 +14,22 @@ class CreateItemsTable extends Migration
     public function up()
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->string('serial_number')->primary();
-            $table->string('item_name');
-            $table->string('item_description');
+            $table->id();
+            $table->unsignedBigInteger('location');
+            $table->string('item_category');
+            $table->string('brand')->nullable();
+            $table->string('model')->nullable();
+            $table->string('description');
             $table->integer('quantity');
-            $table->string('unit_number');
+            $table->string('unit_number')->nullable();
             $table->date('aquisition_date')->nullable();
             $table->string('status');
             $table->string('borrowed');
             $table->string('inventory_tag');
-            $table->string('location');
-            $table->string('campus');
+            $table->string('serial_number')->nullable();
             $table->timestamps();
+
+            $table->foreign('location')->references('id')->on('rooms');
         });
     }
 

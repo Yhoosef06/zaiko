@@ -57,7 +57,7 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         Route::get('viewing-item-{serial_number}', [ItemsController::class,'viewItemDetails'])->name('view_item_details');
         Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
         Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
-        Route::post('deleting-item-{serial_number}', [ItemsController::class,'deleteItem'])->name('delete_item');
+        Route::post('deleting-item-{id}', [ItemsController::class,'deleteItem'])->name('delete_item');
 
         // FOR USERS
         Route::get('add-new-user', [UserController::class,'addUser'])->name('add_user');

@@ -18,21 +18,27 @@ class RoomSeeder extends Seeder
         $room = [
             [
                 'room_name' => 'BRD2',
+                'department_id' => '8'
             ],
             [
                 'room_name' => 'BCL4',
+                'department_id' => '8'
             ],
             [
                 'room_name' => 'BCL5',
+                'department_id' => '8'
             ],
             [
-                'room_name' => 'FACULTY',
+                'room_name' => 'RM102',
+                'department_id' => '5'
             ],
             [
-                'room_name' => 'BRD1',
+                'room_name' => 'RM103',
+                'department_id' => '5'
             ],
             [
-                'room_name' => 'BCL8',
+                'room_name' => 'RM202',
+                'department_id' => '7'
             ]
         ];
         DB::table('rooms')->insert($room); 

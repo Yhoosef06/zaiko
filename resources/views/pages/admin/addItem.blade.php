@@ -7,18 +7,6 @@
         </div>
     @endif
 
-    <!-- <section class="content-header">
-          <div class="container-fluid">
-            <div class="row mb-2">
-              <div class="col-sm-6">
-                <h1>Adding New Item</h1>
-              </div>
-             
-            </div>
-          </div>
-        </section> -->
-
-
     <div class="col-lg-10 bg-light shadow-sm p-3">
         <label for="adding new item">
             <h2>Adding New Item</h2>
@@ -27,16 +15,7 @@
             @csrf
             <div class="row">
                 <div class="col">
-                    <label for="campus">Campus:</label>
-                    <select id="campus" name="campus"
-                        class="form-control col-sm-5 @error('campus')
-                                        border-danger @enderror">
-                        <option value="option_select" disabled selected>Choose a campus</option>
-                        <option value="Main">Main</option>
-                        <option value="Basak">Basak</option>
-                    </select>
-
-                    <label for="location">Room: </label>
+                    <label for="location">Room/Location: </label>
                     <div style="display:flex">
                         <div>
                             <select id="location" name="location"
@@ -44,7 +23,7 @@
                                         border-danger @enderror">
                                 <option value="option_select" disabled selected>Choose a room</option>
                                 @foreach ($rooms as $room)
-                                    <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
+                                    <option value="{{ $room->id }}">{{ $room->room_name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -61,13 +40,40 @@
                         </div>
                     @enderror
 
-                    <label for="Item name">Item Name:</label>
-                    <input type="text" id="item_name" name="item_name" value="{{ old('item_name') }}"
-                        class="form-control @error('item_name')
+                    <label for="Item name">Item Category:</label>
+                    <select id="item_category" name="item_category"
+                        class="form-control col-sm-8 @error('item_category')
+                        border-danger @enderror">
+                        <option value="option_select" disabled selected>Select a category</option>
+                        @foreach ($itemCategories as $category)
+                            <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
+                        @endforeach
+                    </select>
+                    @error('item_category')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="Brand">Brand:</label>
+                    <input type="text" id="brand" name="brand" value="{{ old('brand') }}"
+                        class="form-control @error('brand')
                     border-danger
                     @enderror"
-                        placeholder="Item Name">
-                    @error('item_name')
+                        placeholder="Brand Name (Leave an N/A if none.)">
+                    @error('brand')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="Model">Model:</label>
+                    <input type="text" id="model" name="model" value="{{ old('model') }}"
+                        class="form-control @error('model')
+                    border-danger
+                    @enderror"
+                        placeholder="Model (Leave an N/A if none.)">
+                    @error('model')
                         <div class="text-danger">
                             {{ $message }}
                         </div>
@@ -79,21 +85,21 @@
 
                     <label for="unit number">Unit Number:</label>
                     <input type="text" id="unit_number" name="unit_number"
-                        class="form-control col-sm-4 @error('unit_number')
+                        class="form-control col-sm-5 @error('unit_number')
                     border-danger @enderror"
-                        value="{{ old('unit_number') }}" placeholder="Unit Number">
+                        value="{{ old('unit_number') }}" placeholder="Unit Number     (Leave an N/A if none.)">
                     @error('unit_number')
                         <div class="text-danger">
                             {{ $message }}
                         </div>
                     @enderror
-                    <p class="text-sm font-italic" style="font:italic">Type N/A or None if no unit number.</p>
                 </div>
 
                 <div class="col">
+
                     <label for="serial number"> Serial Number:</label>
                     <input type="text" id="serial_number" name="serial_number"
-                        class="form-control @error('serial_number')
+                        class="form-control col-sm-4 @error('serial_number')
                     border-danger @enderror"
                         value="{{ old('serial_number') }}" placeholder="Serial Number">
                     @if (session()->has('message'))
@@ -136,6 +142,7 @@
                         <option value="Active">Active</option>
                         <option value="For Repair">For Repair</option>
                         <option value="Obsolete">Obsolete</option>
+                        <option value="Lost">Lost</option>
                     </select>
 
                     <label for="borrowed or not">Inventory Tag:</label>
@@ -148,8 +155,25 @@
                         <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
                         Without
                     </label>
+                    <br>
+                    {{-- <label for="serial number"> Serial Number:</label>
+                    <input type="text" id="serial_number" name="serial_number"
+                        class="form-control col-sm-4 @error('serial_number')
+                    border-danger @enderror"
+                        value="{{ old('serial_number') }}" placeholder="Serial Number">
+                    @if (session()->has('message'))
+                        <div class="text-danger">
+                            {{ session()->get('message') }}
+                        </div>
+                    @endif
+                    @error('serial_number')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror --}}
 
                     <hr>
+
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                     <Button type="submit" class="btn btn-success">Submit</Button>
                 </div>

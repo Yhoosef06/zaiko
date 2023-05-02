@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemCategory;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -29,8 +30,10 @@ class PagesController extends Controller
     public function addItem()
     {
         //admin
-        $rooms = Room::all();
-        return view('pages.admin.addItem')->with(compact('rooms'));
+        $user_dept_id = Auth::user()->department_id; 
+        $rooms = Room::where('department_id', $user_dept_id)->get();
+        $itemCategories = ItemCategory::all();
+        return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories'));
     }
 
     public function printPDF(Request $request){

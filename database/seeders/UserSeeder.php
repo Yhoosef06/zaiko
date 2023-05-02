@@ -18,25 +18,27 @@ class UserSeeder extends Seeder
     {
         //
         $user = [
+            // [
+            //     'id_number' => 8888,
+            //     'first_name' => 'admin',
+            //     'last_name' => 'usjr',
+            //     'password' => Hash::make('usjrscs-123'),
+            //     'account_status' => 'approved',
+            //     'account_type' => 'admin',
+            //     'front_of_id' => 'null',
+            //     'back_of_id' => 'null',
+            //     'department_id' => ''
+            // ],
             [
-                'id_number' => 8888,
-                'first_name' => 'admin',
-                'last_name' => 'usjr',
-                'password' => Hash::make('usjrscs-123'),
-                'account_status' => 'approved',
-                'account_type' => 'admin',
-                'front_of_id' => 'null',
-                'back_of_id' => 'null'
-            ],
-            [
-                'id_number' => 2015012123,
-                'first_name' => 'John Jones',
-                'last_name' => 'Indiana',
+                'id_number' => 2016013001,
+                'first_name' => 'Joseph',
+                'last_name' => 'Magabilin',
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'pending',
-                'account_type' => 'student',
+                'account_type' => 'reads',
                 'front_of_id' => 'null',
-                'back_of_id' => 'null'
+                'back_of_id' => 'null',
+                'department_id' => '7'
             ],
             [
                 'id_number' => 2012321404,
@@ -46,7 +48,8 @@ class UserSeeder extends Seeder
                 'account_status' => 'pending',
                 'account_type' => 'student',
                 'front_of_id' => 'null',
-                'back_of_id' => 'null'
+                'back_of_id' => 'null',
+                'department_id' => '8'
             ],
             [
                 'id_number' => 2016331404,
@@ -56,7 +59,8 @@ class UserSeeder extends Seeder
                 'account_status' => 'pending',
                 'account_type' => 'student',
                 'front_of_id' => 'null',
-                'back_of_id' => 'null'
+                'back_of_id' => 'null',
+                'department_id' => '5'
             ],
             [
                 'id_number' => 2014571321,
@@ -66,7 +70,8 @@ class UserSeeder extends Seeder
                 'account_status' => 'pending',
                 'account_type' => 'student',
                 'front_of_id' => 'null',
-                'back_of_id' => 'null'
+                'back_of_id' => 'null',
+                'department_id' => '5'
             ],
             [
                 'id_number' => 2014175231,
@@ -76,7 +81,8 @@ class UserSeeder extends Seeder
                 'account_status' => 'pending',
                 'account_type' => 'student',
                 'front_of_id' => 'null',
-                'back_of_id' => 'null'
+                'back_of_id' => 'null',
+                'department_id' => '8'
             ],
         ];
         DB::table('users')->insert($user); 
