@@ -60,6 +60,8 @@
     <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
     <!-- <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet"> -->
     <!-- <link rel="stylesheet" href="@sweetalert2/themes/dark/dark.css"> -->
+    {{-- sidenav --}}
+    <link rel="stylesheet" href="plugins/aasidenav/styles.css">
 
 
 
@@ -92,6 +94,9 @@
 
     @yield('footer')
     @yield('script')
+
+
+
 </body>
 <!-- <script>
 @if(Session::has('success'))
@@ -155,6 +160,8 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script> -->
 <!-- <script src="sweetalert2/dist/sweetalert2.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 

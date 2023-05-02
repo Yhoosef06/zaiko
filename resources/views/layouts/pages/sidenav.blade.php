@@ -31,47 +31,41 @@
                 <li class="nav-item menu-open">
                     <ul class="nav nav-treeview">
                         @if( \Auth::user()->account_type == 'student' )
-                            <li class="nav-item">
-                                <a href="/student-dashboard" class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
-                                    <p>Dashboard</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                {{-- <a href="./index3.html" class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
-                                    <p>Borrow Item</p>
-                                </a> --}}
-
-
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-circle"></i>
-                                    <p>
-                                        Borrowing
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="{{ route('student.items') }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Items List</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('cart.list') }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Cart</p>
-                                        </a>
-                                    </li>    
-                                    <li class="nav-item">
-                                        <a href="{{ route('borrow_list') }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Borrowing List</p>
-                                        </a>
-                                    </li>   
-                                </ul>
-                            </li>
+                        <li class="nav-item">
+                            <a href="/student-dashboard" class="nav-link {{ Request::is('student-dashboard*') ? 'active' : '' }}">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-item menu-open">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-circle"></i>
+                                <p>
+                                    Borrowing
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview {{ Request::is('student/items*', 'cart*', 'borrow-list*') ? 'show' : '' }}">
+                                <li class="nav-item">
+                                    <a href="{{ route('student.items') }}" class="nav-link {{ Request::is('student-items*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Items List</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('cart.list') }}" class="nav-link {{ Request::is('student-cart-list*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Cart</p>
+                                    </a>
+                                </li>    
+                                <li class="nav-item">
+                                    <a href="{{ route('borrow_list') }}" class="nav-link {{ Request::is('borrow-list*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Borrowing List</p>
+                                    </a>
+                                </li>   
+                            </ul>
+                        </li>
                         @elseif( \Auth::user()->account_type == 'admin'||'reads' )
                         <li class="nav-item">
                             <a href="{{route('admin.dashboard')}}" class="nav-link">
