@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -18,10 +19,18 @@ class UserController extends Controller
     public function index()
     {
         //admin
-        $users = User::orderBy('updated_at', 'DESC')->paginate(10);
-        return view('pages.admin.listOfUsers', [
-            'users' => $users
-        ]);
+        if (Auth::user()->account_type == 'admin') {
+            $users = User::all();
+            return view('pages.admin.listOfUsers', [
+                'users' => $users
+            ]);
+        } else {
+            $user_dept_id = Auth::user()->department_id;
+            $users = User::where('department_id', $user_dept_id)->get();
+            return view('pages.admin.listOfUsers', [
+                'users' => $users
+            ]);   
+        }
     }
 
     public function searchUser(Request $request)

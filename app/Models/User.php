@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -29,8 +31,7 @@ class User extends Authenticatable
         'back_of_id',
         'account_type',
         'account_status',
-        'agreement',
-        'agreement_date'
+        'department_id'
     ];
 
     /**
@@ -52,6 +53,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    
-
+    public function departments(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
 }

@@ -81,26 +81,25 @@
                 @foreach ($items->groupBy('unit_number') as $item)
                     @foreach ($item as $index => $unit)
                         @if ($unit->location == $location)
-                            @if ($index == 0)
-                                <tr>
+                            {{-- @if ($index == 0) --}}
+                            <tr>
+                                <td>{{ $unit->serial_number }}</td>
+                                <td>{{ $unit->description }}</td>
+                                <td>{{ $unit->quantity }}</td>
+                                <td>{{ $unit->unit_number }}</td>
+                                <td>{{ $unit->aquisition_date }}</td>
+                                <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
+                                <td>{{ $unit->inventory_tag }}</td>
+                            </tr>
+                        {{-- @else --}}
+                            {{-- <tr>
                                     <td>{{ $unit->serial_number }}</td>
                                     <td>{{ $unit->item_description }}</td>
                                     <td>{{ $unit->quantity }}</td>
-                                    <td rowspan="{{ count($item) }}">
-                                        {{ $unit->unit_number }}</td>
-                                    <td rowspan="{{ count($item) }}">{{ $unit->aquisition_date }}</td>
                                     <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
                                     <td>{{ $unit->inventory_tag }}</td>
-                                </tr>
-                            @else
-                                <tr>
-                                    <td>{{ $unit->serial_number }}</td>
-                                    <td>{{ $unit->item_description }}</td>
-                                    <td>{{ $unit->quantity }}</td>
-                                    <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
-                                    <td>{{ $unit->inventory_tag }}</td>
-                                </tr>
-                            @endif
+                                </tr> --}}
+                            {{-- @endif --}}
                         @endif
                     @endforeach
                 @endforeach

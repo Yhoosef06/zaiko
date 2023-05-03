@@ -4,26 +4,35 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Item extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'serial_number';
+    // protected $primaryKey = 'serial_number';
 
-    public $incrementing = false;
+    // public $incrementing = false;
 
     protected $fillable = [
-        'serial_number',
-        'item_name',
-        'item_description',
+        'id',
+        'location',
+        'item_category',
+        'brand',
+        'model',
+        'description',
         'quantity',
         'unit_number',
         'aquisition_date',
         'status',
         'borrowed',
         'inventory_tag',
-        'location',
-        'campus'
+        'serial_number',
+        'department_id'
     ];
+
+    public function room(): BelongsTo
+    {
+        return $this->belongsTo(Room::class);
+    }
 }

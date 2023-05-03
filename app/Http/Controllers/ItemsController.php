@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\Item;
 use App\Models\Room;
+use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
-use DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Symfony\Contracts\Service\Attribute\Required;
 
@@ -17,10 +19,15 @@ class ItemsController extends Controller
     public function index()
     {
         //admin
-        $items = Item::paginate(10);
-        return view('pages.admin.listOfItems', [
-            'items' => $items
-        ]);
+        if (Auth::user()->account_type == 'admin') {
+            $items = Item::all();
+            return view('pages.admin.listOfItems')->with('items', $items);
+        } else {
+            $user_dept_id = Auth::user()->department_id;
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
+            return view('pages.admin.listOfItems')->with('items', $items);
+        }
     }
 
     public function viewItemDetails($serial_number)
@@ -56,12 +63,11 @@ class ItemsController extends Controller
         return redirect('list-of-items');
     }
 
-    public function deleteItem(Request $request, $serial_number)
+    public function deleteItem($id)
     {
-        $serial = $request->serial_number;
-        $item = Item::find($serial);
+        $item = Item::find($id);
         $item->delete();
-        Session::flash('success', 'Successfuly Removed Item:' . $serial);
+        Session::flash('success', 'Successfully Removed Item');
         return redirect('list-of-items');
     }
 
@@ -69,10 +75,10 @@ class ItemsController extends Controller
     {
 
         $this->validate($request, [
-            'serial_number' => 'required|max:20',
             'location' => 'required',
-            'campus' => 'required',
-            'item_name' => 'required',
+            'brand' => 'required',
+            'model' => 'required',
+            'item_category' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'nullable',
             'unit_number' => 'required',
@@ -87,15 +93,16 @@ class ItemsController extends Controller
             Item::create([
                 'serial_number' => $request->serial_number,
                 'location' => $request->location,
-                'item_name' => $request->item_name,
-                'item_description' => $request->item_description,
+                'item_category' => $request->item_category,
+                'brand' => $request->brand,
+                'model' => $request->model,
+                'description' => $request->item_description,
                 'aquisition_date' => $request->aquisition_date,
                 'unit_number' => $request->unit_number,
                 'inventory_tag' => $request->inventory_tag,
                 'quantity' => $request->quantity,
                 'status' => $request->status,
                 'borrowed' => 'no',
-                'campus' => $request->campus,
             ]);
             Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
             return redirect('/adding-new-item');
@@ -107,7 +114,8 @@ class ItemsController extends Controller
 
     public function generateReportPage()
     {
-        $rooms = Room::all();
+        $user_dept_id = Auth::user()->department_id;
+        $rooms = Room::where('department_id', $user_dept_id)->get();
         return view('pages.admin.report')->with(compact('rooms'));
     }
 
@@ -188,7 +196,9 @@ class ItemsController extends Controller
         $lab_oic = $request->lab_oic;
         $it_specialist = $request->it_specialist;
 
-        $items = Item::orderBy('unit_number', 'ASC')->get();
+        $user_dept_id = Auth::user()->department_id;
+        $rooms = Room::where('department_id', $user_dept_id)->get();
+        $items = Item::where('location', $location)->get();
 
         if ($request->has('download')) {
             $pdf = App::make('dompdf.wrapper');
@@ -202,31 +212,31 @@ class ItemsController extends Controller
                 'it_specialist',
                 'department'
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
-
-            return $pdf->download('InventoryReport' . $location . '.pdf');
+            return view('pages.pdfReport')->with(compact(
+                'items',
+                'purpose',
+                'location',
+                'prepared_by',
+                'verified_by',
+                'lab_oic',
+                'it_specialist',
+                'department'
+            ));
+            // return $pdf->download('InventoryReport' . $location . '.pdf');
         }
-
-        return view('pages.pdfReport')->with(compact(
-            'items',
-            'location',
-            'purpose',
-            'prepared_by',
-            'verified_by',
-            'lab_oic',
-            'it_specialist',
-            'department'
-        ));
     }
-    public function searchItem(Request $request)
-    {
-        $search_text = request('query');
 
-        $items = Item::where('item_name', 'LIKE', '%' . $search_text . '%')
-            ->orWhere('location', 'LIKE', '%' . $search_text . '%')
-            ->orWhere('item_description', 'LIKE', '%' . $search_text . '%')
-            ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')->orderBy('location', 'desc')->paginate(5);
 
-        // dd($items);
-        return view('pages.admin.listOfItems', compact('items'));
-    }
+    // public function searchItem(Request $request)
+    // {
+    //     $search_text = request('query');
+
+    //     $items = Item::where('item_name', 'LIKE', '%' . $search_text . '%')
+    //         ->orWhere('location', 'LIKE', '%' . $search_text . '%')
+    //         ->orWhere('item_description', 'LIKE', '%' . $search_text . '%')
+    //         ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')->orderBy('location', 'desc')->paginate(5);
+
+    //     // dd($items);
+    //     return view('pages.admin.listOfItems', compact('items'));
+    // }
 }
