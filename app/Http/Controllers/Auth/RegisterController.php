@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
     public function index()
     {
-        return view('pages.register');
+        $departments = Department::all();
+        return view('pages.register')->with(compact('departments'));
     }
 
     public function store(Request $request)
@@ -50,7 +52,9 @@ class RegisterController extends Controller
                 ),
                 
                 'account_type' => 'student',
-                'account_status' => 'pending'
+                'account_status' => 'pending',
+                'department_id' => '1'
+
             ]);
 
             return redirect('/')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
