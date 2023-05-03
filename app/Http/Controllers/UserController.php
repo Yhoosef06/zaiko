@@ -19,11 +19,18 @@ class UserController extends Controller
     public function index()
     {
         //admin
-        $user_dept_id = Auth::user()->department_id;
-        $users = User::where('department_id', $user_dept_id)->get();
-        return view('pages.admin.listOfUsers', [
-            'users' => $users
-        ]);
+        if (Auth::user()->account_type == 'admin') {
+            $users = User::all();
+            return view('pages.admin.listOfUsers', [
+                'users' => $users
+            ]);
+        } else {
+            $user_dept_id = Auth::user()->department_id;
+            $users = User::where('department_id', $user_dept_id)->get();
+            return view('pages.admin.listOfUsers', [
+                'users' => $users
+            ]);   
+        }
     }
 
     public function searchUser(Request $request)

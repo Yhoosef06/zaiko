@@ -18,17 +18,17 @@ class UserSeeder extends Seeder
     {
         //
         $user = [
-            // [
-            //     'id_number' => 8888,
-            //     'first_name' => 'admin',
-            //     'last_name' => 'usjr',
-            //     'password' => Hash::make('usjrscs-123'),
-            //     'account_status' => 'approved',
-            //     'account_type' => 'admin',
-            //     'front_of_id' => 'null',
-            //     'back_of_id' => 'null',
-            //     'department_id' => ''
-            // ],
+            [
+                'id_number' => 8888,
+                'first_name' => 'admin',
+                'last_name' => 'usjr',
+                'password' => Hash::make('usjrscs-123'),
+                'account_status' => 'approved',
+                'account_type' => 'admin',
+                'front_of_id' => 'null',
+                'back_of_id' => 'null',
+                'department_id' => '1'
+            ],
             [
                 'id_number' => 2016013001,
                 'first_name' => 'Joseph',

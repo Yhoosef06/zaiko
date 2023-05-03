@@ -19,10 +19,15 @@ class ItemsController extends Controller
     public function index()
     {
         //admin
-        $user_dept_id = Auth::user()->department_id; 
-        $rooms = Room::where('department_id', $user_dept_id)->get();
-        $items = Item::whereIn('location', $rooms->pluck('id'))->get();
-        return view('pages.admin.listOfItems')->with('items', $items);
+        if (Auth::user()->account_type == 'admin') {
+            $items = Item::all();
+            return view('pages.admin.listOfItems')->with('items', $items);
+        } else {
+            $user_dept_id = Auth::user()->department_id;
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
+            return view('pages.admin.listOfItems')->with('items', $items);
+        }
     }
 
     public function viewItemDetails($serial_number)
@@ -109,7 +114,7 @@ class ItemsController extends Controller
 
     public function generateReportPage()
     {
-        $user_dept_id = Auth::user()->department_id; 
+        $user_dept_id = Auth::user()->department_id;
         $rooms = Room::where('department_id', $user_dept_id)->get();
         return view('pages.admin.report')->with(compact('rooms'));
     }
@@ -191,9 +196,9 @@ class ItemsController extends Controller
         $lab_oic = $request->lab_oic;
         $it_specialist = $request->it_specialist;
 
-        $user_dept_id = Auth::user()->department_id; 
+        $user_dept_id = Auth::user()->department_id;
         $rooms = Room::where('department_id', $user_dept_id)->get();
-        $items = Item::whereIn('location', $rooms->pluck('id'))->get();
+        $items = Item::where('location', $location)->get();
 
         if ($request->has('download')) {
             $pdf = App::make('dompdf.wrapper');
@@ -207,17 +212,17 @@ class ItemsController extends Controller
                 'it_specialist',
                 'department'
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
-            // return view('pages.pdfReport')->with(compact(
-            //     'items',
-            //     'purpose',
-            //     'location',
-            //     'prepared_by',
-            //     'verified_by',
-            //     'lab_oic',
-            //     'it_specialist',
-            //     'department'
-            // ));
-            return $pdf->download('InventoryReport' . $location . '.pdf');
+            return view('pages.pdfReport')->with(compact(
+                'items',
+                'purpose',
+                'location',
+                'prepared_by',
+                'verified_by',
+                'lab_oic',
+                'it_specialist',
+                'department'
+            ));
+            // return $pdf->download('InventoryReport' . $location . '.pdf');
         }
     }
 

@@ -6,7 +6,7 @@
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
-    <div class="container col-lg-6 bg-light shadow-sm p-3">
+    <div class="col-lg-6 bg-light shadow-sm p-3">
         <label for="adding new item">
             <h1>Generate Inventory Report</h1>
         </label>
@@ -20,7 +20,7 @@
                         border-danger @enderror">
                         <option value="option_select" disabled selected>Select a room</option>
                         @foreach ($rooms as $room)
-                            <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
+                            <option value="{{ $room->id }}">{{ $room->room_name }}</option>
                         @endforeach
                     </select>
 
