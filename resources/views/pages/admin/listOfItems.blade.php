@@ -10,10 +10,14 @@
             </div>
         </div><!-- /.container-fluid -->
     </section>
+
+
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
+
+
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title"> <strong>List of All Items</strong> </h3>
@@ -50,7 +54,7 @@
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-edit"></i></a>
                                                 <!-- <a href="" data-id="{{ $item->serial_number }}" class="btn btn-sm btn-danger show-alert-delete-item">
-                                                      <i class="fa fa-trash"></i></a> -->
+                                                  <i class="fa fa-trash"></i></a> -->
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_item', $item->id) }}">
@@ -65,6 +69,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+
                             </table>
                         </div>
                         <!-- /.card-body -->
