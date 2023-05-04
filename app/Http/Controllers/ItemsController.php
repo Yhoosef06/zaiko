@@ -10,6 +10,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use App\Models\ItemCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -21,12 +22,15 @@ class ItemsController extends Controller
         //admin
         if (Auth::user()->account_type == 'admin') {
             $items = Item::all();
-            return view('pages.admin.listOfItems')->with('items', $items);
+            $rooms = Room::all();
+            $itemCategories = ItemCategory::all();
+            return view('pages.admin.listOfItems')->with(compact('items','rooms','itemCategories'));
         } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
             $items = Item::whereIn('location', $rooms->pluck('id'))->get();
-            return view('pages.admin.listOfItems')->with('items', $items);
+            $itemCategories = ItemCategory::all();
+            return view('pages.admin.listOfItems')->with(compact('items','rooms', 'itemCategories'));
         }
     }
 
@@ -212,17 +216,17 @@ class ItemsController extends Controller
                 'it_specialist',
                 'department'
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
-            return view('pages.pdfReport')->with(compact(
-                'items',
-                'purpose',
-                'location',
-                'prepared_by',
-                'verified_by',
-                'lab_oic',
-                'it_specialist',
-                'department'
-            ));
-            // return $pdf->download('InventoryReport' . $location . '.pdf');
+            // return view('pages.pdfReport')->with(compact(
+            //     'items',
+            //     'purpose',
+            //     'location',
+            //     'prepared_by',
+            //     'verified_by',
+            //     'lab_oic',
+            //     'it_specialist',
+            //     'department'
+            // ));
+            return $pdf->download('InventoryReport' . $location . '.pdf');
         }
     }
 

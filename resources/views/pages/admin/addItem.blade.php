@@ -1,6 +1,7 @@
 @extends('layouts.pages.yields')
 
 @section('content')
+
     @if (session('status'))
         <div class="container alert bg-gradient-lightblue text-center text-sm">
             <h4>{{ session('status') }}</h4>

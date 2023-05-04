@@ -57,7 +57,7 @@
                                 <td><span class="bg-success p-1 m-1" style="padding:10px">{{ 'Approved' }}</span>
                                 </td>
                             @endif
-                          <td>{{ $user->departmen_id }}</td>
+                          <td>{{ $user->department_id }}</td>
                           <td><a href="{{ route('view_user_info', $user->id_number) }}" class="btn btn-sm btn-primary">
                                   <i class="fa fa-eye"></i></a>
                               <a href="{{ route('edit_user_info', $user->id_number) }}" class="btn btn-sm btn-warning">
