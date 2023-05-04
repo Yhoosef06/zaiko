@@ -80,6 +80,7 @@ class ItemsController extends Controller
 
         $this->validate($request, [
             'location' => 'required',
+            'serial_number' => 'required',  
             'brand' => 'required',
             'model' => 'required',
             'item_category' => 'required',
@@ -214,7 +215,8 @@ class ItemsController extends Controller
                 'verified_by',
                 'lab_oic',
                 'it_specialist',
-                'department'
+                'department',
+                'rooms'
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
             // return view('pages.pdfReport')->with(compact(
             //     'items',
@@ -224,7 +226,8 @@ class ItemsController extends Controller
             //     'verified_by',
             //     'lab_oic',
             //     'it_specialist',
-            //     'department'
+            //     'department',
+            //     'rooms'
             // ));
             return $pdf->download('InventoryReport' . $location . '.pdf');
         }

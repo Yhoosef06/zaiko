@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class RoomController extends Controller
 {
@@ -24,12 +26,14 @@ class RoomController extends Controller
         $room = Room::where('room_name', '=', $request->input('room_name'))->first();
         if ($room === null) {
             Room::create([
-                'room_name' => $request->room_name
+                'room_name' => $request->room_name,
+                'department_id' => Auth::user()->department_id
             ]);
-
-            return redirect('adding-new-item')->with('status', 'New room added.');
+            Session::flash('success', 'Room '.$request->room_name.' Successfully Added.');
+            return redirect('adding-new-item');
         } else {
-            return redirect('adding-room')->with('message', 'That room was already added.');
+            Session::flash('status', 'Room '.$request->room_name.' has already been added.');
+            return redirect('adding-new-item');
         }
     }
 }

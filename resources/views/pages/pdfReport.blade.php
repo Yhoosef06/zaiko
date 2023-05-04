@@ -62,7 +62,12 @@
     <div class="container" id="intro_details">
         <strong>DATE PREPARED:</strong> {{ now()->format('m-d-Y') }} <br>
         <strong>DEPARTMENT / OFFICE:</strong> {{ $department }} <br>
-        <strong>SPECIFIC LOCATION:</strong> {{ $location }}
+        <strong>SPECIFIC LOCATION:</strong>
+        @foreach ($rooms as $room)
+            @if ($room->id == $location)
+                {{ $room->room_name }}
+            @endif
+        @endforeach
     </div>
     <div class="container">
         <table class="table table-bordered">
@@ -91,7 +96,7 @@
                                 <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
                                 <td>{{ $unit->inventory_tag }}</td>
                             </tr>
-                        {{-- @else --}}
+                            {{-- @else --}}
                             {{-- <tr>
                                     <td>{{ $unit->serial_number }}</td>
                                     <td>{{ $unit->item_description }}</td>

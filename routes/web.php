@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QRController;
 use App\Http\Controllers\CartController;
@@ -11,8 +12,8 @@ use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Auth\SignInController;
+use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\Auth\RegisterController;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,7 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
         Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
         Route::post('deleting-item-{id}', [ItemsController::class,'deleteItem'])->name('delete_item');
+        Route::get('get-brand', ItemsController::class,'getBrand')->name('get_brand');
 
         // FOR USERS
         Route::get('add-new-user', [UserController::class,'addUser'])->name('add_user');
@@ -74,6 +76,9 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         // FOR ROOM
         Route::get('adding-room', [RoomController::class, 'addNewRoom'])->name('adding_new_room');
         Route::post('storing-new-room', [RoomController::class,'storeNewRoom'])->name('store_new_room');
+        
+        // FOR Item Category
+        Route::post('storing-new-category', [ItemCategoryController::class,'storeNewCategory'])->name('store_new_category');
 
         //FOR Manage Borrowings
         Route::get('borrowed',[BorrowController::class, 'borrowed'])->name('borrowed');

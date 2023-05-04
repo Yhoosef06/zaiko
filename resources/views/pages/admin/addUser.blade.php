@@ -66,6 +66,21 @@
                     </div>
 
                     <div class="col">
+                        <label for="Item name">College Department:</label>
+                        <select id="department_id" name="department_id"
+                            class="form-control col-sm-8 @error('department_id')
+                            border-danger @enderror">
+                            <option value="option_select" disabled selected>Select Your College Department</option>
+                            @foreach ($departments as $department)
+                                <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                            @endforeach
+                        </select>
+                        @error('department_id')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                         <label for="">Password</label>
                         <input type="password" name="password" id="password"
                             class="form-control @error('password') border-danger @enderror" placeholder="Password">

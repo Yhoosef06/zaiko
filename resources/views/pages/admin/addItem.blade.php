@@ -1,10 +1,9 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-
     @if (session('status'))
-        <div class="container alert bg-gradient-lightblue text-center text-sm">
-            <h4>{{ session('status') }}</h4>
+        <div class="alert bg-danger text-m">
+            <i class="fa fa-thumbs-down"></i> {{ session('status') }}
         </div>
     @endif
 
@@ -30,8 +29,8 @@
                         </div>
 
                         <div>
-                            <a class="btn text-blue" href="{{ route('adding_new_room') }}"><i
-                                    class="fa fa-plus-circle"></i></a>
+                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
+                                    data-target="#modal-addRoom"></i></a>
                         </div>
                     </div>
 
@@ -42,14 +41,24 @@
                     @enderror
 
                     <label for="Item name">Item Category:</label>
-                    <select id="item_category" name="item_category"
-                        class="form-control col-sm-8 @error('item_category')
+                    <div style="display:flex">
+                        <div>
+                            <select id="item_category" name="item_category"
+                                class="form-control @error('item_category')
                         border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a category</option>
-                        @foreach ($itemCategories as $category)
-                            <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
-                        @endforeach
-                    </select>
+                                <option value="option_select" disabled selected>Select a category</option>
+                                @foreach ($itemCategories as $category)
+                                    <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
+                                    data-target="#modal-addCategory"></i></a>
+                        </div>
+                    </div>
+
                     @error('item_category')
                         <div class="text-danger">
                             {{ $message }}
@@ -61,7 +70,7 @@
                         class="form-control @error('brand')
                     border-danger
                     @enderror"
-                        placeholder="Brand Name (Leave an N/A if none.)">
+                        placeholder="Leave an N/A if none.">
                     @error('brand')
                         <div class="text-danger">
                             {{ $message }}
@@ -73,7 +82,7 @@
                         class="form-control @error('model')
                     border-danger
                     @enderror"
-                        placeholder="Model (Leave an N/A if none.)">
+                        placeholder="Leave an N/A if none.">
                     @error('model')
                         <div class="text-danger">
                             {{ $message }}
@@ -88,7 +97,7 @@
                     <input type="text" id="unit_number" name="unit_number"
                         class="form-control col-sm-5 @error('unit_number')
                     border-danger @enderror"
-                        value="{{ old('unit_number') }}" placeholder="Unit Number     (Leave an N/A if none.)">
+                        value="{{ old('unit_number') }}" placeholder="Leave an N/A if none.">
                     @error('unit_number')
                         <div class="text-danger">
                             {{ $message }}
@@ -100,9 +109,9 @@
 
                     <label for="serial number"> Serial Number:</label>
                     <input type="text" id="serial_number" name="serial_number"
-                        class="form-control col-sm-4 @error('serial_number')
+                        class="form-control col-sm-5 @error('serial_number')
                     border-danger @enderror"
-                        value="{{ old('serial_number') }}" placeholder="Serial Number">
+                        value="{{ old('serial_number') }}" placeholder="Leave an N/A if none.">
                     @if (session()->has('message'))
                         <div class="text-danger">
                             {{ session()->get('message') }}
@@ -181,4 +190,84 @@
             </div>
         </form>
     </div>
+
+    {{-- FOR ADDING A ROOM --}}
+    <div class="modal fade" id="modal-addRoom">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add a room</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('store_new_room') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <label for="">Room Name:</label>
+                        <input type="text" name="room_name" id="room_name"
+                            class="form-control password @error('room_name') border-danger @enderror"
+                            placeholder="Room name">
+                        @error('room_name')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        @if (session('message'))
+                            <div class="text-danger">
+                                {{ session('message') }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    {{-- FOR ADDING AN ITEM CATEGORY --}}
+    <div class="modal fade" id="modal-addCategory">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add an item category</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('store_new_category') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <label for="">Category Name:</label>
+                        <input type="text" name="category_name" id="category_name"
+                            class="form-control password @error('category_name') border-danger @enderror"
+                            placeholder="Category name">
+                        @error('category_name')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        @if (session('message'))
+                            <div class="text-danger">
+                                {{ session('message') }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 @endsection

@@ -46,7 +46,11 @@
                                             <td>{{ Str::limit($item->description, 20, '...') }}</td>
                                             <td>{{ $item->serial_number }}</td>
                                             <td>{{ $item->status }}</td>
-                                            <td> {{ $item->location }}</td>
+                                            @foreach ($rooms as $room)
+                                                @if ($room->id == $item->location)
+                                                    <td> {{ $room->room_name }}</td>
+                                                @endif
+                                            @endforeach
                                             <td><a href="{{ route('view_item_details', $item->serial_number) }}"
                                                     class="btn btn-sm btn-primary" class="btn btn-default"
                                                     data-toggle="modal" data-target="#modal-sm">
@@ -55,7 +59,7 @@
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-edit"></i></a> --}}
                                                 <!-- <a href="" data-id="{{ $item->serial_number }}" class="btn btn-sm btn-danger show-alert-delete-item">
-                                                                          <i class="fa fa-trash"></i></a> -->
+                                                                                  <i class="fa fa-trash"></i></a> -->
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_item', $item->id) }}">
