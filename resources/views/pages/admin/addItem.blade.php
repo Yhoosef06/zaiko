@@ -271,3 +271,73 @@
     </div>
     <!-- /.modal -->
 @endsection
+
+<style>
+    .ui-autocomplete {
+        background-color: #ffffff;
+        border: 1px solid #d2d6de;
+        max-height: 200px;
+        max-width: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 9999;
+        padding: 0;
+        margin: 0;
+    }
+
+    .ui-menu-item {
+        display: block;
+        padding: 10px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333333;
+        white-space: nowrap;
+    }
+
+    .ui-menu-item:hover {
+        background-color: #f4f4f4;
+        color: #333333;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    // $(document).ready(function() {
+    //     $('#brand').autocomplete({
+    //         source: '{!! url('get-brand') !!}',
+    //         minLength: 1,
+    //         autoFocus: true,
+    //     });
+    // });
+
+    $(document).ready(function() {
+        $('#brand').autocomplete({
+            source: function(request, response) {
+                // Send an AJAX request to the server to get the brand names
+                $.ajax({
+                    url: '{!! url('get-brand') !!}',
+                    dataType: 'json',
+                    data: {
+                        query: request
+                            .term // Pass the user's input as the 'query' parameter
+                    },
+                    success: function(data) {
+                        // Filter the brand names to only include those that start with the user's input
+                        var filteredData = $.grep(data, function(item) {
+                            return item.substr(0, request.term.length)
+                                .toLowerCase() === request.term.toLowerCase();
+                        });
+                        // Call the response callback with the filtered data
+                        response(filteredData);
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: true,
+        });
+    });
+</script>

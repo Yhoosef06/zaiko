@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QRController;
@@ -59,7 +58,7 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
         Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
         Route::post('deleting-item-{id}', [ItemsController::class,'deleteItem'])->name('delete_item');
-        Route::get('get-brand', ItemsController::class,'getBrand')->name('get_brand');
+        Route::get('/get-brand', [ItemsController::class,'getBrand']);
 
         // FOR USERS
         Route::get('add-new-user', [UserController::class,'addUser'])->name('add_user');

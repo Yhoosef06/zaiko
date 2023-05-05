@@ -246,4 +246,10 @@ class ItemsController extends Controller
     //     // dd($items);
     //     return view('pages.admin.listOfItems', compact('items'));
     // }
+
+    public function getBrand()
+    {  
+        $brand = Item::pluck('brand')->toArray();
+        return response()->json($brand);
+    }
 }
