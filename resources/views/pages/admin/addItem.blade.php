@@ -42,16 +42,16 @@
 
                     <label for="Item name">Item Category:</label>
                     <div style="display:flex">
-                        <div>
-                            <select id="item_category" name="item_category"
-                                class="form-control @error('item_category')
+
+                        <select id="item_category" name="item_category"
+                            class="form-control col-5 @error('item_category')
                         border-danger @enderror">
-                                <option value="option_select" disabled selected>Select a category</option>
-                                @foreach ($itemCategories as $category)
-                                    <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                            <option value="option_select" disabled selected>Select a category</option>
+                            @foreach ($itemCategories as $category)
+                                <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
+                            @endforeach
+                        </select>
+
 
                         <div>
                             <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
@@ -66,20 +66,27 @@
                     @enderror
 
                     <label for="Brand">Brand:</label>
-                    <input type="text" id="brand" name="brand" value="{{ old('brand') }}"
-                        class="form-control @error('brand')
+                    <div style="display:flex">
+                        <input type="text" id="brand" name="brand" value="{{ old('brand') }}"
+                            class="form-control col-sm-5 @error('brand')
                     border-danger
                     @enderror"
-                        placeholder="Leave an N/A if none.">
-                    @error('brand')
-                        <div class="text-danger">
-                            {{ $message }}
+                            placeholder="Leave an N/A if none.">
+                        @error('brand')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                        <div>
+                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
+                                    data-target="#modal-addBrand"></i></a>
                         </div>
-                    @enderror
+                    </div>
 
                     <label for="Model">Model:</label>
                     <input type="text" id="model" name="model" value="{{ old('model') }}"
-                        class="form-control @error('model')
+                        class="form-control col-5 @error('model')
                     border-danger
                     @enderror"
                         placeholder="Leave an N/A if none.">
@@ -90,7 +97,7 @@
                     @enderror
 
                     <label for="aquisition date">Aquisition Date:</label>
-                    <input type="date" id="aquisition_date" name="aquisition_date" class="form-control"
+                    <input type="date" id="aquisition_date" name="aquisition_date" class="form-control col-sm-4"
                         placeholder="Aquistion Date">
 
                     <label for="unit number">Unit Number:</label>
@@ -148,7 +155,7 @@
                     @enderror
 
                     <label for="status">Status:</label>
-                    <select id="status" name="status" class="form-control">
+                    <select id="status" name="status" class="form-control col-sm-3">
                         <option value="Active">Active</option>
                         <option value="For Repair">For Repair</option>
                         <option value="Obsolete">Obsolete</option>
@@ -221,7 +228,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
@@ -261,7 +268,47 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    {{-- FOR ADDING A BRAND --}}
+    <div class="modal fade" id="modal-addBrand">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add a brand name</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('store_new_brand') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <label for="">Brand Name:</label>
+                        <input type="text" name="brand" id="brand"
+                            class="form-control password @error('category_name') border-danger @enderror"
+                            placeholder="Brand name">
+                        @error('brand')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        @if (session('message'))
+                            <div class="text-danger">
+                                {{ session('message') }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
@@ -306,14 +353,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
-    // $(document).ready(function() {
-    //     $('#brand').autocomplete({
-    //         source: '{!! url('get-brand') !!}',
-    //         minLength: 1,
-    //         autoFocus: true,
-    //     });
-    // });
-
     $(document).ready(function() {
         $('#brand').autocomplete({
             source: function(request, response) {

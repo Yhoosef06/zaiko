@@ -22,15 +22,13 @@ class UserController extends Controller
         //admin
         if (Auth::user()->account_type == 'admin') {
             $users = User::all();
-            return view('pages.admin.listOfUsers', [
-                'users' => $users
-            ]);
+            $departments = Department::all();
+            return view('pages.admin.listOfUsers')->with(compact('users','departments'));
         } else {
             $user_dept_id = Auth::user()->department_id;
             $users = User::where('department_id', $user_dept_id)->get();
-            return view('pages.admin.listOfUsers', [
-                'users' => $users
-            ]);   
+            $departments = Department::all();
+            return view('pages.admin.listOfUsers')->with(compact('deparments'));   
         }
     }
 

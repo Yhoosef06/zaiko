@@ -58,7 +58,11 @@
                                                         style="padding:10px">{{ 'Approved' }}</span>
                                                 </td>
                                             @endif
-                                            <td>{{ $user->department_id }}</td>
+                                            @foreach ($departments as $department)
+                                                @if ($department->id == $user->department_id)
+                                                    <td>{{ $department->department_name}}</td>
+                                                @endif
+                                            @endforeach
                                             <td><a href="{{ route('view_user_info', $user->id_number) }}"
                                                     class="btn btn-sm btn-primary">
                                                     <i class="fa fa-eye"></i></a>

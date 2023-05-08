@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\Models\Item;
 use App\Models\Room;
-use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\ItemCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Symfony\Contracts\Service\Attribute\Required;
+
 
 class ItemsController extends Controller
 {
@@ -24,38 +23,40 @@ class ItemsController extends Controller
             $items = Item::all();
             $rooms = Room::all();
             $itemCategories = ItemCategory::all();
-            return view('pages.admin.listOfItems')->with(compact('items','rooms','itemCategories'));
+            return view('pages.admin.listOfItems')->with(compact('items', 'rooms', 'itemCategories'));
         } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
             $items = Item::whereIn('location', $rooms->pluck('id'))->get();
             $itemCategories = ItemCategory::all();
-            return view('pages.admin.listOfItems')->with(compact('items','rooms', 'itemCategories'));
+            return view('pages.admin.listOfItems')->with(compact('items', 'rooms', 'itemCategories'));
         }
     }
 
-    public function viewItemDetails($serial_number)
+    public function getItemDetails($id)
     {
-        $item = Item::find($serial_number);
-        return view('pages.admin.viewItemDetails')->with('item', $item);
+        $item = Item::find($id);
+        return response()->json($item);
+        // return view('pages.admin.viewItemDetails')->with('item', $item);
     }
 
-    public function editItemPage($serial_number)
+    public function editItemPage($id)
     {
-        $item = Item::find($serial_number);
+        $item = Item::find($id);
         $rooms = Room::all();
-        return view('pages.admin.editItem')->with(compact('item', 'rooms'));
+        $itemCategories = ItemCategory::all();
+        return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
     }
 
-    public function saveEditedItemDetails(Request $request, $serial_number)
+    public function saveEditedItemDetails(Request $request, $id)
     {
 
-        $item = Item::find($serial_number);
+        $item = Item::find($id);
+        $item->brand = $request->brand;
+        $item->model = $request->model;
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
-        $item->campus = $request->campus;
-        $item->item_name = $request->item_name;
-        $item->item_description = $request->item_description;
+        $item->description = $request->description;
         $item->aquisition_date = $request->aquisition_date;
         $item->unit_number = $request->unit_number;
         $item->quantity = $request->quantity;
@@ -63,7 +64,7 @@ class ItemsController extends Controller
         $item->inventory_tag = $request->inventory_tag;
         $item->update();
 
-        Session::flash('success', 'Item ' . $serial_number . ' has been updated.');
+        Session::flash('success', 'Item ' . $id . ' has been updated.');
         return redirect('list-of-items');
     }
 
@@ -80,7 +81,7 @@ class ItemsController extends Controller
 
         $this->validate($request, [
             'location' => 'required',
-            'serial_number' => 'required',  
+            'serial_number' => 'required',
             'brand' => 'required',
             'model' => 'required',
             'item_category' => 'required',
@@ -92,8 +93,8 @@ class ItemsController extends Controller
             'status' => 'required',
         ]);
 
-        $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
-        if ($item === null) {
+        // $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
+        // if ($item == 'N/A') {
 
             Item::create([
                 'serial_number' => $request->serial_number,
@@ -111,17 +112,43 @@ class ItemsController extends Controller
             ]);
             Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
             return redirect('/adding-new-item');
-        } else {
-            Session::flash('message', 'Serial number has already been registered.');
-            return redirect('/adding-new-item');
-        }
+
+        // } elseif ($item == null) {
+
+        //     Item::create([
+        //         'serial_number' => $request->serial_number,
+        //         'location' => $request->location,
+        //         'item_category' => $request->item_category,
+        //         'brand' => $request->brand,
+        //         'model' => $request->model,
+        //         'description' => $request->item_description,
+        //         'aquisition_date' => $request->aquisition_date,
+        //         'unit_number' => $request->unit_number,
+        //         'inventory_tag' => $request->inventory_tag,
+        //         'quantity' => $request->quantity,
+        //         'status' => $request->status,
+        //         'borrowed' => 'no',
+        //     ]);
+        //     Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
+        //     return redirect('/adding-new-item');
+
+        // } else {
+        //     Session::flash('message', 'Serial number has already been registered.');
+        //     return redirect('/adding-new-item');
+        // }
     }
 
     public function generateReportPage()
     {
-        $user_dept_id = Auth::user()->department_id;
-        $rooms = Room::where('department_id', $user_dept_id)->get();
-        return view('pages.admin.report')->with(compact('rooms'));
+        //admin
+        if (Auth::user()->account_type == 'admin') {
+            $rooms = Room::all();
+            return view('pages.admin.report')->with(compact('rooms'));
+        } else {
+            $user_dept_id = Auth::user()->department_id;
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            return view('pages.admin.report')->with(compact('rooms'));
+        }
     }
 
     public function generateReturned()
@@ -248,8 +275,8 @@ class ItemsController extends Controller
     // }
 
     public function getBrand()
-    {  
-        $brand = Item::pluck('brand')->toArray();
+    {
+        $brand = Brand::pluck('brand_name')->toArray();
         return response()->json($brand);
     }
 }

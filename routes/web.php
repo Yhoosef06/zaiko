@@ -5,6 +5,7 @@ use App\Http\Controllers\QRController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\BorrowController;
@@ -54,9 +55,9 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         Route::get('list-of-items', [ItemsController::class,'index'])->name('view_items');
         Route::get('list-of-items-filtered', [ItemsController::class,'searchItem'])->name('filtered_view');
         Route::post('saving-new-item', [ItemsController::class,'saveNewItem'])->name('save_new_item');
-        Route::get('viewing-item-{serial_number}', [ItemsController::class,'viewItemDetails'])->name('view_item_details');
-        Route::get('edit-item-{serial_number}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
-        Route::put('updating-item-{serial_number}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
+        Route::get('get-item-{id}-details', [ItemsController::class,'getItemDetails'])->name('get_item_details');
+        Route::get('edit-item-{id}', [ItemsController::class,'editItemPage'])->name('edit_item_details');
+        Route::put('updating-item-{id}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
         Route::post('deleting-item-{id}', [ItemsController::class,'deleteItem'])->name('delete_item');
         Route::get('/get-brand', [ItemsController::class,'getBrand']);
 
@@ -78,6 +79,9 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         
         // FOR Item Category
         Route::post('storing-new-category', [ItemCategoryController::class,'storeNewCategory'])->name('store_new_category');
+        
+        //FOR BRAND
+        Route::post('storing-new-brand', [BrandController::class,'storeNewBrand'])->name('store_new_brand');
 
         //FOR Manage Borrowings
         Route::get('borrowed',[BorrowController::class, 'borrowed'])->name('borrowed');
