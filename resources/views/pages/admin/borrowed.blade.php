@@ -33,6 +33,7 @@
                   <table id="borrowed" class="table table-bordered table-striped">
                     <thead>
                     <tr>
+                      <th class="d-none">ID</th>
                       <th>Serial #</th>
                       <th>Name</th>
                       <th>Item Name</th>
@@ -45,7 +46,7 @@
                   
                           @foreach ($borrows as $borrow)
                             <tr>
-                            <td class="d-none">{{ $borrow->id }}</td>
+                             <td class="d-none">{{ $borrow->id }}</td>
                                 <td>{{ $borrow->serial_number }}</td>
                                 <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
                                 <td>{{ $borrow->item_name }}</td>
