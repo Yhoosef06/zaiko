@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
                 'first_name' => 'Joseph',
                 'last_name' => 'Magabilin',
                 'password' => Hash::make('usjrscs-123'),
-                'account_status' => 'pending',
+                'account_status' => 'approved',
                 'account_type' => 'reads',
                 'front_of_id' => 'null',
                 'back_of_id' => 'null',
