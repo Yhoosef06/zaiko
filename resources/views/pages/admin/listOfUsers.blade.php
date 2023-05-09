@@ -49,10 +49,17 @@
                                             @else
                                                 <td>{{ 'READS' }}</td>
                                             @endif
-                                            @if ($user->account_status == 'pending')
-                                                <td><span class="bg-warning p-1 m-1"
-                                                        style="padding:10px">{{ 'Pending' }}</span>
-                                                </td>
+
+                                            @if ($user->account_type == 'student')
+                                                @if ($user->account_status == 'pending')
+                                                    <td><span class="bg-warning p-1 m-1"
+                                                            style="padding:10px">{{ 'Pending' }}</span>
+                                                    </td>
+                                                @else
+                                                    <td><span class="bg-success p-1 m-1"
+                                                            style="padding:10px">{{ 'Approved' }}</span>
+                                                    </td>
+                                                @endif
                                             @else
                                                 <td><span class="bg-success p-1 m-1"
                                                         style="padding:10px">{{ 'Approved' }}</span>
@@ -133,7 +140,7 @@
                     '<p><strong>Last Name:</strong> ' + data.last_name + '</p>' +
                     '<p><strong>Account Type:</strong> ' + data.account_type + '</p>' +
                     '<p><strong>Account Status:</strong> ' + data.account_status + '</p>' +
-                    '<p><strong>Department ID:</strong> ' + data.department_id + '</p>' 
+                    '<p><strong>Department ID:</strong> ' + data.department_id + '</p>'
                 );
                 // Update the "Edit" button link with the correct item ID
                 var editUrl = '{{ route('edit_user_info', ['id_number' => ':userId']) }}';
