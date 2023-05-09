@@ -41,7 +41,7 @@
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-circle"></i>
                             <p>
-                                Borrowing
+                                Borrowing Manager
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
