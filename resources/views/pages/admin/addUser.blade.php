@@ -70,7 +70,7 @@
                         <select id="department_id" name="department_id"
                             class="form-control col-sm-8 @error('department_id')
                             border-danger @enderror">
-                            <option value="option_select" disabled selected>Select Your College Department</option>
+                            <option value="option_select" disabled selected>Select College Department</option>
                             @foreach ($departments as $department)
                                 <option value="{{ $department->id }}">{{ $department->department_name }}</option>
                             @endforeach

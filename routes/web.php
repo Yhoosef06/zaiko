@@ -65,7 +65,7 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         Route::get('add-new-user', [UserController::class,'addUser'])->name('add_user');
         Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
         Route::get('list-of-users-filtered', [UserController::class,'searchUser'])->name('filtered_view_users');
-        Route::get('viewing-user-{id_number}', [UserController::class,'viewUserInfo'])->name('view_user_info');
+        Route::get('view-user-{id_number}', [UserController::class,'viewUserInfo'])->name('view_user_info');
         Route::post('saving-new-user', [UserController::class,'saveNewUser'])->name('save_new_user');
         Route::get('edit-user-{id_number}', [UserController::class,'editUserInfo'])->name('edit_user_info');
         Route::put('updating-user-{id_number}', [UserController::class, 'saveEditedUserInfo'])->name('update_user_info');

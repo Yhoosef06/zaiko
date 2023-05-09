@@ -167,12 +167,13 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
+              
+                        {{-- <li class="nav-item">
                             <a href="/qr-reader" class="nav-link">
                                 <i class="bi bi-qr-code-scan nav-icon"></i>
                                 <p>QR Code Scanner</p>
                             </a>
-                        </li>
+                        </li> --}}
                                 
                         @endif
                     </ul>

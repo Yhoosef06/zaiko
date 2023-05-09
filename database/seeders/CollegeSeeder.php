@@ -34,12 +34,9 @@ class CollegeSeeder extends Seeder
                 'college_name' => 'SAMS',
             ],
             [
-                'college_name' => 'SAMS',
-            ],
-            [
                 'college_name' => 'SL',
             ],
         ];
-        DB::table('colleges')->insert($name); 
+        DB::table('colleges')->insert($name);
     }
 }

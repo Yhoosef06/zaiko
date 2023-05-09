@@ -2,7 +2,12 @@
 <html>
 
 <head>
-    <title>Inventory Report for {{ $location }}</title>
+    <title>Inventory Report @foreach ($rooms as $room)
+            @if ($room->id == $location)
+            {{ $room->room_name }}
+            @endif
+        @endforeach
+    </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>

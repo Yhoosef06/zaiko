@@ -113,7 +113,7 @@
                 </div>
 
                 <div class="col">
-
+                    {{-- 
                     <label for="serial number"> Serial Number:</label>
                     <input type="text" id="serial_number" name="serial_number"
                         class="form-control col-sm-5 @error('serial_number')
@@ -128,7 +128,7 @@
                         <div class="text-danger">
                             {{ $message }}
                         </div>
-                    @enderror
+                    @enderror --}}
 
                     <label for="Item description">Item Description:</label>
                     <input type="text" id="item_description" name="item_description"
@@ -145,9 +145,11 @@
 
                     <label for="quantity">Quantity:</label>
                     <input type="text" id="quantity" name="quantity"
-                        class="form-control col-sm-3 @error('quantity')
-                    border-danger @enderror"
-                        value="{{ old('quantity') }}" placeholder="Quantity">
+                        class="form-control col-sm-3 @error('quantity') border-danger @enderror"
+                        value="{{ old('quantity') }}" placeholder="Quantity" oninput="updateSerialNumberFields()">
+                    <input type="checkbox" id="checkbox" name="checkbox" onchange="updateSerialNumberFields()" checked>
+                    <strong> Same serial numbers?</strong> <br>
+
                     @error('quantity')
                         <div class="text-danger">
                             {{ $message }}
@@ -173,21 +175,8 @@
                         Without
                     </label>
                     <br>
-                    {{-- <label for="serial number"> Serial Number:</label>
-                    <input type="text" id="serial_number" name="serial_number"
-                        class="form-control col-sm-4 @error('serial_number')
-                    border-danger @enderror"
-                        value="{{ old('serial_number') }}" placeholder="Serial Number">
-                    @if (session()->has('message'))
-                        <div class="text-danger">
-                            {{ session()->get('message') }}
-                        </div>
-                    @endif
-                    @error('serial_number')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror --}}
+
+                    <div id="serial_numbers_container"></div>
 
                     <hr>
 
@@ -379,4 +368,49 @@
             autoFocus: true,
         });
     });
+
+    function updateSerialNumberFields() {
+        const quantityField = document.getElementById('quantity');
+        const container = document.getElementById('serial_numbers_container');
+        const checkbox = document.getElementById('checkbox');
+
+        // Clear the existing input fields
+        container.innerHTML = '';
+
+        // Generate the new input field(s)
+        const quantity = parseInt(quantityField.value) || 0;
+        if (checkbox.checked) {
+            // If checkbox is checked, generate one input field with a fixed label
+            const label = document.createElement('label');
+            label.for = `serial_number_1`;
+            label.textContent = `Serial Number:`;
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = `serial_numbers[]`;
+            input.id = `serial_number_1`;
+            input.classList.add('form-control', 'col-sm-5');
+            input.placeholder = 'Leave blank if none.';
+
+            container.appendChild(label);
+            container.appendChild(input);
+        } else {
+            // If checkbox is not checked, generate multiple input fields with numbered labels
+            for (let i = 1; i <= quantity; i++) {
+                const label = document.createElement('label');
+                label.for = `serial_number_${i}`;
+                label.textContent = `Serial Number ${i}:`;
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = `serial_numbers[]`;
+                input.id = `serial_number_${i}`;
+                input.classList.add('form-control', 'col-sm-5');
+                input.placeholder = 'Leave blank if none.';
+
+                container.appendChild(label);
+                container.appendChild(input);
+            }
+        }
+    }
 </script>

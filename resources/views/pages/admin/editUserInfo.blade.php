@@ -56,10 +56,6 @@
                                 <option value="student">Student</option>
                             @endif
                         </select>
-
-                        <hr>
-                        <a href="{{ route('view_users') }}" class="btn btn-outline-dark">Cancel</a>
-                        <Button type="submit" class="btn btn-success">Save</Button>
                     </div>
 
                     <div class="col">
@@ -87,7 +83,9 @@
 
                         <a class="btn btn-dark" style="margin-top: 10px;"
                             href="{{ route('change_user_password', $user->id_number) }}">Change Password</a>
-
+                        <hr>
+                        <a href="{{ route('view_users') }}" class="btn btn-outline-dark">Back</a>
+                        <Button type="submit" class="btn btn-success">Save Changes</Button>
                     </div>
 
                 </div>

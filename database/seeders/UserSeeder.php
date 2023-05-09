@@ -49,7 +49,7 @@ class UserSeeder extends Seeder
                 'account_type' => 'student',
                 'front_of_id' => 'null',
                 'back_of_id' => 'null',
-                'department_id' => '8'
+                'department_id' => '5'
             ],
             [
                 'id_number' => 2016331404,
@@ -71,7 +71,7 @@ class UserSeeder extends Seeder
                 'account_type' => 'student',
                 'front_of_id' => 'null',
                 'back_of_id' => 'null',
-                'department_id' => '5'
+                'department_id' => '6'
             ],
             [
                 'id_number' => 2014175231,
@@ -82,7 +82,7 @@ class UserSeeder extends Seeder
                 'account_type' => 'student',
                 'front_of_id' => 'null',
                 'back_of_id' => 'null',
-                'department_id' => '8'
+                'department_id' => '6'
             ],
         ];
         DB::table('users')->insert($user); 

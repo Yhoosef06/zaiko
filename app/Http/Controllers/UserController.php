@@ -28,7 +28,7 @@ class UserController extends Controller
             $user_dept_id = Auth::user()->department_id;
             $users = User::where('department_id', $user_dept_id)->get();
             $departments = Department::all();
-            return view('pages.admin.listOfUsers')->with(compact('deparments'));   
+            return view('pages.admin.listOfUsers')->with(compact('users','departments'));   
         }
     }
 
@@ -48,7 +48,7 @@ class UserController extends Controller
     public function viewUserInfo($id_number)
     {
         $user = User::find($id_number);
-        return view('pages.admin.viewUserInfo')->with('user', $user);
+        return response()->json($user);
     }
 
     public function addUser()

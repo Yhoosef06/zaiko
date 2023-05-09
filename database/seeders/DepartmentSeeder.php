@@ -36,29 +36,74 @@ class DepartmentSeeder extends Seeder
                 'college_id' => '1'
             ],
             [
-                'department_name' => 'Department of Education Programs',
-                'college_id' => '3'
-            ],
-            [
-                'department_name' => 'Department of Computer Studies',
-                'college_id' => '5'
-            ],
-            [
-                'department_name' => 'Department of Business Management',
+                'department_name' => 'Business Administration Department',
                 'college_id' => '2'
             ],
             [
-                'department_name' => 'Department of Law Studies',
-                'college_id' => '8'
+                'department_name' => 'Entrepreneurship Department',
+                'college_id' => '2'
             ],
             [
-                'department_name' => 'Department of Medical Studies',
-                'college_id' => '7'
+                'department_name' => 'Accountancy Department',
+                'college_id' => '2'
             ],
             [
-                'department_name' => 'Department of Engineering Studies',
+                'department_name' => 'Tourism and Hospitality Management Department',
+                'college_id' => '2'
+            ],
+            [
+                'department_name' => 'Education Department',
+                'college_id' => '3'
+            ],
+            [
+                'department_name' => 'P.E. Department',
+                'college_id' => '3'
+            ],
+            [
+                'department_name' => 'Civil Engineering',
                 'college_id' => '4'
             ],
+            [
+                'department_name' => 'Computer Engineering',
+                'college_id' => '4'
+            ],
+            [
+                'department_name' => 'Electronics and Communication Engineering',
+                'college_id' => '4'
+            ],
+            [
+                'department_name' => 'Electrical Engineering',
+                'college_id' => '4'
+            ],
+            [
+                'department_name' => 'Industrial Engineering',
+                'college_id' => '4'
+            ],
+            [
+                'department_name' => 'Mechanical Engineering',
+                'college_id' => '4'
+            ],
+            [
+                'department_name' => 'Computer Science',
+                'college_id' => '5'
+            ],
+            [
+                'department_name' => 'Information Technology',
+                'college_id' => '5'
+            ],
+            [
+                'department_name' => 'Information Systems',
+                'college_id' => '5'
+            ],
+            [
+                'department_name' => 'Medical Sciences',
+                'college_id' => '6'
+            ],
+            [
+                'department_name' => 'Law Department',
+                'college_id' => '7'
+            ],
+         
         ];
         DB::table('departments')->insert($name); 
     }

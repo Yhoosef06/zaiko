@@ -37,7 +37,6 @@ class ItemsController extends Controller
     {
         $item = Item::find($id);
         return response()->json($item);
-        // return view('pages.admin.viewItemDetails')->with('item', $item);
     }
 
     public function editItemPage($id)
@@ -78,10 +77,9 @@ class ItemsController extends Controller
 
     public function saveNewItem(Request $request)
     {
-
         $this->validate($request, [
             'location' => 'required',
-            'serial_number' => 'required',
+            'serial_number.*' => 'required',
             'brand' => 'required',
             'model' => 'required',
             'item_category' => 'required',
@@ -95,9 +93,10 @@ class ItemsController extends Controller
 
         // $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
         // if ($item == 'N/A') {
-
+        $serial_numbers = $request->serial_numbers;
+        foreach ($serial_numbers as $serial_number) {
             Item::create([
-                'serial_number' => $request->serial_number,
+                'serial_number' => $serial_number,
                 'location' => $request->location,
                 'item_category' => $request->item_category,
                 'brand' => $request->brand,
@@ -110,8 +109,10 @@ class ItemsController extends Controller
                 'status' => $request->status,
                 'borrowed' => 'no',
             ]);
-            Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
-            return redirect('/adding-new-item');
+        }
+
+        Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
+        return redirect('/adding-new-item');
 
         // } elseif ($item == null) {
 
@@ -256,7 +257,10 @@ class ItemsController extends Controller
             //     'department',
             //     'rooms'
             // ));
-            return $pdf->download('InventoryReport' . $location . '.pdf');
+            foreach ($rooms as $room) {
+                if ($room->id == $location)
+                    return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
+            }
         }
     }
 

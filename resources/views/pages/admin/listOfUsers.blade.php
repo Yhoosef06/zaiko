@@ -60,15 +60,18 @@
                                             @endif
                                             @foreach ($departments as $department)
                                                 @if ($department->id == $user->department_id)
-                                                    <td>{{ $department->department_name}}</td>
+                                                    <td>{{ $department->department_name }}</td>
                                                 @endif
                                             @endforeach
-                                            <td><a href="{{ route('view_user_info', $user->id_number) }}"
-                                                    class="btn btn-sm btn-primary">
-                                                    <i class="fa fa-eye"></i></a>
-                                                <a href="{{ route('edit_user_info', $user->id_number) }}"
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                    data-target="#modal-item-details"
+                                                    onclick="openItemModal('{{ $user->id_number }}')">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                                {{-- <a href="{{ route('edit_user_info', $user->id_number) }}"
                                                     class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-edit"></i></a>
+                                                    <i class="fa fa-edit"></i></a> --}}
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_user', $user->id_number) }}">
@@ -90,4 +93,63 @@
                     </div>
                 </div><!-- /.container-fluid -->
     </section>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
+        aria-labelledby="modal-item-details-label">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-item-details-label">User Info</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                    <a href="{{ route('edit_user_info', ['id_number' => $user->id_number]) }}"
+                        class="btn btn-primary">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+<script>
+    function openItemModal(userId) {
+        // Send an AJAX request to fetch the item details
+        $.ajax({
+            url: 'view-user-' + userId,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Populate the modal window with the item details
+                $('#modal-item-details .modal-body').html(
+                    '<p><strong>I.D. #:</strong> ' + data.id_number + '</p>' +
+                    '<p><strong>First Name:</strong> ' + data.first_name + '</p>' +
+                    '<p><strong>Last Name:</strong> ' + data.last_name + '</p>' +
+                    '<p><strong>Account Type:</strong> ' + data.account_type + '</p>' +
+                    '<p><strong>Account Status:</strong> ' + data.account_status + '</p>' +
+                    '<p><strong>Department ID:</strong> ' + data.department_id + '</p>' 
+                );
+                // Update the "Edit" button link with the correct item ID
+                var editUrl = '{{ route('edit_user_info', ['id_number' => ':userId']) }}';
+                editUrl = editUrl.replace(':userId', data.id_number);
+                $('#modal-item-details .modal-footer a').attr('href', editUrl);
+            },
+            error: function(xhr, status, error) {
+                // Display an error message if the AJAX request fails
+                $('#modal-item-details .modal-body').html(
+                    '<p>Failed to load item details.</p>' +
+                    '<p>Error: ' + error + '</p>'
+                );
+            }
+        });
+
+        // Show the modal window
+        $('#modal-item-details').modal('hide');
+    }
+</script>
