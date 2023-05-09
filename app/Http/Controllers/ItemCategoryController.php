@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Session;
 
 class ItemCategoryController extends Controller
 {
+
+    public function index()
+    {
+        $categories = ItemCategory::all();
+        return view('pages.admin.listOfItemCategories')->with(compact('categories'));
+    }
+
     public function storeNewCategory(Request $request)
     {
         

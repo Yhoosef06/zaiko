@@ -10,6 +10,7 @@ use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\ItemCategoryController;
@@ -73,14 +74,20 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         Route::get('change-user-{id_number}-password', [UserController::class,'changeUserPassword'])->name('change_user_password');
         Route::post('updating-user-{id_number}-password', [UserController::class, 'saveUserNewPassword'])->name('save_user_new_password');
 
+        // FOR Colleges
+        Route::get('colleges', [CollegeController::class, 'index'])->name('view_colleges');
+
         // FOR ROOM
-        Route::get('adding-room', [RoomController::class, 'addNewRoom'])->name('adding_new_room');
+        Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
+        // Route::get('adding-room', [RoomController::class, 'addNewRoom'])->name('adding_new_room');
         Route::post('storing-new-room', [RoomController::class,'storeNewRoom'])->name('store_new_room');
         
         // FOR Item Category
+        Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
         Route::post('storing-new-category', [ItemCategoryController::class,'storeNewCategory'])->name('store_new_category');
         
         //FOR BRAND
+        Route::get('brands', [BrandController::class, 'index'])->name('view_brands');
         Route::post('storing-new-brand', [BrandController::class,'storeNewBrand'])->name('store_new_brand');
 
         //FOR Manage Borrowings

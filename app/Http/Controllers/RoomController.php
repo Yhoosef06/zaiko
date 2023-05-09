@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,22 @@ use Illuminate\Support\Facades\Session;
 
 class RoomController extends Controller
 {
+
+    public function index()
+    {
+        //admin
+        if (Auth::user()->account_type == 'admin') {
+            $rooms = Room::all();
+            $departments = Department::all();
+            return view('pages.admin.listOfRooms')->with(compact('rooms', 'departments'));
+        } else {
+            $departments = Department::all();
+            $user_dept_id = Auth::user()->department_id;
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            return view('pages.admin.listOfRooms')->with(compact('rooms', 'departments'));
+        }
+    }
+
     public function addNewRoom()
     {
         return view('pages.admin.addRoom');
@@ -29,10 +46,10 @@ class RoomController extends Controller
                 'room_name' => $request->room_name,
                 'department_id' => Auth::user()->department_id
             ]);
-            Session::flash('success', 'Room '.$request->room_name.' Successfully Added.');
+            Session::flash('success', 'Room ' . $request->room_name . ' Successfully Added.');
             return redirect('adding-new-item');
         } else {
-            Session::flash('status', 'Room '.$request->room_name.' has already been added.');
+            Session::flash('status', 'Room ' . $request->room_name . ' has already been added.');
             return redirect('adding-new-item');
         }
     }

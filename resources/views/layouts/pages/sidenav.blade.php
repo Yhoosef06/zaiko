@@ -66,7 +66,7 @@
                             </li>
                         </ul>
                     </li>
-                @elseif(Auth::user()->account_type == 'admin' || 'reads')
+                @elseif(Auth::user()->account_type == 'admin')
                     <li class="nav-item">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
@@ -156,12 +156,144 @@
                         </ul>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>
+                                Controls
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview ml-4">
+                            <li class="nav-item">
+                                <a href="/colleges" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Colleges</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/departments" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Departments</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('view_rooms') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Rooms</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('view_item_categories') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Item Categories</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('view_brands') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Brands</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                     {{-- <li class="nav-item">
                             <a href="/qr-reader" class="nav-link">
                                 <i class="bi bi-qr-code-scan nav-icon"></i>
                                 <p>QR Code Scanner</p>
                             </a>
                         </li> --}}
+                @elseif (Auth::user()->account_type == 'reads')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i>
+                            <p>
+                                Inventory
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview ml-4">
+                            <li class="nav-item">
+                                <a href="{{ route('add_item') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    Add New Item
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('view_items') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>View All Items</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('generate_report') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Generate Report</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i>
+                            <p>
+                                Manage Users
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview ml-4">
+                            <li class="nav-item">
+                                <a href="{{ route('add_user') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Add New User</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('view_users') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>View All Users</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>
+                                Manage Borrowings
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview ml-4">
+                            <li class="nav-item">
+                                <a href="{{ route('pending') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pending</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('borrowed') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Borrowed Items</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('returned') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Returned Items</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 @endif
             </ul>
         </nav>
