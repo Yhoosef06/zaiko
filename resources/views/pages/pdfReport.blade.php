@@ -4,7 +4,7 @@
 <head>
     <title>Inventory Report @foreach ($rooms as $room)
             @if ($room->id == $location)
-            {{ $room->room_name }}
+                {{ $room->room_name }}
             @endif
         @endforeach
     </title>
@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="container" id="intro_details">
-        <strong>DATE PREPARED:</strong> {{ now()->format('m-d-Y') }} <br>
+        <strong>DATE PREPARED:</strong> {{ now()->format('F j, Y') }} <br>
         <strong>DEPARTMENT / OFFICE:</strong> {{ $department }} <br>
         <strong>SPECIFIC LOCATION:</strong>
         @foreach ($rooms as $room)
@@ -97,7 +97,11 @@
                                 <td>{{ $unit->description }}</td>
                                 <td>{{ $unit->quantity }}</td>
                                 <td>{{ $unit->unit_number }}</td>
-                                <td>{{ $unit->aquisition_date }}</td>
+                                @if ($unit->aquisition_date == null)
+                                <td>{{ 'No Date Record.' }}</td>
+                                @else
+                                    <td>{{ date('F j, Y', strtotime($unit->aquisition_date)) }}</td>
+                                @endif
                                 <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
                                 <td>{{ $unit->inventory_tag }}</td>
                             </tr>

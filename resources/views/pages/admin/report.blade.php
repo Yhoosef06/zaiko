@@ -35,7 +35,7 @@
                         class="form-control @error('purpose')
                     border-danger
                     @enderror"
-                        placeholder="Purpose of the report">
+                        placeholder="Leave black if none.">
                     @error('purpose')
                         <div class="text-danger">
                             {{ $message }}

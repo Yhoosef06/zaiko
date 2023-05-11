@@ -394,7 +394,6 @@
             input.id = `serial_number_1`;
             input.classList.add('form-control', 'col-sm-5');
             input.placeholder = 'Leave blank if none.';
-            // input.value = '{{ old('serial_numbers') }}'
 
             container.appendChild(label);
             container.appendChild(input);

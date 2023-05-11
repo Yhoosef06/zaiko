@@ -36,15 +36,15 @@ class ItemsController extends Controller
     public function getItemDetails($id)
     {
         $item = Item::find($id);
-
+         
         // dd($item->room->room_name);
 
         $room = $item->room->room_name;
 
-
+        
 
         $item['room'] = $room;
-
+        
         // dd($item);
 
         return response()->json($item);
@@ -90,37 +90,36 @@ class ItemsController extends Controller
     {
         $this->validate($request, [
             'location' => 'required',
-            // 'serial_number.*' => 'required',
+            'serial_number.*' => 'required',
             // 'brand' => 'required',
             // 'model' => 'required',
             'item_category' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'nullable',
-            'unit_number' => 'required',
+            // 'unit_number' => 'required',
             'inventory_tag' => 'required',
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);
-        
+
+        // $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
+        // if ($item == 'N/A') {
         $serial_numbers = $request->serial_numbers;
         foreach ($serial_numbers as $serial_number) {
-            $item = Item::where('serial_number', '=', $request->input('serial_numbers'))->first();
-            if ($item == 'N/A') {
-                Item::create([
-                    'serial_number' => $serial_number,
-                    'location' => $request->location,
-                    'item_category' => $request->item_category,
-                    'brand' => $request->brand,
-                    'model' => $request->model,
-                    'description' => $request->item_description,
-                    'aquisition_date' => $request->aquisition_date,
-                    'unit_number' => $request->unit_number,
-                    'inventory_tag' => $request->inventory_tag,
-                    'quantity' => $request->quantity,
-                    'status' => $request->status,
-                    'borrowed' => 'no',
-                ]);
-            }
+            Item::create([
+                'serial_number' => $serial_number,
+                'location' => $request->location,
+                'item_category' => $request->item_category,
+                'brand' => $request->brand,
+                'model' => $request->model,
+                'description' => $request->item_description,
+                'aquisition_date' => $request->aquisition_date,
+                'unit_number' => $request->unit_number,
+                'inventory_tag' => $request->inventory_tag,
+                'quantity' => $request->quantity,
+                'status' => $request->status,
+                'borrowed' => 'no',
+            ]);
         }
 
         Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
@@ -258,21 +257,21 @@ class ItemsController extends Controller
                 'department',
                 'rooms'
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
-            return view('pages.pdfReport')->with(compact(
-                'items',
-                'purpose',
-                'location',
-                'prepared_by',
-                'verified_by',
-                'lab_oic',
-                'it_specialist',
-                'department',
-                'rooms'
-            ));
-            // foreach ($rooms as $room) {
-            //     if ($room->id == $location)
-            //         return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
-            // }
+            // return view('pages.pdfReport')->with(compact(
+            //     'items',
+            //     'purpose',
+            //     'location',
+            //     'prepared_by',
+            //     'verified_by',
+            //     'lab_oic',
+            //     'it_specialist',
+            //     'department',
+            //     'rooms'
+            // ));
+            foreach ($rooms as $room) {
+                if ($room->id == $location)
+                    return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
+            }
         }
     }
 
