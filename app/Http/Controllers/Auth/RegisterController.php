@@ -53,7 +53,7 @@ class RegisterController extends Controller
                 
                 'account_type' => 'student',
                 'account_status' => 'pending',
-                'department_id' => '1'
+                'department_id' => $request->department_id
 
             ]);
 

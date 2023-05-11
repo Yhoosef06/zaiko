@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\ItemCategory;
 use App\Models\User;
+use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -17,9 +19,12 @@ class StudentController extends Controller
     }
 
     public function items(){
-        $items = Item::all();
+        $categories = ItemCategory::all();
+        $user_dept_id = Auth::user()->department_id;
+        $rooms = Room::where('department_id', $user_dept_id)->get();
+        $items = Item::whereIn('location', $rooms->pluck('id'))->get();
 
-        return view('pages.students.items',compact('items'));
+        return view('pages.students.items',compact('categories','items'));     
     }
 
 
