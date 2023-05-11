@@ -30,8 +30,8 @@
                                         <th>#</th>
                                         <th>Brand</th>
                                         <th>Model</th>
-                                        <th>Item Category</th>
-                                        <th>Item Description(s)</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
                                         <th>Serial #</th>
                                         <th>Status</th>
                                         <th>Room</th>
@@ -48,11 +48,7 @@
                                             <td>{{ Str::limit($item->description, 20, '...') }}</td>
                                             <td>{{ $item->serial_number }}</td>
                                             <td>{{ $item->status }}</td>
-                                            @foreach ($rooms as $room)
-                                                @if ($room->id == $item->location)
-                                                    <td> {{ $room->room_name }}</td>
-                                                @endif
-                                            @endforeach
+                                            <td>{{ $item->room->room_name }}</td>
                                             <td>
                                                 {{-- <a href="{{ route('view_item_details', $item->id) }}"
                                                     class="btn btn-sm btn-primary" class="btn btn-default"
@@ -131,6 +127,7 @@
             type: 'GET',
             dataType: 'json',
             success: function(data) {
+                console.log(data);
                 // Populate the modal window with the item details
                 $('#modal-item-details .modal-body').html(
                     '<p><strong>Item Number:</strong> ' + data.id + '</p>' +
@@ -143,7 +140,7 @@
                     '<p><strong>Quantity:</strong> ' + data.quantity + '</p>' +
                     '<p><strong>Aquisition Date:</strong> ' + data.aquisition_date + '</p>' +
                     '<p><strong>Status:</strong> ' + data.status + '</p>' +
-                    '<p><strong>Location:</strong> ' + data.location + '</p>' +
+                    '<p><strong>Location:</strong> ' + data.room.room_name + '</p>' +
                     '<p><strong>Invnetory Tag:</strong> ' + data.inventory_tag + '</p>' 
                 );
                 // Update the "Edit" button link with the correct item ID

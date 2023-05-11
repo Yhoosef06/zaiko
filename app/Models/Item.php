@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Item extends Model
 {
@@ -31,8 +32,8 @@ class Item extends Model
         'department_id'
     ];
 
-    public function room(): BelongsTo
+    public function room(): HasOne
     {
-        return $this->belongsTo(Room::class);
+        return $this->HasOne(Room::class, 'id', 'location');
     }
 }

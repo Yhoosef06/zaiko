@@ -13,11 +13,11 @@
         </label>
         <form action="{{ route('save_new_item') }}" method="POST">
             @csrf
-            <div class="row">
+            <div class="row m-2">
                 <div class="col">
                     <label for="location">Room/Location: </label>
                     <div style="display:flex">
-                        <div>
+                        <div class=" form-group">
                             <select id="location" name="location"
                                 class="form-control @error('location')
                                         border-danger @enderror">
@@ -42,16 +42,17 @@
 
                     <label for="Item name">Item Category:</label>
                     <div style="display:flex">
-
-                        <select id="item_category" name="item_category"
-                            class="form-control col-5 @error('item_category')
+                        <div class="form-group">
+                            <select id="item_category" name="item_category"
+                                class="form-control @error('item_category')
                         border-danger @enderror">
-                            <option value="option_select" disabled selected>Select a category</option>
-                            @foreach ($itemCategories as $category)
-                                <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
-                            @endforeach
-                        </select>
+                                <option value="option_select" disabled selected>Select a category</option>
+                                @foreach ($itemCategories as $category)
+                                    <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
+                                @endforeach
+                            </select>
 
+                        </div>
 
                         <div>
                             <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
@@ -67,16 +68,18 @@
 
                     <label for="Brand">Brand:</label>
                     <div style="display:flex">
-                        <input type="text" id="brand" name="brand" value="{{ old('brand') }}"
-                            class="form-control col-sm-5 @error('brand')
+                        <div class="form-group">
+                            <input type="text" id="brand" name="brand" value="{{ old('brand') }}"
+                                class="form-control @error('brand')
                     border-danger
                     @enderror"
-                            placeholder="Leave an N/A if none.">
-                        @error('brand')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                                placeholder="Leave blank if none.">
+                            @error('brand')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
                         <div>
                             <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
@@ -84,99 +87,99 @@
                         </div>
                     </div>
 
-                    <label for="Model">Model:</label>
-                    <input type="text" id="model" name="model" value="{{ old('model') }}"
-                        class="form-control col-5 @error('model')
-                    border-danger
-                    @enderror"
-                        placeholder="Leave an N/A if none.">
-                    @error('model')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    <div class="form-group">
+                        <label for="Model">Model:</label>
+                        <input type="text" id="model" name="model" value="{{ old('model') }}"
+                            class="form-control col-5 @error('model')
+                        border-danger
+                        @enderror"
+                            placeholder="Leave blank if none.">
+                        @error('model')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
 
-                    <label for="aquisition date">Aquisition Date:</label>
-                    <input type="date" id="aquisition_date" name="aquisition_date" class="form-control col-sm-4"
-                        placeholder="Aquistion Date">
+                    <div class="form-group">
+                        <label for="aquisition date">Aquisition Date:</label>
+                        <input type="date" id="aquisition_date" name="aquisition_date" class="form-control col-sm-4"
+                            placeholder="Aquistion Date">
+                    </div>
 
-                    <label for="unit number">Unit Number:</label>
-                    <input type="text" id="unit_number" name="unit_number"
-                        class="form-control col-sm-5 @error('unit_number')
-                    border-danger @enderror"
-                        value="{{ old('unit_number') }}" placeholder="Leave an N/A if none.">
-                    @error('unit_number')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    <div class="form-group">
+                        <label for="unit number">Unit Number:</label>
+                        <input type="text" id="unit_number" name="unit_number"
+                            class="form-control col-sm-5 @error('unit_number')
+                        border-danger @enderror"
+                            value="{{ old('unit_number') }}" placeholder="Leave blank if none.">
+                        @error('unit_number')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="col">
-                    {{-- 
-                    <label for="serial number"> Serial Number:</label>
-                    <input type="text" id="serial_number" name="serial_number"
-                        class="form-control col-sm-5 @error('serial_number')
-                    border-danger @enderror"
-                        value="{{ old('serial_number') }}" placeholder="Leave an N/A if none.">
-                    @if (session()->has('message'))
-                        <div class="text-danger">
-                            {{ session()->get('message') }}
-                        </div>
-                    @endif
-                    @error('serial_number')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror --}}
+                    <div class="form-group">
+                        <label for="Item description">Item Description:</label>
+                        <input type="text" id="item_description" name="item_description"
+                            value="{{ old('item_description') }}"
+                            class="form-control @error('item_description')
+                        border-danger
+                        @enderror"
+                            placeholder="Item Description">
+                        @error('item_description')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
-                    <label for="Item description">Item Description:</label>
-                    <input type="text" id="item_description" name="item_description"
-                        value="{{ old('item_description') }}"
-                        class="form-control @error('item_description')
-                    border-danger
-                    @enderror"
-                        placeholder="Item Description">
-                    @error('item_description')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    </div>
 
-                    <label for="quantity">Quantity:</label>
-                    <input type="text" id="quantity" name="quantity"
-                        class="form-control col-sm-3 @error('quantity') border-danger @enderror"
-                        value="{{ old('quantity') }}" placeholder="Quantity" oninput="updateSerialNumberFields()">
-                    <input type="checkbox" id="checkbox" name="checkbox" onchange="updateSerialNumberFields()" checked>
-                    <strong> Same serial numbers?</strong> <br>
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="text" id="quantity" name="quantity"
+                            class="form-control col-sm-3 @error('quantity') border-danger @enderror"
+                            value="{{ old('quantity') }}" placeholder="Quantity" oninput="updateSerialNumberFields()">
+                        <input type="checkbox" id="checkbox" name="checkbox" onchange="updateSerialNumberFields()" checked>
+                        <strong> Same serial numbers?</strong> <br>
 
-                    @error('quantity')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                        @error('quantity')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
 
-                    <label for="status">Status:</label>
-                    <select id="status" name="status" class="form-control col-sm-3">
-                        <option value="Active">Active</option>
-                        <option value="For Repair">For Repair</option>
-                        <option value="Obsolete">Obsolete</option>
-                        <option value="Lost">Lost</option>
-                    </select>
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <select id="status" name="status" class="form-control col-sm-3">
+                            <option value="Active">Active</option>
+                            <option value="For Repair">For Repair</option>
+                            <option value="Obsolete">Obsolete</option>
+                            <option value="Lost">Lost</option>
+                        </select>
+                    </div>
 
-                    <label for="borrowed or not">Inventory Tag:</label>
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
-                        With
-                    </label>
-                    /
-                    <label for="" class="radio-inline">
-                        <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
-                        Without
-                    </label>
-                    <br>
+                    <div class="form-group">
+                        <label for="borrowed or not">Inventory Tag:</label>
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
+                            With
+                        </label>
+                        /
+                        <label for="" class="radio-inline">
+                            <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
+                            Without
+                        </label>
+                        <br>
+                    </div>
+              
+                   
 
-                    <div id="serial_numbers_container"></div>
+                    <div class="form-group" id="serial_numbers_container"></div>
 
                     <hr>
 
@@ -391,6 +394,7 @@
             input.id = `serial_number_1`;
             input.classList.add('form-control', 'col-sm-5');
             input.placeholder = 'Leave blank if none.';
+            // input.value = '{{ old('serial_numbers') }}'
 
             container.appendChild(label);
             container.appendChild(input);

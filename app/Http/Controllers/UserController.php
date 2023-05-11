@@ -48,6 +48,12 @@ class UserController extends Controller
     public function viewUserInfo($id_number)
     {
         $user = User::find($id_number);
+
+        $department = $user->departments->department_name;
+
+        $user['department'] = $department;
+
+        // dd($user);
         return response()->json($user);
     }
 

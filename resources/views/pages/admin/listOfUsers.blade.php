@@ -29,8 +29,8 @@
                                     <tr>
                                         <th>ID #</th>
                                         <th>Name</th>
-                                        <th>Account Type</th>
-                                        <th>Account Status</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
                                         <th>Department ID</th>
                                         <th>Actions</th>
 
@@ -65,11 +65,8 @@
                                                         style="padding:10px">{{ 'Approved' }}</span>
                                                 </td>
                                             @endif
-                                            @foreach ($departments as $department)
-                                                @if ($department->id == $user->department_id)
-                                                    <td>{{ $department->department_name }}</td>
-                                                @endif
-                                            @endforeach
+
+                                            <td>{{$user->departments->department_name}}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
@@ -133,6 +130,7 @@
             type: 'GET',
             dataType: 'json',
             success: function(data) {
+                console.log(data);
                 // Populate the modal window with the item details
                 $('#modal-item-details .modal-body').html(
                     '<p><strong>I.D. #:</strong> ' + data.id_number + '</p>' +
@@ -140,7 +138,7 @@
                     '<p><strong>Last Name:</strong> ' + data.last_name + '</p>' +
                     '<p><strong>Account Type:</strong> ' + data.account_type + '</p>' +
                     '<p><strong>Account Status:</strong> ' + data.account_status + '</p>' +
-                    '<p><strong>Department ID:</strong> ' + data.department_id + '</p>'
+                    '<p><strong>Department ID:</strong> ' + data.departments.department_name + '</p>'
                 );
                 // Update the "Edit" button link with the correct item ID
                 var editUrl = '{{ route('edit_user_info', ['id_number' => ':userId']) }}';
