@@ -57,16 +57,16 @@
     <div class="container" style="font-weight: 800; font-size:18pt; text-align:center">
         UNIVERSITY OF SAN JOSE-RECOLETOS <br>
         Inventory Report
-        <div class="container" id="purpose">
+        {{-- <div class="container" id="purpose">
             @if ($purpose == null)
             @else
                 ({{ $purpose }})
             @endif
-        </div>
+        </div> --}}
     </div>
     <div class="container" id="intro_details">
         <strong>DATE PREPARED:</strong> {{ now()->format('F j, Y') }} <br>
-        <strong>DEPARTMENT / OFFICE:</strong> {{ $department }} <br>
+        <strong>DEPARTMENT / OFFICE:</strong> {{ $department}} <br>
         <strong>SPECIFIC LOCATION:</strong>
         @foreach ($rooms as $room)
             @if ($room->id == $location)
@@ -98,7 +98,7 @@
                                 <td>{{ $unit->quantity }}</td>
                                 <td>{{ $unit->unit_number }}</td>
                                 @if ($unit->aquisition_date == null)
-                                <td>{{ 'No Date Record.' }}</td>
+                                    <td>{{ 'No Date Record.' }}</td>
                                 @else
                                     <td>{{ date('F j, Y', strtotime($unit->aquisition_date)) }}</td>
                                 @endif
@@ -125,7 +125,7 @@
                 <br>
                 <span class="signee">{{ $prepared_by }}</span>
                 <br>
-                Main Office <br>
+                {{ $position_1 }}<br>
                 <br>
                 Noted By: <br>
                 <br>
@@ -138,9 +138,9 @@
                 <br>
                 <span class="signee">{{ $verified_by }}</span>
                 <br>
-                Main Office <br>
+                {{$position_2}} <br>
                 <br>
-                <br>
+                Approved By: <br>
                 <br>
                 <span class="signee">{{ $it_specialist }}</span>
                 <br>

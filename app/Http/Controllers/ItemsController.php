@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Room;
+use App\Models\Brand;
 use App\Models\Order;
+use App\Models\College;
+use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
-use App\Models\ItemCategory;
+use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -36,15 +38,15 @@ class ItemsController extends Controller
     public function getItemDetails($id)
     {
         $item = Item::find($id);
-         
+
         // dd($item->room->room_name);
 
         $room = $item->room->room_name;
 
-        
+
 
         $item['room'] = $room;
-        
+
         // dd($item);
 
         return response()->json($item);
@@ -223,43 +225,78 @@ class ItemsController extends Controller
             $request,
             [
                 'location' => 'required',
-                'purpose' => 'nullable',
-                'department' => 'required',
+                // 'purpose' => 'nullable',
+                // 'department' => 'required',
                 'prepared_by' => 'required',
                 'verified_by' => 'required',
                 'lab_oic' => 'required',
-                'it_specialist' => 'required'
+                'it_specialist' => 'required',
+                'position_1' => 'required',
+                'position_2' => 'required',
+                'position_3' => 'required',
+                'position_4' => 'required'
             ]
         );
 
-        $purpose = $request->purpose;
-        $department = $request->department;
         $location = $request->location;
         $prepared_by = $request->prepared_by;
         $verified_by = $request->verified_by;
         $lab_oic = $request->lab_oic;
         $it_specialist = $request->it_specialist;
+        $position_1 = $request->position_1;
+        $position_2 = $request->position_2;
+        $position_3 = $request->position_3;
+        $position_4 = $request->position_4;
 
         $user_dept_id = Auth::user()->department_id;
-        $rooms = Room::where('department_id', $user_dept_id)->get();
-        $items = Item::where('location', $location)->get();
+        if (Auth::user()->account_status == 'admin') {
+            $rooms = Room::all();
+
+            $items = Item::where('location', $location)->get();
+            $room = Room::where('id', '=', $location)->get();
+
+            foreach ($room as $index) {
+                $dept_id = $index->department_id;
+            }
+            $department = Department::find($dept_id);
+
+            $department = $department->department_name;
+        } else {
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $rooms = Room::all();
+
+            $items = Item::where('location', $location)->get();
+            $room = Room::where('id', '=', $location)->get();
+
+            foreach ($room as $index) {
+                $dept_id = $index->department_id;
+            }
+            $department = Department::find($dept_id);
+
+            $department = $department->department_name;
+        }
+
 
         if ($request->has('download')) {
             $pdf = App::make('dompdf.wrapper');
             $pdf->loadView('pages.pdfReport', compact(
                 'items',
-                'purpose',
+                // 'purpose',
                 'location',
                 'prepared_by',
                 'verified_by',
                 'lab_oic',
                 'it_specialist',
                 'department',
-                'rooms'
+                'rooms',
+                'position_1',
+                'position_2',
+                'position_3',
+                'position_4'
             ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
             // return view('pages.pdfReport')->with(compact(
             //     'items',
-            //     'purpose',
+            //     // 'purpose',
             //     'location',
             //     'prepared_by',
             //     'verified_by',

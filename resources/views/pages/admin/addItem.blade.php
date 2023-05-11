@@ -176,19 +176,46 @@
                         </label>
                         <br>
                     </div>
-              
-                   
+
+
 
                     <div class="form-group" id="serial_numbers_container"></div>
 
                     <hr>
 
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                    <Button type="submit" class="btn btn-success">Submit</Button>
+                    <Button type="submit" class="btn btn-success" data-toggle="modal" data-target="modal-submitConfirmation">Submit</Button>
                 </div>
             </div>
         </form>
     </div>
+
+        {{-- Submit Confirmation--}}
+        <div class="modal fade" id="modal-submitConfirmation">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Saving New Item</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('store_new_room') }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            Are you sure you want to continue?
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
 
     {{-- FOR ADDING A ROOM --}}
     <div class="modal fade" id="modal-addRoom">
@@ -203,6 +230,25 @@
                 <form action="{{ route('store_new_room') }}" method="POST">
                     @csrf
                     <div class="modal-body">
+                        @if (Auth::user()->account_type == 'admin')
+                            <label for="">Department:</label>
+                            <select id="department" name="department"
+                                class="form-control @error('departments')
+                                    border-danger @enderror">
+                                <option value="option_select" disabled selected>Choose a department</option>
+                                @foreach ($departments as $department)
+                                    <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                                @endforeach
+
+                                {{-- @foreach ($data as $group)
+                                    <optgroup label="{{ $group->college_id }}">
+                                        @foreach ($group as $depar  ment_name)
+                                            <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                @endforeach --}}
+                            </select>
+                        @endif
                         <label for="">Room Name:</label>
                         <input type="text" name="room_name" id="room_name"
                             class="form-control password @error('room_name') border-danger @enderror"
@@ -300,7 +346,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary" >Save</button>
                     </div>
                 </form>
             </div>

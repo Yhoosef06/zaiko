@@ -68,7 +68,7 @@
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-edit"></i></a> --}}
                                                 <!-- <a href="" data-id="{{ $item->serial_number }}" class="btn btn-sm btn-danger show-alert-delete-item">
-                                                                                                                                              <i class="fa fa-trash"></i></a> -->
+                                                                                                                                                  <i class="fa fa-trash"></i></a> -->
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_item', $item->id) }}">
@@ -128,6 +128,14 @@
             dataType: 'json',
             success: function(data) {
                 console.log(data);
+                const acquisitionDate = new Date(data.aquisition_date);
+                const options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                };
+                const acquisitionDateStr = acquisitionDate.toLocaleDateString('en-US', options);
+
                 // Populate the modal window with the item details
                 $('#modal-item-details .modal-body').html(
                     '<p><strong>Item Number:</strong> ' + data.id + '</p>' +
@@ -138,10 +146,10 @@
                     '<p><strong>Category:</strong> ' + data.item_category + '</p>' +
                     '<p><strong>Description:</strong> ' + data.description + '</p>' +
                     '<p><strong>Quantity:</strong> ' + data.quantity + '</p>' +
-                    '<p><strong>Aquisition Date:</strong> ' + data.aquisition_date + '</p>' +
+                    '<p><strong>Aquisition Date:</strong> ' + acquisitionDateStr + '</p>' +
                     '<p><strong>Status:</strong> ' + data.status + '</p>' +
                     '<p><strong>Location:</strong> ' + data.room.room_name + '</p>' +
-                    '<p><strong>Invnetory Tag:</strong> ' + data.inventory_tag + '</p>' 
+                    '<p><strong>Invnetory Tag:</strong> ' + data.inventory_tag + '</p>'
                 );
                 // Update the "Edit" button link with the correct item ID
                 var editUrl = '{{ route('edit_item_details', ['id' => ':itemId']) }}';

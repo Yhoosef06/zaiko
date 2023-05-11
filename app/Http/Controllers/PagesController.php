@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Item;
 use App\Models\Room;
 use App\Models\ItemCategory;
@@ -36,7 +37,10 @@ class PagesController extends Controller
         if (Auth::user()->account_type == 'admin') {
             $rooms = Room::all();
             $itemCategories = ItemCategory::all();
-            return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories'));
+            // $data = Department::select('department_name', 'college_id')->orderBy('id')->groupBy('department_name', 'college_id')->get();
+            // // dd($data);
+            $departments = Department::all();
+            return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories', 'departments'));
         } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();

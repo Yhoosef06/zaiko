@@ -41,16 +41,30 @@ class RoomController extends Controller
             ]
         );
         $room = Room::where('room_name', '=', $request->input('room_name'))->first();
-        if ($room === null) {
-            Room::create([
-                'room_name' => $request->room_name,
-                'department_id' => Auth::user()->department_id
-            ]);
-            Session::flash('success', 'Room ' . $request->room_name . ' Successfully Added.');
-            return redirect('adding-new-item');
-        } else {
-            Session::flash('status', 'Room ' . $request->room_name . ' has already been added.');
-            return redirect('adding-new-item');
+        if(Auth::user()->account_type == 'admin'){
+            if ($room === null) {
+                Room::create([
+                    'room_name' => $request->room_name,
+                    'department_id' => $request->department
+                ]);
+                Session::flash('success', 'Room ' . $request->room_name . ' Successfully Added.');
+                return redirect('adding-new-item');
+            } else {
+                Session::flash('status', 'Room ' . $request->room_name . ' has already been added.');
+                return redirect('adding-new-item');
+            }
+        }else{
+            if ($room === null) {
+                Room::create([
+                    'room_name' => $request->room_name,
+                    'department_id' => Auth::user()->department_id
+                ]);
+                Session::flash('success', 'Room ' . $request->room_name . ' Successfully Added.');
+                return redirect('adding-new-item');
+            } else {
+                Session::flash('status', 'Room ' . $request->room_name . ' has already been added.');
+                return redirect('adding-new-item');
+            }
         }
     }
 }
