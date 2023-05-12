@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -111,5 +112,11 @@ class BorrowController extends Controller
         Session::flash('success', 'Successfuly Remove Borrowed Item.');
         return redirect('pending');
     }
+
+    // public function autoCompleteID(Request $request){
+    //     $search = $request->get('term');
+    //     $result = User::where('id_number', 'LIKE', '%'. $search. '%')->get();
+    //     return response()->json($result);
+    // }
 
 }

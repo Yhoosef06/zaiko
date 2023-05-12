@@ -7,6 +7,7 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1>Manage Borrowings</h1>
+            
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -102,12 +103,56 @@
               </button>
             </div>
             <div class="modal-body">
-              <p>One fine body&hellip;</p>
+
+
+            <div class="card-body">
+                <form>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <!-- text input -->
+                      <div class="form-group">
+                        <label>ID Number</label>
+                        <input type="text" class="form-control" id="idNumber" name="idNumber" placeholder="Enter ID Number">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" readonly>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control"  readonly>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- input states -->
+                  <div class="form-group">
+                    <label class="col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Input with
+                      success</label>
+                    <input type="text" class="form-control is-valid" id="inputSuccess" placeholder="Enter ...">
+                  </div>
+                 
+
+               
+
+               
+              
+              </div>  
+
+
+              
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
             </div>
+            </form>
           </div>
           <!-- /.modal-content -->
         </div>

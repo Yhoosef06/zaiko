@@ -82,6 +82,7 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
         Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
         Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
+        
 
         //reports
         Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
