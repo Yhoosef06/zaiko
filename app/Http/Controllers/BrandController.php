@@ -18,16 +18,19 @@ class BrandController extends Controller
 
     public function storeNewBrand(Request $request)
     {
+        // Validate the input
+        $request->validate([
+            'brand' => 'required',
+        ]);
+
         $brand = Brand::where('brand_name', '=', $request->input('brand'))->first();
-        if ($brand === null) {
-            Brand::create([
-                'brand_name' => $request->brand,
-            ]);
-            Session::flash('success', $request->brand . ' successfully added.');
-            return redirect('adding-new-item');
-        } else {
-            Session::flash('status', $request->brand . ' has already been added.');
-            return redirect('adding-new-item');
+        if ($brand) {
+            return response()->json(['error' => $request->brand.' brand has already been added.'], 422);
         }
+
+        Brand::create([
+            'brand_name' => $request->brand,
+        ]);
+        return response()->json(['success' => $request->brand . ' brand successfully added.'], 200);
     }
 }

@@ -300,27 +300,19 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('store_new_brand') }}" method="POST">
+                <form id="addBrandForm" method="POST">
                     @csrf
                     <div class="modal-body">
                         <label for="">Brand Name:</label>
-                        <input type="text" name="brand" id="brand"
-                            class="form-control password @error('category_name') border-danger @enderror"
+                        <input type="text" name="brand_name" id="brand_name"
+                            class="form-control"
                             placeholder="Brand name">
-                        @error('brand')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                        @if (session('message'))
-                            <div class="text-danger">
-                                {{ session('message') }}
-                            </div>
-                        @endif
+                        <span class="text-danger" id="brand-name-error"></span>
+                        <span class="text-success" id="brand-name-success"></span>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
@@ -329,6 +321,7 @@
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+
 
     <div id="success-message" style="display: none;">
         Data saved successfully.
@@ -508,6 +501,39 @@
                             'Category name has already been added.');
                         $('#category_name').addClass('border border-danger');
                         $('#category-name-success').text('');
+                    }
+                }
+            });
+        });
+    });
+
+    //FOR ADDING BRAND NAME 
+    $(document).ready(function() {
+        $('#addBrandForm').submit(function(event) {
+            event.preventDefault();
+            var brand_name = $('#brand_name').val();
+            $.ajax({
+                url: "{{ route('store_new_brand') }}",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "brand": brand_name,
+                },
+                success: function(response) {
+                    $('#brand-name-error').text('');
+                    $('#brand').removeClass('border border-danger');
+                    $('#brand-name-success').text(response.success);
+                    $('#brand_name').val('');
+                },
+                error: function(xhr) {
+                    console.log(xhr);
+                    if (xhr.status === 422) {
+                        $('#brand-name-error').text(xhr.responseJSON.error);
+                    } else {
+                        $('#brand-name-error').text(
+                            + data.brand_name + ' has already been added.');
+                        $('#brand_name').addClass('border border-danger');
+                        $('#brand-name-success').text('');
                     }
                 }
             });
