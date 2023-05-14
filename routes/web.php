@@ -89,7 +89,6 @@ Route::middleware(['auth', 'user-role:admin|reads'])->group(function () {
 
     // FOR ROOM
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
-    // Route::get('adding-room', [RoomController::class, 'addNewRoom'])->name('adding_new_room');
     Route::post('storing-new-room', [RoomController::class, 'storeNewRoom'])->name('store_new_room');
     // });
 

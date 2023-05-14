@@ -269,23 +269,14 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('store_new_category') }}" method="POST">
+                <form id="addCategoryForm" method="POST">
                     @csrf
                     <div class="modal-body">
                         <label for="">Category Name:</label>
-                        <input type="text" name="category_name" id="category_name"
-                            class="form-control password @error('category_name') border-danger @enderror"
+                        <input type="text" name="category_name" id="category_name" class="form-control"
                             placeholder="Category name">
-                        @error('category_name')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                        @if (session('message'))
-                            <div class="text-danger">
-                                {{ session('message') }}
-                            </div>
-                        @endif
+                        <div id="category-name-error" class="text-danger"></div>
+                        <div id="category-name-success" class="text-success"></div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -484,6 +475,40 @@
                     $('#room_name').val('');
                     $('#department').val('');
                     $('#room-name-success').text('');
+                }
+            });
+        });
+    });
+
+    //for adding category
+    $(document).ready(function() {
+        $('#addCategoryForm').submit(function(event) {
+            event.preventDefault();
+            var category_name = $('#category_name').val();
+            $.ajax({
+                url: "{{ route('store_new_category') }}",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "category_name": category_name,
+                },
+                success: function(response) {
+                    $('#category-name-error').text('');
+                    $('#category_name').removeClass('border border-danger');
+                    $('#category-name-success').text(response.success);
+                    $('#category_name').val('');
+                },
+                error: function(xhr) {
+                    console.log(xhr);
+                    if (xhr.status === 422) {
+                        $('#category-name-error').text(xhr.responseJSON.errors
+                            .category_name[0]);
+                    } else {
+                        $('#category-name-error').text(
+                            'Category name has already been added.');
+                        $('#category_name').addClass('border border-danger');
+                        $('#category-name-success').text('');
+                    }
                 }
             });
         });
