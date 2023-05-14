@@ -9,7 +9,7 @@
     <div class="container m-2">
         <div class="col-lg-10 bg-light shadow-sm p-3">
             <label for="adding new item">
-                <h2>Adding New User</h2>
+                <h2 class="text-decoration-underline">Adding New User</h2>
             </label>
             <form action="{{ route('save_new_user') }}" method="POST">
                 @csrf

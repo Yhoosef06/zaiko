@@ -6,10 +6,9 @@
             <i class="fa fa-thumbs-down"></i> {{ session('status') }}
         </div>
     @endif
-
-    <div class="col-lg-10 bg-light shadow-sm p-3">
+    <div class="container col-lg-10 bg-light shadow-lg p-3">
         <label for="adding new item">
-            <h2>Adding New Item</h2>
+            <h2 class="text-decoration-underline">Adding New Item</h2>
         </label>
         <form action="{{ route('save_new_item') }}" method="POST">
             @csrf
@@ -184,40 +183,42 @@
                     <hr>
 
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                    <Button type="submit" class="btn btn-success" data-toggle="modal" data-target="modal-submitConfirmation">Submit</Button>
+                    <Button type="submit" class="btn btn-success" data-toggle="modal"
+                        data-target="#modal-submitConfirmation">Save</Button>
                 </div>
             </div>
         </form>
     </div>
 
-        {{-- Submit Confirmation--}}
-        <div class="modal fade" id="modal-submitConfirmation">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Saving New Item</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form action="{{ route('store_new_room') }}" method="POST">
-                        @csrf
-                        <div class="modal-body">
-                            Are you sure you want to continue?
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
+    {{-- Submit Confirmation --}}
+    <div class="modal fade" id="modal-submitConfirmation">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Saving New Item</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <!-- /.modal-content -->
+                <form action="{{ route('store_new_room') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        Are you sure you want to continue?
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Proceed</button>
+                    </div>
+                </form>
             </div>
-            <!-- /.modal-dialog -->
+            <!-- /.modal-content -->
         </div>
-        <!-- /.modal -->
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 
     {{-- FOR ADDING A ROOM --}}
+
     <div class="modal fade" id="modal-addRoom">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -227,54 +228,36 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('store_new_room') }}" method="POST">
-                    @csrf
+                <form id="add-room-form">
                     <div class="modal-body">
+                        @csrf
                         @if (Auth::user()->account_type == 'admin')
-                            <label for="">Department:</label>
-                            <select id="department" name="department"
-                                class="form-control @error('departments')
-                                    border-danger @enderror">
-                                <option value="option_select" disabled selected>Choose a department</option>
-                                @foreach ($departments as $department)
-                                    <option value="{{ $department->id }}">{{ $department->department_name }}</option>
-                                @endforeach
-
-                                {{-- @foreach ($data as $group)
-                                    <optgroup label="{{ $group->college_id }}">
-                                        @foreach ($group as $depar  ment_name)
-                                            <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                            <label for="department">Department:</label>
+                            <select id="department" name="department" class="form-control">
+                                <option value="" disabled selected>Choose a department</option>
+                                @foreach ($colleges as $college)
+                                    <optgroup label="{{ $college->college_name }}">
+                                        @foreach ($college->departments as $department)
+                                            <option value="{{ $department->id }}">{{ $department->department_name }}
+                                            </option>
                                         @endforeach
                                     </optgroup>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         @endif
-                        <label for="">Room Name:</label>
-                        <input type="text" name="room_name" id="room_name"
-                            class="form-control password @error('room_name') border-danger @enderror"
-                            placeholder="Room name">
-                        @error('room_name')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                        @if (session('message'))
-                            <div class="text-danger">
-                                {{ session('message') }}
-                            </div>
-                        @endif
+                        <label for="room_name">Room Name:</label>
+                        <input type="text" name="room_name" id="room_name" class="form-control">
+                        <span id="room-name-error" class="text-danger"></span>
+                        <span id="room-name-success" class="text-success"></span>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" id="save-room-name" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
 
     {{-- FOR ADDING AN ITEM CATEGORY --}}
     <div class="modal fade" id="modal-addCategory">
@@ -346,7 +329,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" >Save</button>
+                        <button type="button" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
@@ -355,6 +338,10 @@
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+
+    <div id="success-message" style="display: none;">
+        Data saved successfully.
+    </div>
 @endsection
 
 <style>
@@ -462,4 +449,43 @@
             }
         }
     }
+
+    // FOR ADDING ROOM
+    $(document).ready(function() {
+        $('#add-room-form').on('submit', function(event) {
+            event.preventDefault();
+            var roomName = $('#room_name').val();
+            var department = $('#department').val();
+
+            $.ajax({
+                url: "{{ route('store_new_room') }}",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "room_name": roomName,
+                    "department": department
+                },
+                success: function(response) {
+                    $('#room_name').removeClass('border border-danger');
+                    $('#room-name-success').text(response.success);
+                    $('#room_name').val('');
+                    $('#department').val('');
+                    $('#room-name-error').text('');
+                },
+                error: function(xhr) {
+                    console.log(xhr);
+                    if (xhr.status === 422) {
+                        $('#room-name-error').text(xhr.responseJSON.errors.room_name[0]);
+                    } else {
+                        $('#room-name-error').text(
+                            'Room name has already been added.');
+                    }
+                    $('#room_name').addClass('border border-danger');
+                    $('#room_name').val('');
+                    $('#department').val('');
+                    $('#room-name-success').text('');
+                }
+            });
+        });
+    });
 </script>

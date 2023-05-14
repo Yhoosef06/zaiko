@@ -102,7 +102,7 @@
                     @endif
 
                     <hr>
-                    <a href="{{ route('view_items') }}" class="btn btn-outline-dark">Back</a>
+                    <a href="{{ route('view_items') }}" class="btn btn-outline-dark" data-dismiss="modal">Cancel</a>
                     <Button type="submit" class="btn btn-success">Save Changes</Button>
                 </div>
             </div>

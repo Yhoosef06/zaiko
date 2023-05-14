@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Inventory</h1>
+                    <h1 class="text-decoration-underline">Inventory</h1>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
@@ -63,12 +63,15 @@
                                                     <i class="fa fa-eye"></i>
                                                 </button>
 
+                                                <a href="#" class="btn btn-primary"
+                                                    onclick="openModal({{ $item->id }});">Edit</a>
+
 
                                                 {{-- <a href="{{ route('edit_item_details', $item->serial_number) }}"
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-edit"></i></a> --}}
                                                 <!-- <a href="" data-id="{{ $item->serial_number }}" class="btn btn-sm btn-danger show-alert-delete-item">
-                                                                                                                                                  <i class="fa fa-trash"></i></a> -->
+                                                                                                                                                          <i class="fa fa-trash"></i></a> -->
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_item', $item->id) }}">
@@ -112,12 +115,44 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    <a href="{{ route('edit_item_details', ['id' => $item->id]) }}" class="btn btn-primary">Edit</a>
+                    {{-- <a href="{{ route('edit_item_details', ['id' => $item->id]) }}" class="btn btn-primary">Edit</a> --}}
+                    <a href="#" class="btn btn-primary" onclick="openModal({{ $item->id }});">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="my-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Item Details</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" id="my-modal-body">
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+<script>
+    function openModal(itemId) {
+        $.ajax({
+            url: '/edit-item-' + itemId,
+            type: 'GET',
+            success: function(response) {
+                $('#my-modal-body').html(response);
+                $('#my-modal').modal('show');
+
+                // Close the edit item modal and open the item details modal
+                $('#modal-item-details').on('hidden.bs.modal', function() {
+                openItemModal(itemId);
+            });
+            }
+        });
+    }
+</script>
 
 <script>
     function openItemModal(itemId) {
@@ -152,9 +187,9 @@
                     '<p><strong>Invnetory Tag:</strong> ' + data.inventory_tag + '</p>'
                 );
                 // Update the "Edit" button link with the correct item ID
-                var editUrl = '{{ route('edit_item_details', ['id' => ':itemId']) }}';
-                editUrl = editUrl.replace(':itemId', data.id);
-                $('#modal-item-details .modal-footer a').attr('href', editUrl);
+                // var editUrl = '{{ route('edit_item_details', ['id' => ':itemId']) }}';
+                // editUrl = editUrl.replace(':itemId', data.id);
+                // $('#modal-item-details .modal-footer a').attr('href', editUrl);
             },
             error: function(xhr, status, error) {
                 // Display an error message if the AJAX request fails
