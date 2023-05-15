@@ -7,7 +7,7 @@
         </div>
     @endif
     <div class="container m-2">
-        <div class="col-lg-10 bg-light shadow-sm p-3">
+        <div class="container col-lg-10 bg-light shadow-sm p-3">
             <label for="adding new item">
                 <h2 class="text-decoration-underline">Adding New User</h2>
             </label>
@@ -53,6 +53,7 @@
                         <select id="account_type" name="account_type" class="form-control">
                             <option value="student">Student</option>
                             <option value="admin">Admin</option>
+                            <option value="faculty">Faculty</option>
                             <option value="reads">Reads</option>
                         </select>
 
@@ -102,7 +103,8 @@
 
                         <hr>
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                        <Button type="submit" class="btn btn-success">Submit</Button>
+                        <Button type="submit" class="btn btn-success"
+                            onclick="return confirm('You are about to create a new user. Do you wish to continue?')">Save</Button>
                     </div>
                 </div>
             </form>

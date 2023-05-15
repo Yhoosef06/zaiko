@@ -25,6 +25,11 @@
                                     <option value="{{ $room->id }}">{{ $room->room_name }}</option>
                                 @endforeach
                             </select>
+                            @error('location')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div>
@@ -32,12 +37,6 @@
                                     data-target="#modal-addRoom"></i></a>
                         </div>
                     </div>
-
-                    @error('location')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
 
                     <label for="Item name">Item Category:</label>
                     <div style="display:flex">
@@ -51,6 +50,11 @@
                                 @endforeach
                             </select>
 
+                            @error('item_category')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div>
@@ -58,12 +62,6 @@
                                     data-target="#modal-addCategory"></i></a>
                         </div>
                     </div>
-
-                    @error('item_category')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
 
                     <label for="Brand">Brand:</label>
                     <div style="display:flex">
@@ -184,38 +182,33 @@
 
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                     <Button type="submit" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-submitConfirmation">Save</Button>
+                        data-target="#modal-submitConfirmation"
+                        onclick="return confirm('You are about to save a new item into your inventory. Do you wish to continue?')">Save</Button>
                 </div>
             </div>
         </form>
     </div>
 
     {{-- Submit Confirmation --}}
-    <div class="modal fade" id="modal-submitConfirmation">
-        <div class="modal-dialog modal-sm">
+    <div id="confirmModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Saving New Item</h4>
+                    <h5 class="modal-title">Confirm submission</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('store_new_room') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        Are you sure you want to continue?
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Proceed</button>
-                    </div>
-                </form>
+                <div class="modal-body">
+                    <p>Are you sure you want to submit this form?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmSubmitBtn">Proceed</button>
+                </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
 
     {{-- FOR ADDING A ROOM --}}
 
@@ -304,8 +297,7 @@
                     @csrf
                     <div class="modal-body">
                         <label for="">Brand Name:</label>
-                        <input type="text" name="brand_name" id="brand_name"
-                            class="form-control"
+                        <input type="text" name="brand_name" id="brand_name" class="form-control"
                             placeholder="Brand name">
                         <span class="text-danger" id="brand-name-error"></span>
                         <span class="text-success" id="brand-name-success"></span>
@@ -531,7 +523,7 @@
                         $('#brand-name-error').text(xhr.responseJSON.error);
                     } else {
                         $('#brand-name-error').text(
-                            + data.brand_name + ' has already been added.');
+                            +data.brand_name + ' has already been added.');
                         $('#brand_name').addClass('border border-danger');
                         $('#brand-name-success').text('');
                     }

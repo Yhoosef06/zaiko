@@ -46,6 +46,8 @@
                                                 <td>{{ 'Student' }}</td>
                                             @elseif ($user->account_type == 'admin')
                                                 <td>{{ 'Admin' }}</td>
+                                            @elseif($user->account_type == 'faculty')
+                                            <td>{{ 'Faculty' }}</td>
                                             @else
                                                 <td>{{ 'READS' }}</td>
                                             @endif

@@ -47,6 +47,8 @@ class SignInController extends Controller
                 return redirect()->route('admin.dashboard');
             }else if(auth()->user()->account_type == 'reads'){
                 return redirect()->route('admin.dashboard');
+            }else if(auth()->user()->account_type == 'faculty'){
+                return redirect()->route('admin.dashboard');
             }else if(auth()->user()->account_type == 'student'){
                 if(auth()->user()->account_status == 'approved'){
                     return redirect()->route('student.dashboard');

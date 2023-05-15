@@ -243,6 +243,72 @@
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>
+                                Manage Borrowings
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview ml-4">
+                            <li class="nav-item">
+                                <a href="{{ route('pending') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pending</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('borrowed') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Borrowed Items</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('returned') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Returned Items</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @elseif (Auth::user()->account_type == 'faculty')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i>
+                            <p>
+                                Inventory
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview ml-4">
+                            <li class="nav-item">
+                                <a href="{{ route('add_item') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    Add New Item
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('view_items') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>View All Items</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('generate_report') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Generate Report</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-circle"></i>
                             <p>
                                 Manage Users

@@ -46,7 +46,7 @@ Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 //     Route::controller(PagesController::class)->group(function(){
 //         Route::get('/admin-dashboard','index')->name('admin.dashboard');
 //admin
-Route::middleware(['auth', 'user-role:admin|reads'])->group(function () {
+Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
