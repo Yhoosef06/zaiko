@@ -68,12 +68,14 @@
 
                     <div class="col">
                         <label for="Item name">College Department:</label>
-                        <select id="department_id" name="department_id"
-                            class="form-control col-sm-8 @error('department_id')
-                            border-danger @enderror">
+                        <select id="department_id" name="department_id" class="form-control col-sm-8 @error('department_id') border-danger @enderror">
                             <option value="option_select" disabled selected>Select College Department</option>
-                            @foreach ($departments as $department)
-                                <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                            @foreach ($colleges as $college)
+                                <optgroup label="{{ $college->college_name }}">
+                                    @foreach ($college->departments as $department)
+                                        <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                                    @endforeach
+                                </optgroup>
                             @endforeach
                         </select>
                         @error('department_id')
@@ -81,6 +83,7 @@
                                 {{ $message }}
                             </div>
                         @enderror
+                        
 
                         <label for="">Password</label>
                         <input type="password" name="password" id="password"

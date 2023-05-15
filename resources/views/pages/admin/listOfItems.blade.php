@@ -50,28 +50,11 @@
                                             <td>{{ $item->status }}</td>
                                             <td>{{ $item->room->room_name }}</td>
                                             <td>
-                                                {{-- <a href="{{ route('view_item_details', $item->id) }}"
-                                                    class="btn btn-sm btn-primary" class="btn btn-default"
-                                                    data-toggle="modal" data-target="#modal-sm"
-                                                    onclick="openItemModal('{{ $item->id }}')">>
-                                                    <i class="fa fa-eye"></i></a> --}}
-                                                {{-- {{ $item->id }} --}}
-
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
                                                     onclick="openItemModal('{{ $item->id }}')">
                                                     <i class="fa fa-eye"></i>
                                                 </button>
-
-                                                <a href="#" class="btn btn-primary"
-                                                    onclick="openModal({{ $item->id }});">Edit</a>
-
-
-                                                {{-- <a href="{{ route('edit_item_details', $item->serial_number) }}"
-                                                    class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-edit"></i></a> --}}
-                                                <!-- <a href="" data-id="{{ $item->serial_number }}" class="btn btn-sm btn-danger show-alert-delete-item">
-                                                                                                                                                          <i class="fa fa-trash"></i></a> -->
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_item', $item->id) }}">

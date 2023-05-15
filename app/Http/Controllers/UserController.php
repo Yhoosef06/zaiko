@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\College;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -60,7 +61,8 @@ class UserController extends Controller
     public function addUser()
     {
         $departments = Department::all();
-        return view('pages.admin.addUser')->with(compact('departments'));
+        $colleges = College::all();
+        return view('pages.admin.addUser')->with(compact('departments','colleges'));
     }
 
     public function saveNewUser(Request $request)
