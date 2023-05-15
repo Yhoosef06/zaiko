@@ -17,7 +17,7 @@ class Item extends Model
     protected $fillable = [
         'id',
         'location',
-        'item_category',
+        'category_id',
         'brand',
         'model',
         'description',
@@ -34,5 +34,9 @@ class Item extends Model
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function category(){
+        return $this->belongsTo(ItemCategory::class);
     }
 }
