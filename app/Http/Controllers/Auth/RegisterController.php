@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\College;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -13,7 +14,8 @@ class RegisterController extends Controller
     public function index()
     {
         $departments = Department::all();
-        return view('pages.register')->with(compact('departments'));
+        $colleges = College::all();
+        return view('pages.register')->with(compact('departments', 'colleges'));
     }
 
     public function store(Request $request)
