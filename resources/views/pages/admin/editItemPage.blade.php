@@ -14,9 +14,6 @@
         </div>
     @endif
     <div class="container bg-light shadow-lg p-3">
-        <label for="adding new item">
-            <h2>Edit Item Details</h2>
-        </label>
         <form action="{{ route('update_item_details', $item->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -135,8 +132,10 @@
                     </div>
 
                     <hr>
-                    <a href="#" class="btn btn-outline-dark" data-dismiss="modal">Back</a>
-                    <Button type="submit" class="btn btn-success">Save Changes</Button>
+                    <a class="btn btn-outline-dark" data-dismiss="modal">Close</a>
+                    <Button type="submit" class="btn btn-success"
+                        onclick="return confirm('You are to save changes in the details of this item. Do you wish to continue?')">Save
+                        Changes</Button>
                 </div>
             </div>
         </form>

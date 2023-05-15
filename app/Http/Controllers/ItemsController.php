@@ -62,7 +62,7 @@ class ItemsController extends Controller
 
     public function saveEditedItemDetails(Request $request, $id)
     {
-
+        dd($id);
         $item = Item::find($id);
         $item->brand = $request->brand;
         $item->model = $request->model;

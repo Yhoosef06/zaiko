@@ -95,43 +95,65 @@
                     </button>
                 </div>
                 <div class="modal-body">
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    {{-- <a href="{{ route('edit_item_details', ['id' => $item->id]) }}" class="btn btn-primary">Edit</a> --}}
-                    <a href="#" class="btn btn-primary" onclick="openModal({{ $item->id }});">Edit</a>
+                    <a href="#" class="btn btn-primary" onclick="editItemModal({{ $item->id }});">Edit</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="my-modal">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="modal-edit-item" tabindex="-1" role="dialog" aria-labelledby="modal-edit-item-label">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Item Details</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="modal-edit-item-label">Edit Item Details</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="modal-body" id="my-modal-body">
+                <div class="modal-body">
+                    <!-- Form fields for editing the item details -->
                 </div>
+                <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
             </div>
         </div>
     </div>
 @endsection
 
 <script>
-    function openModal(itemId) {
-        $.ajax({
-            url: '/edit-item-' + itemId,
-            type: 'GET',
-            success: function(response) {
-                $('#my-modal-body').html(response);
-                $('#my-modal').modal('show');
-
-                // Close the edit item modal and open the item details modal
-                $('#modal-item-details').on('hidden.bs.modal', function() {
-                openItemModal(itemId);
+    function editItemModal(itemId) {
+        $(document).ready(function() {
+            $('#modal-item-details').on('show.bs.modal', function() {
+                $('#modal-edit-item').modal('hide');
             });
+        });
+
+        // close the current modal
+        $('#modal-item-details').modal('hide');
+
+        // open the new modal for editing the item
+        $.ajax({
+            url: 'edit-item-' + itemId,
+            type: 'GET',
+            success: function(data) {
+                // Populate the modal window with the edit form
+                $('#modal-edit-item .modal-body').html(data);
+
+                // Show the modal window for editing the item
+                $('#modal-edit-item').modal('show');
+            },
+            error: function(xhr, status, error) {
+                // Display an error message if the AJAX request fails
+                $('#modal-item-details .modal-body').html(
+                    '<p>Failed to load edit form.</p>' +
+                    '<p>Error: ' + error + '</p>'
+                );
             }
         });
     }
@@ -139,6 +161,11 @@
 
 <script>
     function openItemModal(itemId) {
+        $(document).ready(function() {
+            $('#modal-item-details').on('show.bs.modal', function() {
+                $('#modal-edit-item').modal('hide');
+            });
+        });
         // Send an AJAX request to fetch the item details
         $.ajax({
             url: 'get-item-' + itemId + '-details',
@@ -169,10 +196,11 @@
                     '<p><strong>Location:</strong> ' + data.room.room_name + '</p>' +
                     '<p><strong>Invnetory Tag:</strong> ' + data.inventory_tag + '</p>'
                 );
-                // Update the "Edit" button link with the correct item ID
-                // var editUrl = '{{ route('edit_item_details', ['id' => ':itemId']) }}';
-                // editUrl = editUrl.replace(':itemId', data.id);
-                // $('#modal-item-details .modal-footer a').attr('href', editUrl);
+                $('#modal-item-details .modal-footer').html(
+                    '<button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>' +
+                    '<a href="#" class="btn btn-primary" onclick="editItemModal(' + data.id +
+                    ');">Edit</a>'
+                );
             },
             error: function(xhr, status, error) {
                 // Display an error message if the AJAX request fails
