@@ -18,8 +18,9 @@ class CreateOrdersTable extends Migration
             $table->string('id_number');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('serial_number');
-            $table->string('item_name');
+            $table->string('category');
+            $table->string('brand');
+            $table->string('model');
             $table->string('item_description');
             $table->string('number_of_days');
             $table->string('release_by');
@@ -29,7 +30,6 @@ class CreateOrdersTable extends Migration
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      *

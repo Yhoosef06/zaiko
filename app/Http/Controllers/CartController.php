@@ -71,7 +71,6 @@ class CartController extends Controller
 
         $data = Cart::where('id_number', '=', $user)->get();
 
-        if(($usernames->agreement == true)){
             foreach($data as $data){
                 
                 // if($data->ordered == 'no'){
@@ -79,8 +78,9 @@ class CartController extends Controller
                     $order->id_number = $data->id_number;
                     $order->first_name = $usernames->first_name;
                     $order->last_name = $usernames->last_name;
-                    $order->serial_number = $data->serial_number;
-                    $order->item_name = $data->item_name;
+                    $order->category = $data->category;
+                    $order->brand = $data->brand;
+                    $order->model = $data->model;
                     $order->item_description = $data->item_description;
                     $order->order_status = "pending";
                     
@@ -101,12 +101,7 @@ class CartController extends Controller
                     
                 // }
                
-            }
-        }else{
-            return redirect()->route('agreement');
-        }
-
-           
+            }  
 
         return redirect()->route('student.dashboard');
     }

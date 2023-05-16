@@ -55,9 +55,6 @@
                     <a href="{{ route('agreement.approve', Auth::user()->id_number) }}" class="btn btn-success">I AGREE  <i class="bi bi-check-circle"></i></a>
                 </div>
             </div>
-        </div>
-        
-       
-        
+        </div> 
     </div>
 @endsection
