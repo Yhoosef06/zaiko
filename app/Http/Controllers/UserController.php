@@ -27,7 +27,7 @@ class UserController extends Controller
             return view('pages.admin.listOfUsers')->with(compact('users','departments'));
         } else {
             $user_dept_id = Auth::user()->department_id;
-            $users = User::where('department_id', $user_dept_id)->get();
+            $users = User::where('department_id', $user_dept_id)->orderBy('id_number', 'DESC')->get();
             $departments = Department::all();
             return view('pages.admin.listOfUsers')->with(compact('users','departments'));   
         }

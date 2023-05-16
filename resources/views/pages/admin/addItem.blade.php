@@ -78,10 +78,10 @@
                             @enderror
                         </div>
 
-                        <div>
+                        {{-- <div>
                             <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
                                     data-target="#modal-addBrand"></i></a>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div class="form-group">
@@ -245,7 +245,8 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" id="save-room-name" class="btn btn-primary">Save</button>
+                        <button type="submit" id="save-room-name" class="btn btn-primary"
+                            onclick="return confirm('You are about to add a new room name. Do you wish to continue?')">Save</button>
                     </div>
                 </form>
             </div>
@@ -273,7 +274,8 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary"
+                            onclick="return confirm('You are about to add a new category. Do you wish to continue?')">Save</button>
                     </div>
                 </form>
             </div>
@@ -304,7 +306,8 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary"
+                            onclick="return confirm('You are about to add new brand name. Do you wish to continue?')">Save</button>
                     </div>
                 </form>
             </div>
@@ -360,6 +363,60 @@
                 // Send an AJAX request to the server to get the brand names
                 $.ajax({
                     url: '{!! url('get-brand') !!}',
+                    dataType: 'json',
+                    data: {
+                        query: request
+                            .term // Pass the user's input as the 'query' parameter
+                    },
+                    success: function(data) {
+                        // Filter the brand names to only include those that start with the user's input
+                        var filteredData = $.grep(data, function(item) {
+                            return item.substr(0, request.term.length)
+                                .toLowerCase() === request.term.toLowerCase();
+                        });
+                        // Call the response callback with the filtered data
+                        response(filteredData);
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: true,
+        });
+    });
+
+    $(document).ready(function() {
+        $('#model').autocomplete({
+            source: function(request, response) {
+                // Send an AJAX request to the server to get the brand names
+                $.ajax({
+                    url: '{!! url('get-model') !!}',
+                    dataType: 'json',
+                    data: {
+                        query: request
+                            .term // Pass the user's input as the 'query' parameter
+                    },
+                    success: function(data) {
+                        // Filter the brand names to only include those that start with the user's input
+                        var filteredData = $.grep(data, function(item) {
+                            return item.substr(0, request.term.length)
+                                .toLowerCase() === request.term.toLowerCase();
+                        });
+                        // Call the response callback with the filtered data
+                        response(filteredData);
+                    }
+                });
+            },
+            minLength: 1,
+            autoFocus: true,
+        });
+    });
+
+    $(document).ready(function() {
+        $('#unit_number').autocomplete({
+            source: function(request, response) {
+                // Send an AJAX request to the server to get the brand names
+                $.ajax({
+                    url: '{!! url('get-unit-number') !!}',
                     dataType: 'json',
                     data: {
                         query: request
@@ -447,14 +504,20 @@
                     $('#room_name').val('');
                     $('#department').val('');
                     $('#room-name-error').text('');
+
+                    var newOption = $('<option></option>').attr('value', roomName).text(
+                        roomName);
+                    $('#location').append(newOption);
+
+                    // Select the newly added option
+                    $('#location').val(roomName);
                 },
                 error: function(xhr) {
                     console.log(xhr);
                     if (xhr.status === 422) {
                         $('#room-name-error').text(xhr.responseJSON.errors.room_name[0]);
                     } else {
-                        $('#room-name-error').text(
-                            'Room name has already been added.');
+                        $('#room-name-error').text('Room name has already been added.');
                     }
                     $('#room_name').addClass('border border-danger');
                     $('#room_name').val('');
@@ -464,6 +527,7 @@
             });
         });
     });
+
 
     //for adding category
     $(document).ready(function() {
@@ -482,6 +546,13 @@
                     $('#category_name').removeClass('border border-danger');
                     $('#category-name-success').text(response.success);
                     $('#category_name').val('');
+
+                    var newOption = $('<option></option>').attr('value', category_name).text(
+                        category_name);
+                    $('#item_category').append(newOption);
+
+                    // Select the newly added option
+                    $('#item_category').val(category_name);
                 },
                 error: function(xhr) {
                     console.log(xhr);

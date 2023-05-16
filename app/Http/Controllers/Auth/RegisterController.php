@@ -26,8 +26,6 @@ class RegisterController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'password' => 'required|confirmed|min:7',
-            'front_of_id' => 'required',
-            'back_of_id' => 'required'
         ]);
 
 
@@ -41,17 +39,17 @@ class RegisterController extends Controller
                 'last_name' => $request->last_name,
                 'password' => Hash::make($request->password),
 
-                'front_of_id' =>  $request->file('front_of_id')->storeAs(
-                    'ids',
-                    $request->id_number . 'frontID.' . $request->file('front_of_id')->getClientOriginalExtension(),
-                    'public',
-                ),
+                // 'front_of_id' =>  $request->file('front_of_id')->storeAs(
+                //     'ids',
+                //     $request->id_number . 'frontID.' . $request->file('front_of_id')->getClientOriginalExtension(),
+                //     'public',
+                // ),
 
-                'back_of_id' =>  $request->file('back_of_id')->storeAs(
-                    'ids',
-                    $request->id_number . 'backID.' . $request->file('back_of_id')->getClientOriginalExtension(),
-                    'public',
-                ),
+                // 'back_of_id' =>  $request->file('back_of_id')->storeAs(
+                //     'ids',
+                //     $request->id_number . 'backID.' . $request->file('back_of_id')->getClientOriginalExtension(),
+                //     'public',
+                // ),
                 
                 'account_type' => 'student',
                 'account_status' => 'pending',

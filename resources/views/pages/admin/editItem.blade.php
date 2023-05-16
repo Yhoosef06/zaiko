@@ -6,7 +6,7 @@
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
-    <div class="col-lg-10 bg-light shadow-sm p-3">
+    <div class="container col-lg-10 bg-light shadow-sm p-3">
         <label for="adding new item">
             <h2>Edit Item Details</h2>
         </label>

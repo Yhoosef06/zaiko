@@ -25,8 +25,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'approved',
                 'account_type' => 'admin',
-                'front_of_id' => 'null',
-                'back_of_id' => 'null',
                 'department_id' => '1'
             ],
             [
@@ -36,8 +34,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'approved',
                 'account_type' => 'reads',
-                'front_of_id' => 'null',
-                'back_of_id' => 'null',
                 'department_id' => '7'
             ],
             [
@@ -47,8 +43,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'pending',
                 'account_type' => 'student',
-                'front_of_id' => 'null',
-                'back_of_id' => 'null',
                 'department_id' => '5'
             ],
             [
@@ -58,8 +52,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'pending',
                 'account_type' => 'student',
-                'front_of_id' => 'null',
-                'back_of_id' => 'null',
                 'department_id' => '5'
             ],
             [
@@ -69,8 +61,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'pending',
                 'account_type' => 'student',
-                'front_of_id' => 'null',
-                'back_of_id' => 'null',
                 'department_id' => '6'
             ],
             [
@@ -80,8 +70,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'pending',
                 'account_type' => 'student',
-                'front_of_id' => 'null',
-                'back_of_id' => 'null',
                 'department_id' => '6'
             ],
         ];

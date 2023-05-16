@@ -23,31 +23,22 @@ class ItemsController extends Controller
         //admin
         if (Auth::user()->account_type == 'admin') {
             $items = Item::all();
-            $rooms = Room::all();
-            $itemCategories = ItemCategory::all();
-            return view('pages.admin.listOfItems')->with(compact('items', 'rooms'));
-        } else {
+
+            return view('pages.admin.listOfItems')->with(compact('items'));
+        }
+         else {           
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
-            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
-            // $itemCategories = ItemCategory::all();
-            return view('pages.admin.listOfItems')->with(compact('items', 'rooms'));
+            $items = Item::whereIn('location', $rooms->pluck('id'))->get();          
+            return view('pages.admin.listOfItems')->with('items', $items);
         }
     }
 
     public function getItemDetails($id)
     {
         $item = Item::find($id);
-
-        // dd($item->room->room_name);
-
         $room = $item->room->room_name;
-
-
-
         $item['room'] = $room;
-
-        // dd($item);
 
         return response()->json($item);
     }
@@ -57,7 +48,7 @@ class ItemsController extends Controller
         $item = Item::find($id);
         $rooms = Room::all();
         $itemCategories = ItemCategory::all();
-        return view('pages.admin.editItemPage')->with(compact('item', 'rooms', 'itemCategories'));
+        return view('pages.admin.editItem   ')->with(compact('item', 'rooms', 'itemCategories'));
     }
 
     public function saveEditedItemDetails(Request $request, $id)
@@ -328,7 +319,19 @@ class ItemsController extends Controller
 
     public function getBrand()
     {
-        $brand = Brand::pluck('brand_name')->toArray();
+        $brand = Item::distinct()->pluck('brand')->toArray();
         return response()->json($brand);
+    }
+
+    public function getModel()
+    {
+        $model = Item::distinct()->pluck('model')->toArray();
+        return response()->json($model);
+    }
+
+    public function getUnitNumber()
+    {
+        $unit_number = Item::distinct()->pluck('unit_number')->toArray();
+        return response()->json($unit_number);
     }
 }

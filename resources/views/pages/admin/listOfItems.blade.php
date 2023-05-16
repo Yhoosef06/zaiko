@@ -69,8 +69,8 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
+
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -99,7 +99,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    <a href="#" class="btn btn-primary" onclick="editItemModal({{ $item->id }});">Edit</a>
+                    {{-- <a href="#" class="btn btn-primary" onclick="editItemModal({{ $item->id }});">Edit</a> --}}
+                    <a href="{{ route('edit_item_details', ['id' => $item->id]) }}" class="btn btn-primary">Edit</a>
                 </div>
             </div>
         </div>
@@ -118,9 +119,9 @@
                     <!-- Form fields for editing the item details -->
                 </div>
                 <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
             </div>
         </div>
     </div>

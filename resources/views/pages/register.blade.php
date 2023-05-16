@@ -79,7 +79,7 @@
             </div>
         @enderror
 
-        <label for="" class="sr-only">Upload Front of ID</label>
+        {{-- <label for="" class="sr-only">Upload Front of ID</label>
         <input type="file" name="front_of_id" id="front_of_id"
             class="form-control @error('front_of_id') border-danger @enderror" placeholder="Upload Front of ID">
         @error('front_of_id')
@@ -95,7 +95,7 @@
             <div class="text-danger">
                 {{ $message }}
             </div>
-        @enderror
+        @enderror --}}
 
         <hr>
         <a href="{{ route('signin.page') }}" class="btn btn-md btn-outline-success">Cancel</a>

@@ -68,6 +68,9 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::put('updating-item-{id}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
     Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
     Route::get('/get-brand', [ItemsController::class, 'getBrand']);
+    Route::get('/get-model', [ItemsController::class, 'getModel']);
+    Route::get('/get-unit-number', [ItemsController::class, 'getUnitNumber']);
+
 
     // FOR USERS
     Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
