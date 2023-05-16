@@ -252,6 +252,80 @@
     //             }
     //         });
     // });
+
+
+
+
+
+    $('#selectCategory').change(function(){
+      var selectedValue = $(this).val();
+
+      console.log('Selected value: ' + selectedValue);
+
+      if( selectedValue == 'PCs' ){
+        $('#pc').show();
+        $('#monitor').hide();
+        $('#mobileDev').hide();
+        $('#peripheral').hide();
+        $('#microcontroller').hide();
+        $('#kit').hide();
+        $('#tool').hide();
+      }else if(  selectedValue == 'Monitors' ){
+        $('#monitor').show();
+        $('#pc').hide();
+        $('#mobileDev').hide();
+        $('#peripheral').hide();
+        $('#microcontroller').hide();
+        $('#kit').hide();
+        $('#tool').hide();
+      }else if(  selectedValue == 'Mobile Devices' ){
+        $('#mobileDev').show();
+        $('#pc').hide();
+        $('#monitor').hide();
+        $('#peripheral').hide();
+        $('#microcontroller').hide();
+        $('#kit').hide();
+        $('#tool').hide();
+      }else if(  selectedValue == 'Peripherals' ){
+        $('#peripheral').show();
+        $('#pc').hide();
+        $('#monitor').hide();
+        $('#mobileDev').hide();
+        $('#microcontroller').hide();
+        $('#kit').hide();
+        $('#tool').hide();
+      }else if(  selectedValue == 'Microcontrollers' ){
+        $('#microcontroller').show();
+        $('#pc').hide();
+        $('#monitor').hide();
+        $('#mobileDev').hide();
+        $('#peripheral').hide();
+        $('#kit').hide();
+        $('#tool').hide();
+      }else if(  selectedValue == 'Kits' ){
+        $('#kit').show();
+        $('#pc').hide();
+        $('#monitor').hide();
+        $('#mobileDev').hide();
+        $('#peripheral').hide();
+        $('#microcontroller').hide();
+        $('#tool').hide();
+      }else if(  selectedValue == 'Tools' ){
+        $('#tool').show();
+        $('#pc').hide();
+        $('#monitor').hide();
+        $('#mobileDev').hide();
+        $('#peripheral').hide();
+        $('#microcontroller').hide();
+        $('#kit').hide();
+      
+      }
+    })
+
+
+
+
+
          
      });
 

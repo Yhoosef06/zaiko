@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -59,9 +60,20 @@ class BorrowController extends Controller
     }
 
     public function pending(){
+        $pc = ITEM:: where('item_category', '=', 'PCs') ->get();
+        $monitors = ITEM:: where('item_category', '=', 'Monitors') ->get();
+        $mobileDevs = ITEM:: where('item_category', '=', 'Mobile Devices') ->get();
+        $peripherals = ITEM:: where('item_category', '=', 'Peripherals') ->get();
+        $microControllers = ITEM:: where('item_category', '=', 'Microcontrollers') ->get();
+        $kits = ITEM:: where('item_category', '=', 'Kits') ->get();
+        $tools = ITEM:: where('item_category', '=', 'Tools') ->get();
+
+        $items = ITEM:: where('borrowed', '=', 'no')->get(); 
+        $itemCategories = ItemCategory:: all();
         $pendings = ORDER::where('order_status', '=', 'pending')->get();
 
-        return view('pages.admin.pending')->with(compact('pendings'));
+
+        return view('pages.admin.pending')->with(compact('pendings','itemCategories', 'items','pc','monitors','mobileDevs','peripherals','microControllers','kits','tools'));
     }
 
     public function returned(){

@@ -132,10 +132,105 @@
                   </div>
 
                   <!-- input states -->
-                  <div class="form-group">
-                    <label class="col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Input with
-                      success</label>
-                    <input type="text" class="form-control is-valid" id="inputSuccess" placeholder="Enter ...">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <!-- select -->
+                      <div class="form-group">
+                        <label>Item Category</label>
+                        <select class="form-control" id="selectCategory">
+                          <option>Select Category</option>
+                          @foreach ( $itemCategories as $itemCategory )
+                          <option>{{ $itemCategory->category_name }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6" id="pc" style="display: none;">
+                      <div class="form-group">
+                        <label>Serial Nuber</label>
+                        <select class="form-control">
+                          <option>PC's</option>
+                          @foreach ($pc as $pcs)
+                          <option>{{ $pcs->serial_number }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6" id="monitor" style="display: none;">
+                      <div class="form-group">
+                        <label>Serial Number</label>
+                        <select class="form-control">
+                          <option>Monitors</option>
+                         @foreach ($monitors as $monitor)
+                          <option>{{ $monitor->serial_number }}</option>
+                        @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6" id="mobileDev" style="display: none;">
+                      <div class="form-group">
+                        <label>Serial Number</label>
+                        <select class="form-control">
+                          <option>Mobile Device</option>
+                          @foreach ($mobileDevs as $mobileDev)
+                          <option>{{ $mobileDev->serial_number }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6" id="peripheral" style="display: none;">
+                      <div class="form-group">
+                        <label>Serial Number</label>
+                        <select class="form-control">
+                          <option>Peripherals</option>
+                          @foreach ($peripherals as $peripheral)
+                          <option>{{ $peripheral->serial_number }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6" id="microcontroller" style="display: none;">
+                      <div class="form-group">
+                        <label>Serial Number</label>
+                        <select class="form-control">
+                          <option>Microcontrollers</option>
+                          @foreach ($microControllers as $microController)
+                          <option>{{ $microController->serial_number }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6" id="kit" style="display: none;">
+                      <div class="form-group">
+                        <label>Serial Number</label>
+                        <select class="form-control">
+                          <option>Kits</option>
+                          @foreach ($kits as $kit)
+                          <option>{{ $kit->serial_number }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6" id="tool" style="display: none;">
+                      <div class="form-group">
+                        <label>Serial Number</label>
+                        <select class="form-control">
+                          <option>Tools</option>
+                          @foreach ($tools as $tool)
+                          <option>{{ $tool->serial_number }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+
                   </div>
                  
 
