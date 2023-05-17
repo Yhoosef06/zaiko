@@ -27,6 +27,7 @@ class CartController extends Controller
 
         $cart->id_number = $user->id_number;
         $cart->category = $categoryName;
+        $cart->item_id = $item->id;
         $cart->brand = $item->brand;
         $cart->model = $item->model;
         $cart->item_description = $item->description; 
@@ -84,7 +85,7 @@ class CartController extends Controller
                     $order->item_description = $data->item_description;
                     $order->order_status = "pending";
                     
-                    $affectedRows = Item::where('serial_number','=',$data->serial_number)->update(['borrowed' => 'pending']);
+                    $affectedRows = Item::where('id','=',$data->item_id)->update(['borrowed' => 'pending']);
                     
                     // dd($order);
                     

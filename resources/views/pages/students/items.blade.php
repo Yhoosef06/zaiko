@@ -42,6 +42,7 @@
                                 $catItem = $items->where('category_id',$category->id)->sortByDesc('id');
                             @endphp
                             @foreach($catItem as $item)
+                                @if($item->borrowed == 'no')
                                 <div class="col-lg-2 col-6">
                                     <div class="small-box bg-info bg-gradient">
                                         <div class="inner">
@@ -90,6 +91,7 @@
                                             </div>
                                     </div>
                                 </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>

@@ -11,6 +11,7 @@ class Cart extends Model
 
     protected $fillable = [
         'id_number',
+        'item_id',
         'serial_number',
         'item_name',
         'item_description',
