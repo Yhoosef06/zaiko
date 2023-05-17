@@ -55,6 +55,7 @@ class ItemsController extends Controller
         $rooms = Room::where('department_id', $user_dept_id)->get();
         $itemCategories = ItemCategory::all();
         return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
+    }
     
        
     }
