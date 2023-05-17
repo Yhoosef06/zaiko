@@ -99,8 +99,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    {{-- <a href="#" class="btn btn-primary" onclick="editItemModal({{ $item->id }});">Edit</a> --}}
-                    <a href="{{ route('edit_item_details', ['id' => $item->id]) }}" class="btn btn-primary">Edit</a>
+                    <a href="" class="btn btn-primary">Edit</a>
                 </div>
             </div>
         </div>
@@ -202,6 +201,10 @@
                     '<a href="#" class="btn btn-primary" onclick="editItemModal(' + data.id +
                     ');">Edit</a>'
                 );
+                // Update the "Edit" button link with the correct item ID
+                var editUrl = '{{ route('edit_item_details', ['id' => ':itemId']) }}';
+                editUrl = editUrl.replace(':itemId', data.id);
+                $('#modal-item-details .modal-footer a').attr('href', editUrl);
             },
             error: function(xhr, status, error) {
                 // Display an error message if the AJAX request fails

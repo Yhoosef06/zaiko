@@ -499,18 +499,19 @@
                     "department": department
                 },
                 success: function(response) {
+                    roomId = response.id;
                     $('#room_name').removeClass('border border-danger');
                     $('#room-name-success').text(response.success);
                     $('#room_name').val('');
                     $('#department').val('');
                     $('#room-name-error').text('');
 
-                    var newOption = $('<option></option>').attr('value', roomName).text(
+                    var newOption = $('<option></option>').attr('value', roomId).text(
                         roomName);
                     $('#location').append(newOption);
 
                     // Select the newly added option
-                    $('#location').val(roomName);
+                    // $('#location').val(roomName);
                 },
                 error: function(xhr) {
                     console.log(xhr);
@@ -518,11 +519,11 @@
                         $('#room-name-error').text(xhr.responseJSON.errors.room_name[0]);
                     } else {
                         $('#room-name-error').text('Room name has already been added.');
+                        $('#room_name').addClass('border border-danger');
+                        $('#room_name').val('');
+                        $('#department').val('');
+                        $('#room-name-success').text('');
                     }
-                    $('#room_name').addClass('border border-danger');
-                    $('#room_name').val('');
-                    $('#department').val('');
-                    $('#room-name-success').text('');
                 }
             });
         });
@@ -547,8 +548,9 @@
                     $('#category-name-success').text(response.success);
                     $('#category_name').val('');
 
-                    var newOption = $('<option></option>').attr('value', category_name).text(
-                        category_name);
+                    var newOption = $('<option></option>').attr('value', category_name)
+                        .text(
+                            category_name);
                     $('#item_category').append(newOption);
 
                     // Select the newly added option

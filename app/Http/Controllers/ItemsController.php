@@ -44,11 +44,19 @@ class ItemsController extends Controller
     }
 
     public function editItemPage($id)
-    {
+    {   if (Auth::user()->account_type == 'admin') {
         $item = Item::find($id);
         $rooms = Room::all();
         $itemCategories = ItemCategory::all();
-        return view('pages.admin.editItem   ')->with(compact('item', 'rooms', 'itemCategories'));
+        return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
+    } else {
+        $item = Item::find($id);
+        $user_dept_id = Auth::user()->department_id;
+        $rooms = Room::where('department_id', $user_dept_id)->get();
+        $itemCategories = ItemCategory::all();
+        return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
+    
+       
     }
 
     public function saveEditedItemDetails(Request $request, $id)

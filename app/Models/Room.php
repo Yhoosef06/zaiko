@@ -18,6 +18,7 @@ class Room extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'id',
         'room_name',
         'department_id'
     ];
