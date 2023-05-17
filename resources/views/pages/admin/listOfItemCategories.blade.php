@@ -44,12 +44,12 @@
                                                     onclick="openItemModal('{{ $item->id }}')">>
                                                     <i class="fa fa-eye"></i></a> --}}
                                                 {{-- {{ $item->id }} --}}
-
+{{-- 
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
                                                     onclick="openItemModal('{{ $category->id }}')">
                                                     <i class="fa fa-eye"></i>
-                                                </button>
+                                                </button> --}}
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_item', $category->id) }}">

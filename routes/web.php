@@ -13,6 +13,7 @@ use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -86,6 +87,9 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
 
     // FOR Colleges
     Route::get('colleges', [CollegeController::class, 'index'])->name('view_colleges');
+    
+    //FOR Departments
+    Route::get('departments', [DepartmentController::class, 'index'])->name('view_departments');
 
     // Route::middleware(['web'])->group(function () {
     // your routes here

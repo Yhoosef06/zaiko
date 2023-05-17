@@ -20,7 +20,7 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"> <strong>List of All Items</strong> </h3>
+                            <h3 class="card-title"> <strong>List of All Colleges</strong> </h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -28,23 +28,21 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Room Name</th>
-                                        <th>Departments</th>
+                                        <th>Department Name</th>
+                                        <th>College</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($rooms as $room)
+                                    @foreach ($departments as $department)
                                         <tr>
-                                            <td>{{ $room->id }}</td>
-                                            <td>{{ $room->room_name }}</td>
-                                            <td>
-                                                @foreach ($departments as $department)
-                                                    @if ($department->id == $room->department_id)
-                                                        {{$department->department_name}}
-                                                    @endif
-                                                @endforeach
-                                            </td>
+                                            <td>{{ $department->id }}</td>
+                                            <td>{{ $department->department_name }}</td>
+                                            @foreach ($colleges as $college)
+                                                @if ($college->id == $department->college_id)
+                                                    <td>{{ $college->college_name }}</td>
+                                                @endif
+                                            @endforeach
                                             <td>
                                                 {{-- <a href="{{ route('view_item_details', $item->id) }}"
                                                     class="btn btn-sm btn-primary" class="btn btn-default"
@@ -55,12 +53,12 @@
 
                                                 {{-- <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
-                                                    onclick="openItemModal('{{ $room->id }}')">
+                                                    onclick="openItemModal('{{ $department->id }}')">
                                                     <i class="fa fa-eye"></i>
                                                 </button> --}}
 
                                                 <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_item', $room->id) }}">
+                                                    action="{{ route('delete_item', $department->id) }}">
                                                     @csrf
                                                     <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                     <button type="submit"
@@ -87,7 +85,7 @@
     </section>
 
     <!-- Modal -->
-    <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
+    {{-- <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
         aria-labelledby="modal-item-details-label">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
@@ -101,9 +99,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    <a href="{{ route('edit_item_details', ['id' => $room->id]) }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ route('edit_item_details', ['id' => $college->id]) }}" class="btn btn-primary">Edit</a>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    </div> --}}
+@endsection 

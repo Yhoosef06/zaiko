@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Department extends Model
 {
@@ -16,9 +17,9 @@ class Department extends Model
         'college_id'
     ];
 
-    public function colleges(): BelongsTo
+    public function college(): BelongsTo
     {
-        return $this->belongsTo(College::class);
+        return $this->belongsTo(College::class, 'id', 'college_id');
     }
 
     public function rooms(): HasMany

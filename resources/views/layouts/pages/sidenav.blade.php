@@ -165,12 +165,14 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview ml-4">
+                            
                             <li class="nav-item">
-                                <a href="/colleges" class="nav-link">
+                                <a href="{{route('view_colleges')}}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Colleges</p>
                                 </a>
                             </li>
+
                             <li class="nav-item">
                                 <a href="/departments" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -190,12 +192,12 @@
                                     <p>Item Categories</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('view_brands') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Brands</p>
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
 
