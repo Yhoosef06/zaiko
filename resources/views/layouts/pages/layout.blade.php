@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Zaiko.</title>
 <style>
@@ -145,7 +146,7 @@
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <!-- Summernote -->
-<script src="plugins/summernote/summernote-bs4.min.js"></script>
+<script src="plugins/summernote/summernote-bs4.min.js" defe></script>
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
@@ -161,6 +162,7 @@
 <!-- <script src="sweetalert2/dist/sweetalert2.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 
@@ -198,6 +200,9 @@
 
 
     $(document).ready(function(){
+      var csrfToken = '{{ csrf_token() }}';
+
+
         $('.show-alert-delete-user').click(function(event){
         var form =  $(this).closest("form");
         event.preventDefault();
@@ -320,24 +325,51 @@
         $('#kit').hide();
       
       }
-    })
+    });
 
 
 
+
+
+
+    $('#get-btn').click(function(event){
+      event.preventDefault();
+      var idNumber = $('#idNumber').val();
+
+      console.log(idNumber);
+     
+  
+
+      $.ajax({
+    
+      type: 'POST',
+      url: '{{ route('addOrder') }}',
+      data: { idNumber: idNumber },
+      headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+  },
+        success: function(response) {
+          $('#profile').show();
+          $('#category').show();
+          $('#firstname').val(response.data1);
+          $('#lastname').val(response.data2);
+        
+          },
+      error: function(response) {
+        Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'ID Number doesnt exist!'
+        
+      })
+      } 
+      });
+    });
 
 
          
      });
 
-
-  
-//     Swal.fire(
-//       'Deleted!',
-//       'Your file has been deleted.',
-//       'success'
-//     )
-//   }
-// })
 
     
 </script>

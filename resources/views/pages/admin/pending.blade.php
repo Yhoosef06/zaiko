@@ -106,33 +106,40 @@
 
 
             <div class="card-body">
-                <form>
                   <div class="row">
                     <div class="col-sm-6">
                       <!-- text input -->
                       <div class="form-group">
                         <label>ID Number</label>
-                        <input type="text" class="form-control" id="idNumber" name="idNumber" placeholder="Enter ID Number">
+                       <!-- <form id="inputID"> -->
+                        <div class="input-group mb-3">
+                        <input type="text" class="form-control rounded-0" id="idNumber" name="idNumber" placeholder="Enter ID Number">
+                        <span class="input-group-append">
+                          <button type="submit" id="get-btn"  class="btn btn-primary btn-flat">submit</button>
+                       </span>
+<!-- </form> -->
+                </div>
+                  
                       </div>
                     </div>
                   </div>
-                  <div class="row">
+                  <div class="row" id="profile" style="display: none;">
                   <div class="col-sm-6">
                       <div class="form-group">
                         <label>First Name</label>
-                        <input type="text" class="form-control" readonly>
+                        <input type="text" id="firstname" name="firstname" class="form-control" readonly>
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="form-group">
                         <label>Last Name</label>
-                        <input type="text" class="form-control"  readonly>
+                        <input type="text" id="lastname" name="lastname" class="form-control"  readonly>
                       </div>
                     </div>
                   </div>
 
                   <!-- input states -->
-                  <div class="row">
+                  <div class="row" id="category" style="display: none;">
                     <div class="col-sm-6">
                       <!-- select -->
                       <div class="form-group">
@@ -233,11 +240,6 @@
 
                   </div>
                  
-
-               
-
-               
-              
               </div>  
 
 

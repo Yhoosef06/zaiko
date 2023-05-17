@@ -125,10 +125,18 @@ class BorrowController extends Controller
         return redirect('pending');
     }
 
-    // public function autoCompleteID(Request $request){
-    //     $search = $request->get('term');
-    //     $result = User::where('id_number', 'LIKE', '%'. $search. '%')->get();
-    //     return response()->json($result);
-    // }
+   public function addOrder(Request $request){
+    $idNumber = $request->input('idNumber');
+    $getUser = User::where('id_number','=', $idNumber)->first();
+
+    if ($getUser) {
+        $data1 = $getUser->first_name;
+        $data2 = $getUser->last_name;
+        
+        return response()->json(['data1' => $data1, 'data2' => $data2]);
+    }else {
+        return response()->json(['error' => 'User not found'], 404);
+    }
+   }
 
 }
