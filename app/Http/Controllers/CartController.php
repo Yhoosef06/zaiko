@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Console\Input\Input;
@@ -22,10 +23,13 @@ class CartController extends Controller
 
         $cart = new Cart;
 
+        $categoryName = ItemCategory::where('id', $item->category_id)->value('category_name');
+
         $cart->id_number = $user->id_number;
-        $cart->serial_number = $item->serial_number;
-        $cart->item_name = $item->item_name;
-        $cart->item_description = $item->item_description; 
+        $cart->category = $categoryName;
+        $cart->brand = $item->brand;
+        $cart->model = $item->model;
+        $cart->item_description = $item->description; 
         $cart->ordered = 'no';
 
         $cart->save();
@@ -46,7 +50,7 @@ class CartController extends Controller
 
     public function remove_cart($id){
         
-        Cart::where('serial_number','=',$id)->delete();
+        Cart::where('id','=',$id)->delete();
 
         session()->flash('success','Item suceessfully removed.');
         return redirect()->back();
@@ -67,7 +71,6 @@ class CartController extends Controller
 
         $data = Cart::where('id_number', '=', $user)->get();
 
-        if(($usernames->agreement == true)){
             foreach($data as $data){
                 
                 // if($data->ordered == 'no'){
@@ -75,8 +78,9 @@ class CartController extends Controller
                     $order->id_number = $data->id_number;
                     $order->first_name = $usernames->first_name;
                     $order->last_name = $usernames->last_name;
-                    $order->serial_number = $data->serial_number;
-                    $order->item_name = $data->item_name;
+                    $order->category = $data->category;
+                    $order->brand = $data->brand;
+                    $order->model = $data->model;
                     $order->item_description = $data->item_description;
                     $order->order_status = "pending";
                     
@@ -97,12 +101,7 @@ class CartController extends Controller
                     
                 // }
                
-            }
-        }else{
-            return redirect()->route('agreement');
-        }
-
-           
+            }  
 
         return redirect()->route('student.dashboard');
     }

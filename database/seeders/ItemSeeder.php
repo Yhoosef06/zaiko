@@ -17,7 +17,7 @@ class ItemSeeder extends Seeder
         $item = [
             [
                 'location' => '1',
-                'item_category' => 'Mobile Devices',
+                'category_id' => '3',
                 'brand' => 'Oppo',
                 'Model' => 'A17s',
                 'Description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum tellus a malesuada vulputate.',
@@ -31,7 +31,7 @@ class ItemSeeder extends Seeder
             ],
             [
                 'location' => '1',
-                'item_category' => 'Peripherals',
+                'category_id' => '4',
                 'brand' => 'Wacom',
                 'Model' => 'Clintiq 16',
                 'Description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum tellus a malesuada vulputate.',
@@ -45,7 +45,7 @@ class ItemSeeder extends Seeder
             ],
             [
                 'location' => '2',
-                'item_category' => 'Peripherals',
+                'category_id' => '4',
                 'brand' => 'Genius',
                 'Model' => 'NX7000',
                 'Description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum tellus a malesuada vulputate.',
@@ -59,7 +59,7 @@ class ItemSeeder extends Seeder
             ],
             [
                 'location' => '2',
-                'item_category' => 'Peripherals',
+                'category_id' => '4',
                 'brand' => 'Genius',
                 'Model' => 'KB110',
                 'Description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum tellus a malesuada vulputate.',
@@ -73,7 +73,7 @@ class ItemSeeder extends Seeder
             ],
             [
                 'location' => '2',
-                'item_category' => 'PCs',
+                'category_id' => '1',
                 'brand' => 'ASUS',
                 'Model' => 'Z690',
                 'Description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum tellus a malesuada vulputate.',
@@ -87,7 +87,7 @@ class ItemSeeder extends Seeder
             ],
             [
                 'location' => '4',
-                'item_category' => 'Furnitures',
+                'category_id' => '7',
                 'brand' => 'Uratex',
                 'Model' => 'Mirella',
                 'Description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum tellus a malesuada vulputate.',
@@ -101,7 +101,7 @@ class ItemSeeder extends Seeder
             ],
             [
                 'location' => '5',
-                'item_category' => 'Furnitures',
+                'category_id' => '7',
                 'brand' => 'Uratex',
                 'Model' => 'Classic 101',
                 'Description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum tellus a malesuada vulputate.',
@@ -115,7 +115,7 @@ class ItemSeeder extends Seeder
             ],
             [
                 'location' => '6',
-                'item_category' => 'Furnitures',
+                'category_id' => '7',
                 'brand' => 'Uratex',
                 'Model' => 'Classic 101',
                 'Description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum tellus a malesuada vulputate.',
@@ -129,7 +129,7 @@ class ItemSeeder extends Seeder
             ], 
             [
                 'location' => '6',
-                'item_category' => 'Furnitures',
+                'category_id' => '7',
                 'brand' => 'Uratex',
                 'Model' => 'Mirella',
                 'Description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum tellus a malesuada vulputate.',

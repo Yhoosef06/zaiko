@@ -16,8 +16,9 @@ class CreateCartsTable extends Migration
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->string('id_number');
-            $table->string('serial_number');
-            $table->string('item_name');
+            $table->string('category');
+            $table->string('brand');
+            $table->string('model');
             $table->string('item_description');
             $table->string('ordered');
             $table->timestamps();
