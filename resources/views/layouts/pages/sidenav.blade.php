@@ -174,7 +174,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="/departments" class="nav-link">
+                                <a href="{{ route('view_departments') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Departments</p>
                                 </a>

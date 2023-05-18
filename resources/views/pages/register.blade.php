@@ -50,7 +50,14 @@
             @foreach ($colleges as $college)
                 <optgroup label="{{ $college->college_name }}">
                     @foreach ($college->departments as $department)
-                        <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                        @if (old('department_id') == $department->id)
+                            <option value="{{ old('department_id') }}" selected>
+                                {{ $department->department_name }}
+                            </option>
+                        @else
+                            <option value="{{ $department->id }}">{{ $department->department_name }}
+                            </option>
+                        @endif
                     @endforeach
                 </optgroup>
             @endforeach

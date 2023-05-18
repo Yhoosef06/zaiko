@@ -41,11 +41,7 @@ class RoomController extends Controller
         ]);
 
         // Check if the room already exists
-        // $room_input = Room::where('room_name', $request->input('room_name'))->first();
-        // if ($room_input) {
-        //     return response()->json(['error' => 'Room has already been added.'], 400);
-        // }
-
+        $room_input = Room::where('room_name', $request->input('room_name'))->first();
         // Create a new room
         // $room = new Room;
         // $room->room_name = $request->input('room_name');
@@ -53,14 +49,38 @@ class RoomController extends Controller
         // $room->save();
 
         $departmentId = Auth::user()->account_type == 'admin' ? $request->input('department') : Auth::user()->department_id;
+        
+        if ($room_input) {
+                return response()->json(['error' => $room_input.' has already been added.'], 400);
+            }
+
         $room = Room::create([
             'room_name' => $request->input('room_name'),
             'department_id' => $departmentId,
         ]);
 
-        $roomId = $room->id;
-
         // Return a success message
-        return response()->json(['success' => $roomId . ' Successfully Added.',], 200);
+        return response()->json(['success' => $room->room_name . ' successfully Added.',], 200);
     }
+
+    // public function storeNewRoom(Request $request)
+    // {
+    //     // dd($request);
+    //     $this->validate(
+    //         $request,
+    //         [
+    //             'room_name' => 'required|regex:/[A-Z]+/|min:3'
+    //         ]
+    //     );
+    //     $room = Room::where('room_name', '=', $request->input('room_name'))->first();
+    //     if ($room === null) {
+    //         Room::create([
+    //             'room_name' => $request->room_name
+    //         ]);
+
+    //         return view('adding-new-item')->with('status', 'New room added.');
+    //     } else {
+    //         return view('adding-room')->with('message', 'That room was already added.');
+    //     }
+    // }
 }

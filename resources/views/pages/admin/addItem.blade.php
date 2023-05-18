@@ -22,7 +22,11 @@
                                         border-danger @enderror">
                                 <option value="option_select" disabled selected>Choose a room</option>
                                 @foreach ($rooms as $room)
-                                    <option value="{{ $room->id }}">{{ $room->room_name }}</option>
+                                    @if (old('location') == $room->id)
+                                        <option value="{{ old('location') }}" selected>{{ $room->room_name }}</option>
+                                    @else
+                                        <option value="{{ $room->id }}">{{ $room->room_name }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('location')
@@ -46,7 +50,12 @@
                         border-danger @enderror">
                                 <option value="option_select" disabled selected>Select a category</option>
                                 @foreach ($itemCategories as $category)
-                                    <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
+                                    @if (old('item_category') == $category->category_name)
+                                        <option value="{{ old('item_category') }}" selected>{{ $category->category_name }}</option>
+                                    @else
+                                        <option value="{{ $category->category_name }}">{{ $category->category_name }}
+                                        </option>
+                                    @endif
                                 @endforeach
                             </select>
 
@@ -396,6 +405,7 @@
                             .term // Pass the user's input as the 'query' parameter
                     },
                     success: function(data) {
+                        console.log(data);
                         // Filter the brand names to only include those that start with the user's input
                         var filteredData = $.grep(data, function(item) {
                             return item.substr(0, request.term.length)
@@ -506,9 +516,18 @@
                     $('#department').val('');
                     $('#room-name-error').text('');
 
+                    var currentRoomName = $('#brand').val();
+                    var currentDepartment = $('#model').val();
+
+                    location.reload();
+
                     var newOption = $('<option></option>').attr('value', roomId).text(
                         roomName);
                     $('#location').append(newOption);
+
+                    // Restore the input values
+                    $('#brand').val(currentRoomName);
+                    $('#model').val(currentDepartment);
 
                     // Select the newly added option
                     // $('#location').val(roomName);

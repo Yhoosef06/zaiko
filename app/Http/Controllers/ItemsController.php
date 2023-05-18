@@ -25,11 +25,10 @@ class ItemsController extends Controller
             $items = Item::all();
 
             return view('pages.admin.listOfItems')->with(compact('items'));
-        }
-         else {           
+        } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
-            $items = Item::whereIn('location', $rooms->pluck('id'))->get();          
+            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
             return view('pages.admin.listOfItems')->with('items', $items);
         }
     }
@@ -44,20 +43,19 @@ class ItemsController extends Controller
     }
 
     public function editItemPage($id)
-    {   if (Auth::user()->account_type == 'admin') {
-        $item = Item::find($id);
-        $rooms = Room::all();
-        $itemCategories = ItemCategory::all();
-        return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
-    } else {
-        $item = Item::find($id);
-        $user_dept_id = Auth::user()->department_id;
-        $rooms = Room::where('department_id', $user_dept_id)->get();
-        $itemCategories = ItemCategory::all();
-        return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
-    }
-    
-       
+    {
+        if (Auth::user()->account_type == 'admin') {
+            $item = Item::find($id);
+            $rooms = Room::all();
+            $itemCategories = ItemCategory::all();
+            return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
+        } else {
+            $item = Item::find($id);
+            $user_dept_id = Auth::user()->department_id;
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $itemCategories = ItemCategory::all();
+            return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
+        }
     }
 
     public function saveEditedItemDetails(Request $request, $id)
@@ -328,19 +326,25 @@ class ItemsController extends Controller
 
     public function getBrand()
     {
-        $brand = Item::distinct()->pluck('brand')->toArray();
-        return response()->json($brand);
+        $brands = Item::distinct()->pluck('brand')->toArray();
+        return response()->json($brands);
     }
 
     public function getModel()
     {
-        $model = Item::distinct()->pluck('model')->toArray();
-        return response()->json($model);
+        $models = Item::distinct()->pluck('model')->reject(function ($model) {
+            return $model === null;
+        })->toArray();
+
+        return response()->json($models);
     }
 
     public function getUnitNumber()
     {
-        $unit_number = Item::distinct()->pluck('unit_number')->toArray();
-        return response()->json($unit_number);
+        $unit_numbers = Item::distinct()->pluck('unit_number')->reject(function ($unit_number ) {
+            return $unit_number === null;
+        })->toArray();
+
+        return response()->json($unit_numbers);
     }
 }

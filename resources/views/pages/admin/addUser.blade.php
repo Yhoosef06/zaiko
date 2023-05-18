@@ -68,22 +68,31 @@
 
                     <div class="col">
                         <label for="Item name">College Department:</label>
-                        <select id="department_id" name="department_id" class="form-control col-sm-8 @error('department_id') border-danger @enderror">
+                        <select id="department_id" name="department_id"
+                            class="form-control col-sm-8 @error('department_id') border-danger @enderror">
                             <option value="option_select" disabled selected>Select College Department</option>
                             @foreach ($colleges as $college)
                                 <optgroup label="{{ $college->college_name }}">
                                     @foreach ($college->departments as $department)
-                                        <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                                        @if (old('department_id') == $department->id)
+                                            <option value="{{ old('department_id') }}" selected>
+                                                {{ $department->department_name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $department->id }}">{{ $department->department_name }}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </optgroup>
                             @endforeach
+
                         </select>
                         @error('department_id')
                             <div class="text-danger">
                                 {{ $message }}
                             </div>
                         @enderror
-                        
+
 
                         <label for="">Password</label>
                         <input type="password" name="password" id="password"

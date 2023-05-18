@@ -47,7 +47,7 @@
                                             @elseif ($user->account_type == 'admin')
                                                 <td>{{ 'Admin' }}</td>
                                             @elseif($user->account_type == 'faculty')
-                                            <td>{{ 'Faculty' }}</td>
+                                                <td>{{ 'Faculty' }}</td>
                                             @else
                                                 <td>{{ 'READS' }}</td>
                                             @endif
@@ -68,7 +68,7 @@
                                                 </td>
                                             @endif
 
-                                            <td>{{$user->departments->department_name}}</td>
+                                            <td>{{ $user->departments->department_name }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
