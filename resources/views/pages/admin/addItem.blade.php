@@ -246,6 +246,7 @@
                                     </optgroup>
                                 @endforeach
                             </select>
+                            <span id="department-error" class="text-danger"></span>
                         @endif
                         <label for="room_name">Room Name:</label>
                         <input type="text" name="room_name" id="room_name" class="form-control">
@@ -536,6 +537,9 @@
                     console.log(xhr);
                     if (xhr.status === 422) {
                         $('#room-name-error').text(xhr.responseJSON.errors.room_name[0]);
+                        $('#room_name').addClass('border border-danger');
+                        $('#department-error').text(xhr.responseJSON.errors.department[0]);
+                        $('#department').addClass('border border-danger');
                     } else {
                         $('#room-name-error').text('Room name has already been added.');
                         $('#room_name').addClass('border border-danger');
@@ -580,6 +584,7 @@
                     if (xhr.status === 422) {
                         $('#category-name-error').text(xhr.responseJSON.errors
                             .category_name[0]);
+                            $('#category_name').addClass('border border-danger');
                     } else {
                         $('#category-name-error').text(
                             'Category name has already been added.');

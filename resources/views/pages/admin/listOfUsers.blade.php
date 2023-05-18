@@ -75,9 +75,10 @@
                                                     onclick="openItemModal('{{ $user->id_number }}')">
                                                     <i class="fa fa-eye"></i>
                                                 </button>
-                                                {{-- <a href="{{ route('edit_user_info', $user->id_number) }}"
-                                                    class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-edit"></i></a> --}}
+
+                                                <a href="#"
+                                                    class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-cart-plus"></i></a>
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_user', $user->id_number) }}">
