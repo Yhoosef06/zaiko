@@ -139,4 +139,18 @@ class BorrowController extends Controller
     }
    }
 
+//    public function insertOrder(Request $request){
+
+//     dd($request);
+
+//     $idNumber = $request->idNumber;
+//     $firstName = $request->firstname;
+//     $lastName = $request->lastname;
+//     $itemCategory = $request->itemCategory;
+//     $serialNumber = $request->serialNumber;
+
+   
+
+//    }
+
 }

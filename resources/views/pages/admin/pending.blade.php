@@ -104,6 +104,8 @@
             </div>
             <div class="modal-body">
 
+            <form id="insertOrder">
+
 
             <div class="card-body">
                   <div class="row">
@@ -140,102 +142,116 @@
 
                   <!-- input states -->
                   <div class="row" id="category" style="display: none;">
-                    <div class="col-sm-6">
+                  <div class="col-sm-6">
                       <!-- select -->
                       <div class="form-group">
                         <label>Item Category</label>
-                        <select class="form-control" id="selectCategory">
+                        <select class="form-control" id="selectCategory" name="itemCategory">
                           <option>Select Category</option>
-                          @foreach ( $itemCategories as $itemCategory )
-                          <option>{{ $itemCategory->category_name }}</option>
+                          @foreach ($itemCategories as $itemCategory)
+                            <option value="{{ $itemCategory->category_name }}">{{ $itemCategory->category_name }}</option>
                           @endforeach
                         </select>
                       </div>
-                    </div>
+                    </div>  
 
-                    <div class="col-sm-6" id="pc" style="display: none;">
-                      <div class="form-group">
-                        <label>Serial Nuber</label>
-                        <select class="form-control">
-                          <option>PC's</option>
-                          @foreach ($pc as $pcs)
-                          <option>{{ $pcs->serial_number }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="col-sm-6" id="monitor" style="display: none;">
+                    <div class="col-sm-6">
                       <div class="form-group">
                         <label>Serial Number</label>
-                        <select class="form-control">
+                        <select class="form-control" name="serialNumber">
+                          <option>PC's</option>
+                          @foreach ($items as $item)
+                            @if ($item->item_category == $itemCategory->category_name)
+                              <option value="{{ $item->serial_number }}">{{ $item->serial_number }}</option>
+                            @endif
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- <div class="col-sm-6" id="pc" style="display: none;" >
+                      <div class="form-group">
+                        <label>Serial Number</label>
+                        <select class="form-control" name="serialNumber" disabled>
+                          <option>PC's</option>
+                          @foreach ($pc as $pcs)
+                          <option value="{{ $pcs->serial_number }}">{{ $pcs->serial_number }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div> -->
+
+                    <!-- <div class="col-sm-6" id="monitor" style="display: none;" >
+                      <div class="form-group">
+                        <label>Serial Number</label>
+                        <select class="form-control" name="serialNumber" disabled>
                           <option>Monitors</option>
                          @foreach ($monitors as $monitor)
-                          <option>{{ $monitor->serial_number }}</option>
+                          <option value="{{ $monitor->serial_number }}">{{ $monitor->serial_number }}</option>
                         @endforeach
                         </select>
                       </div>
                     </div>
 
-                    <div class="col-sm-6" id="mobileDev" style="display: none;">
+                    <div class="col-sm-6" id="mobileDev" style="display: none;" >
                       <div class="form-group">
                         <label>Serial Number</label>
-                        <select class="form-control">
+                        <select class="form-control" name="serialNumber" disabled>
                           <option>Mobile Device</option>
                           @foreach ($mobileDevs as $mobileDev)
-                          <option>{{ $mobileDev->serial_number }}</option>
+                          <option value="{{ $mobileDev->serial_number }}">{{ $mobileDev->serial_number }}</option>
                           @endforeach
                         </select>
                       </div>
                     </div>
 
-                    <div class="col-sm-6" id="peripheral" style="display: none;">
+                    <div class="col-sm-6" id="peripheral" style="display: none;" >
                       <div class="form-group">
                         <label>Serial Number</label>
-                        <select class="form-control">
+                        <select class="form-control" name="serialNumber" disabled>
                           <option>Peripherals</option>
                           @foreach ($peripherals as $peripheral)
-                          <option>{{ $peripheral->serial_number }}</option>
+                          <option value="{{ $peripheral->serial_number }}" >{{ $peripheral->serial_number }}</option>
                           @endforeach
                         </select>
                       </div>
                     </div>
 
-                    <div class="col-sm-6" id="microcontroller" style="display: none;">
+                    <div class="col-sm-6" id="microcontroller" style="display: none;" >
                       <div class="form-group">
                         <label>Serial Number</label>
-                        <select class="form-control">
+                        <select class="form-control" name="serialNumber" disabled>
                           <option>Microcontrollers</option>
                           @foreach ($microControllers as $microController)
-                          <option>{{ $microController->serial_number }}</option>
+                          <option value="{{ $microController->serial_number }}">{{ $microController->serial_number }}</option>
                           @endforeach
                         </select>
                       </div>
                     </div>
 
-                    <div class="col-sm-6" id="kit" style="display: none;">
+                    <div class="col-sm-6" id="kit" style="display: none;" >
                       <div class="form-group">
                         <label>Serial Number</label>
-                        <select class="form-control">
+                        <select class="form-control" name="serialNumber" disabled>
                           <option>Kits</option>
                           @foreach ($kits as $kit)
-                          <option>{{ $kit->serial_number }}</option>
+                          <option value="{{ $kit->serial_number }}">{{ $kit->serial_number }}</option>
                           @endforeach
                         </select>
                       </div>
                     </div>
 
-                    <div class="col-sm-6" id="tool" style="display: none;">
-                      <div class="form-group">
+                    <div class="col-sm-6" id="tool" style="display: none;" >
+                      <div class="form-group" >
                         <label>Serial Number</label>
-                        <select class="form-control">
+                        <select class="form-control" name="serialNumber" disabled>
                           <option>Tools</option>
                           @foreach ($tools as $tool)
-                          <option>{{ $tool->serial_number }}</option>
+                          <option value="{{ $tool->serial_number }}">{{ $tool->serial_number }}</option>
                           @endforeach
                         </select>
                       </div>
-                    </div>
+                    </div> -->
 
 
                   </div>

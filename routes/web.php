@@ -83,6 +83,7 @@ Route::post('/logout', [LogoutController::class,'logout'])->name('logout');
         Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
         Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
         Route::post('addOrder',[BorrowController::class, 'addOrder'])->name('addOrder');
+        Route::post('insertOrder',[BorrowController::class,'insertOrder'])->name('insertOrder');
         
 
         //reports

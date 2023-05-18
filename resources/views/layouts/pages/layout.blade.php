@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Zaiko.</title>
@@ -262,70 +263,81 @@
 
 
 
-    $('#selectCategory').change(function(){
-      var selectedValue = $(this).val();
+    // $('#selectCategory').change(function(){
+    //   var selectedValue = $(this).val();
+    //   $
 
-      console.log('Selected value: ' + selectedValue);
+      // console.log('Selected value: ' + selectedValue);
 
-      if( selectedValue == 'PCs' ){
-        $('#pc').show();
-        $('#monitor').hide();
-        $('#mobileDev').hide();
-        $('#peripheral').hide();
-        $('#microcontroller').hide();
-        $('#kit').hide();
-        $('#tool').hide();
-      }else if(  selectedValue == 'Monitors' ){
-        $('#monitor').show();
-        $('#pc').hide();
-        $('#mobileDev').hide();
-        $('#peripheral').hide();
-        $('#microcontroller').hide();
-        $('#kit').hide();
-        $('#tool').hide();
-      }else if(  selectedValue == 'Mobile Devices' ){
-        $('#mobileDev').show();
-        $('#pc').hide();
-        $('#monitor').hide();
-        $('#peripheral').hide();
-        $('#microcontroller').hide();
-        $('#kit').hide();
-        $('#tool').hide();
-      }else if(  selectedValue == 'Peripherals' ){
-        $('#peripheral').show();
-        $('#pc').hide();
-        $('#monitor').hide();
-        $('#mobileDev').hide();
-        $('#microcontroller').hide();
-        $('#kit').hide();
-        $('#tool').hide();
-      }else if(  selectedValue == 'Microcontrollers' ){
-        $('#microcontroller').show();
-        $('#pc').hide();
-        $('#monitor').hide();
-        $('#mobileDev').hide();
-        $('#peripheral').hide();
-        $('#kit').hide();
-        $('#tool').hide();
-      }else if(  selectedValue == 'Kits' ){
-        $('#kit').show();
-        $('#pc').hide();
-        $('#monitor').hide();
-        $('#mobileDev').hide();
-        $('#peripheral').hide();
-        $('#microcontroller').hide();
-        $('#tool').hide();
-      }else if(  selectedValue == 'Tools' ){
-        $('#tool').show();
-        $('#pc').hide();
-        $('#monitor').hide();
-        $('#mobileDev').hide();
-        $('#peripheral').hide();
-        $('#microcontroller').hide();
-        $('#kit').hide();
+      // if( selectedValue == 'PCs' ){
+      //   console.log('Button clicked'); // Add this line to check if the button click event is triggered
+      //     $('#pc').prop('disabled', false);
+      //     console.log('Input enabled');
+      //   $('#pc').show();
+      //   // $('#pc').removeAttr('disabled');
+      //   $('#monitor').hide();
+      //   $('#mobileDev').hide();
+      //   $('#peripheral').hide();
+      //   $('#microcontroller').hide();
+      //   $('#kit').hide();
+      //   $('#tool').hide();
+      // }else if(  selectedValue == 'Monitors' ){
+      //   $('#monitor').show();
+      //   $('#monitor').prop('disabled', false);
+      //   $('#pc').hide();
+      //   $('#mobileDev').hide();
+      //   $('#peripheral').hide();
+      //   $('#microcontroller').hide();
+      //   $('#kit').hide();
+      //   $('#tool').hide();
+      // }else if(  selectedValue == 'Mobile Devices' ){
+      //   $('#mobileDev').show();
+      //   $('#mobileDev').prop('disabled', false);
+      //   $('#pc').hide();
+      //   $('#monitor').hide();
+      //   $('#peripheral').hide();
+      //   $('#microcontroller').hide();
+      //   $('#kit').hide();
+      //   $('#tool').hide();
+      // }else if(  selectedValue == 'Peripherals' ){
+      //   $('#peripheral').show();
+      //   $('#peripheral').prop('disabled', false);
+      //   $('#pc').hide();
+      //   $('#monitor').hide();
+      //   $('#mobileDev').hide();
+      //   $('#microcontroller').hide();
+      //   $('#kit').hide();
+      //   $('#tool').hide();
+      // }else if(  selectedValue == 'Microcontrollers' ){
+      //   $('#microcontroller').show();
+      //   $('#microcontroller').prop('disabled', false);
+      //   $('#pc').hide();
+      //   $('#monitor').hide();
+      //   $('#mobileDev').hide();
+      //   $('#peripheral').hide();
+      //   $('#kit').hide();
+      //   $('#tool').hide();
+      // }else if(  selectedValue == 'Kits' ){
+      //   $('#kit').show();
+      //   $('#kit').prop('disabled', false);
+      //   $('#pc').hide();
+      //   $('#monitor').hide();
+      //   $('#mobileDev').hide();
+      //   $('#peripheral').hide();
+      //   $('#microcontroller').hide();
+      //   $('#tool').hide();
+      // }else if(  selectedValue == 'Tools' ){
+      //   $('#tool').show();
+      //   $('#tool').prop('disabled', false);
+      //   $('#pc').hide();
+      //   $('#monitor').hide();
+      //   $('#mobileDev').hide();
+      //   $('#peripheral').hide();
+      //   $('#microcontroller').hide();
+      //   $('#kit').hide();
       
-      }
-    });
+      // }
+    // });
 
 
 
@@ -336,7 +348,7 @@
       event.preventDefault();
       var idNumber = $('#idNumber').val();
 
-      console.log(idNumber);
+      // console.log(idNumber);
      
   
 
@@ -347,7 +359,7 @@
       data: { idNumber: idNumber },
       headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
-  },
+      },
         success: function(response) {
           $('#profile').show();
           $('#category').show();
@@ -364,6 +376,28 @@
       })
       } 
       });
+    });
+
+
+
+    $('#insertOrder').submit(function(event){
+      event.preventDefault();
+
+      var formData = $(this).serialize();
+
+      console.log(formData);
+      $.ajax({
+            type: 'POST',
+            url: '{{ route('insertOrder') }}',
+            data: formData,
+            headers: {
+            'X-CSRF-TOKEN': csrfToken // Include CSRF token in headers
+           },
+            success: function(response) {
+                
+                console.log(response);
+            }
+        });
     });
 
 
