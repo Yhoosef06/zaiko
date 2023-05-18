@@ -45,11 +45,21 @@
 
         <label for="Item name">College Department:</label>
         <select id="department_id" name="department_id"
-            class="form-control col-sm-8 @error('department_id')
-            border-danger @enderror">
+            class="form-control col-sm-8 @error('department_id') border-danger @enderror">
             <option value="option_select" disabled selected>Select Your College Department</option>
-            @foreach ($departments as $department)
-                <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+            @foreach ($colleges as $college)
+                <optgroup label="{{ $college->college_name }}">
+                    @foreach ($college->departments as $department)
+                        @if (old('department_id') == $department->id)
+                            <option value="{{ old('department_id') }}" selected>
+                                {{ $department->department_name }}
+                            </option>
+                        @else
+                            <option value="{{ $department->id }}">{{ $department->department_name }}
+                            </option>
+                        @endif
+                    @endforeach
+                </optgroup>
             @endforeach
         </select>
         @error('department_id')
@@ -76,7 +86,7 @@
             </div>
         @enderror
 
-        <label for="" class="sr-only">Upload Front of ID</label>
+        {{-- <label for="" class="sr-only">Upload Front of ID</label>
         <input type="file" name="front_of_id" id="front_of_id"
             class="form-control @error('front_of_id') border-danger @enderror" placeholder="Upload Front of ID">
         @error('front_of_id')
@@ -92,7 +102,7 @@
             <div class="text-danger">
                 {{ $message }}
             </div>
-        @enderror
+        @enderror --}}
 
         <hr>
         <a href="{{ route('signin.page') }}" class="btn btn-md btn-outline-success">Cancel</a>

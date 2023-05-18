@@ -7,9 +7,9 @@
         </div>
     @endif
     <div class="container m-2">
-        <div class="col-lg-10 bg-light shadow-sm p-3">
+        <div class="container col-lg-10 bg-light shadow-sm p-3">
             <label for="adding new item">
-                <h2>Adding New User</h2>
+                <h2 class="text-decoration-underline">Adding New User</h2>
             </label>
             <form action="{{ route('save_new_user') }}" method="POST">
                 @csrf
@@ -53,6 +53,7 @@
                         <select id="account_type" name="account_type" class="form-control">
                             <option value="student">Student</option>
                             <option value="admin">Admin</option>
+                            <option value="faculty">Faculty</option>
                             <option value="reads">Reads</option>
                         </select>
 
@@ -66,6 +67,33 @@
                     </div>
 
                     <div class="col">
+                        <label for="Item name">College Department:</label>
+                        <select id="department_id" name="department_id"
+                            class="form-control col-sm-8 @error('department_id') border-danger @enderror">
+                            <option value="option_select" disabled selected>Select College Department</option>
+                            @foreach ($colleges as $college)
+                                <optgroup label="{{ $college->college_name }}">
+                                    @foreach ($college->departments as $department)
+                                        @if (old('department_id') == $department->id)
+                                            <option value="{{ old('department_id') }}" selected>
+                                                {{ $department->department_name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $department->id }}">{{ $department->department_name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+
+                        </select>
+                        @error('department_id')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+
                         <label for="">Password</label>
                         <input type="password" name="password" id="password"
                             class="form-control @error('password') border-danger @enderror" placeholder="Password">
@@ -87,7 +115,8 @@
 
                         <hr>
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                        <Button type="submit" class="btn btn-success">Submit</Button>
+                        <Button type="submit" class="btn btn-success"
+                            onclick="return confirm('You are about to create a new user. Do you wish to continue?')">Save</Button>
                     </div>
                 </div>
             </form>

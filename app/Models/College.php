@@ -10,8 +10,13 @@ class College extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'id',
         'college_name',
     ];
+
+    public $incrementing = false;
+
+    protected $primaryKey = 'id';
 
     public function departments(): HasMany
     {

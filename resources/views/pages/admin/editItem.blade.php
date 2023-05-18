@@ -6,100 +6,69 @@
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
-    <div class="col-lg-10 bg-light shadow-sm p-3">
+    <div class="container col-lg-10 bg-light shadow-sm p-3">
         <label for="adding new item">
             <h2>Edit Item Details</h2>
         </label>
-        <form action="{{ route('update_item_details', $item->serial_number) }}" method="POST">
+        <form action="{{ route('update_item_details', $item->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="row">
                 <div class="col">
-                    <label for="campus">Campus:</label>
-                    <select id="campus" name="campus" class="form-control col-sm-5">
-                        <option value="{{ $item->campus }}" selected>{{ $item->campus }}</option>
-                        <option value="Main">Main</option>
-                        <option value="Basak">Basak</option>
-                    </select>
-                    <label for="location">Room:</label>
+                    <label for="location">Room/Location:</label>
                     <select id="location" name="location" class="form-control col-sm-5">
-                        <option value="{{ $item->location }}" selected>{{ $item->location }}</option>
                         @foreach ($rooms as $room)
-                            <option value="{{ $room->room_name }}">{{ $room->room_name }}</option>
+                            @if ($room->id == $item->location)
+                                <option value="{{ $room->id }}" selected>{{ $room->room_name }}</option>
+                            @endif
+                        @endforeach
+
+                        @foreach ($rooms as $room)
+                            <option value="{{ $room->id }}">{{ $room->room_name }}</option>
                         @endforeach
                     </select>
 
-                    @error('room')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    <label for="Item name">Item Category:</label>
+                    <select id="item_category" name="item_category"
+                        class="form-control col-5 @error('item_category')
+                border-danger @enderror">
+                        <option value="{{ $item->item_category }}" disabled selected>{{ $item->item_category }}</option>
+                        @foreach ($itemCategories as $category)
+                            <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
+                        @endforeach
+                    </select>
 
-                    <label for="Item name">Item Name:</label>
-                    <input type="text" id="item_name" name="item_name" value="{{ $item->item_name }}"
-                        class="form-control @error('item_name')
-                    border-danger
-                    @enderror"
-                        placeholder="Item Name">
-                    @error('item_name')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    <label for="Brand">Brand:</label>
+                    <input type="text" id="brand" name="brand" value="{{ $item->brand }}"
+                        class="form-control col-sm-5 ">
+
+                    <label for="Model">Model:</label>
+                    <input type="text" id="model" name="model" value="{{ $item->model }}"
+                        class="form-control col-5">
 
                     <label for="aquisition date">Aquisition Date:</label>
-                    <input type="date" id="aquisition_date" name="aquisition_date" class="form-control"
-                        placeholder="Aquistion Date" value="{{ $item->aquisition_date }}">
+                    <input type="date" id="aquisition_date" name="aquisition_date" class="form-control col-sm-4"
+                        value="{{ $item->aquisition_date }}">
 
                     <label for="unit number">Unit Number:</label>
                     <input type="text" id="unit_number" name="unit_number"
                         class="form-control col-sm-4 @error('unit_number')
                     border-danger @enderror"
                         value="{{ $item->unit_number }}" placeholder="Unit Number">
-                    <p class="text-sm font-italic" style="font:italic">Type N/A or None if no unit number.</p>
-                    @error('unit_number')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-
                 </div>
 
                 <div class="col">
                     <label for="serial number"> Serial Number:</label>
-                    <input type="text" id="serial_number" name="serial_number"
-                        class="form-control @error('serial_number')
-                    border-danger @enderror"
-                        value="{{ $item->serial_number }}" placeholder="Serial Number">
-                    @error('serial_number')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    <input type="text" id="serial_number" name="serial_number" class="form-control"
+                        value="{{ $item->serial_number }}" p>
 
                     <label for="Item Description">Item Description:</label>
-                    <input type="text" id="item_description" name="item_description"
-                        value="{{ $item->item_description }}"
-                        class="form-control @error('item_description')
-                    border-danger
-                    @enderror"
-                        placeholder="Item Name/Description">
-                    @error('item_description')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    <input type="text" id="description" name="description"
+                        value="{{ $item->description }}" class="form-control">
 
                     <label for="quantity">Quantity:</label>
-                    <input type="text" id="quantity" name="quantity"
-                        class="form-control col-sm-3 @error('quantity')
-                    border-danger @enderror"
-                        value="{{ $item->quantity }}" placeholder="Quantity">
-                    @error('quantity')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    <input type="text" id="quantity" name="quantity" class="form-control col-sm-3"
+                        value="{{ $item->quantity }}">
 
                     <label for="status">Status:</label>
                     <select name="status" id="status" name="status" class="form-control">
@@ -133,8 +102,8 @@
                     @endif
 
                     <hr>
-                    <a href="{{ route('view_items') }}" class="btn btn-outline-dark">Cancel</a>
-                    <Button type="submit" class="btn btn-success">Save</Button>
+                    <a href="{{ route('view_items') }}" class="btn btn-outline-dark" data-dismiss="modal">Back</a>
+                    <Button type="submit" class="btn btn-success">Save Changes</Button>
                 </div>
             </div>
         </form>

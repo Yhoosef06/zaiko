@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Room extends Model
 {
@@ -17,6 +18,7 @@ class Room extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'id',
         'room_name',
         'department_id'
     ];
@@ -26,8 +28,8 @@ class Room extends Model
         return $this->belongsTo(Department::class);
     }
 
-    public function items(): HasMany
-    {
-        return $this->hasMany(Item::class);
-    }
+    // public function items(): HasMany
+    // {
+    //     return $this->hasMany(Item::class);
+    // }
 }

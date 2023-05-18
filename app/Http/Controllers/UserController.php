@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\College;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
@@ -21,15 +23,13 @@ class UserController extends Controller
         //admin
         if (Auth::user()->account_type == 'admin') {
             $users = User::all();
-            return view('pages.admin.listOfUsers', [
-                'users' => $users
-            ]);
+            $departments = Department::all();
+            return view('pages.admin.listOfUsers')->with(compact('users','departments'));
         } else {
             $user_dept_id = Auth::user()->department_id;
-            $users = User::where('department_id', $user_dept_id)->get();
-            return view('pages.admin.listOfUsers', [
-                'users' => $users
-            ]);   
+            $users = User::where('department_id', $user_dept_id)->orderBy('id_number', 'DESC')->get();
+            $departments = Department::all();
+            return view('pages.admin.listOfUsers')->with(compact('users','departments'));   
         }
     }
 
@@ -49,12 +49,20 @@ class UserController extends Controller
     public function viewUserInfo($id_number)
     {
         $user = User::find($id_number);
-        return view('pages.admin.viewUserInfo')->with('user', $user);
+
+        $department = $user->departments->department_name;
+
+        $user['department'] = $department;
+
+        // dd($user);
+        return response()->json($user);
     }
 
     public function addUser()
     {
-        return view('pages.admin.addUser');
+        $departments = Department::all();
+        $colleges = College::all();
+        return view('pages.admin.addUser')->with(compact('departments','colleges'));
     }
 
     public function saveNewUser(Request $request)
@@ -68,6 +76,7 @@ class UserController extends Controller
                 'last_name' => 'required',
                 'account_type' => 'required',
                 'account_status' => 'required',
+                'department_id' => 'required',
                 'password' => 'required|confirmed|min:7',
             ]
         );
@@ -80,6 +89,7 @@ class UserController extends Controller
                 'last_name' => $request->last_name,
                 'account_type' => $request->account_type,
                 'account_status' => $request->account_status,
+                'department_id' => $request->department_id,
                 'password' => Hash::make($request->password),
                 // 'front_of_id' => $request->file('front_of_id')->store(('ids')),
                 // 'back_of_id' => $request->file('back_of_id')->store(('ids')),

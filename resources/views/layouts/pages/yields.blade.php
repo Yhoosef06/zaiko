@@ -7,6 +7,6 @@
 @endsection
 
 {{-- footer --}}
-@section('footer')
+{{-- @section('footer')
     @include('layouts.pages.footer')
-@endsection
+@endsection --}}

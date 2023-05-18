@@ -16,30 +16,27 @@ class CollegeSeeder extends Seeder
     {
         $name = [
             [
-                'college_name' => 'SAS',
+                'college_name' => 'School of Arts & Sciences',
             ],
             [
-                'college_name' => 'SBM',
+                'college_name' => 'School of Business & Management',
             ],
             [
-                'college_name' => 'SED',
+                'college_name' => 'School of Education',
             ],
             [
-                'college_name' => 'SENG',
+                'college_name' => 'School of Engineering',
             ],
             [
-                'college_name' => 'SCS',
+                'college_name' => 'School of Computer Studies',
             ],
             [
-                'college_name' => 'SAMS',
+                'college_name' => 'School of Allied & Medical Sciences',
             ],
             [
-                'college_name' => 'SAMS',
-            ],
-            [
-                'college_name' => 'SL',
+                'college_name' => 'School of Law',
             ],
         ];
-        DB::table('colleges')->insert($name); 
+        DB::table('colleges')->insert($name);
     }
 }

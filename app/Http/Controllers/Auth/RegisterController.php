@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Department;
+use App\Models\College;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -13,7 +14,8 @@ class RegisterController extends Controller
     public function index()
     {
         $departments = Department::all();
-        return view('pages.register')->with(compact('departments'));
+        $colleges = College::all();
+        return view('pages.register')->with(compact('departments', 'colleges'));
     }
 
     public function store(Request $request)
@@ -24,8 +26,6 @@ class RegisterController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'password' => 'required|confirmed|min:7',
-            'front_of_id' => 'required',
-            'back_of_id' => 'required'
         ]);
 
 
@@ -39,22 +39,21 @@ class RegisterController extends Controller
                 'last_name' => $request->last_name,
                 'password' => Hash::make($request->password),
 
-                'front_of_id' =>  $request->file('front_of_id')->storeAs(
-                    'ids',
-                    $request->id_number . 'frontID.' . $request->file('front_of_id')->getClientOriginalExtension(),
-                    'public',
-                ),
+                // 'front_of_id' =>  $request->file('front_of_id')->storeAs(
+                //     'ids',
+                //     $request->id_number . 'frontID.' . $request->file('front_of_id')->getClientOriginalExtension(),
+                //     'public',
+                // ),
 
-                'back_of_id' =>  $request->file('back_of_id')->storeAs(
-                    'ids',
-                    $request->id_number . 'backID.' . $request->file('back_of_id')->getClientOriginalExtension(),
-                    'public',
-                ),
+                // 'back_of_id' =>  $request->file('back_of_id')->storeAs(
+                //     'ids',
+                //     $request->id_number . 'backID.' . $request->file('back_of_id')->getClientOriginalExtension(),
+                //     'public',
+                // ),
                 
                 'account_type' => 'student',
                 'account_status' => 'pending',
                 'department_id' => $request->department_id
-
             ]);
 
             return redirect('/')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');

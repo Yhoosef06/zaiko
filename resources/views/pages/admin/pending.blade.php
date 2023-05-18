@@ -31,7 +31,6 @@
                   <tr>
                     <th>Serial #</th>
                     <th>Name</th>
-            
                     <th>Item Name</th>
                     <th>Item Description</th>
                     <th>Actions</th>
