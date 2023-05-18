@@ -126,7 +126,7 @@
     </div>
 @endsection
 
-<script>
+{{-- <script>
     function editItemModal(itemId) {
         $(document).ready(function() {
             $('#modal-item-details').on('show.bs.modal', function() {
@@ -157,7 +157,7 @@
             }
         });
     }
-</script>
+</script> --}}
 
 <script>
     function openItemModal(itemId) {
