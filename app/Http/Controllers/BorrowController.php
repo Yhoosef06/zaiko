@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -110,6 +111,13 @@ class BorrowController extends Controller
         $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
         Session::flash('success', 'Successfuly Remove Borrowed Item.');
         return redirect('pending');
+    }
+
+    public function searchUser(Request $request)
+    {
+        $query = $request->input('query');
+        $users = User::where('id_number', 'like', $query . '%')->pluck('id_number')->toArray();
+        return response()->json($users);
     }
 
 }

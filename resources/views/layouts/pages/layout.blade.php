@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Zaiko</title>
     <style>
@@ -10,27 +11,14 @@
             display: inline-block !important;
         }
 
-        /* .form_control_approved{
-        display: inline-block !important;
-        width: 20px;
-        height: calc(2.25rem + 2px);
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        box-shadow: inset 0 0 0 transparent;
-        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    } */
+    
+        /* .ui-autocomplete-loading {
+            background: white url('/images/loading.gif') right center no-repeat;
+        } */
+ 
     </style>
 
 
-
-    <!-- Google Font: Source Sans Pro -->
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -98,6 +86,12 @@
         });
     @endif
 </script> -->
+<!-- Include jQuery library -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<!-- Include jQuery UI library -->
+<!-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script> -->
+<!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css"> -->
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -110,18 +104,18 @@
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables  & Plugins -->
-<script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="plugins/datatables/jquery.dataTables.min.js" defer></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js" defer></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js" defer></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js" defer></script>
+<script src="plugins/datatables-buttons/js/dataTables.buttons.min.js" defer></script>
+<script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js" defer></script>
 <script src="plugins/jszip/jszip.min.js"></script>
 <script src="plugins/pdfmake/pdfmake.min.js"></script>
 <script src="plugins/pdfmake/vfs_fonts.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="plugins/datatables-buttons/js/buttons.html5.min.js" defer></script>
+<script src="plugins/datatables-buttons/js/buttons.print.min.js" defer></script>
+<script src="plugins/datatables-buttons/js/buttons.colVis.min.js" defer></script>
 <!-- ChartJS -->
 <script src="plugins/chart.js/Chart.min.js"></script>
 <!-- Sparkline -->
@@ -156,7 +150,32 @@
 
 
 <script>
-    $(function() {
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    $(document).ready(function() {
+  $('#id-Number').autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: '{{ route('searchUser') }}',
+        dataType: 'json',
+        data: {
+          query: request.term
+        },
+        success: function(data) {
+          response(data);
+        }
+      });
+    },
+    minLength: 1,
+    autoFocus: true
+  });
+});
+ 
+
+
+ $(function () {
+
+
         $("#borrowed").DataTable({
             "responsive": true,
             "lengthChange": false,
