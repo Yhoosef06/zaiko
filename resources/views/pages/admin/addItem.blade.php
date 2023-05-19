@@ -185,14 +185,15 @@
                     </div>
 
                     <div class="form-group" id="serial_numbers_container">
-                        @if ($errors->has('serial_numbers.*'))
+                        @if (count(old('serial_numbers', [])) > 0)
                             @foreach (old('serial_numbers', []) as $index => $serialNumber)
                                 <div>
                                     <label for="serial_number_{{ $index + 1 }}">Serial Number
                                         {{ $index + 1 }}:</label>
                                     <input type="text" name="serial_numbers[]" id="serial_number_{{ $index + 1 }}"
                                         class="form-control col-sm-5 @error('serial_numbers.' . $index) border-danger @enderror"
-                                        value="{{ $serialNumber }}" placeholder="Leave blank if none.">
+                                        value="{{ old('serial_numbers.' . $index, $serialNumber) }}"
+                                        placeholder="Leave blank if none.">
                                     @error('serial_numbers.' . $index)
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -210,6 +211,27 @@
                 </div>
             </div>
         </form>
+    </div>
+
+    {{-- Submit Confirmation --}}
+    <div id="confirmModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm submission</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to submit this form?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmSubmitBtn">Proceed</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- FOR ADDING A ROOM --}}
@@ -399,7 +421,6 @@
                     },
                     success: function(data) {
                         console.log(data);
-
                         var filteredData = $.grep(data, function(item) {
                             return item.substr(0, request.term.length)
                                 .toLowerCase() === request.term.toLowerCase();
@@ -442,69 +463,57 @@
         const container = document.getElementById('serial_numbers_container');
         const checkbox = document.getElementById('checkbox');
 
-        // checker para sa existing na serial numbers
-        const existingFields = container.querySelectorAll('input[name="serial_numbers[]"]');
-        const existingValues = [...existingFields].map(input => input.value.trim());
+        // Remove existing serial number fields
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
 
-        // generate sa serial number fields
+        // Get the quantity value
         const quantity = parseInt(quantityField.value) || 0;
-        const serialNumbers = new Set(); // pag check sa unique serial number
 
-        for (let i = 1; i <= quantity; i++) {
+        // Generate new serial number fields
+        if (checkbox.checked) {
+            // Only one field when the checkbox is checked
             const label = document.createElement('label');
-            label.for = `serial_number_${i}`;
-            label.textContent = `Serial Number ${i}:`;
+            label.for = 'serial_number_1';
+            label.textContent = 'Serial Number:';
 
             const input = document.createElement('input');
             input.type = 'text';
-            input.name = `serial_numbers[]`;
-            input.id = `serial_number_${i}`;
+            input.name = 'serial_numbers[]';
+            input.id = 'serial_number_1';
             input.classList.add('form-control', 'col-sm-5');
             input.placeholder = 'Leave blank if none.';
 
             const error = document.createElement('div');
             error.classList.add('error-message');
-            error.textContent = ''; //blank ang default error field
-
-            // event listener para validator
-            input.addEventListener('change', () => {
-                const value = input.value.trim();
-                if (value === '') {
-                    error.textContent = 'Serial number cannot be empty.';
-                } else if (serialNumbers.has(value)) {
-                    error.textContent = 'Duplicate serial number.';
-                } else {
-                    error.textContent = '';
-                }
-            });
+            error.textContent = '';
 
             container.appendChild(label);
             container.appendChild(input);
             container.appendChild(error);
-
-            // Add the entered value to the set of serial numbers
-            serialNumbers.add(input.value.trim());
-        }
-
-        // Populate the new fields with the existing values
-        [...container.querySelectorAll('input[name="serial_numbers[]"]')].forEach((input, index) => {
-            input.value = existingValues[index] ||
-                ''; // Set the value from existingValues or empty string if undefined
-        });
-
-        // para pag validate sa serial number fields
-        const emptySerialNumbers = [...serialNumbers].filter(value => value === '');
-        const hasDuplicates = [...serialNumbers].length !== new Set([...serialNumbers].filter(Boolean)).size;
-
-        if (emptySerialNumbers.length > 0) {
-            const errorMessage = document.getElementById('serial_number_errors');
-            errorMessage.textContent = 'Serial Number field(s) cannot be empty.';
-        } else if (hasDuplicates) {
-            const errorMessage = document.getElementById('serial_number_errors');
-            errorMessage.textContent = 'Serial Numbers cannot be repeated.';
         } else {
-            const errorMessage = document.getElementById('serial_number_errors');
-            errorMessage.textContent = ''; // Clear any previous error message
+            // Populate fields based on the quantity entry
+            for (let i = 1; i <= quantity; i++) {
+                const label = document.createElement('label');
+                label.for = `serial_number_${i}`;
+                label.textContent = `Serial Number ${i}:`;
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'serial_numbers[]';
+                input.id = `serial_number_${i}`;
+                input.classList.add('form-control', 'col-sm-5');
+                input.placeholder = 'Leave blank if none.';
+
+                const error = document.createElement('div');
+                error.classList.add('error-message');
+                error.textContent = '';
+
+                container.appendChild(label);
+                container.appendChild(input);
+                container.appendChild(error);
+            }
         }
     }
 

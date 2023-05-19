@@ -91,7 +91,7 @@ class ItemsController extends Controller
         $this->validate($request, [
             'location' => 'required',
             'serial_numbers' => 'required|array|min:1',
-            'serial_numbers.*' => function ($attribute, $value, $fail) use ($request) {
+            'serial_numbers.*' => function ($value, $fail) use ($request) {
                 if (empty($value)) {
                     $fail('Serial Number field cannot be empty');
                 } elseif (!$request->checkbox && count(array_keys($request->serial_numbers, $value)) > 1) {
@@ -333,7 +333,10 @@ class ItemsController extends Controller
 
     public function getBrand()
     {
-        $brands = Item::distinct()->pluck('brand')->toArray();
+        $brands  = Item::distinct()->pluck('brand')->reject(function ($brand) {
+            return $brand === null;
+        })->toArray();
+
         return response()->json($brands);
     }
 
