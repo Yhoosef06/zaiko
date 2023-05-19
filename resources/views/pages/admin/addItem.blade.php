@@ -184,23 +184,9 @@
                         <br>
                     </div>
 
-                    <div class="form-group" id="serial_numbers_container">
-                        @if (count(old('serial_numbers', [])) > 0)
-                            @foreach (old('serial_numbers', []) as $index => $serialNumber)
-                                <div>
-                                    <label for="serial_number_{{ $index + 1 }}">Serial Number
-                                        {{ $index + 1 }}:</label>
-                                    <input type="text" name="serial_numbers[]" id="serial_number_{{ $index + 1 }}"
-                                        class="form-control col-sm-5 @error('serial_numbers.' . $index) border-danger @enderror"
-                                        value="{{ old('serial_numbers.' . $index, $serialNumber) }}"
-                                        placeholder="Leave blank if none.">
-                                    @error('serial_numbers.' . $index)
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
+
+
+                    <div class="form-group" id="serial_numbers_container"></div>
 
                     <hr>
 
@@ -412,19 +398,22 @@
     $(document).ready(function() {
         $('#model').autocomplete({
             source: function(request, response) {
+                // Send an AJAX request to the server to get the brand names
                 $.ajax({
                     url: '{!! url('get-model') !!}',
                     dataType: 'json',
                     data: {
                         query: request
-                            .term
+                            .term // Pass the user's input as the 'query' parameter
                     },
                     success: function(data) {
                         console.log(data);
+                        // Filter the brand names to only include those that start with the user's input
                         var filteredData = $.grep(data, function(item) {
                             return item.substr(0, request.term.length)
                                 .toLowerCase() === request.term.toLowerCase();
                         });
+                        // Call the response callback with the filtered data
                         response(filteredData);
                     }
                 });
@@ -437,18 +426,21 @@
     $(document).ready(function() {
         $('#unit_number').autocomplete({
             source: function(request, response) {
+                // Send an AJAX request to the server to get the brand names
                 $.ajax({
                     url: '{!! url('get-unit-number') !!}',
                     dataType: 'json',
                     data: {
                         query: request
-                            .term
+                            .term // Pass the user's input as the 'query' parameter
                     },
                     success: function(data) {
+                        // Filter the brand names to only include those that start with the user's input
                         var filteredData = $.grep(data, function(item) {
                             return item.substr(0, request.term.length)
                                 .toLowerCase() === request.term.toLowerCase();
                         });
+                        // Call the response callback with the filtered data
                         response(filteredData);
                     }
                 });
@@ -463,37 +455,28 @@
         const container = document.getElementById('serial_numbers_container');
         const checkbox = document.getElementById('checkbox');
 
-        // Remove existing serial number fields
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
-        }
+        // Clear the existing input fields
+        container.innerHTML = '';
 
-        // Get the quantity value
+        // Generate the new input field(s)
         const quantity = parseInt(quantityField.value) || 0;
-
-        // Generate new serial number fields
         if (checkbox.checked) {
-            // Only one field when the checkbox is checked
+            // If checkbox is checked, generate one input field with a fixed label
             const label = document.createElement('label');
-            label.for = 'serial_number_1';
-            label.textContent = 'Serial Number:';
+            label.for = `serial_number_1`;
+            label.textContent = `Serial Number:`;
 
             const input = document.createElement('input');
             input.type = 'text';
-            input.name = 'serial_numbers[]';
-            input.id = 'serial_number_1';
+            input.name = `serial_numbers[]`;
+            input.id = `serial_number_1`;
             input.classList.add('form-control', 'col-sm-5');
             input.placeholder = 'Leave blank if none.';
 
-            const error = document.createElement('div');
-            error.classList.add('error-message');
-            error.textContent = '';
-
             container.appendChild(label);
             container.appendChild(input);
-            container.appendChild(error);
         } else {
-            // Populate fields based on the quantity entry
+            // If checkbox is not checked, generate multiple input fields with numbered labels
             for (let i = 1; i <= quantity; i++) {
                 const label = document.createElement('label');
                 label.for = `serial_number_${i}`;
@@ -501,18 +484,13 @@
 
                 const input = document.createElement('input');
                 input.type = 'text';
-                input.name = 'serial_numbers[]';
+                input.name = `serial_numbers[]`;
                 input.id = `serial_number_${i}`;
                 input.classList.add('form-control', 'col-sm-5');
                 input.placeholder = 'Leave blank if none.';
 
-                const error = document.createElement('div');
-                error.classList.add('error-message');
-                error.textContent = '';
-
                 container.appendChild(label);
                 container.appendChild(input);
-                container.appendChild(error);
             }
         }
     }
