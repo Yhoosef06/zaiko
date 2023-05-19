@@ -24,6 +24,7 @@
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="plugins/jquery-ui/jquery-ui.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -95,8 +96,9 @@
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
 <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
     $.widget.bridge('uibutton', $.ui.button)
@@ -118,7 +120,7 @@
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js" defer></script>
 <!-- ChartJS -->
 <script src="plugins/chart.js/Chart.min.js"></script>
-<!-- Sparkline -->
+<!-- sline -->
 <script src="plugins/sparklines/sparkline.js"></script>
 <!-- JQVMap -->
 <script src="plugins/jqvmap/jquery.vmap.min.js"></script>
@@ -152,25 +154,8 @@
 <script>
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    $(document).ready(function() {
-  $('#id-Number').autocomplete({
-    source: function(request, response) {
-      $.ajax({
-        url: '{{ route('searchUser') }}',
-        dataType: 'json',
-        data: {
-          query: request.term
-        },
-        success: function(data) {
-          response(data);
-        }
-      });
-    },
-    minLength: 1,
-    autoFocus: true
-  });
-});
- 
+
+
 
 
  $(function () {
@@ -213,6 +198,105 @@
 
 
 <script type="text/javascript">
+
+$(document).ready(function() {
+    $("#idNumber").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchUser') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_id_container",
+        open: function(event, ui) {
+            $("#user_id_container .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = { value: "", label: "No matching ID numbers found" };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                $('#profile').show();
+                $('#first_name').val(ui.item.firstName);
+                $('#last_name').val(ui.item.lastName);
+            }
+        }
+
+    })
+    .autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.label + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>ID: " + item.value + "</div>").appendTo(ul);
+        }
+    };
+});
+
+  
+// $(document).ready(function() {
+//     $("#idNumber").autocomplete({
+//         minLength: 2,
+//         source: function(request, response) {
+//             $.ajax({
+//                 url: "{{ route('searchUser') }}",
+//                 dataType: "json",
+//                 data: {
+//                     query: request.term
+//                 },
+//                 success: function(data) {
+//                     response(data);
+//                 }
+//             });
+//         },
+//         appendTo: "#user_id_container",
+//         open: function(event, ui) {
+//             $("#user_id_container .ui-autocomplete").css("top", "auto");
+//         },
+//         // Custom rendering of autocomplete items
+//         response: function(event, ui) {
+//             if (!ui.content.length) {
+//                 var noResult = { value: "", label: "No matching ID numbers found" };
+//                 ui.content.push(noResult);
+//             }
+//         },
+//         select: function(event, ui) {
+//             if (ui.item.value === "") {
+//                 event.preventDefault();
+//             }
+//         }
+//     })
+//     .autocomplete("instance")._renderItem = function(ul, item) {
+//         if (item.value === "") {
+//             return $("<li>")
+//                 .append("<div>" + item.label + "</div>")
+//                 .appendTo(ul);
+//         } else {
+//             return $("<li>").append("<div>ID: " + item.label + "</div>").appendTo(ul);
+
+//             $('#first_name').val(item.firstName);
+//             $('#last_name').val(item.lastName);
+//         }
+//     };
+// });
+     
+
+
+
     $(document).ready(function() {
         $('.show-alert-delete-user').click(function(event) {
             var form = $(this).closest("form");

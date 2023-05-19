@@ -111,12 +111,15 @@
       
                               <div class="form-group">
                                 <label>ID Number</label>
-                                <input type="text" id="id-Number" name="idNumber" class="form-control" placeholder="Enter ID Number here....">
-                                <!-- <ul id="search-results"></ul> -->
+                                <div id="user_id_container">
+                                <input type="text" id="idNumber" name="idNumber" class="form-control" placeholder="Enter ID Number here....">
+                                </div>
+                               
+                        
                               </div>
                             </div>
                     </div>
-                    <div class="row">
+                    <div class="row" id="profile" style="display: none;">
                     <div class="col-sm-6">
                       
                       <div class="form-group">
@@ -143,4 +146,9 @@
           <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
+        
       </div>
+
+   
+
+    

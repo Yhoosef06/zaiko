@@ -116,8 +116,20 @@ class BorrowController extends Controller
     public function searchUser(Request $request)
     {
         $query = $request->input('query');
-        $users = User::where('id_number', 'like', $query . '%')->pluck('id_number')->toArray();
-        return response()->json($users);
+    
+        $users = User::where('id_number', 'LIKE', $query . '%')->take(10)->get();
+
+        $response = $users->map(function ($user) {
+            return [
+                'value' => $user->id_number, // User ID
+                'label' => $user->id_number, // User display name
+                'firstName' => $user->first_name, // User first name
+                'lastName' => $user->last_name // User last name
+            ];
+        });
+        
+    
+        return response()->json($response);
     }
 
 }
