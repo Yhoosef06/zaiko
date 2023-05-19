@@ -90,7 +90,14 @@ class ItemsController extends Controller
     {
         $this->validate($request, [
             'location' => 'required',
-            'serial_number.*' => 'required',
+            'serial_numbers' => 'required|array|min:1',
+            'serial_numbers.*' => function ($attribute, $value, $fail) use ($request) {
+                if (empty($value)) {
+                    $fail('Serial Number field cannot be empty');
+                } elseif (!$request->checkbox && count(array_keys($request->serial_numbers, $value)) > 1) {
+                    $fail('Serial Numbers cannot be repeated');
+                }
+            },
             // 'brand' => 'required',
             // 'model' => 'required',
             'item_category' => 'required',
@@ -341,7 +348,7 @@ class ItemsController extends Controller
 
     public function getUnitNumber()
     {
-        $unit_numbers = Item::distinct()->pluck('unit_number')->reject(function ($unit_number ) {
+        $unit_numbers = Item::distinct()->pluck('unit_number')->reject(function ($unit_number) {
             return $unit_number === null;
         })->toArray();
 

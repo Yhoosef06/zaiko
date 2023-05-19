@@ -30,6 +30,15 @@
                         </div> --}}
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <div class="form-group">
+                                <label for="category">Select Category:</label>
+                                <select id="category" class="form-control" onchange="filterItems(this.value)">
+                                    <option value="">Categories</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{$category->category_name}}">{{$category->category_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <table id="listofitems" class="table table-bordered table-striped">
                                 <thead>
                                     <tr class=" text-center">
@@ -62,7 +71,8 @@
                                                 {{-- <button class="btn btn-default btn-sm">
                                                     <i class="fa fa-minus"></i>
                                                 </button> --}}
-                                                <input type="number" value="0" min="0" max="{{ $item->quantity }}">
+                                                <input type="number" value="0" min="0"
+                                                    max="{{ $item->quantity }}">
                                                 {{-- <button class="btn btn-default btn-sm">
                                                     <i class="fa fa-plus"></i>
                                                 </button> --}}
@@ -77,7 +87,7 @@
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
                                                     onclick="openItemModal('{{ $item->id }}')">
-                                                  Add to cart
+                                                    Add to cart
                                                 </button>
 
                                                 {{-- <form class="form_delete_btn" method="POST"
@@ -107,3 +117,27 @@
         <!-- /.container-fluid -->
     </section>
 @endsection
+
+<script>
+    function filterItems(category) {
+        var table = document.getElementById("listofitems");
+        var rows = table.getElementsByTagName("tr");
+
+        // Loop through all rows in the table (skipping the first row, which is the table header)
+        for (var i = 1; i < rows.length; i++) {
+            var row = rows[i];
+            var categoryCell = row.getElementsByTagName("td")[2]; // Assuming the category column is the third column
+
+            // Show or hide the row based on the selected category
+            if (category === "" || category === categoryCell.textContent.trim()) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        }
+    }
+</script>
+
+
+
+

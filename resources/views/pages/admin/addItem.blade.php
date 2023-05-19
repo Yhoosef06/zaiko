@@ -51,7 +51,8 @@
                                 <option value="option_select" disabled selected>Select a category</option>
                                 @foreach ($itemCategories as $category)
                                     @if (old('item_category') == $category->category_name)
-                                        <option value="{{ old('item_category') }}" selected>{{ $category->category_name }}</option>
+                                        <option value="{{ old('item_category') }}" selected>{{ $category->category_name }}
+                                        </option>
                                     @else
                                         <option value="{{ $category->category_name }}">{{ $category->category_name }}
                                         </option>
@@ -183,9 +184,22 @@
                         <br>
                     </div>
 
-
-
-                    <div class="form-group" id="serial_numbers_container"></div>
+                    <div class="form-group" id="serial_numbers_container">
+                        @if ($errors->has('serial_numbers.*'))
+                            @foreach (old('serial_numbers', []) as $index => $serialNumber)
+                                <div>
+                                    <label for="serial_number_{{ $index + 1 }}">Serial Number
+                                        {{ $index + 1 }}:</label>
+                                    <input type="text" name="serial_numbers[]" id="serial_number_{{ $index + 1 }}"
+                                        class="form-control col-sm-5 @error('serial_numbers.' . $index) border-danger @enderror"
+                                        value="{{ $serialNumber }}" placeholder="Leave blank if none.">
+                                    @error('serial_numbers.' . $index)
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
 
                     <hr>
 
@@ -196,27 +210,6 @@
                 </div>
             </div>
         </form>
-    </div>
-
-    {{-- Submit Confirmation --}}
-    <div id="confirmModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm submission</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to submit this form?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="confirmSubmitBtn">Proceed</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     {{-- FOR ADDING A ROOM --}}
@@ -397,22 +390,20 @@
     $(document).ready(function() {
         $('#model').autocomplete({
             source: function(request, response) {
-                // Send an AJAX request to the server to get the brand names
                 $.ajax({
                     url: '{!! url('get-model') !!}',
                     dataType: 'json',
                     data: {
                         query: request
-                            .term // Pass the user's input as the 'query' parameter
+                            .term
                     },
                     success: function(data) {
                         console.log(data);
-                        // Filter the brand names to only include those that start with the user's input
+
                         var filteredData = $.grep(data, function(item) {
                             return item.substr(0, request.term.length)
                                 .toLowerCase() === request.term.toLowerCase();
                         });
-                        // Call the response callback with the filtered data
                         response(filteredData);
                     }
                 });
@@ -425,21 +416,18 @@
     $(document).ready(function() {
         $('#unit_number').autocomplete({
             source: function(request, response) {
-                // Send an AJAX request to the server to get the brand names
                 $.ajax({
                     url: '{!! url('get-unit-number') !!}',
                     dataType: 'json',
                     data: {
                         query: request
-                            .term // Pass the user's input as the 'query' parameter
+                            .term
                     },
                     success: function(data) {
-                        // Filter the brand names to only include those that start with the user's input
                         var filteredData = $.grep(data, function(item) {
                             return item.substr(0, request.term.length)
                                 .toLowerCase() === request.term.toLowerCase();
                         });
-                        // Call the response callback with the filtered data
                         response(filteredData);
                     }
                 });
@@ -454,43 +442,69 @@
         const container = document.getElementById('serial_numbers_container');
         const checkbox = document.getElementById('checkbox');
 
-        // Clear the existing input fields
-        container.innerHTML = '';
+        // checker para sa existing na serial numbers
+        const existingFields = container.querySelectorAll('input[name="serial_numbers[]"]');
+        const existingValues = [...existingFields].map(input => input.value.trim());
 
-        // Generate the new input field(s)
+        // generate sa serial number fields
         const quantity = parseInt(quantityField.value) || 0;
-        if (checkbox.checked) {
-            // If checkbox is checked, generate one input field with a fixed label
+        const serialNumbers = new Set(); // pag check sa unique serial number
+
+        for (let i = 1; i <= quantity; i++) {
             const label = document.createElement('label');
-            label.for = `serial_number_1`;
-            label.textContent = `Serial Number:`;
+            label.for = `serial_number_${i}`;
+            label.textContent = `Serial Number ${i}:`;
 
             const input = document.createElement('input');
             input.type = 'text';
             input.name = `serial_numbers[]`;
-            input.id = `serial_number_1`;
+            input.id = `serial_number_${i}`;
             input.classList.add('form-control', 'col-sm-5');
             input.placeholder = 'Leave blank if none.';
 
+            const error = document.createElement('div');
+            error.classList.add('error-message');
+            error.textContent = ''; //blank ang default error field
+
+            // event listener para validator
+            input.addEventListener('change', () => {
+                const value = input.value.trim();
+                if (value === '') {
+                    error.textContent = 'Serial number cannot be empty.';
+                } else if (serialNumbers.has(value)) {
+                    error.textContent = 'Duplicate serial number.';
+                } else {
+                    error.textContent = '';
+                }
+            });
+
             container.appendChild(label);
             container.appendChild(input);
+            container.appendChild(error);
+
+            // Add the entered value to the set of serial numbers
+            serialNumbers.add(input.value.trim());
+        }
+
+        // Populate the new fields with the existing values
+        [...container.querySelectorAll('input[name="serial_numbers[]"]')].forEach((input, index) => {
+            input.value = existingValues[index] ||
+                ''; // Set the value from existingValues or empty string if undefined
+        });
+
+        // para pag validate sa serial number fields
+        const emptySerialNumbers = [...serialNumbers].filter(value => value === '');
+        const hasDuplicates = [...serialNumbers].length !== new Set([...serialNumbers].filter(Boolean)).size;
+
+        if (emptySerialNumbers.length > 0) {
+            const errorMessage = document.getElementById('serial_number_errors');
+            errorMessage.textContent = 'Serial Number field(s) cannot be empty.';
+        } else if (hasDuplicates) {
+            const errorMessage = document.getElementById('serial_number_errors');
+            errorMessage.textContent = 'Serial Numbers cannot be repeated.';
         } else {
-            // If checkbox is not checked, generate multiple input fields with numbered labels
-            for (let i = 1; i <= quantity; i++) {
-                const label = document.createElement('label');
-                label.for = `serial_number_${i}`;
-                label.textContent = `Serial Number ${i}:`;
-
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = `serial_numbers[]`;
-                input.id = `serial_number_${i}`;
-                input.classList.add('form-control', 'col-sm-5');
-                input.placeholder = 'Leave blank if none.';
-
-                container.appendChild(label);
-                container.appendChild(input);
-            }
+            const errorMessage = document.getElementById('serial_number_errors');
+            errorMessage.textContent = ''; // Clear any previous error message
         }
     }
 
@@ -584,7 +598,7 @@
                     if (xhr.status === 422) {
                         $('#category-name-error').text(xhr.responseJSON.errors
                             .category_name[0]);
-                            $('#category_name').addClass('border border-danger');
+                        $('#category_name').addClass('border border-danger');
                     } else {
                         $('#category-name-error').text(
                             'Category name has already been added.');
