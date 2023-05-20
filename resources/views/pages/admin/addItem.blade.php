@@ -114,7 +114,7 @@
                             placeholder="Aquistion Date">
                     </div>
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="unit number">Unit Number:</label>
                         <input type="text" id="unit_number" name="unit_number"
                             class="form-control col-sm-5 @error('unit_number')
@@ -125,7 +125,7 @@
                                 {{ $message }}
                             </div>
                         @enderror
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="col">
@@ -184,9 +184,12 @@
                         <br>
                     </div>
 
-
-
-                    <div class="form-group" id="serial_numbers_container"></div>
+                    <div class="form-group" id="serial_numbers_container"
+                        data-error-message="{{ $errors->first('serial_numbers') }}">
+                        @error('serial_numbers')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
 
                     <hr>
 
@@ -450,16 +453,63 @@
         });
     });
 
+    // function updateSerialNumberFields() {
+    //     const quantityField = document.getElementById('quantity');
+    //     const container = document.getElementById('serial_numbers_container');
+    //     const checkbox = document.getElementById('checkbox');
+
+    //     // Clear the existing input fields
+    //     container.innerHTML = '';
+
+    //     // Generate the new input field(s)
+    //     const quantity = parseInt(quantityField.value) || 0;
+    //     if (checkbox.checked) {
+    //         // If checkbox is checked, generate one input field with a fixed label
+    //         const label = document.createElement('label');
+    //         label.for = `serial_number_1`;
+    //         label.textContent = `Serial Number:`;
+
+    //         const input = document.createElement('input');
+    //         input.type = 'text';
+    //         input.name = `serial_numbers[]`;
+    //         input.id = `serial_number_1`;
+    //         input.classList.add('form-control', 'col-sm-5');
+    //         input.placeholder = 'Leave blank if none.';
+
+    //         container.appendChild(label);
+    //         container.appendChild(input);
+    //     } else {
+    //         // If checkbox is not checked, generate multiple input fields with numbered labels
+    //         for (let i = 1; i <= quantity; i++) {
+    //             const label = document.createElement('label');
+    //             label.for = `serial_number_${i}`;
+    //             label.textContent = `Serial Number ${i}:`;
+
+    //             const input = document.createElement('input');
+    //             input.type = 'text';
+    //             input.name = `serial_numbers[]`;
+    //             input.id = `serial_number_${i}`;
+    //             input.classList.add('form-control', 'col-sm-5');
+    //             input.placeholder = 'Leave blank if none.';
+
+    //             container.appendChild(label);
+    //             container.appendChild(input);
+    //         }
+    //     }
+    // }
+
     function updateSerialNumberFields() {
         const quantityField = document.getElementById('quantity');
         const container = document.getElementById('serial_numbers_container');
         const checkbox = document.getElementById('checkbox');
 
-        // Clear the existing input fields
+        // Clear the existing input fields and error messages
         container.innerHTML = '';
 
-        // Generate the new input field(s)
+        // Generate the new input field(s) and error messages
         const quantity = parseInt(quantityField.value) || 0;
+        const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
+
         if (checkbox.checked) {
             // If checkbox is checked, generate one input field with a fixed label
             const label = document.createElement('label');
@@ -475,6 +525,12 @@
 
             container.appendChild(label);
             container.appendChild(input);
+
+            // Add error message element
+            const errorSpan = document.createElement('span');
+            errorSpan.classList.add('text-danger');
+            errorSpan.textContent = errorMessage;
+            container.appendChild(errorSpan);
         } else {
             // If checkbox is not checked, generate multiple input fields with numbered labels
             for (let i = 1; i <= quantity; i++) {
@@ -491,6 +547,12 @@
 
                 container.appendChild(label);
                 container.appendChild(input);
+
+                // Add error message element
+                const errorSpan = document.createElement('span');
+                errorSpan.classList.add('text-danger');
+                errorSpan.textContent = errorMessage;
+                container.appendChild(errorSpan);
             }
         }
     }

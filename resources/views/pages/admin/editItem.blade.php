@@ -103,7 +103,7 @@
 
                     <hr>
                     <a href="{{ route('view_items') }}" class="btn btn-outline-dark" data-dismiss="modal">Back</a>
-                    <Button type="submit" class="btn btn-success">Save Changes</Button>
+                    <Button type="submit" class="btn btn-success" onclick="return confirm('Do you wish to continue updating this item?')">Save Changes</Button>
                 </div>
             </div>
         </form>

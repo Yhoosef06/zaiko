@@ -60,7 +60,6 @@ class ItemsController extends Controller
 
     public function saveEditedItemDetails(Request $request, $id)
     {
-        dd($id);
         $item = Item::find($id);
         $item->brand = $request->brand;
         $item->model = $request->model;
@@ -68,7 +67,7 @@ class ItemsController extends Controller
         $item->location = $request->location;
         $item->description = $request->description;
         $item->aquisition_date = $request->aquisition_date;
-        $item->unit_number = $request->unit_number;
+        // $item->unit_number = $request->unit_number;
         $item->quantity = $request->quantity;
         $item->status = $request->status;
         $item->inventory_tag = $request->inventory_tag;
@@ -121,7 +120,7 @@ class ItemsController extends Controller
                 'model' => $request->model,
                 'description' => $request->item_description,
                 'aquisition_date' => $request->aquisition_date,
-                'unit_number' => $request->unit_number,
+                // 'unit_number' => $request->unit_number,
                 'inventory_tag' => $request->inventory_tag,
                 'quantity' => $request->quantity,
                 'status' => $request->status,
@@ -234,24 +233,24 @@ class ItemsController extends Controller
                 // 'department' => 'required',
                 'prepared_by' => 'required',
                 'verified_by' => 'required',
-                'lab_oic' => 'required',
-                'it_specialist' => 'required',
-                'position_1' => 'required',
-                'position_2' => 'required',
-                'position_3' => 'required',
-                'position_4' => 'required'
+                'noted_by' => 'required',
+                'approved_by' => 'required',
+                'role_1' => 'required',
+                'role_2' => 'required',
+                'role_3' => 'required',
+                'role_4' => 'required'
             ]
         );
 
         $location = $request->location;
         $prepared_by = $request->prepared_by;
         $verified_by = $request->verified_by;
-        $lab_oic = $request->lab_oic;
-        $it_specialist = $request->it_specialist;
-        $position_1 = $request->position_1;
-        $position_2 = $request->position_2;
-        $position_3 = $request->position_3;
-        $position_4 = $request->position_4;
+        $noted_by = $request->noted_by;
+        $approved_by = $request->approved_by;
+        $role_1 = $request->role_1;
+        $role_2 = $request->role_2;
+        $role_3 = $request->role_3;
+        $role_4 = $request->role_4;
 
         $user_dept_id = Auth::user()->department_id;
         if (Auth::user()->account_status == 'admin') {
@@ -286,29 +285,31 @@ class ItemsController extends Controller
             $pdf = App::make('dompdf.wrapper');
             $pdf->loadView('pages.pdfReport', compact(
                 'items',
-                // 'purpose',
                 'location',
                 'prepared_by',
                 'verified_by',
-                'lab_oic',
-                'it_specialist',
+                'noted_by',
+                'approved_by',
                 'department',
                 'rooms',
-                'position_1',
-                'position_2',
-                'position_3',
-                'position_4'
-            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+                'role_1',
+                'role_2',
+                'role_3',
+                'role_4'
+            ))->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
             // return view('pages.pdfReport')->with(compact(
             //     'items',
-            //     // 'purpose',
             //     'location',
             //     'prepared_by',
             //     'verified_by',
             //     'lab_oic',
             //     'it_specialist',
             //     'department',
-            //     'rooms'
+            //     'rooms',
+            //     'position_1',
+            //     'position_2',
+            //     'position_3',
+            //     'position_4'
             // ));
             foreach ($rooms as $room) {
                 if ($room->id == $location)

@@ -54,99 +54,106 @@
 </style>
 
 <body>
-    <div class="container" style="font-weight: 800; font-size:18pt; text-align:center">
-        UNIVERSITY OF SAN JOSE-RECOLETOS <br>
-        Inventory Report
-        {{-- <div class="container" id="purpose">
-            @if ($purpose == null)
-            @else
-                ({{ $purpose }})
-            @endif
-        </div> --}}
-    </div>
-    <div class="container" id="intro_details">
-        <strong>DATE PREPARED:</strong> {{ now()->format('F j, Y') }} <br>
-        <strong>DEPARTMENT / OFFICE:</strong> {{ $department}} <br>
-        <strong>SPECIFIC LOCATION:</strong>
-        @foreach ($rooms as $room)
-            @if ($room->id == $location)
-                {{ $room->room_name }}
-            @endif
-        @endforeach
-    </div>
     <div class="container">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">Serial #</th>
-                    <th scope="col">Description of Item</th>
-                    <th scope="col">QTY</th>
-                    <th scope="col">UNIT #</th>
-                    <th scope="col">Aquisition Date</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Inventory Tag</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($items->groupBy('unit_number') as $item)
-                    @foreach ($item as $index => $unit)
-                        @if ($unit->location == $location)
-                            {{-- @if ($index == 0) --}}
-                            <tr>
-                                <td>{{ $unit->serial_number }}</td>
-                                <td>{{ $unit->description }}</td>
-                                <td>{{ $unit->quantity }}</td>
-                                <td>{{ $unit->unit_number }}</td>
-                                @if ($unit->aquisition_date == null)
-                                    <td>{{ 'No Date Record.' }}</td>
-                                @else
-                                    <td>{{ date('F j, Y', strtotime($unit->aquisition_date)) }}</td>
-                                @endif
-                                <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
-                                <td>{{ $unit->inventory_tag }}</td>
-                            </tr>
-                            {{-- @else --}}
-                            {{-- <tr>
+        <div class="container" style="font-weight: 800; font-size:18pt; text-align:center">
+            UNIVERSITY OF SAN JOSE-RECOLETOS <br>
+            Inventory Report
+            {{-- <div class="container" id="purpose">
+                @if ($purpose == null)
+                @else
+                    ({{ $purpose }})
+                @endif
+            </div> --}}
+        </div>
+        <div class="container" id="intro_details">
+            <strong>DATE PREPARED:</strong> {{ now()->format('F j, Y') }} <br>
+            <strong>DEPARTMENT / OFFICE:</strong> {{ $department }} <br>
+            <strong>SPECIFIC LOCATION:</strong>
+            @foreach ($rooms as $room)
+                @if ($room->id == $location)
+                    {{ $room->room_name }}
+                @endif
+            @endforeach
+        </div>
+        <div class="container">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Serial #</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Model</th>
+                        <th scope="col">Description of Item</th>
+                        <th scope="col">QTY</th>
+                        {{-- <th scope="col">UNIT #</th> --}}
+                        <th scope="col">Aquisition Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Inventory Tag</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($items->groupBy('unit_number') as $item)
+                        @foreach ($item as $index => $unit)
+                            @if ($unit->location == $location)
+                                {{-- @if ($index == 0) --}}
+                                <tr>
                                     <td>{{ $unit->serial_number }}</td>
-                                    <td>{{ $unit->item_description }}</td>
+                                    <td>{{ $unit->brand }}</td>
+                                    <td>{{ $unit->model }}</td>
+                                    <td>{{ $unit->description }}</td>
                                     <td>{{ $unit->quantity }}</td>
+                                    {{-- <td>{{ $unit->unit_number }}</td> --}}
+                                    @if ($unit->aquisition_date == null)
+                                        <td>{{ 'No Date Record.' }}</td>
+                                    @else
+                                        <td>{{ date('F j, Y', strtotime($unit->aquisition_date)) }}</td>
+                                    @endif
                                     <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
                                     <td>{{ $unit->inventory_tag }}</td>
-                                </tr> --}}
-                            {{-- @endif --}}
-                        @endif
+                                </tr>
+                                {{-- @else --}}
+                                {{-- <tr>
+                                        <td>{{ $unit->serial_number }}</td>
+                                        <td>{{ $unit->item_description }}</td>
+                                        <td>{{ $unit->quantity }}</td>
+                                        <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
+                                        <td>{{ $unit->inventory_tag }}</td>
+                                    </tr> --}}
+                                {{-- @endif --}}
+                            @endif
+                        @endforeach
                     @endforeach
-                @endforeach
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="column">
-                Prepared By: <br>
-                <br>
-                <span class="signee">{{ $prepared_by }}</span>
-                <br>
-                {{ $position_1 }}<br>
-                <br>
-                Noted By: <br>
-                <br>
-                <span class="signee">{{ $lab_oic }}</span>
-                <br>
-                Laboratory OIC
-            </div>
-            <div class="column">
-                Verified By: <br>
-                <br>
-                <span class="signee">{{ $verified_by }}</span>
-                <br>
-                {{$position_2}} <br>
-                <br>
-                Approved By: <br>
-                <br>
-                <span class="signee">{{ $it_specialist }}</span>
-                <br>
-                IT Specialist
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="column">
+                    Prepared By: <br>
+                    <br>
+                    <span class="signee">{{ $prepared_by }}</span>
+                    <br>
+                    {{ $role_1 }}<br>
+                    <br>
+                    Noted By: <br>
+                    <br>
+                    <span class="signee">{{ $noted_by }}</span>
+                    <br>
+                    {{ $role_3 }}
+                </div>
+                <div class="column">
+                    Verified By: <br>
+                    <br>
+                    <span class="signee">{{ $verified_by }}</span>
+                    <br>
+                    {{ $role_2 }} <br>
+                    <br>
+                    Approved By: <br>
+                    <br>
+                    <span class="signee">{{ $approved_by }}</span>
+                    <br>
+                    {{ $role_4 }}
+                </div>
             </div>
         </div>
     </div>
+
 
 </html>

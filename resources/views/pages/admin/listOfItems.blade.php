@@ -126,7 +126,7 @@
     </div>
 @endsection
 
-<script>
+{{-- <script>
     function editItemModal(itemId) {
         $(document).ready(function() {
             $('#modal-item-details').on('show.bs.modal', function() {
@@ -157,7 +157,7 @@
             }
         });
     }
-</script>
+</script> --}}
 
 <script>
     function openItemModal(itemId) {
@@ -185,7 +185,6 @@
                 $('#modal-item-details .modal-body').html(
                     '<p><strong>Item Number:</strong> ' + data.id + '</p>' +
                     '<p><strong>Serial Number:</strong> ' + data.serial_number + '</p>' +
-                    '<p><strong>Unit Number:</strong> ' + data.unit_number + '</p>' +
                     '<p><strong>Brand:</strong> ' + data.brand + '</p>' +
                     '<p><strong>Model:</strong> ' + data.model + '</p>' +
                     '<p><strong>Category:</strong> ' + data.item_category + '</p>' +

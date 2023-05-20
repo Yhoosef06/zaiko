@@ -13,6 +13,7 @@ use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\ItemCategoryController;
@@ -114,6 +115,10 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
     Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
     Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
+
+    //storing references
+    Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
+    Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
 
     //reports
     Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
