@@ -38,6 +38,6 @@ class Item extends Model
     }
 
     public function category(){
-        return $this->belongsTo(ItemCategory::class);
+        return $this->belongsTo(ItemCategory::class, 'category_id', 'id');
     }
 }
