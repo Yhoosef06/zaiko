@@ -189,26 +189,21 @@
 <script>
     $(document).ready(function() {
         $('#saveReferencesBtn').click(function(event) {
-            event.preventDefault(); // Prevent the default form submission behavior
+            event.preventDefault(); 
 
-            // Get the form data
             var formData = $('form').serialize();
 
-            // Cache the button element
             var button = $(this);
 
-            // Send an AJAX request to the controller
             $.ajax({
                 url: '{{ route('store_references') }}',
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                    // Show the check icon
                     button.after(
                         '<span class="m-1"><i class="fa fa-check text-green"></i></span>'
                     );
 
-                    // Change the button class to btn btn-outline-info
                     button.attr('class', 'btn btn-outline-info').prop('disabled', true);;
                 },
                 error: function(xhr) {
@@ -223,6 +218,7 @@
                         $('#role_2').addClass('border-danger');
                         $('#role_3').addClass('border-danger');
                         $('#role_4').addClass('border-danger');
+                        alert('Make sure that there are no empty fields.');
                     }
                 }
             });
@@ -230,7 +226,7 @@
     });
 
     $(document).ready(function() {
-        // Function to fetch and populate the fields based on the selected location
+        
         function fetchAndPopulateData(location) {
             $.ajax({
                 url: 'get-references',
@@ -242,15 +238,14 @@
                 success: function(response) {
                     console.log(response);
                     if (response.length > 0) {
-                        // Sort the response array in descending order based on the 'created_at' value
+                
                         response.sort(function(a, b) {
                             return new Date(b.created_at) - new Date(a.created_at);
                         });
 
                         var latestData = response[
-                        0]; // Get the object with the latest 'created_at' value
+                        0];
 
-                        // Populate the fields with the data from the latest object
                         $('#prepared_by').val(latestData.prepared_by);
                         $('#verified_by').val(latestData.verified_by);
                         $('#noted_by').val(latestData.noted_by);
@@ -266,14 +261,12 @@
                 },
                 error: function(xhr) {
                     console.log('Error:', xhr);
-                    // Handle the error if needed
                 }
             });
         }
 
-        // Event listener for changes in the select element
         $('#location').change(function() {
-            console.log('Change event triggered'); // Check if this message appears in the console
+            console.log('Change event triggered'); 
             var selectedLocation = $(this).val();
             if (selectedLocation) {
                 fetchAndPopulateData(selectedLocation);

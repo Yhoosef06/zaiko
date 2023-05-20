@@ -41,11 +41,8 @@ class ReferenceController extends Controller
     public function getReferences(Request $request)
     {
         $locationId = $request->location;
-
-        // Fetch the data from the database based on the selected location
         $references = Reference::where('location', '=', $locationId)->get();
         
-        // Prepare the data to be sent back in the response
         $data = $references;
 
         return response()->json($data);
