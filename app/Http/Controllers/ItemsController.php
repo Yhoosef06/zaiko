@@ -22,8 +22,8 @@ class ItemsController extends Controller
     {
         //admin
         if (Auth::user()->account_type == 'admin') {
-            $items = Item::all();
-
+            $items = Item::all()->groupBy(['brand', 'model', 'item_category']);
+            // dd($items);
             return view('pages.admin.listOfItems')->with(compact('items'));
         } else {
             $user_dept_id = Auth::user()->department_id;
@@ -31,6 +31,16 @@ class ItemsController extends Controller
             $items = Item::whereIn('location', $rooms->pluck('id'))->get();
             return view('pages.admin.listOfItems')->with('items', $items);
         }
+    }
+
+    public function viewItemDetails($id)
+    {   
+        $item = Item::find($id);
+        $room = $item->room->room_name;
+        $item['room'] = $room;
+        $model = $item->model;
+        $items = Item::where('model','=', $model)->get();
+        return view('pages.admin.viewItemDetails')->with('items', $items);
     }
 
     public function getItemDetails($id)
@@ -130,30 +140,6 @@ class ItemsController extends Controller
 
         Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
         return redirect('/adding-new-item');
-
-        // } elseif ($item == null) {
-
-        //     Item::create([
-        //         'serial_number' => $request->serial_number,
-        //         'location' => $request->location,
-        //         'item_category' => $request->item_category,
-        //         'brand' => $request->brand,
-        //         'model' => $request->model,
-        //         'description' => $request->item_description,
-        //         'aquisition_date' => $request->aquisition_date,
-        //         'unit_number' => $request->unit_number,
-        //         'inventory_tag' => $request->inventory_tag,
-        //         'quantity' => $request->quantity,
-        //         'status' => $request->status,
-        //         'borrowed' => 'no',
-        //     ]);
-        //     Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
-        //     return redirect('/adding-new-item');
-
-        // } else {
-        //     Session::flash('message', 'Serial number has already been registered.');
-        //     return redirect('/adding-new-item');
-        // }
     }
 
     public function generateReportPage()

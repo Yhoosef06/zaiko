@@ -1,42 +1,61 @@
-@extends('pages.admin.home')
+@extends('layouts.pages.yields')
 
 @section('content')
-    <div class="container shadow-lg">
-        <div class="container p-3">
-            <div class="row text-lg">
-                <div class="col">
-                    <strong>Serial Number:</strong> {{ $item->serial_number }} <br>
-                    <strong>Item Name:</strong> {{ $item->item_name }} <br>
-                    <strong>Quantity:</strong> {{ $item->quantity }} <br>
-                    <strong>Aquisition Date:</strong> {{ $item->aquisition_date }} <br>
-                    <strong>Unit Number:</strong> {{ $item->unit_number }} <br>
-                </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
 
-                <div class="col">
-                    <strong>Campus:</strong> {{ $item->campus }} <br>
-                    <strong>Room:</strong> {{ $item->location }} <br>
-                    <strong>Item Description:</strong> {{ $item->item_description }} <br>
-                    <strong>Inventory Tag:</strong> {{ $item->inventory_tag }} <br>
-                    <strong>Status:</strong> {{ $item->status }}
-                </div>
-            </div>
+                    <div class="card">
+                        <div class="card-header">
+                            @foreach ($items as $item)
+                                <h3 class="card-title"><strong>Brand:</strong> {{ $item->brand }} </h3> <br>
+                                <h3 class="card-title"><strong>Model:</strong> {{ $item->model }} </h3> <br>
+                                <h3 class="card-title"><strong>Category:</strong> {{ $item->item_category }} </h3>
+                                <br>
+                                <h3 class="card-title"><strong>Description:</strong> {{ $item->description }} </h3>
+                            @break
+                        @endforeach
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body text-center">
+                        <table id="listofusers" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Serial #</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($items as $item)
+                                    <tr>
+                                        <td>{{ $item->serial_number }}</td>
+                                        <td>{{ $item->room->room_name }}</td>
+                                        <td>{{ $item->status }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
 
-            <div class="card text-center">
-                <div class="card-header">
-                    <h5>{{ $item->serial_number }} QR Code</h5>
+                                            <form class="form_delete_btn" method="POST"
+                                                action="{{ route('delete_item', $item->id) }}">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="btn btn-sm btn-danger show-alert-delete-item"
+                                                    data-toggle="tooltip" title='Delete'>
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
                 </div>
-                <div class="card-body">
-                    <img src="data:image/png;base64, {!! base64_encode(
-                        QrCode::format('png')->size(150)->generate($item->serial_number),
-                    ) !!} " alt="" srcset=""><br>
-                    <a href="data:image/png;base64, {!! base64_encode(
-                        QrCode::format('png')->size(300)->generate($item->serial_number),
-                    ) !!} "
-                        download="{{ 'Item_' . $item->serial_number . '_QRCode' }}">Download</a>
-                </div>
-            </div>
-            <hr>
-            <a href="{{ route('view_items') }}" class="btn btn-outline-dark">Back</a>
+            </div><!-- /.container-fluid -->
         </div>
     </div>
+</section>
 @endsection

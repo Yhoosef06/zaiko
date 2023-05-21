@@ -58,6 +58,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
 
     // FOR ITEMS
     Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
+    Route::get('view-item-details-{id}', [ItemsController::class, 'viewItemDetails'])->name('view_item_details');
     Route::get('list-of-items-filtered', [ItemsController::class, 'searchItem'])->name('filtered_view');
     Route::post('saving-new-item', [ItemsController::class, 'saveNewItem'])->name('save_new_item');
     Route::get('get-item-{id}-details', [ItemsController::class, 'getItemDetails'])->name('get_item_details');
