@@ -37,7 +37,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     @foreach ($items as $brand => $brandItems)
                                         @foreach ($brandItems as $model => $modelItems)
                                             @foreach ($modelItems as $description => $categoryItems)
@@ -48,7 +47,11 @@
                                                     <td>{{ $categoryItems->first()->item_category }}</td>
                                                     <td>{{ Str::limit($categoryItems->first()->description, 20, '...') }}
                                                     </td>
-                                                    <td>{{ $categoryItems->count() }}</td>
+                                                    @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
+                                                        <td>{{ $categoryItems->first()->quantity }}</td>
+                                                    @else
+                                                        <td>{{ $categoryItems->count() }} </td>
+                                                    @endif
                                                     <td>
                                                         @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
                                                             <button class="btn btn-sm btn-primary" data-toggle="modal"
@@ -81,7 +84,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
                         </div>
                         <!-- /.card-body -->
                     </div>
