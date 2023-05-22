@@ -29,7 +29,7 @@ class ItemsController extends Controller
         } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
-            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
+            $items = Item::whereIn('location', $rooms->pluck('id'))->get()->groupBy(['brand', 'model', 'item_category']);
             return view('pages.admin.listOfItems')->with('items', $items);
         }
     }
@@ -64,7 +64,6 @@ class ItemsController extends Controller
         $item = Item::find($id);
         $room = $item->room->room_name;
         $item['room'] = $room;
-
         return response()->json($item);
     }
 

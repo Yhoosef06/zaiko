@@ -38,13 +38,7 @@
                                         <tr>
                                             <td>{{ $room->id }}</td>
                                             <td>{{ $room->room_name }}</td>
-                                            <td>
-                                                @foreach ($departments as $department)
-                                                    @if ($department->id == $room->department_id)
-                                                        {{$department->department_name}}
-                                                    @endif
-                                                @endforeach
-                                            </td>
+                                            <td>{{ $room->department->department_name }}</td>
                                             <td>
                                                 {{-- <a href="{{ route('view_item_details', $item->id) }}"
                                                     class="btn btn-sm btn-primary" class="btn btn-default"

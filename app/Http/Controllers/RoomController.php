@@ -16,14 +16,18 @@ class RoomController extends Controller
     {
         //admin
         if (Auth::user()->account_type == 'admin') {
-            $rooms = Room::all();
-            $departments = Department::all();
-            return view('pages.admin.listOfRooms')->with(compact('rooms', 'departments'));
+            $rooms = Room::with('department')->get();
+            $rooms->each(function ($room) {
+                $room->department_name = $room->department->department_name;
+            });
+            return view('pages.admin.listOfRooms')->with(compact('rooms'));
         } else {
-            $departments = Department::all();
             $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->get();
-            return view('pages.admin.listOfRooms')->with(compact('rooms', 'departments'));
+            $rooms = Room::where('department_id', $user_dept_id)->with('department')->get();
+            $rooms->each(function ($room) {
+                $room->department_name = $room->department->department_name;
+            });
+            return view('pages.admin.listOfRooms')->with(compact('rooms'));
         }
     }
 
@@ -43,13 +47,13 @@ class RoomController extends Controller
 
         // Check if the room already exists
         $room_input = Room::where('room_name', $request->input('room_name'))->first();
-        
+
         $departmentId = Auth::user()->account_type == 'admin' ? $request->input('department') : Auth::user()->department_id;
-        
+
         if ($room_input) {
-                
-                return response()->json(['error' =>  $room_input.' has already been added.'], 400);
-            }
+
+            return response()->json(['error' =>  $room_input . ' has already been added.'], 400);
+        }
 
         $room = Room::create([
             'room_name' => $request->input('room_name'),
@@ -87,8 +91,7 @@ class RoomController extends Controller
     //     }
     // }
 
-    public function deleteRoom($id){
-
+    public function deleteRoom($id)
+    {
     }
 }
-
