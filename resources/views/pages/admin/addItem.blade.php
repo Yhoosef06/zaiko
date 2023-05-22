@@ -138,7 +138,8 @@
                             class="form-control col-sm-3 @error('quantity') border-danger @enderror"
                             value="{{ old('quantity') }}" placeholder="Quantity" oninput="updateSerialNumberFields()">
                         <input type="checkbox" id="checkbox" name="checkbox" value="1"
-                            onchange="this.value = this.checked ? '1' : '2'; updateSerialNumberFields(); console.log(this.value);" checked>
+                            onchange="this.value = this.checked ? '1' : '2'; updateSerialNumberFields(); console.log(this.value);"
+                            checked>
                         <strong>Same serial numbers?</strong> <br>
 
                         @error('quantity')
@@ -227,12 +228,15 @@
                         @csrf
                         @if (Auth::user()->account_type == 'admin')
                             <label for="department">Department:</label>
-                            <select id="department" name="department" class="form-control">
-                                <option value="" disabled selected>Choose a department</option>
-                                @foreach ($colleges as $college)
-                                    <optgroup label="{{ $college->college_name }}">
-                                        @foreach ($college->departments as $department)
-                                            <option value="{{ $department->id }}">{{ $department->department_name }}
+                            <select id="department_id" name="department_id"
+                                class="form-control @error('department_id') border-danger @enderror">
+                                <option value="" disabled selected>Select College Department</option>
+                                @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                    <optgroup label="{{ $collegeName }}">
+                                        @foreach ($departmentsGroup as $department)
+                                            <option value="{{ $department->id }}"
+                                                {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                                                {{ $department->department_name }}
                                             </option>
                                         @endforeach
                                     </optgroup>
