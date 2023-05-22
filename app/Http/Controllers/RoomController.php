@@ -43,12 +43,12 @@ class RoomController extends Controller
 
         // Check if the room already exists
         $room_input = Room::where('room_name', $request->input('room_name'))->first();
-
+        
         $departmentId = Auth::user()->account_type == 'admin' ? $request->input('department') : Auth::user()->department_id;
         
         if ($room_input) {
                 
-                return response()->json(['error' => $room_input.' has already been added.'], 400);
+                return response()->json(['error' =>  $room_input.' has already been added.'], 400);
             }
 
         $room = Room::create([

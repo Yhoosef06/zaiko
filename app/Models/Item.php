@@ -28,6 +28,7 @@ class Item extends Model
         'borrowed',
         'inventory_tag',
         'serial_number',
+        'same_serial_numbers'
     ];
 
     public function room(): HasOne

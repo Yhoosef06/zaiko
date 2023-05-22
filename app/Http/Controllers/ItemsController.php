@@ -69,7 +69,7 @@ class ItemsController extends Controller
     }
 
     public function editItemPage($id)
-    {   
+    {
         if (Auth::user()->account_type == 'admin') {
             $item = Item::find($id);
             $rooms = Room::all();
@@ -120,6 +120,7 @@ class ItemsController extends Controller
 
     public function saveNewItem(Request $request)
     {
+        // dd($request->checkbox);
         $this->validate($request, [
             'location' => 'required',
             'serial_numbers' => 'required|array|min:1',
@@ -143,6 +144,8 @@ class ItemsController extends Controller
 
         // $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
         // if ($item == 'N/A') {
+        $isChecked = $request->has('checkbox') && $request->input('checkbox') === '1' ? 1 : 0;
+        // dd($isChecked);
         $serial_numbers = $request->serial_numbers;
         foreach ($serial_numbers as $serial_number) {
             Item::create([
@@ -158,6 +161,7 @@ class ItemsController extends Controller
                 'quantity' => $request->quantity,
                 'status' => $request->status,
                 'borrowed' => 'no',
+                'same_serial_numbers' => $isChecked,
             ]);
         }
 
@@ -306,24 +310,24 @@ class ItemsController extends Controller
                 'role_3',
                 'role_4'
             ))->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
-            // return view('pages.pdfReport')->with(compact(
-            //     'items',
-            //     'location',
-            //     'prepared_by',
-            //     'verified_by',
-            //     'lab_oic',
-            //     'it_specialist',
-            //     'department',
-            //     'rooms',
-            //     'position_1',
-            //     'position_2',
-            //     'position_3',
-            //     'position_4'
-            // ));
-            foreach ($rooms as $room) {
-                if ($room->id == $location)
-                    return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
-            }
+            return view('pages.pdfReport')->with(compact(
+                'items',
+                'location',
+                'prepared_by',
+                'verified_by',
+                'noted_by',
+                'approved_by',
+                'department',
+                'rooms',
+                'role_1',
+                'role_2',
+                'role_3',
+                'role_4'
+            ));
+            // foreach ($rooms as $room) {
+            //     if ($room->id == $location)
+            //         return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
+            // }
         }
     }
 

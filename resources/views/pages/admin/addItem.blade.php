@@ -113,19 +113,6 @@
                         <input type="date" id="aquisition_date" name="aquisition_date" class="form-control col-sm-4"
                             placeholder="Aquistion Date">
                     </div>
-
-                    {{-- <div class="form-group">
-                        <label for="unit number">Unit Number:</label>
-                        <input type="text" id="unit_number" name="unit_number"
-                            class="form-control col-sm-5 @error('unit_number')
-                        border-danger @enderror"
-                            value="{{ old('unit_number') }}" placeholder="Leave blank if none.">
-                        @error('unit_number')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div> --}}
                 </div>
 
                 <div class="col">
@@ -150,8 +137,9 @@
                         <input type="text" id="quantity" name="quantity"
                             class="form-control col-sm-3 @error('quantity') border-danger @enderror"
                             value="{{ old('quantity') }}" placeholder="Quantity" oninput="updateSerialNumberFields()">
-                        <input type="checkbox" id="checkbox" name="checkbox" onchange="updateSerialNumberFields()" checked>
-                        <strong> Same serial numbers?</strong> <br>
+                        <input type="checkbox" id="checkbox" name="checkbox" value="1"
+                            onchange="this.value = this.checked ? '1' : '2'; updateSerialNumberFields(); console.log(this.value);" checked>
+                        <strong>Same serial numbers?</strong> <br>
 
                         @error('quantity')
                             <div class="text-danger">
@@ -599,22 +587,30 @@
                 error: function(xhr) {
                     console.log(xhr);
                     if (xhr.status === 422) {
-                        $('#room-name-error').text(xhr.responseJSON.errors.room_name[0]);
-                        $('#room_name').addClass('border border-danger');
-                        $('#department-error').text(xhr.responseJSON.errors.department[0]);
-                        $('#department').addClass('border border-danger');
+                        var errors = xhr.responseJSON.errors;
+                        if (errors) {
+                            if (errors.room_name) {
+                                $('#room-name-error').text(errors.room_name[0]);
+                                $('#room_name').addClass('border border-danger');
+                            }
+                            if (errors.department) {
+                                $('#department-error').text(errors.department[0]);
+                                $('#department').addClass('border border-danger');
+                            }
+                        }
                     } else {
-                        $('#room-name-error').text('Room name has already been added.');
-                        $('#room_name').addClass('border border-danger');
-                        $('#room_name').val('');
-                        $('#department').val('');
-                        $('#room-name-success').text('');
+                        if (xhr.responseJSON.error) {
+                            $('#room-name-error').text('Room name has already been added.');
+                            $('#room_name').addClass('border border-danger');
+                            $('#room_name').val('');
+                            $('#department').val('');
+                            $('#room-name-success').text('');
+                        }
                     }
                 }
             });
         });
     });
-
 
     //for adding category
     $(document).ready(function() {

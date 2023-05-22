@@ -82,10 +82,10 @@
                         <th scope="col">Serial #</th>
                         <th scope="col">Brand</th>
                         <th scope="col">Model</th>
-                        <th scope="col">Description of Item</th>
+                        <th scope="col">Description</th>
                         <th scope="col">QTY</th>
                         {{-- <th scope="col">UNIT #</th> --}}
-                        <th scope="col">Aquisition Date</th>
+                        <th scope="col">Acquisition Date</th>
                         <th scope="col">Status</th>
                         <th scope="col">Inventory Tag</th>
                     </tr>
@@ -94,13 +94,18 @@
                     @foreach ($items->groupBy('unit_number') as $item)
                         @foreach ($item as $index => $unit)
                             @if ($unit->location == $location)
-                                {{-- @if ($index == 0) --}}
                                 <tr>
                                     <td>{{ $unit->serial_number }}</td>
                                     <td>{{ $unit->brand }}</td>
                                     <td>{{ $unit->model }}</td>
                                     <td>{{ $unit->description }}</td>
-                                    <td>{{ $unit->quantity }}</td>
+                                    <td>
+                                        @if ($unit->same_serial_numbers == false)
+                                            1
+                                        @else
+                                            {{ $unit->quantity }}
+                                        @endif
+                                    </td>
                                     {{-- <td>{{ $unit->unit_number }}</td> --}}
                                     @if ($unit->aquisition_date == null)
                                         <td>{{ 'No Date Record.' }}</td>
@@ -110,20 +115,12 @@
                                     <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
                                     <td>{{ $unit->inventory_tag }}</td>
                                 </tr>
-                                {{-- @else --}}
-                                {{-- <tr>
-                                        <td>{{ $unit->serial_number }}</td>
-                                        <td>{{ $unit->item_description }}</td>
-                                        <td>{{ $unit->quantity }}</td>
-                                        <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
-                                        <td>{{ $unit->inventory_tag }}</td>
-                                    </tr> --}}
-                                {{-- @endif --}}
                             @endif
                         @endforeach
                     @endforeach
                 </tbody>
             </table>
+            
             <div class="row">
                 <div class="column">
                     Prepared By: <br>

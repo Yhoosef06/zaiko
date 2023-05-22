@@ -9,7 +9,8 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="contaienr m-2">
-                            <a href="{{ route('view_items') }}" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-arrow-left"></i> Back</a>
+                            <a href="{{ route('view_items') }}" class="btn btn-dark" data-dismiss="modal"><i
+                                    class="fa fa-arrow-left"></i> Back</a>
                         </div>
                         <div class="card-header">
                             @foreach ($items as $item)
@@ -89,6 +90,7 @@
                         <select id="item_category" name="item_category"
                             class="form-control col-5 @error('item_category')
                     border-danger @enderror">
+                            <option value="{{ $item->item_category }}">{{ $item->item_category }}</option>
                             @foreach ($itemCategories as $category)
                                 <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
                             @endforeach
@@ -99,8 +101,12 @@
                         <input type="text" id="description" name="description" class="form-control">
                     </div>
                     <div class="form-group">
+                        <label for="aquisition date">Quantity:</label>
+                        <input type="text" id="quantity" name="quantity" value="{{ $item->quantity }}" class="form-control">
+                    </div>
+                    <div class="form-group">
                         <label for="aquisition date">Aquisition Date:</label>
-                        <input type="date" id="aquisition_date" name="aquisition_date" class="form-control">
+                        <input type="date" id="aquisition_date" name="aquisition_date" value="{{ $item->aquisition_date }}" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="serial number"> Serial Number:</label>
@@ -182,8 +188,8 @@
 
     $(document).ready(function() {
         $('#modal-edit-item').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); 
-            var itemId = button.data('item-id'); 
+            var button = $(event.relatedTarget);
+            var itemId = button.data('item-id');
             openItemModal(itemId);
         });
 
@@ -208,9 +214,8 @@
                 $('#description').val(data.description);
                 $('#aquisition_date').val(data.aquisition_date);
                 $('#item_category').val(data.item_category);
-
+                $('#quantity').val(data.quantity);
                 $('#saveChangesBtn').data('item-id', itemId);
-
                 $('#modal-edit-item').modal('hide');
             },
             error: function(xhr, status, error) {
@@ -230,6 +235,7 @@
         var description = $('#description').val();
         var aquisition_date = $('#aquisition_date').val();
         var item_category = $('#item_category').val();
+        var quantity = $('#quantity').val();
 
         $.ajaxSetup({
             headers: {
@@ -251,6 +257,7 @@
                     description: description,
                     aquisition_date: aquisition_date,
                     item_category: item_category,
+                    quantity: quantity
                 },
                 success: function(response) {
                     console.log(response);
@@ -259,9 +266,9 @@
 
                         alert(response.message);
 
-                         window.location.reload();
+                        window.location.reload();
                     } else {
-        
+
                         alert('Failed to save changes: ' + response.message);
                     }
                 },

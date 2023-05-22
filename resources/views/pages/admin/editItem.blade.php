@@ -32,7 +32,7 @@
                     <select id="item_category" name="item_category"
                         class="form-control col-5 @error('item_category')
                 border-danger @enderror">
-                        <option value="{{ $item->item_category }}" disabled selected>{{ $item->item_category }}</option>
+                        <option value="{{ $item->item_category }}" selected>{{ $item->item_category }}</option>
                         @foreach ($itemCategories as $category)
                             <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
                         @endforeach
