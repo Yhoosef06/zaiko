@@ -32,7 +32,7 @@
                     </select>
                 </div>
             
-                <div class="mt-20">
+                <div class="mt-20 ml-2">
                     @foreach($categories as $category)
                     <div class="tab-pane" id="category{{$category->id}}">
                         <div class="row">
