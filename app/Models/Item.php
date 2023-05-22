@@ -23,13 +23,11 @@ class Item extends Model
         'model',
         'description',
         'quantity',
-        'unit_number',
         'aquisition_date',
         'status',
         'borrowed',
         'inventory_tag',
         'serial_number',
-        'department_id'
     ];
 
     public function room(): HasOne

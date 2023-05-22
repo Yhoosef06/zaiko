@@ -49,12 +49,12 @@
                     <label for="aquisition date">Aquisition Date:</label>
                     <input type="date" id="aquisition_date" name="aquisition_date" class="form-control col-sm-4"
                         value="{{ $item->aquisition_date }}">
-
+{{-- 
                     <label for="unit number">Unit Number:</label>
                     <input type="text" id="unit_number" name="unit_number"
                         class="form-control col-sm-4 @error('unit_number')
                     border-danger @enderror"
-                        value="{{ $item->unit_number }}" placeholder="Unit Number">
+                        value="{{ $item->unit_number }}" placeholder="Unit Number"> --}}
                 </div>
 
                 <div class="col">
@@ -76,6 +76,7 @@
                         <option value="Active">Active</option>
                         <option value="For Repair">For Repair</option>
                         <option value="Obsolete">Obsolete</option>
+                        <option value="Lost">Lost</option>
                     </select>
 
                     <label for="borrowed or not">Inventory Tag:</label>

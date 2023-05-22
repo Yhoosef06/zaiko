@@ -47,6 +47,7 @@ class RoomController extends Controller
         $departmentId = Auth::user()->account_type == 'admin' ? $request->input('department') : Auth::user()->department_id;
         
         if ($room_input) {
+                
                 return response()->json(['error' => $room_input.' has already been added.'], 400);
             }
 

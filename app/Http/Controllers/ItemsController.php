@@ -7,11 +7,12 @@ use App\Models\Room;
 use App\Models\Brand;
 use App\Models\Order;
 use App\Models\College;
+use App\Models\Department;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
-use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -34,13 +35,28 @@ class ItemsController extends Controller
     }
 
     public function viewItemDetails($id)
-    {   
-        $item = Item::find($id);
-        $room = $item->room->room_name;
-        $item['room'] = $room;
-        $model = $item->model;
-        $items = Item::where('model','=', $model)->get();
-        return view('pages.admin.viewItemDetails')->with('items', $items);
+    {
+        //admin
+        if (Auth::user()->account_type == 'admin') {
+            $item = Item::find($id);
+            $rooms = Room::all();
+            $room = $item->room->room_name;
+            $item['room'] = $room;
+            $model = $item->model;
+            $items = Item::where('model', '=', $model)->get();
+            $itemCategories = ItemCategory::all();
+            return view('pages.admin.viewItemDetails')->with(compact('items', 'rooms', 'itemCategories'));
+        } else {
+            $item = Item::find($id);
+            $user_dept_id = Auth::user()->department_id;
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $room = $item->room->room_name;
+            $item['room'] = $room;
+            $model = $item->model;
+            $items = Item::where('model', '=', $model)->get();
+            $itemCategories = ItemCategory::all();
+            return view('pages.admin.viewItemDetails')->with(compact('items', 'rooms', 'itemCategories'));
+        }
     }
 
     public function getItemDetails($id)
@@ -53,7 +69,7 @@ class ItemsController extends Controller
     }
 
     public function editItemPage($id)
-    {
+    {   
         if (Auth::user()->account_type == 'admin') {
             $item = Item::find($id);
             $rooms = Room::all();
@@ -75,16 +91,23 @@ class ItemsController extends Controller
         $item->model = $request->model;
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
+        $item->item_category = $request->item_category;
         $item->description = $request->description;
         $item->aquisition_date = $request->aquisition_date;
-        // $item->unit_number = $request->unit_number;
         $item->quantity = $request->quantity;
         $item->status = $request->status;
         $item->inventory_tag = $request->inventory_tag;
-        $item->update();
+        $item->save();
 
-        Session::flash('success', 'Item ' . $id . ' has been updated.');
-        return redirect('list-of-items');
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Changes saved successfully',
+            ]);
+        } else {
+            Session::flash('success', 'Changes saved successfully.');
+            return redirect('list-of-items');
+        }
     }
 
     public function deleteItem($id)

@@ -63,12 +63,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::post('saving-new-item', [ItemsController::class, 'saveNewItem'])->name('save_new_item');
     Route::get('get-item-{id}-details', [ItemsController::class, 'getItemDetails'])->name('get_item_details');
     Route::get('edit-item-{id}', [ItemsController::class, 'editItemPage'])->name('edit_item_details');
-
-    // Route::get('/edit-item-{id}', function () {
-    //     return view('pages.admin.editItem');
-    // })->name('edit_item_details');
-
-    Route::put('updating-item-{id}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
+    Route::put('updating-item-{id}-details', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
     Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
     Route::get('/get-brand', [ItemsController::class, 'getBrand']);
     Route::get('/get-model', [ItemsController::class, 'getModel']);
