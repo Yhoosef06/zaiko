@@ -146,22 +146,40 @@ class ItemsController extends Controller
         $isChecked = $request->has('checkbox') && $request->input('checkbox') === '1' ? 1 : 0;
         // dd($isChecked);
         $serial_numbers = $request->serial_numbers;
-        foreach ($serial_numbers as $serial_number) {
-            Item::create([
-                'serial_number' => $serial_number,
-                'location' => $request->location,
-                'item_category' => $request->item_category,
-                'brand' => $request->brand,
-                'model' => $request->model,
-                'description' => $request->item_description,
-                'aquisition_date' => $request->aquisition_date,
-                // 'unit_number' => $request->unit_number,
-                'inventory_tag' => $request->inventory_tag,
-                'quantity' => $request->quantity,
-                'status' => $request->status,
-                'borrowed' => 'no',
-                'same_serial_numbers' => $isChecked,
-            ]);
+        if (count($serial_numbers) > 1) {
+            foreach ($serial_numbers as $serial_number) {
+                Item::create([
+                    'serial_number' => $serial_number,
+                    'location' => $request->location,
+                    'item_category' => $request->item_category,
+                    'brand' => $request->brand,
+                    'model' => $request->model,
+                    'description' => $request->item_description,
+                    'aquisition_date' => $request->aquisition_date,
+                    'inventory_tag' => $request->inventory_tag,
+                    'quantity' => 1,
+                    'status' => $request->status,
+                    'borrowed' => 'no',
+                    'same_serial_numbers' => $isChecked,
+                ]);
+            }            
+        } else {
+            foreach ($serial_numbers as $serial_number) {
+                Item::create([
+                    'serial_number' => $serial_number,
+                    'location' => $request->location,
+                    'item_category' => $request->item_category,
+                    'brand' => $request->brand,
+                    'model' => $request->model,
+                    'description' => $request->item_description,
+                    'aquisition_date' => $request->aquisition_date,
+                    'inventory_tag' => $request->inventory_tag,
+                    'quantity' => $request->quantity,
+                    'status' => $request->status,
+                    'borrowed' => 'no',
+                    'same_serial_numbers' => $isChecked,
+                ]);
+            }
         }
 
         Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
