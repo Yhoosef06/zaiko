@@ -16,11 +16,13 @@ use Illuminate\Support\Facades\View;
 
 class StudentController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('pages.students.home');
     }
 
-    public function items(){
+    public function items()
+    {
 
         $categories = ItemCategory::all();
         $user_dept_id = Auth::user()->department_id;
@@ -30,11 +32,11 @@ class StudentController extends Controller
         $departments = Department::with('college')->get();
         // $rooms = Room::with('departments')->get();
         // $items = Item::with('room')->get();
-       
+
         // $departments->each(function ($department) {
         //     $department->college_name = $department->college->college_name;
         // });
-        
+
         // foreach($items as $item){
         //     foreach($rooms as $room){
         //         foreach($departments as $department){
@@ -47,13 +49,13 @@ class StudentController extends Controller
         // }   
 
         $collegeId = null;
-        foreach( $departments as $department) {
-            if ($department->id == $user_dept_id){ 
+        foreach ($departments as $department) {
+            if ($department->id == $user_dept_id) {
                 $collegeId =  $department->college->id;
                 break;
             }
         }
-        if($collegeId != null){
+        if ($collegeId != null) {
             $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
                 $query->where('id', $collegeId);
             })->get();
@@ -67,7 +69,8 @@ class StudentController extends Controller
     }
 
 
-    public function borrow(){
+    public function borrow()
+    {
         return view('pages.students.borrowitems');
     }
 
@@ -77,11 +80,13 @@ class StudentController extends Controller
         return view('pages.students.viewItem')->with('item', $item);
     }
 
-    public function agreement(){
+    public function agreement()
+    {
         return view('pages.students.agreement');
     }
 
-    public function agreement_approve($id){
+    public function agreement_approve($id)
+    {
         $user = User::find($id);
 
         $user->agreement = true;
@@ -93,17 +98,16 @@ class StudentController extends Controller
 
         // public function pendingItem($serial_number){
         //     $affectedRows = Order::where('serial_number','=',$serial_number)->update(['order_status' => 'borrowed']);
-           
-           
+
+
         //     Session::flash('success', 'Borrow has been Approved.');
-        
+
         //     return redirect('pending');
         // }
     }
 
-    public function borrowList(){
+    public function borrowList()
+    {
         echo 'test';
-
     }
-
 }
