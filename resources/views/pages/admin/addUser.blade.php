@@ -62,31 +62,25 @@
                             <option value="approved">Approved</option>
                             <option value="pending">Pending</option>
                         </select>
-
-
                     </div>
 
                     <div class="col">
                         <label for="Item name">College Department:</label>
-                        <select id="department_id" name="department_id"
-                            class="form-control col-sm-8 @error('department_id') border-danger @enderror">
-                            <option value="option_select" disabled selected>Select College Department</option>
-                            @foreach ($colleges as $college)
-                                <optgroup label="{{ $college->college_name }}">
-                                    @foreach ($college->departments as $department)
-                                        @if (old('department_id') == $department->id)
-                                            <option value="{{ old('department_id') }}" selected>
-                                                {{ $department->department_name }}
-                                            </option>
-                                        @else
-                                            <option value="{{ $department->id }}">{{ $department->department_name }}
-                                            </option>
-                                        @endif
+                        @if (isset($departments))
+                        <select id="department_id" name="department_id" class="form-control col-sm-8 @error('department_id') border-danger @enderror">
+                            <option value="" disabled selected>Select College Department</option>
+                            @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                <optgroup label="{{ $collegeName }}">
+                                    @foreach ($departmentsGroup as $department)
+                                        <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                                            {{ $department->department_name }}
+                                        </option>
                                     @endforeach
                                 </optgroup>
                             @endforeach
-
                         </select>
+                        @endif
+
                         @error('department_id')
                             <div class="text-danger">
                                 {{ $message }}

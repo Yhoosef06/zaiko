@@ -38,7 +38,10 @@ class PagesController extends Controller
         if (Auth::user()->account_type == 'admin') {
             $rooms = Room::all();
             $itemCategories = ItemCategory::all();
-            $departments = Department::all();
+            $departments = Department::with('college')->get();
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
             $colleges = College::with('departments')->orderBy('college_name')->get();
             return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories', 'departments', 'colleges'));
         } else {

@@ -32,45 +32,66 @@
                                         <th>Model</th>
                                         <th>Category</th>
                                         <th>Description</th>
-                                        <th>Serial #</th>
-                                        <th>Status</th>
-                                        <th>Room</th>
+                                        <th>Quantity</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($items as $item)
-                                        <tr>
-                                            <td>{{ $item->id }}</td>
-                                            <td>{{ $item->brand }}</td>
-                                            <td>{{ $item->model }}</td>
-                                            <td>{{ $item->item_category }}</td>
-                                            <td>{{ Str::limit($item->description, 20, '...') }}</td>
-                                            <td>{{ $item->serial_number }}</td>
-                                            <td>{{ $item->status }}</td>
-                                            <td>{{ $item->room->room_name }}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-item-details"
-                                                    onclick="openItemModal('{{ $item->id }}')">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
+                                    @foreach ($items as $brand => $brandItems)
+                                        @foreach ($brandItems as $model => $modelItems)
+                                            @foreach ($modelItems as $description => $categoryItems)
+                                                <tr>
+                                                    <td>{{ $categoryItems->first()->id }}</td>
+                                                    <td>{{ $categoryItems->first()->brand }}</td>
+                                                    <td>{{ $categoryItems->first()->model }}</td>
+                                                    <td>{{ $categoryItems->first()->item_category }}</td>
+                                                    <td>{{ Str::limit($categoryItems->first()->description, 20, '...') }}
+                                                    </td>
+                                                    @php
+                                                        $total = 0;
+                                                    @endphp
+                                                    @foreach ($categoryItems as $item)
+                                                        @php
+                                                            $total += $item->quantity;
+                                                        @endphp
+                                                    @endforeach
+                                                    @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
+                                                        <td>{{ $categoryItems->first()->quantity }}</td>
+                                                    @else
+                                                        <td>{{ $total }}</td>
+                                                    @endif
+                                                    <td>
+                                                        @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
+                                                            <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                                data-target="#modal-item-details"
+                                                                onclick="openItemModal('{{ $categoryItems->first()->id }}')">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+                                                        @else
+                                                            <a href="{{ route('view_item_details', ['id' => $categoryItems->first()->id]) }}"
+                                                                class="btn btn-sm btn-primary"
+                                                                onclick="openNewWindow(event, '{{ route('view_item_details', ['id' => $categoryItems->first()->id]) }}')">
+                                                                <i class="fa fa-eye"></i>
+                                                        @endif
 
-                                                <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_item', $item->id) }}">
-                                                    @csrf
-                                                    <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete'><i
-                                                            class="fa fa-trash"></i></button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                                        @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
+                                                            <form class="form_delete_btn" method="POST"
+                                                                action="{{ route('delete_item', $categoryItems->first()->id) }}">
+                                                                @csrf
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                    data-toggle="tooltip" title='Delete'>
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endforeach
                                     @endforeach
                                 </tbody>
                             </table>
-
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -185,7 +206,6 @@
                 $('#modal-item-details .modal-body').html(
                     '<p><strong>Item Number:</strong> ' + data.id + '</p>' +
                     '<p><strong>Serial Number:</strong> ' + data.serial_number + '</p>' +
-                    '<p><strong>Unit Number:</strong> ' + data.unit_number + '</p>' +
                     '<p><strong>Brand:</strong> ' + data.brand + '</p>' +
                     '<p><strong>Model:</strong> ' + data.model + '</p>' +
                     '<p><strong>Category:</strong> ' + data.item_category + '</p>' +
@@ -217,5 +237,10 @@
 
         // Show the modal window
         $('#modal-item-details').modal('hide');
+    }
+
+    function openNewWindow(event, url) {
+        event.preventDefault(); // Prevent the default link behavior
+        window.open(url, '_blank'); // Open the URL in a new window or tab
     }
 </script>

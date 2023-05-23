@@ -13,6 +13,7 @@ use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\ItemCategoryController;
@@ -57,16 +58,12 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
 
     // FOR ITEMS
     Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
+    Route::get('view-item-details-{id}', [ItemsController::class, 'viewItemDetails'])->name('view_item_details');
     Route::get('list-of-items-filtered', [ItemsController::class, 'searchItem'])->name('filtered_view');
     Route::post('saving-new-item', [ItemsController::class, 'saveNewItem'])->name('save_new_item');
     Route::get('get-item-{id}-details', [ItemsController::class, 'getItemDetails'])->name('get_item_details');
     Route::get('edit-item-{id}', [ItemsController::class, 'editItemPage'])->name('edit_item_details');
-
-    // Route::get('/edit-item-{id}', function () {
-    //     return view('pages.admin.editItem');
-    // })->name('edit_item_details');
-
-    Route::put('updating-item-{id}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
+    Route::put('updating-item-{id}-details', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
     Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
     Route::get('/get-brand', [ItemsController::class, 'getBrand']);
     Route::get('/get-model', [ItemsController::class, 'getModel']);
@@ -114,6 +111,10 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
     Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
     Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
+
+    //storing references
+    Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
+    Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
 
     //reports
     Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');

@@ -32,7 +32,7 @@
                     <select id="item_category" name="item_category"
                         class="form-control col-5 @error('item_category')
                 border-danger @enderror">
-                        <option value="{{ $item->item_category }}" disabled selected>{{ $item->item_category }}</option>
+                        <option value="{{ $item->item_category }}" selected>{{ $item->item_category }}</option>
                         @foreach ($itemCategories as $category)
                             <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
                         @endforeach
@@ -49,12 +49,12 @@
                     <label for="aquisition date">Aquisition Date:</label>
                     <input type="date" id="aquisition_date" name="aquisition_date" class="form-control col-sm-4"
                         value="{{ $item->aquisition_date }}">
-
+{{-- 
                     <label for="unit number">Unit Number:</label>
                     <input type="text" id="unit_number" name="unit_number"
                         class="form-control col-sm-4 @error('unit_number')
                     border-danger @enderror"
-                        value="{{ $item->unit_number }}" placeholder="Unit Number">
+                        value="{{ $item->unit_number }}" placeholder="Unit Number"> --}}
                 </div>
 
                 <div class="col">
@@ -76,6 +76,7 @@
                         <option value="Active">Active</option>
                         <option value="For Repair">For Repair</option>
                         <option value="Obsolete">Obsolete</option>
+                        <option value="Lost">Lost</option>
                     </select>
 
                     <label for="borrowed or not">Inventory Tag:</label>
@@ -103,7 +104,7 @@
 
                     <hr>
                     <a href="{{ route('view_items') }}" class="btn btn-outline-dark" data-dismiss="modal">Back</a>
-                    <Button type="submit" class="btn btn-success">Save Changes</Button>
+                    <Button type="submit" class="btn btn-success" onclick="return confirm('Do you wish to continue updating this item?')">Save Changes</Button>
                 </div>
             </div>
         </form>

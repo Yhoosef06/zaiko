@@ -24,12 +24,12 @@ class UserController extends Controller
         if (Auth::user()->account_type == 'admin') {
             $users = User::all();
             $departments = Department::all();
-            return view('pages.admin.listOfUsers')->with(compact('users','departments'));
+            return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
         } else {
             $user_dept_id = Auth::user()->department_id;
             $users = User::where('department_id', $user_dept_id)->orderBy('id_number', 'DESC')->get();
             $departments = Department::all();
-            return view('pages.admin.listOfUsers')->with(compact('users','departments'));   
+            return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
         }
     }
 
@@ -60,9 +60,13 @@ class UserController extends Controller
 
     public function addUser()
     {
-        $departments = Department::all();
-        $colleges = College::all();
-        return view('pages.admin.addUser')->with(compact('departments','colleges'));
+        $departments = Department::with('college')->get();
+
+        $departments->each(function ($department) {
+            $department->college_name = $department->college->college_name;
+        });
+        
+        return view('pages.admin.addUser')->with(compact('departments'));
     }
 
     public function saveNewUser(Request $request)

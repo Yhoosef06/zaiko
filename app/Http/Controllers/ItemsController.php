@@ -7,11 +7,12 @@ use App\Models\Room;
 use App\Models\Brand;
 use App\Models\Order;
 use App\Models\College;
+use App\Models\Department;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
-use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -22,14 +23,39 @@ class ItemsController extends Controller
     {
         //admin
         if (Auth::user()->account_type == 'admin') {
-            $items = Item::all();
-
+            $items = Item::all()->groupBy(['brand', 'model', 'item_category']);
+            // dd($items);
             return view('pages.admin.listOfItems')->with(compact('items'));
         } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
-            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
+            $items = Item::whereIn('location', $rooms->pluck('id'))->get()->groupBy(['brand', 'model', 'item_category']);
             return view('pages.admin.listOfItems')->with('items', $items);
+        }
+    }
+
+    public function viewItemDetails($id)
+    {
+        //admin
+        if (Auth::user()->account_type == 'admin') {
+            $item = Item::find($id);
+            $rooms = Room::all();
+            $room = $item->room->room_name;
+            $item['room'] = $room;
+            $model = $item->model;
+            $items = Item::where('model', '=', $model)->get();
+            $itemCategories = ItemCategory::all();
+            return view('pages.admin.viewItemDetails')->with(compact('items', 'rooms', 'itemCategories'));
+        } else {
+            $item = Item::find($id);
+            $user_dept_id = Auth::user()->department_id;
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $room = $item->room->room_name;
+            $item['room'] = $room;
+            $model = $item->model;
+            $items = Item::where('model', '=', $model)->get();
+            $itemCategories = ItemCategory::all();
+            return view('pages.admin.viewItemDetails')->with(compact('items', 'rooms', 'itemCategories'));
         }
     }
 
@@ -38,7 +64,6 @@ class ItemsController extends Controller
         $item = Item::find($id);
         $room = $item->room->room_name;
         $item['room'] = $room;
-
         return response()->json($item);
     }
 
@@ -60,22 +85,28 @@ class ItemsController extends Controller
 
     public function saveEditedItemDetails(Request $request, $id)
     {
-        dd($id);
         $item = Item::find($id);
         $item->brand = $request->brand;
         $item->model = $request->model;
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
+        $item->item_category = $request->item_category;
         $item->description = $request->description;
         $item->aquisition_date = $request->aquisition_date;
-        $item->unit_number = $request->unit_number;
         $item->quantity = $request->quantity;
         $item->status = $request->status;
         $item->inventory_tag = $request->inventory_tag;
-        $item->update();
+        $item->save();
 
-        Session::flash('success', 'Item ' . $id . ' has been updated.');
-        return redirect('list-of-items');
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Changes saved successfully',
+            ]);
+        } else {
+            Session::flash('success', 'Changes saved successfully.');
+            return redirect('list-of-items');
+        }
     }
 
     public function deleteItem($id)
@@ -88,9 +119,17 @@ class ItemsController extends Controller
 
     public function saveNewItem(Request $request)
     {
+        // dd($request->checkbox);
         $this->validate($request, [
             'location' => 'required',
-            'serial_number.*' => 'required',
+            'serial_numbers' => 'required|array|min:1',
+            'serial_numbers.*' => function ($value, $fail) use ($request) {
+                if (empty($value)) {
+                    $fail('Serial Number field cannot be empty');
+                } elseif (!$request->checkbox && count(array_keys($request->serial_numbers, $value)) > 1) {
+                    $fail('Serial Numbers cannot be repeated');
+                }
+            },
             // 'brand' => 'required',
             // 'model' => 'required',
             'item_category' => 'required',
@@ -104,6 +143,8 @@ class ItemsController extends Controller
 
         // $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
         // if ($item == 'N/A') {
+        $isChecked = $request->has('checkbox') && $request->input('checkbox') === '1' ? 1 : 0;
+        // dd($isChecked);
         $serial_numbers = $request->serial_numbers;
         foreach ($serial_numbers as $serial_number) {
             Item::create([
@@ -114,40 +155,17 @@ class ItemsController extends Controller
                 'model' => $request->model,
                 'description' => $request->item_description,
                 'aquisition_date' => $request->aquisition_date,
-                'unit_number' => $request->unit_number,
+                // 'unit_number' => $request->unit_number,
                 'inventory_tag' => $request->inventory_tag,
                 'quantity' => $request->quantity,
                 'status' => $request->status,
                 'borrowed' => 'no',
+                'same_serial_numbers' => $isChecked,
             ]);
         }
 
         Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
         return redirect('/adding-new-item');
-
-        // } elseif ($item == null) {
-
-        //     Item::create([
-        //         'serial_number' => $request->serial_number,
-        //         'location' => $request->location,
-        //         'item_category' => $request->item_category,
-        //         'brand' => $request->brand,
-        //         'model' => $request->model,
-        //         'description' => $request->item_description,
-        //         'aquisition_date' => $request->aquisition_date,
-        //         'unit_number' => $request->unit_number,
-        //         'inventory_tag' => $request->inventory_tag,
-        //         'quantity' => $request->quantity,
-        //         'status' => $request->status,
-        //         'borrowed' => 'no',
-        //     ]);
-        //     Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
-        //     return redirect('/adding-new-item');
-
-        // } else {
-        //     Session::flash('message', 'Serial number has already been registered.');
-        //     return redirect('/adding-new-item');
-        // }
     }
 
     public function generateReportPage()
@@ -227,24 +245,24 @@ class ItemsController extends Controller
                 // 'department' => 'required',
                 'prepared_by' => 'required',
                 'verified_by' => 'required',
-                'lab_oic' => 'required',
-                'it_specialist' => 'required',
-                'position_1' => 'required',
-                'position_2' => 'required',
-                'position_3' => 'required',
-                'position_4' => 'required'
+                'noted_by' => 'required',
+                'approved_by' => 'required',
+                'role_1' => 'required',
+                'role_2' => 'required',
+                'role_3' => 'required',
+                'role_4' => 'required'
             ]
         );
 
         $location = $request->location;
         $prepared_by = $request->prepared_by;
         $verified_by = $request->verified_by;
-        $lab_oic = $request->lab_oic;
-        $it_specialist = $request->it_specialist;
-        $position_1 = $request->position_1;
-        $position_2 = $request->position_2;
-        $position_3 = $request->position_3;
-        $position_4 = $request->position_4;
+        $noted_by = $request->noted_by;
+        $approved_by = $request->approved_by;
+        $role_1 = $request->role_1;
+        $role_2 = $request->role_2;
+        $role_3 = $request->role_3;
+        $role_4 = $request->role_4;
 
         $user_dept_id = Auth::user()->department_id;
         if (Auth::user()->account_status == 'admin') {
@@ -279,34 +297,36 @@ class ItemsController extends Controller
             $pdf = App::make('dompdf.wrapper');
             $pdf->loadView('pages.pdfReport', compact(
                 'items',
-                // 'purpose',
                 'location',
                 'prepared_by',
                 'verified_by',
-                'lab_oic',
-                'it_specialist',
+                'noted_by',
+                'approved_by',
                 'department',
                 'rooms',
-                'position_1',
-                'position_2',
-                'position_3',
-                'position_4'
-            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
-            // return view('pages.pdfReport')->with(compact(
-            //     'items',
-            //     // 'purpose',
-            //     'location',
-            //     'prepared_by',
-            //     'verified_by',
-            //     'lab_oic',
-            //     'it_specialist',
-            //     'department',
-            //     'rooms'
-            // ));
-            foreach ($rooms as $room) {
-                if ($room->id == $location)
-                    return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
-            }
+                'role_1',
+                'role_2',
+                'role_3',
+                'role_4'
+            ))->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
+            return view('pages.pdfReport')->with(compact(
+                'items',
+                'location',
+                'prepared_by',
+                'verified_by',
+                'noted_by',
+                'approved_by',
+                'department',
+                'rooms',
+                'role_1',
+                'role_2',
+                'role_3',
+                'role_4'
+            ));
+            // foreach ($rooms as $room) {
+            //     if ($room->id == $location)
+            //         return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
+            // }
         }
     }
 
@@ -326,7 +346,10 @@ class ItemsController extends Controller
 
     public function getBrand()
     {
-        $brands = Item::distinct()->pluck('brand')->toArray();
+        $brands  = Item::distinct()->pluck('brand')->reject(function ($brand) {
+            return $brand === null;
+        })->toArray();
+
         return response()->json($brands);
     }
 
@@ -341,7 +364,7 @@ class ItemsController extends Controller
 
     public function getUnitNumber()
     {
-        $unit_numbers = Item::distinct()->pluck('unit_number')->reject(function ($unit_number ) {
+        $unit_numbers = Item::distinct()->pluck('unit_number')->reject(function ($unit_number) {
             return $unit_number === null;
         })->toArray();
 
