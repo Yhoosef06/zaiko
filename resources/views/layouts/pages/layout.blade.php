@@ -199,6 +199,15 @@
 
 <script type="text/javascript">
 
+   $(document).ready(function() {
+    $(document).on('click', '#btn-return', function() {
+      var dataId = $(this).attr("data-id");
+      var dataSerial = $(this).attr("data-serial");
+      $("#idreturn").val(dataId);
+      $("#serialreturn").val(dataSerial);
+    });
+  });
+  
 $(document).ready(function() {
     $("#idNumber").autocomplete({
         minLength: 2,

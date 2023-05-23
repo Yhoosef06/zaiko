@@ -37,9 +37,10 @@
                 <table id="pending" class="table table-bordered table-striped">
                   <thead>
                   <tr>
+                  <th class="d-none">ID</th>
                     <th>Serial #</th>
                     <th>Name</th>
-                    <th>Item Name</th>
+                    <th>Brand</th>
                     <th>Item Description</th>
                     <th>Actions</th>
 
@@ -52,11 +53,10 @@
                           <td class="d-none">{{ $pending->id }}</td>
                           <td>{{ $pending->serial_number }}</td>
                           <td>{{ $pending->first_name }} {{ $pending->last_name }}</td>
-                          <td>{{ $pending->item_name }}</td>
+                          <td>{{ $pending->brand }}</td>
                           <td>{{ Str::limit($pending->item_description, 20, '...') }}</td>
                       
                           <td>
-
                             <a href="{{ route('remove_borrow', $pending->id) }}" class="btn btn-sm btn-danger" title="Disregard">
                                     <i class="fa fa-trash"></i></a>
 

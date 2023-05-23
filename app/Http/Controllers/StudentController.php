@@ -55,7 +55,7 @@ class StudentController extends Controller
                 break;
             }
         }
-        if ($collegeId != null) {
+        if($collegeId != null){
             $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
                 $query->where('id', $collegeId);
             })->get();
