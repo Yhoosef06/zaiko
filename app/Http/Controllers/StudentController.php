@@ -24,7 +24,7 @@ class StudentController extends Controller
 
         $categories = ItemCategory::all();
         $user_dept_id = Auth::user()->department_id;
-        // $rooms = Room::where('department_id', $user_dept_id)->get();
+        // $rooms = Room::where('department_id', $user_dept_id)->get();x    x   
         $items = Item::all();
 
         $departments = Department::with('college')->get();
@@ -54,11 +54,11 @@ class StudentController extends Controller
             }
         }
         if($collegeId != null){
-            $items = Item::whereHas('room.departments.college', function ($query) use ($collegeId) {
+            $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
                 $query->where('id', $collegeId);
             })->get();
         }
-        $items = Item::whereHas('room.departments.college', function ($query) use ($collegeId) {
+        $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
             $query->where('id', $collegeId);
         })->get();
 
@@ -69,7 +69,7 @@ class StudentController extends Controller
         $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
             $items = Item::whereIn('location', $rooms->pluck('id'))->get();
-            return view('pages.students.browse-items')->with(compact('items','categories'));
+            return view('pages.students.items')->with(compact('items','categories'));
     }
 
 
