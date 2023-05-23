@@ -111,6 +111,9 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
     Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
     Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
+    Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
+    Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
+    Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
 
     //storing references
     Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');

@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Zaiko</title>
     <style>
@@ -10,32 +11,20 @@
             display: inline-block !important;
         }
 
-        /* .form_control_approved{
-        display: inline-block !important;
-        width: 20px;
-        height: calc(2.25rem + 2px);
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        box-shadow: inset 0 0 0 transparent;
-        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    } */
+    
+        /* .ui-autocomplete-loading {
+            background: white url('/images/loading.gif') right center no-repeat;
+        } */
+ 
     </style>
 
 
-
-    <!-- Google Font: Source Sans Pro -->
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="plugins/jquery-ui/jquery-ui.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -98,11 +87,18 @@
         });
     @endif
 </script> -->
+<!-- Include jQuery library -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<!-- Include jQuery UI library -->
+<!-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script> -->
+<!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css"> -->
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
 <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
     $.widget.bridge('uibutton', $.ui.button)
@@ -110,21 +106,21 @@
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables  & Plugins -->
-<script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="plugins/datatables/jquery.dataTables.min.js" defer></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js" defer></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js" defer></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js" defer></script>
+<script src="plugins/datatables-buttons/js/dataTables.buttons.min.js" defer></script>
+<script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js" defer></script>
 <script src="plugins/jszip/jszip.min.js"></script>
 <script src="plugins/pdfmake/pdfmake.min.js"></script>
 <script src="plugins/pdfmake/vfs_fonts.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="plugins/datatables-buttons/js/buttons.html5.min.js" defer></script>
+<script src="plugins/datatables-buttons/js/buttons.print.min.js" defer></script>
+<script src="plugins/datatables-buttons/js/buttons.colVis.min.js" defer></script>
 <!-- ChartJS -->
 <script src="plugins/chart.js/Chart.min.js"></script>
-<!-- Sparkline -->
+<!-- sline -->
 <script src="plugins/sparklines/sparkline.js"></script>
 <!-- JQVMap -->
 <script src="plugins/jqvmap/jquery.vmap.min.js"></script>
@@ -156,7 +152,15 @@
 
 
 <script>
-    $(function() {
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+
+
+
+
+ $(function () {
+
+
         $("#borrowed").DataTable({
             "responsive": true,
             "lengthChange": false,
@@ -194,6 +198,108 @@
 
 
 <script type="text/javascript">
+
+$(document).ready(function() {
+    $("#idNumber").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchUser') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_id_container",
+        open: function(event, ui) {
+            $("#user_id_container .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = { value: "", label: "No matching ID numbers found" };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                $('#profile').show();
+                $('.item-category').show();
+                $('#first_name').val(ui.item.firstName);
+                $('#last_name').val(ui.item.lastName);
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.label + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value +" "+ item.lastName +"," +" "+ item.firstName +  "</div>").appendTo(ul);
+        }
+    };
+
+});
+
+
+$(document).ready(function() {
+    $("#serial_number").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchItem') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_id_container",
+        open: function(event, ui) {
+            $("#item-serial .ui-autocomplete").css("top", "auto");r
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = { value: "", brand: "No matching Serial Numbers found" };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                $('#brand').val(ui.item.brand);
+                $('#model').val(ui.item.model);
+                $('#item_description').val(ui.item.description);
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value +" - "+ item.brand  +" - "+ item.model +  "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+
+
     $(document).ready(function() {
         $('.show-alert-delete-user').click(function(event) {
             var form = $(this).closest("form");

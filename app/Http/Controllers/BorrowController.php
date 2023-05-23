@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Order;
+use App\Models\User;
+use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -52,15 +54,15 @@ class BorrowController extends Controller
 
 
     public function borrowed(){
-        $borrows = ORDER::where('order_status', '=', 'borrowed')->get();
+        $borrows = Order::where('order_status', '=', 'borrowed')->get();
 
         return view('pages.admin.borrowed')->with(compact('borrows'));
     }
 
     public function pending(){
-        $pendings = ORDER::where('order_status', '=', 'pending')->get();
-
-        return view('pages.admin.pending')->with(compact('pendings'));
+        $pendings = Order::where('order_status', '=', 'pending')->get();
+        $items = ItemCategory::all();
+        return view('pages.admin.pending')->with(compact('pendings','items'));
     }
 
     public function returned(){
@@ -111,5 +113,85 @@ class BorrowController extends Controller
         Session::flash('success', 'Successfuly Remove Borrowed Item.');
         return redirect('pending');
     }
+
+    public function searchUser(Request $request)
+    {
+        $query = $request->input('query');
+    
+        $users = User::where('id_number', 'LIKE', $query . '%')->take(10)->get();
+
+        $response = $users->map(function ($user) {
+            return [
+                'value' => $user->id_number, // User ID
+                'label' => $user->id_number, // User display name
+                'firstName' => $user->first_name, // User first name
+                'lastName' => $user->last_name // User last name
+            ];
+        });
+        return response()->json($response);
+    }
+
+    public function searchItem(Request $request)
+    {
+        $query = $request->input('query');
+    
+        $items = Item::where('borrowed', '=', 'no')->where('serial_number', 'LIKE', $query . '%')->take(10)->get();
+
+        $response = $items->map(function ($item) {
+            return [
+                'value' => $item->serial_number, // User ID
+                'brand' => $item->brand, // User display name
+                'model' => $item->model, // User first name
+                'description' => $item->description // User last name
+            ];
+        });
+        return response()->json($response);
+    }
+
+    public function addOrder(Request $request)
+    {
+
+        $id_number = $request->idNumber;
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
+        $item_category = $request->item_category;
+        $serial_number = $request->serial_number;
+        $brand = $request->brand;
+        $model = $request->model;
+        $item_description = $request->item_description;
+        $quantity = $request->quantity;
+        $return_date = $request->return_date;
+
+        $user = auth()->user();
+        if($user){
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
+
+            Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'yes']);
+            $order = Order::create([
+                'id_number' => $id_number,
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'category' => $item_category,
+                'serial_number' => $serial_number,
+                'brand' => $brand,
+                'model' => $model,
+                'item_description' => $item_description,
+                'quantity' => $quantity,
+                'return_date' => $return_date,
+                'order_status' => 'borrowed',
+                'release_by' => $lastName .', '. $firstName
+
+                
+            ]);
+            Session::flash('success', 'Successfuly Added Borrowed Item.');
+            return redirect('pending');
+
+        }
+
+     
+       
+    }
+
 
 }
