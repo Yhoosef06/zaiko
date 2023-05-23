@@ -39,21 +39,21 @@
                                             <td>{{ $department->id }}</td>
                                             <td>{{ $department->department_name }}</td>
                                             <td>{{ $department->college->college_name }}</td>
-                                    <td>
-                                        {{-- <a href="{{ route('view_item_details', $item->id) }}"
+                                            <td>
+                                                {{-- <a href="{{ route('view_item_details', $item->id) }}"
                                                     class="btn btn-sm btn-primary" class="btn btn-default"
                                                     data-toggle="modal" data-target="#modal-sm"
                                                     onclick="openItemModal('{{ $item->id }}')">>
                                                     <i class="fa fa-eye"></i></a> --}}
-                                        {{-- {{ $item->id }} --}}
+                                                {{-- {{ $item->id }} --}}
 
-                                        {{-- <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                {{-- <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
                                                     onclick="openItemModal('{{ $department->id }}')">
                                                     <i class="fa fa-eye"></i>
                                                 </button> --}}
 
-                                        <form class="form_delete_btn" method="POST"
+                                                <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_item', $department->id) }}">
                                                     @csrf
                                                     <!-- <input name="_method" type="hidden" value="DELETE">  -->
@@ -62,11 +62,10 @@
                                                         data-toggle="tooltip" title='Delete'><i
                                                             class="fa fa-trash"></i></button>
                                                 </form>
-                                    </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                         <!-- /.card-body -->
