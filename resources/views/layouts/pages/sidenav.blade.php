@@ -54,7 +54,7 @@
                     <li class="nav-item">
                         <a href="{{ route('borrow_list') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
-                            <p>Borrowing List</p>
+                            <p>History</p>
                         </a>
                     </li>
                         {{-- <ul class="nav nav-treeview ml-4">
