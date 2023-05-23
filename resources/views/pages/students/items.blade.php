@@ -8,11 +8,6 @@
                 <div class="col-sm-6">
                     <h1 class="m-0">Borrowing</h1>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Items available to borrow</li>
-                    </ol>
-                </div>
             </div>
         </div>
     </div>
@@ -23,10 +18,12 @@
 <section class="content">
     <div id="categoryContainer">
         <div class="col-3">
-            <select class="form-select form-select-lg mb-3" aria-label="Default select example">
+            <select class="form-select form-select-lg mb-3" aria-label="Default select example" name="selectedCategory">
                 <option selected>Choose a Category</option>
                 @foreach($categories as $category)
-                <option value="category{{$category->id}}">{{$category->category_name}}</option>
+                <option value="category{{$category->id}}" {{ old('selectedCategory', session('selectedCategory')) === "category".$category->id ? 'selected' : '' }}>
+                    {{$category->category_name}}
+                </option>
                 @endforeach
             </select>
         </div>
@@ -110,20 +107,40 @@
     </div>
 
 
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script>
-                $(document).ready(function() {
-                    // Hide all category content initially
-                    $('.tab-pane').hide();
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+    // Hide all category content initially
+    $('.tab-pane').hide();
 
-                    // Show the selected category content when the dropdown changes
-                    $('select.form-select').change(function() {
-                    var selectedCategory = $(this).val();
-                    $('.tab-pane').hide();
-                    $('#' + selectedCategory).show();
-                    });
-                });
-            </script>
+    // Show the selected category content when the dropdown changes
+    $('select.form-select').change(function() {
+        var selectedCategory = $(this).val();
+        $('.tab-pane').hide();
+        $('#' + selectedCategory).show();
+
+        // Store the selected option value in the session
+        $.ajax({
+            url: '{{ route("storeSelectedCategory") }}',
+            type: 'POST',
+            data: {
+                selectedCategory: selectedCategory,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Session value stored successfully
+            }
+        });
+    });
+
+    // Fetch the selected category from the session and show its corresponding items
+    var selectedCategory = '{{ session("selectedCategory") }}';
+    if (selectedCategory !== '') {
+        $('select.form-select').val(selectedCategory);
+        $('#' + selectedCategory).show();
+    }
+});
+    </script>
 
 
 

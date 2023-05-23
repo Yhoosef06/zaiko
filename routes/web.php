@@ -157,6 +157,8 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             Route::get('agreement-approve/{id}', [StudentController::class, 'agreement_approve'])->name('agreement.approve');
             Route::get('/test',[PagesController::class,'test'])->name('test');
 
+            Route::post('/store-selected-category', 'App\Http\Controllers\CategoryController@storeSelectedCategory')->name('storeSelectedCategory');
+
             // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
             // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
             // Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
