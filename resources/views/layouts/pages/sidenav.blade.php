@@ -19,7 +19,7 @@
                     <a href="#" class="d-block">{{Auth::user()->first_name}}  {{Auth::user()->last_name}}</a>
                 @endauth --}}
         {{-- </div>
-        </div> --}}
+        </div> --}} 
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
@@ -61,19 +61,19 @@
                             <li class="nav-item">
                                 <a href="{{ route('student.items') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Items List</p>
+                                    <p>Browse Items</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('cart.list') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Cart</p>
+                                    <p>View Cart</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('borrow_list') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Borrowing List</p>
+                                    <p>Checked Out Items</p>
                                 </a>
                             </li>
                         </ul> --}}

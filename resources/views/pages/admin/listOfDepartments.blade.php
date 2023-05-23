@@ -38,11 +38,7 @@
                                         <tr>
                                             <td>{{ $department->id }}</td>
                                             <td>{{ $department->department_name }}</td>
-                                            @foreach ($colleges as $college)
-                                                @if ($college->id == $department->college_id)
-                                                    <td>{{ $college->college_name }}</td>
-                                                @endif
-                                            @endforeach
+                                            <td>{{ $department->college->college_name }}</td>
                                             <td>
                                                 {{-- <a href="{{ route('view_item_details', $item->id) }}"
                                                     class="btn btn-sm btn-primary" class="btn btn-default"
@@ -70,7 +66,6 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                         <!-- /.card-body -->
@@ -104,4 +99,4 @@
             </div>
         </div>
     </div> --}}
-@endsection 
+@endsection

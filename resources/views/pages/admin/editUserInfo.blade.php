@@ -93,7 +93,7 @@
                         href="{{ route('change_user_password', $user->id_number) }}">Change Password</a>
                     <hr>
                     <a href="{{ route('view_users') }}" class="btn btn-outline-dark">Back</a>
-                    <Button type="submit" class="btn btn-success">Save Changes</Button>
+                    <Button type="submit" class="btn btn-success" onclick="return confirm('Do you wish to continue updating this user?')">Save Changes</Button>
                 </div>
 
             </div>

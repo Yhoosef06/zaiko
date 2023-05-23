@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\User;
@@ -10,9 +11,8 @@ use App\Models\Department;
 use App\Models\College;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\View;
 
 class StudentController extends Controller
 {
@@ -64,7 +64,12 @@ class StudentController extends Controller
 
         // dd($items);
 
-        return view('pages.students.items',compact('categories','items'));     
+        $categories = ItemCategory::all();
+        
+        $user_dept_id = Auth::user()->department_id;
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
+            return view('pages.students.browse-items')->with(compact('items','categories'));
     }
 
 

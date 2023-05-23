@@ -24,7 +24,7 @@ class Department extends Model
 
     public function rooms(): HasMany
     {
-        return $this->hasMany(Rooms::class);
+        return $this->hasMany(Room::class);
     }
 
     public function users(): HasMany
