@@ -20,6 +20,7 @@ class CreateCartsTable extends Migration
             $table->string('brand');
             $table->string('model');
             $table->string('item_description');
+            $table->integer('quantity');
             $table->string('ordered');
             $table->timestamps();
         });

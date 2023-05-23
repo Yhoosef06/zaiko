@@ -72,6 +72,15 @@ class UserSeeder extends Seeder
                 'account_type' => 'student',
                 'department_id' => '6'
             ],
+            [
+                'id_number' => 1111,
+                'first_name' => 'Francis Louie',
+                'last_name' => 'Alolor',
+                'password' => Hash::make('usjrscs-123'),
+                'account_status' => 'approved',
+                'account_type' => 'student',
+                'department_id' => '19'
+            ]
         ];
         DB::table('users')->insert($user); 
     }

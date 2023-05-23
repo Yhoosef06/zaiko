@@ -56,7 +56,8 @@
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Borrowing List</p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                    </li>
+                        {{-- <ul class="nav nav-treeview ml-4">
                             <li class="nav-item">
                                 <a href="{{ route('student.items') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -75,8 +76,7 @@
                                     <p>Borrowing List</p>
                                 </a>
                             </li>
-                        </ul>
-                    </li>
+                        </ul> --}}
                 @elseif(Auth::user()->account_type == 'admin')
                     <li class="nav-item">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">

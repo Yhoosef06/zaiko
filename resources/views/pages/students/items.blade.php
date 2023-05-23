@@ -20,84 +20,94 @@
 
 @section('content')
 
-        <section class="content">
-
-            <div id="categoryContainer">
-                <div class="col-2">
-                    <select class="form-select form-select-lg mb-3" aria-label="Default select example">
-                        <option selected>Choose a Category</option>
-                        @foreach($categories as $category)
-                        <option value="category{{$category->id}}">{{$category->category_name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            
-                <div class="mt-20 ml-2">
-                    @foreach($categories as $category)
-                    <div class="tab-pane" id="category{{$category->id}}">
-                        <div class="row">
-                            @php 
-                            $catItem = $items->where('category_id',$category->id)->sortByDesc('id');
-                            @endphp
-                            @foreach($catItem as $item)
-                            <div class="col-lg-2 col-6">
-                                <div class="small-box bg-info bg-gradient">
-                                    <div class="inner">
-                                        <h3>{{$item->brand}}</h3>
-            
-                                        <p>{{Str::limit($item->model, 30, '...')}}</p>
-                                    </div>
-                                    <div class="small-box-footer d-grid gap-2">
-                                        <button type="button" class="btn btn-link text-dark" data-toggle="modal"
-                                            data-target="#itemModal{{$item->id}}">
-                                            More info <i class="fas fa-arrow-circle-right"></i>
-                                        </button>
-                                    </div>
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="itemModal{{$item->id}}" tabindex="-1" role="dialog"
-                                        aria-labelledby="itemModal{{$item->id}}Label" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header text-dark">
-                                                    <h5 class="modal-title" id="itemModal{{$item->id}}Label">{{$category->category_name}}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+<section class="content">
+    <div id="categoryContainer">
+        <div class="col-3">
+            <select class="form-select form-select-lg mb-3" aria-label="Default select example">
+                <option selected>Choose a Category</option>
+                @foreach($categories as $category)
+                <option value="category{{$category->id}}">{{$category->category_name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="mt-20 ml-2">
+            @foreach($categories as $category)
+            <div class="tab-pane" id="category{{$category->id}}">
+                <div class="row">
+                    @php 
+                    $catItem = $items->where('category_id',$category->id)->sortByDesc('id');
+                    $groupedItems = $catItem->groupBy(function ($item) {
+                        return $item->brand . '_' . $item->model;
+                    });
+                    @endphp
+                    @foreach($groupedItems as $groupedItem)
+                    @php
+                    $item = $groupedItem->first();
+                    $quantity = $groupedItem->count();
+                    @endphp
+                    <div class="col-lg-2 col-6">
+                        <div class="small-box bg-info bg-gradient">
+                            <div class="inner">
+                                <h3>{{$item->brand}}</h3>
+                                <p>{{Str::limit($item->model, 30, '...')}}</p>
+                            </div>
+                            <div class="small-box-footer d-grid gap-2">
+                                <button type="button" class="btn btn-link text-dark" data-toggle="modal"
+                                    data-target="#itemModal{{$item->id}}">
+                                    More info <i class="fas fa-arrow-circle-right"></i>
+                                </button>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="itemModal{{$item->id}}" tabindex="-1" role="dialog"
+                                aria-labelledby="itemModal{{$item->id}}Label" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header text-dark">
+                                            <h5 class="modal-title" id="itemModal{{$item->id}}Label">{{$category->category_name}}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body text-dark">
+                                            <div class="row text-lg">
+                                                <div class="col">
+                                                    <strong>Brand:</strong> {{ $item->brand }} <br>
+                                                    <strong>Model:</strong> {{ $item->model }} <br>
+                                                    <strong>Available:</strong> {{$quantity}} <br>
                                                 </div>
-                                                <div class="modal-body text-dark">
-                                                    <div class="row text-lg">
-                                                        <div class="col">
-                                                            <strong>Brand:</strong> {{ $item->brand }} <br>
-                                                            <strong>Model:</strong> {{ $item->model }} <br>
-                                                        </div>
-            
-                                                        <div class="col">
-                                                            <strong>Description:</strong> {{ $item->description }} <br>
-                                                            <strong>Status:</strong> {{ $item->status }}
-                                                        </div>
-                                                    </div>
-            
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form action="{{ route('add.cart',$item->id) }}" method="POST"
-                                                        onsubmit="return confirm('Are you sure you want to add this item to your cart?');">
-                                                        @csrf
-                                                        <input type="submit" class="btn btn-outline-dark" value="Add to cart">
-                                                    </form>
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <div class="col">
+                                                    <strong>Description:</strong> {{ $item->description }} <br>
+                                                    <strong>Status:</strong> {{ $item->status }}
                                                 </div>
                                             </div>
+                                            <form action="{{ route('add.cart',$item->id) }}" method="POST"
+                                                onsubmit="return confirm('Are you sure you want to add this item to your cart?');">
+                                                @csrf
+                                                <div class="form-group col-2">
+                                                    <label for="quantity">Quantity:</label>
+                                                    <select class="form-control" id="quantity" name="quantity">
+                                                        @for($i = 1; $i <= $quantity; $i++)
+                                                        <option value="{{$i}}">{{$i}}</option>
+                                                        @endfor
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <input type="submit" class="btn btn-outline-dark" value="Add to cart">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            @endforeach
                         </div>
                     </div>
                     @endforeach
                 </div>
             </div>
-
+            @endforeach
+        </div>
+    </div>
 
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -119,6 +129,7 @@
 
 
 
+@endsection
 
 
 
@@ -475,7 +486,6 @@
          
 
 
-@endsection
 
 
 {{-- <li class="nav-item">

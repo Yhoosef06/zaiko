@@ -13,8 +13,9 @@ use Symfony\Component\Console\Input\Input;
 
 class CartController extends Controller
 {
-    public function add_cart($id){
+    public function add_cart(Request $request, $id){
         
+        // dd($request);
         $user = Auth::user();
 
         // $cartcheck = Cart::where('id_number', '=', $user->id_number)->exists();
@@ -30,6 +31,7 @@ class CartController extends Controller
         $cart->brand = $item->brand;
         $cart->model = $item->model;
         $cart->item_description = $item->description; 
+        $cart->quantity = $request->quantity;
         $cart->ordered = 'no';
 
         $cart->save();
@@ -82,9 +84,10 @@ class CartController extends Controller
                     $order->brand = $data->brand;
                     $order->model = $data->model;
                     $order->item_description = $data->item_description;
+                    $order->quantity = $data->quantity;
                     $order->order_status = "pending";
                     
-                    $affectedRows = Item::where('serial_number','=',$data->serial_number)->update(['borrowed' => 'pending']);
+                    // $affectedRows = Item::where('serial_number','=',$data->serial_number)->update(['borrowed' => 'pending']);
                     
                     // dd($order);
                     

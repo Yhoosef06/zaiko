@@ -19,7 +19,7 @@ class Department extends Model
 
     public function college(): BelongsTo
     {
-        return $this->belongsTo(College::class, 'id', 'college_id');
+        return $this->belongsTo(College::class, 'college_id');
     }
 
     public function rooms(): HasMany

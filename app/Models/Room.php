@@ -25,7 +25,7 @@ class Room extends Model
 
     public function departments(): BelongsTo
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
     // public function items(): HasMany

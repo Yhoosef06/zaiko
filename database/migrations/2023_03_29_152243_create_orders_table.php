@@ -22,6 +22,7 @@ class CreateOrdersTable extends Migration
             $table->string('brand');
             $table->string('model');
             $table->string('item_description');
+            $table->integer('quantity');
             $table->string('number_of_days');
             $table->string('release_by');
             $table->string('return_to');
