@@ -26,11 +26,18 @@
                     {{-- <li class="nav-item">
                         <a href="#all" data-toggle="tab" class="nav-link">All</a>
                     </li> --}}
-                    @foreach($categories as $category)
+                    {{-- @foreach($categories as $category)
                         <li class="nav-item"> 
                             <a href="#category{{$category->id}}" class="nav-link @if($loop->first) active @endif" data-toggle="tab">{{$category->category_name}}</a>
                         </li>
-                    @endforeach
+                    @endforeach --}}
+
+                    <select class="form-select" aria-label="Default select example">
+                        @foreach($categories as $category)
+                            {{-- <option value="{{$category->id}}">{{$category->category_name}}</option> --}}
+                            <option value="{{$category->id}}">{{ $category->category_name }}</option>
+                        @endforeach
+                    </select>
                 </ul>
                 <div class="tab-content">
                     

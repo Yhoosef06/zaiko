@@ -45,7 +45,7 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview">
+                        <ul class="nav nav-treeview ml-4">
                             <li class="nav-item">
                                 <a href="{{ route('student.items') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
