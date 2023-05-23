@@ -16,14 +16,18 @@ class RoomController extends Controller
     {
         //admin
         if (Auth::user()->account_type == 'admin') {
-            $rooms = Room::all();
-            $departments = Department::all();
-            return view('pages.admin.listOfRooms')->with(compact('rooms', 'departments'));
+            $rooms = Room::with('department')->get();
+            $rooms->each(function ($room) {
+                $room->department_name = $room->department->department_name;
+            });
+            return view('pages.admin.listOfRooms')->with(compact('rooms'));
         } else {
-            $departments = Department::all();
             $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->get();
-            return view('pages.admin.listOfRooms')->with(compact('rooms', 'departments'));
+            $rooms = Room::where('department_id', $user_dept_id)->with('department')->get();
+            $rooms->each(function ($room) {
+                $room->department_name = $room->department->department_name;
+            });
+            return view('pages.admin.listOfRooms')->with(compact('rooms'));
         }
     }
 
@@ -38,21 +42,18 @@ class RoomController extends Controller
         $request->validate([
             'room_name' => 'required|regex:/[A-Z]+/|min:3',
             'department' => Auth::user()->account_type == 'admin' ? 'required|exists:departments,id' : '',
+
         ]);
 
         // Check if the room already exists
         $room_input = Room::where('room_name', $request->input('room_name'))->first();
-        // Create a new room
-        // $room = new Room;
-        // $room->room_name = $request->input('room_name');
-        // $room->department = $request->input('department');
-        // $room->save();
 
         $departmentId = Auth::user()->account_type == 'admin' ? $request->input('department') : Auth::user()->department_id;
-        
+
         if ($room_input) {
-                return response()->json(['error' => $room_input.' has already been added.'], 400);
-            }
+
+            return response()->json(['error' =>  $room_input . ' has already been added.'], 400);
+        }
 
         $room = Room::create([
             'room_name' => $request->input('room_name'),
@@ -60,7 +61,13 @@ class RoomController extends Controller
         ]);
 
         // Return a success message
-        return response()->json(['success' => $room->room_name . ' successfully Added.',], 200);
+        return response()->json([
+            'success' => $room->room_name . ' successfully added.',
+            'errors' => [
+                'department' => ['The department field is required.'],
+                'room_name' => ['The room name field is required.']
+            ]
+        ], 200);
     }
 
     // public function storeNewRoom(Request $request)
@@ -83,4 +90,8 @@ class RoomController extends Controller
     //         return view('adding-room')->with('message', 'That room was already added.');
     //     }
     // }
+
+    public function deleteRoom($id)
+    {
+    }
 }

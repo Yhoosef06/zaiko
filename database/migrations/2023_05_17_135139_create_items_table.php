@@ -16,12 +16,12 @@ class CreateItemsTable extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('location');
-            $table->foreignId('category_id');
+            $table->unsignedBigInteger('category_id');
             $table->string('brand')->nullable();
             $table->string('model')->nullable();
             $table->string('description');
             $table->integer('quantity');
-            $table->string('unit_number')->nullable();
+            $table->integer('same_serial_numbers');
             $table->date('aquisition_date')->nullable();
             $table->string('status');
             $table->string('borrowed');
@@ -30,6 +30,7 @@ class CreateItemsTable extends Migration
             $table->timestamps();
 
             $table->foreign('location')->references('id')->on('rooms');
+            $table->foreign('category_id')->references('id')->on('item_categories');
         });
     }
 

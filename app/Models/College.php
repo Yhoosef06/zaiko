@@ -20,6 +20,6 @@ class College extends Model
 
     public function departments(): HasMany
     {
-        return $this->hasMany(Department::class);
+        return $this->hasMany(Department::class, 'id');
     }
 }

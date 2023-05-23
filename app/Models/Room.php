@@ -23,13 +23,13 @@ class Room extends Model
         'department_id'
     ];
 
-    public function departments(): BelongsTo
+    public function department(): BelongsTo
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
-    // public function items(): HasMany
-    // {
-    //     return $this->hasMany(Item::class);
-    // }
+    public function items(): HasMany
+    {
+        return $this->hasMany(Item::class, 'location');
+    }
 }

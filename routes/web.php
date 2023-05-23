@@ -13,6 +13,7 @@ use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\ItemCategoryController;
@@ -57,16 +58,12 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
 
     // FOR ITEMS
     Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
+    Route::get('view-item-details-{id}', [ItemsController::class, 'viewItemDetails'])->name('view_item_details');
     Route::get('list-of-items-filtered', [ItemsController::class, 'searchItem'])->name('filtered_view');
     Route::post('saving-new-item', [ItemsController::class, 'saveNewItem'])->name('save_new_item');
     Route::get('get-item-{id}-details', [ItemsController::class, 'getItemDetails'])->name('get_item_details');
     Route::get('edit-item-{id}', [ItemsController::class, 'editItemPage'])->name('edit_item_details');
-
-    // Route::get('/edit-item-{id}', function () {
-    //     return view('pages.admin.editItem');
-    // })->name('edit_item_details');
-
-    Route::put('updating-item-{id}', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
+    Route::put('updating-item-{id}-details', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
     Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
     Route::get('/get-brand', [ItemsController::class, 'getBrand']);
     Route::get('/get-model', [ItemsController::class, 'getModel']);
@@ -118,6 +115,10 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
     Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
 
+    //storing references
+    Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
+    Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
+
     //reports
     Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
     Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
@@ -145,7 +146,7 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             });
 
             //cart
-            Route::post('/student-add-cart/{serial_number}', [CartController::class, 'add_cart'])->name('add.cart');
+            Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
             Route::get('/student-cart-list', [CartController::class, 'cart_list'])->name('cart.list');
             Route::get('/remove-cart/{serial_number}', [CartController::class, 'remove_cart'])->name('remove.cart');
             Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
@@ -153,7 +154,7 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             //agreement
             Route::get('/agreement', [StudentController::class, 'agreement'])->name('agreement');
             Route::get('agreement-approve/{id}', [StudentController::class, 'agreement_approve'])->name('agreement.approve');
-
+            Route::get('/test',[PagesController::class,'test'])->name('test');
 
             // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
             // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');

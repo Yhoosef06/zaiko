@@ -23,13 +23,12 @@ class Item extends Model
         'model',
         'description',
         'quantity',
-        'unit_number',
         'aquisition_date',
         'status',
         'borrowed',
         'inventory_tag',
         'serial_number',
-        'department_id'
+        'same_serial_numbers'
     ];
 
     public function room(): HasOne
@@ -38,6 +37,6 @@ class Item extends Model
     }
 
     public function category(){
-        return $this->belongsTo(ItemCategory::class);
+        return $this->belongsTo(ItemCategory::class, 'category_id', 'id');
     }
 }

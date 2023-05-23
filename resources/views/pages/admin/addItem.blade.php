@@ -51,7 +51,8 @@
                                 <option value="option_select" disabled selected>Select a category</option>
                                 @foreach ($itemCategories as $category)
                                     @if (old('item_category') == $category->category_name)
-                                        <option value="{{ old('item_category') }}" selected>{{ $category->category_name }}</option>
+                                        <option value="{{ old('item_category') }}" selected>{{ $category->category_name }}
+                                        </option>
                                     @else
                                         <option value="{{ $category->category_name }}">{{ $category->category_name }}
                                         </option>
@@ -112,19 +113,6 @@
                         <input type="date" id="aquisition_date" name="aquisition_date" class="form-control col-sm-4"
                             placeholder="Aquistion Date">
                     </div>
-
-                    <div class="form-group">
-                        <label for="unit number">Unit Number:</label>
-                        <input type="text" id="unit_number" name="unit_number"
-                            class="form-control col-sm-5 @error('unit_number')
-                        border-danger @enderror"
-                            value="{{ old('unit_number') }}" placeholder="Leave blank if none.">
-                        @error('unit_number')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
                 </div>
 
                 <div class="col">
@@ -149,8 +137,10 @@
                         <input type="text" id="quantity" name="quantity"
                             class="form-control col-sm-3 @error('quantity') border-danger @enderror"
                             value="{{ old('quantity') }}" placeholder="Quantity" oninput="updateSerialNumberFields()">
-                        <input type="checkbox" id="checkbox" name="checkbox" onchange="updateSerialNumberFields()" checked>
-                        <strong> Same serial numbers?</strong> <br>
+                        <input type="checkbox" id="checkbox" name="checkbox" value="1"
+                            onchange="this.value = this.checked ? '1' : '2'; updateSerialNumberFields(); console.log(this.value);"
+                            checked>
+                        <strong>Same serial numbers?</strong> <br>
 
                         @error('quantity')
                             <div class="text-danger">
@@ -183,9 +173,12 @@
                         <br>
                     </div>
 
-
-
-                    <div class="form-group" id="serial_numbers_container"></div>
+                    <div class="form-group" id="serial_numbers_container"
+                        data-error-message="{{ $errors->first('serial_numbers') }}">
+                        @error('serial_numbers')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
 
                     <hr>
 
@@ -235,17 +228,21 @@
                         @csrf
                         @if (Auth::user()->account_type == 'admin')
                             <label for="department">Department:</label>
-                            <select id="department" name="department" class="form-control">
-                                <option value="" disabled selected>Choose a department</option>
-                                @foreach ($colleges as $college)
-                                    <optgroup label="{{ $college->college_name }}">
-                                        @foreach ($college->departments as $department)
-                                            <option value="{{ $department->id }}">{{ $department->department_name }}
+                            <select id="department_id" name="department_id"
+                                class="form-control @error('department_id') border-danger @enderror">
+                                <option value="" disabled selected>Select College Department</option>
+                                @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                    <optgroup label="{{ $collegeName }}">
+                                        @foreach ($departmentsGroup as $department)
+                                            <option value="{{ $department->id }}"
+                                                {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                                                {{ $department->department_name }}
                                             </option>
                                         @endforeach
                                     </optgroup>
                                 @endforeach
                             </select>
+                            <span id="department-error" class="text-danger"></span>
                         @endif
                         <label for="room_name">Room Name:</label>
                         <input type="text" name="room_name" id="room_name" class="form-control">
@@ -448,16 +445,63 @@
         });
     });
 
+    // function updateSerialNumberFields() {
+    //     const quantityField = document.getElementById('quantity');
+    //     const container = document.getElementById('serial_numbers_container');
+    //     const checkbox = document.getElementById('checkbox');
+
+    //     // Clear the existing input fields
+    //     container.innerHTML = '';
+
+    //     // Generate the new input field(s)
+    //     const quantity = parseInt(quantityField.value) || 0;
+    //     if (checkbox.checked) {
+    //         // If checkbox is checked, generate one input field with a fixed label
+    //         const label = document.createElement('label');
+    //         label.for = `serial_number_1`;
+    //         label.textContent = `Serial Number:`;
+
+    //         const input = document.createElement('input');
+    //         input.type = 'text';
+    //         input.name = `serial_numbers[]`;
+    //         input.id = `serial_number_1`;
+    //         input.classList.add('form-control', 'col-sm-5');
+    //         input.placeholder = 'Leave blank if none.';
+
+    //         container.appendChild(label);
+    //         container.appendChild(input);
+    //     } else {
+    //         // If checkbox is not checked, generate multiple input fields with numbered labels
+    //         for (let i = 1; i <= quantity; i++) {
+    //             const label = document.createElement('label');
+    //             label.for = `serial_number_${i}`;
+    //             label.textContent = `Serial Number ${i}:`;
+
+    //             const input = document.createElement('input');
+    //             input.type = 'text';
+    //             input.name = `serial_numbers[]`;
+    //             input.id = `serial_number_${i}`;
+    //             input.classList.add('form-control', 'col-sm-5');
+    //             input.placeholder = 'Leave blank if none.';
+
+    //             container.appendChild(label);
+    //             container.appendChild(input);
+    //         }
+    //     }
+    // }
+
     function updateSerialNumberFields() {
         const quantityField = document.getElementById('quantity');
         const container = document.getElementById('serial_numbers_container');
         const checkbox = document.getElementById('checkbox');
 
-        // Clear the existing input fields
+        // Clear the existing input fields and error messages
         container.innerHTML = '';
 
-        // Generate the new input field(s)
+        // Generate the new input field(s) and error messages
         const quantity = parseInt(quantityField.value) || 0;
+        const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
+
         if (checkbox.checked) {
             // If checkbox is checked, generate one input field with a fixed label
             const label = document.createElement('label');
@@ -473,6 +517,12 @@
 
             container.appendChild(label);
             container.appendChild(input);
+
+            // Add error message element
+            const errorSpan = document.createElement('span');
+            errorSpan.classList.add('text-danger');
+            errorSpan.textContent = errorMessage;
+            container.appendChild(errorSpan);
         } else {
             // If checkbox is not checked, generate multiple input fields with numbered labels
             for (let i = 1; i <= quantity; i++) {
@@ -489,6 +539,12 @@
 
                 container.appendChild(label);
                 container.appendChild(input);
+
+                // Add error message element
+                const errorSpan = document.createElement('span');
+                errorSpan.classList.add('text-danger');
+                errorSpan.textContent = errorMessage;
+                container.appendChild(errorSpan);
             }
         }
     }
@@ -535,19 +591,30 @@
                 error: function(xhr) {
                     console.log(xhr);
                     if (xhr.status === 422) {
-                        $('#room-name-error').text(xhr.responseJSON.errors.room_name[0]);
+                        var errors = xhr.responseJSON.errors;
+                        if (errors) {
+                            if (errors.room_name) {
+                                $('#room-name-error').text(errors.room_name[0]);
+                                $('#room_name').addClass('border border-danger');
+                            }
+                            if (errors.department) {
+                                $('#department-error').text(errors.department[0]);
+                                $('#department').addClass('border border-danger');
+                            }
+                        }
                     } else {
-                        $('#room-name-error').text('Room name has already been added.');
-                        $('#room_name').addClass('border border-danger');
-                        $('#room_name').val('');
-                        $('#department').val('');
-                        $('#room-name-success').text('');
+                        if (xhr.responseJSON.error) {
+                            $('#room-name-error').text('Room name has already been added.');
+                            $('#room_name').addClass('border border-danger');
+                            $('#room_name').val('');
+                            $('#department').val('');
+                            $('#room-name-success').text('');
+                        }
                     }
                 }
             });
         });
     });
-
 
     //for adding category
     $(document).ready(function() {
@@ -580,6 +647,7 @@
                     if (xhr.status === 422) {
                         $('#category-name-error').text(xhr.responseJSON.errors
                             .category_name[0]);
+                        $('#category_name').addClass('border border-danger');
                     } else {
                         $('#category-name-error').text(
                             'Category name has already been added.');

@@ -13,9 +13,13 @@ class RegisterController extends Controller
 {
     public function index()
     {
-        $departments = Department::all();
-        $colleges = College::all();
-        return view('pages.register')->with(compact('departments', 'colleges'));
+        $departments = Department::with('college')->get();
+
+        $departments->each(function ($department) {
+            $department->college_name = $department->college->college_name;
+        });
+
+        return view('pages.register')->with(compact('departments'));
     }
 
     public function store(Request $request)
@@ -50,7 +54,7 @@ class RegisterController extends Controller
                 //     $request->id_number . 'backID.' . $request->file('back_of_id')->getClientOriginalExtension(),
                 //     'public',
                 // ),
-                
+
                 'account_type' => 'student',
                 'account_status' => 'pending',
                 'department_id' => $request->department_id

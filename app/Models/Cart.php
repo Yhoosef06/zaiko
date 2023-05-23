@@ -14,6 +14,7 @@ class Cart extends Model
         'serial_number',
         'item_name',
         'item_description',
-        'ordered'
+        'quantity',
+        'ordered'   
     ];
 }
