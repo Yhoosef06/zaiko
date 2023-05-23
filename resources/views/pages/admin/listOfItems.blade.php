@@ -47,10 +47,18 @@
                                                     <td>{{ $categoryItems->first()->item_category }}</td>
                                                     <td>{{ Str::limit($categoryItems->first()->description, 20, '...') }}
                                                     </td>
+                                                    @php
+                                                        $total = 0;
+                                                    @endphp
+                                                    @foreach ($categoryItems as $item)
+                                                        @php
+                                                            $total += $item->quantity;
+                                                        @endphp
+                                                    @endforeach
                                                     @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
                                                         <td>{{ $categoryItems->first()->quantity }}</td>
                                                     @else
-                                                        <td>{{ $categoryItems->count() }} </td>
+                                                        <td>{{ $total }}</td>
                                                     @endif
                                                     <td>
                                                         @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
