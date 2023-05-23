@@ -63,7 +63,9 @@ class ItemsController extends Controller
     {
         $item = Item::find($id);
         $room = $item->room->room_name;
+        $category = $item->category->category_name;
         $item['room'] = $room;
+        $item['category'] = $category;
         return response()->json($item);
     }
 
@@ -151,7 +153,7 @@ class ItemsController extends Controller
                 Item::create([
                     'serial_number' => $serial_number,
                     'location' => $request->location,
-                    'item_category' => $request->item_category,
+                    'category_id' => $request->item_category,
                     'brand' => $request->brand,
                     'model' => $request->model,
                     'description' => $request->item_description,
@@ -168,7 +170,7 @@ class ItemsController extends Controller
                 Item::create([
                     'serial_number' => $serial_number,
                     'location' => $request->location,
-                    'item_category' => $request->item_category,
+                    'category_id' => $request->item_category,
                     'brand' => $request->brand,
                     'model' => $request->model,
                     'description' => $request->item_description,

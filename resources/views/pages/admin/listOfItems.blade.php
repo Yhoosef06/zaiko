@@ -208,7 +208,7 @@
                     '<p><strong>Serial Number:</strong> ' + data.serial_number + '</p>' +
                     '<p><strong>Brand:</strong> ' + data.brand + '</p>' +
                     '<p><strong>Model:</strong> ' + data.model + '</p>' +
-                    '<p><strong>Category:</strong> ' + data.item_category + '</p>' +
+                    '<p><strong>Category:</strong> ' + data.category.category_name + '</p>' +
                     '<p><strong>Description:</strong> ' + data.description + '</p>' +
                     '<p><strong>Quantity:</strong> ' + data.quantity + '</p>' +
                     '<p><strong>Aquisition Date:</strong> ' + acquisitionDateStr + '</p>' +

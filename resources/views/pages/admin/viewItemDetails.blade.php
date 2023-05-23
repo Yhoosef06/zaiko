@@ -16,7 +16,13 @@
                             @foreach ($items as $item)
                                 <h3 class="card-title"><strong>Brand:</strong> {{ $item->brand }} </h3> <br>
                                 <h3 class="card-title"><strong>Model:</strong> {{ $item->model }} </h3> <br>
-                                <h3 class="card-title"><strong>Category:</strong> {{ $item->item_category }} </h3>
+                                <h3 class="card-title"><strong>Category: </strong>
+                                    @foreach ($itemCategories as $category)
+                                        @if ($item->category_id == $category->id)
+                                            {{ $category->category_name }}
+                                        @endif
+                                    @endforeach
+                                </h3>
                                 <br>
                                 <h3 class="card-title"><strong>Description:</strong> {{ $item->description }} </h3>
                             @break
@@ -90,9 +96,15 @@
                         <select id="item_category" name="item_category"
                             class="form-control col-5 @error('item_category')
                     border-danger @enderror">
-                            <option value="{{ $item->item_category }}">{{ $item->item_category }}</option>
                             @foreach ($itemCategories as $category)
-                                <option value="{{ $category->category_name }}">{{ $category->category_name }}</option>
+                                @if ($category->id == $item->category_id)
+                                    <option value="{{ $category->id }}" selected>{{ $category->category_name }}
+                                    </option>
+                                @endif
+                            @endforeach
+                            <option value="{{ $item->category->id }}">{{ $item->category->category_name }}</option>
+                            @foreach ($itemCategories as $category)
+                                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -102,11 +114,13 @@
                     </div>
                     <div class="form-group">
                         <label for="aquisition date">Quantity:</label>
-                        <input type="text" id="quantity" name="quantity" value="{{ $item->quantity }}" class="form-control">
+                        <input type="text" id="quantity" name="quantity" value="{{ $item->quantity }}"
+                            class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="aquisition date">Aquisition Date:</label>
-                        <input type="date" id="aquisition_date" name="aquisition_date" value="{{ $item->aquisition_date }}" class="form-control">
+                        <input type="date" id="aquisition_date" name="aquisition_date"
+                            value="{{ $item->aquisition_date }}" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="serial number"> Serial Number:</label>
@@ -213,7 +227,7 @@
                 $('#model').val(data.model);
                 $('#description').val(data.description);
                 $('#aquisition_date').val(data.aquisition_date);
-                $('#item_category').val(data.item_category);
+                $('#item_category').val(data.category_id);
                 $('#quantity').val(data.quantity);
                 $('#saveChangesBtn').data('item-id', itemId);
                 $('#modal-edit-item').modal('hide');
