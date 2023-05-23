@@ -23,7 +23,8 @@ class CreateOrdersTable extends Migration
             $table->string('model');
             $table->string('item_description');
             $table->string('serial_number');
-            $table->string('number_of_days');
+            $table->integer('quantity');
+            $table->date('return_date');
             $table->string('release_by');
             $table->string('return_to');
             $table->string('order_status');

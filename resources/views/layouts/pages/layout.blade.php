@@ -230,70 +230,73 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 $('#profile').show();
+                $('.item-category').show();
                 $('#first_name').val(ui.item.firstName);
                 $('#last_name').val(ui.item.lastName);
             }
         }
 
-    })
-    .autocomplete("instance")._renderItem = function(ul, item) {
+    }).autocomplete("instance")._renderItem = function(ul, item) {
         if (item.value === "") {
             return $("<li>")
                 .append("<div>" + item.label + "</div>")
                 .appendTo(ul);
         } else {
-            return $("<li>").append("<div>ID: " + item.value + "</div>").appendTo(ul);
+            return $("<li>").append("<div>" + item.value +" "+ item.lastName +"," +" "+ item.firstName +  "</div>").appendTo(ul);
         }
     };
+
 });
 
-  
-// $(document).ready(function() {
-//     $("#idNumber").autocomplete({
-//         minLength: 2,
-//         source: function(request, response) {
-//             $.ajax({
-//                 url: "{{ route('searchUser') }}",
-//                 dataType: "json",
-//                 data: {
-//                     query: request.term
-//                 },
-//                 success: function(data) {
-//                     response(data);
-//                 }
-//             });
-//         },
-//         appendTo: "#user_id_container",
-//         open: function(event, ui) {
-//             $("#user_id_container .ui-autocomplete").css("top", "auto");
-//         },
-//         // Custom rendering of autocomplete items
-//         response: function(event, ui) {
-//             if (!ui.content.length) {
-//                 var noResult = { value: "", label: "No matching ID numbers found" };
-//                 ui.content.push(noResult);
-//             }
-//         },
-//         select: function(event, ui) {
-//             if (ui.item.value === "") {
-//                 event.preventDefault();
-//             }
-//         }
-//     })
-//     .autocomplete("instance")._renderItem = function(ul, item) {
-//         if (item.value === "") {
-//             return $("<li>")
-//                 .append("<div>" + item.label + "</div>")
-//                 .appendTo(ul);
-//         } else {
-//             return $("<li>").append("<div>ID: " + item.label + "</div>").appendTo(ul);
 
-//             $('#first_name').val(item.firstName);
-//             $('#last_name').val(item.lastName);
-//         }
-//     };
-// });
-     
+$(document).ready(function() {
+    $("#serial_number").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchItem') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_id_container",
+        open: function(event, ui) {
+            $("#item-serial .ui-autocomplete").css("top", "auto");r
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = { value: "", brand: "No matching Serial Numbers found" };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                $('#brand').val(ui.item.brand);
+                $('#model').val(ui.item.model);
+                $('#item_description').val(ui.item.description);
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value +" - "+ item.brand  +" - "+ item.model +  "</div>").appendTo(ul);
+        }
+    };
+ });
+
 
 
 

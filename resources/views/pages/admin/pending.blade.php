@@ -104,7 +104,8 @@
               </button>
             </div>
             <div class="modal-body">
-
+            <form method="POST" action="{{ route('addOrder') }}">
+            @csrf
 
                   <div class="row">
                     <div class="col-sm-6">
@@ -112,7 +113,7 @@
                               <div class="form-group">
                                 <label>ID Number</label>
                                 <div id="user_id_container">
-                                <input type="text" id="idNumber" name="idNumber" class="form-control" placeholder="Enter ID Number here....">
+                                <input type="text" id="idNumber" name="idNumber" class="form-control" placeholder="Enter ID Number here...." required>
                                 </div>
                                
                         
@@ -135,19 +136,87 @@
                     </div>
                  </div>
 
+                 <div class="row item-category" id="item-category" style="display: none;">
+                    <div class="col-sm-6">
+                      
+                    <div class="form-group">
+                        <label>Item Category</label>
+                        <select class="form-control" id="item_category" name="item_category">
+                          <option>Select Category</option>
+                          @foreach ($items as $item)
+                          <option value="{{ $item->category_name }}"> {{ $item->category_name }} </option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label>Serial Number</label>
+                        <div id="item-serial">
+                        <input type="text" class="form-control" id="serial_number" name="serial_number" placeholder="Enter Serial Number...">
+                        </div>
+                      </div>
+                    </div>
+                 </div>
+
+
+                 <div class="row item-category" style="display: none;">
+                    <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Brand</label>
+                        <input type="text" class="form-control" id="brand" name="brand" required>
+                        </div> 
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label>Model</label>
+                        <input type="text" class="form-control" id="model" name="model" required>
+                      </div>
+                    </div>
+                 </div>
+              
+              
+                 <div class="row item-category" style="display: none;">
+                    <div class="col-sm-6">
+                      
+                    <div class="form-group">
+                        <label>Item Description</label>
+                        <input type="text" class="form-control" id="item_description" name="item_description">
+                      </div>
+                    </div>
+                 </div>
+
+                 <div class="row item-category" style="display: none;">
+                    <div class="col-sm-6" id="quantity-order">
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" value="0" class="form-control" id="quantity" name="quantity" >
+                      </div>
+                  </div>
+                      <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Return Date</label>
+                        <input type="date" class="form-control" id="return_date" name="return_date">
+                      </div>
+                    </div>
+                 </div>
+
+
 
               
-            </div>
+         
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>
+</form>
           </div>
           <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
         
       </div>
+</div>
 
    
 

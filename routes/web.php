@@ -115,6 +115,8 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
     Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
     Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
+    Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
+    Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
 
     //reports
     Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');

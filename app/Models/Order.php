@@ -10,6 +10,19 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ordered'
+        'id_number',
+        'first_name', 
+        'last_name', 
+        'category',
+        'serial_number', 
+        'brand', 
+        'model', 
+        'item_description',
+        'quantity', 
+        'return_date', 
+        'order_status',
+        'release_by',
+        'return_to',
+        'item_remark'
     ];
 }
