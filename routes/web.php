@@ -143,7 +143,7 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             });
 
             //cart
-            Route::post('/student-add-cart/{serial_number}', [CartController::class, 'add_cart'])->name('add.cart');
+            Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
             Route::get('/student-cart-list', [CartController::class, 'cart_list'])->name('cart.list');
             Route::get('/remove-cart/{serial_number}', [CartController::class, 'remove_cart'])->name('remove.cart');
             Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
@@ -151,7 +151,7 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             //agreement
             Route::get('/agreement', [StudentController::class, 'agreement'])->name('agreement');
             Route::get('agreement-approve/{id}', [StudentController::class, 'agreement_approve'])->name('agreement.approve');
-
+            Route::get('/test',[PagesController::class,'test'])->name('test');
 
             // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
             // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');

@@ -28,7 +28,13 @@ class PagesController extends Controller
 
     public function test()
     {
-        return view('pages.students.test');
+
+        $categories = ItemCategory::all();
+        $user_dept_id = Auth::user()->department_id;
+        $rooms = Room::where('department_id', $user_dept_id)->get();
+        $items = Item::whereIn('location', $rooms->pluck('id'))->get();
+
+        return view('pages.students.test', compact('categories', 'items'));
     }
 
 

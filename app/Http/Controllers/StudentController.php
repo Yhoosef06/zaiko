@@ -7,6 +7,8 @@ use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\User;
 use App\Models\Room;
+use App\Models\Department;
+use App\Models\College;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +21,48 @@ class StudentController extends Controller
     }
 
     public function items(){
+
+        $categories = ItemCategory::all();
+        $user_dept_id = Auth::user()->department_id;
+        // $rooms = Room::where('department_id', $user_dept_id)->get();
+        $items = Item::all();
+
+        $departments = Department::with('college')->get();
+        // $rooms = Room::with('departments')->get();
+        // $items = Item::with('room')->get();
+       
+        // $departments->each(function ($department) {
+        //     $department->college_name = $department->college->college_name;
+        // });
+        
+        // foreach($items as $item){
+        //     foreach($rooms as $room){
+        //         foreach($departments as $department){
+        //             if ($department->id == $user_dept_id){ 
+        //                 $college =  $department->college->id;
+        //                 dd($college);
+        //             }
+        //         }
+        //     }
+        // }   
+
+        $collegeId = null;
+        foreach( $departments as $department) {
+            if ($department->id == $user_dept_id){ 
+                $collegeId =  $department->college->id;
+                break;
+            }
+        }
+        if($collegeId != null){
+            $items = Item::whereHas('room.departments.college', function ($query) use ($collegeId) {
+                $query->where('id', $collegeId);
+            })->get();
+        }
+        $items = Item::whereHas('room.departments.college', function ($query) use ($collegeId) {
+            $query->where('id', $collegeId);
+        })->get();
+
+        // dd($items);
 
         $categories = ItemCategory::all();
         

@@ -38,14 +38,26 @@
                                     <i class="fas fa-circle nav-icon"></i>
                                     <p>Borrow Item</p>
                                 </a> --}}
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-circle"></i>
-                            <p>
-                                Borrowing Manager
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('student.items') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Items List</p>
                         </a>
-                        <ul class="nav nav-treeview">
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('cart.list') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Cart</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('borrow_list') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Borrowing List</p>
+                        </a>
+                    </li>
+                        {{-- <ul class="nav nav-treeview ml-4">
                             <li class="nav-item">
                                 <a href="{{ route('student.items') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -64,8 +76,7 @@
                                     <p>Checked Out Items</p>
                                 </a>
                             </li>
-                        </ul>
-                    </li>
+                        </ul> --}}
                 @elseif(Auth::user()->account_type == 'admin')
                     <li class="nav-item">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
