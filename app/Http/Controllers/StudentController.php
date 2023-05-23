@@ -63,13 +63,8 @@ class StudentController extends Controller
         })->get();
 
         // dd($items);
-
-        $categories = ItemCategory::all();
         
-        $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->get();
-            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
-            return view('pages.students.items')->with(compact('items','categories'));
+        return view('pages.students.items')->with(compact('items','categories'));
     }
 
 
