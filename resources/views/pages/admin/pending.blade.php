@@ -37,18 +37,15 @@
                 <table id="pending" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                  <th class="d-none">ID</th>
-                    <th>Serial #</th>
-                    <th>Name</th>
-                    <th>Brand</th>
-                    <th>Item Description</th>
-                    <th>Actions</th>
-
+                    <th>Student</th>
+                    <th>Date Submitted</th>
+                    <th>Option</th>
+ 
                   </tr>
                   </thead>
                   <tbody>
                  
-                  @foreach ($pendings as $pending)
+                  <!-- @foreach ($pendings as $pending)
                       <tr>
                           <td class="d-none">{{ $pending->id }}</td>
                           <td>{{ $pending->serial_number }}</td>
@@ -63,7 +60,7 @@
                              
                         </td>
                       </tr>
-                  @endforeach
+                  @endforeach -->
                   </tbody>
                  
                 </table>
@@ -123,6 +120,20 @@
                       </div>
                     </div>
                  </div>
+
+                 <div class="row item-category">
+                    <div class="col-sm-12">
+      
+                              <div class="form-group">
+                                <label>Search Item</label>
+                                <div id="search_item">
+                                <input type="text" id="search_item" name="search_item" class="form-control" placeholder="Search Item to Borrow - Serial Number or Item Description" required>
+                                </div>
+                               
+                        
+                              </div>
+                            </div>
+                  </div>
 
                  <div class="row item-category" id="item-category" style="display: none;">
                     <div class="col-sm-6">

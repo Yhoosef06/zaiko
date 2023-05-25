@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\OrderItemTemp;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -53,23 +54,27 @@ class BorrowController extends Controller
    
 
 
-    public function borrowed(){
-        $borrows = Order::where('order_status', '=', 'borrowed')->get();
+    // public function borrowed(){
+    //     $borrows = Order::where('order_status', '=', 'borrowed')->get();
 
-        return view('pages.admin.borrowed')->with(compact('borrows'));
-    }
+    //     return view('pages.admin.borrowed')->with(compact('borrows'));
+    // }
 
     public function pending(){
-        $pendings = Order::where('order_status', '=', 'pending')->get();
+        $pendings = OrderItemTemp::join('orders', 'order_item_temps.order_id', '=', 'orders.id')
+        ->whereNotNull('orders.date_submitted')
+        ->whereNull('orders.date_returned')
+        ->get();
         $items = ItemCategory::all();
         return view('pages.admin.pending')->with(compact('pendings','items'));
+        
     }
 
-    public function returned(){
-        $forReturns = ORDER::where('order_status', '=', 'returned')->get();
+    // public function returned(){
+    //     $forReturns = ORDER::where('order_status', '=', 'returned')->get();
 
-        return view('pages.admin.returned')->with(compact('forReturns'));
-    }
+    //     return view('pages.admin.returned')->with(compact('forReturns'));
+    // }
 
     // public function pendingItem(Request $request,$id,$serial_number){
     //     $num = $request->number_of_days;
@@ -89,30 +94,30 @@ class BorrowController extends Controller
         
     // }
 
-    public function borrowItem(Request $request,$id,$serial_number){
-        $remarks = $request->item_remark;
-        // echo $serial_number;
-        // exit;
-        $user = auth()->user();
-        if($user){
-            $firstName = $user->first_name;
-            $lastName = $user->last_name;
+    // public function borrowItem(Request $request,$id,$serial_number){
+    //     $remarks = $request->item_remark;
+    //     // echo $serial_number;
+    //     // exit;
+    //     $user = auth()->user();
+    //     if($user){
+    //         $firstName = $user->first_name;
+    //         $lastName = $user->last_name;
 
-            $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'returned', 'return_to' => $firstName .' '. $lastName,'item_remark' => $remarks]);
-            $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
-            Session::flash('success', 'Successfuly Return Borrowed Item.');
-            return redirect('borrowed');
-        }
+    //         $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'returned', 'return_to' => $firstName .' '. $lastName,'item_remark' => $remarks]);
+    //         $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
+    //         Session::flash('success', 'Successfuly Return Borrowed Item.');
+    //         return redirect('borrowed');
+    //     }
        
        
-    }
+    // }
 
-    public function removeBorrow($serial_number){
-        $affectedRows = Order::where('serial_number','=',$serial_number)->delete();
-        $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
-        Session::flash('success', 'Successfuly Remove Borrowed Item.');
-        return redirect('pending');
-    }
+    // public function removeBorrow($serial_number){
+    //     $affectedRows = Order::where('serial_number','=',$serial_number)->delete();
+    //     $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
+    //     Session::flash('success', 'Successfuly Remove Borrowed Item.');
+    //     return redirect('pending');
+    // }
 
     public function searchUser(Request $request)
     {
@@ -148,65 +153,65 @@ class BorrowController extends Controller
         return response()->json($response);
     }
 
-    public function addOrder(Request $request)
-    {
+    // public function addOrder(Request $request)
+    // {
 
-        $id_number = $request->idNumber;
-        $first_name = $request->first_name;
-        $last_name = $request->last_name;
-        $item_category = $request->item_category;
-        $serial_number = $request->serial_number;
-        $brand = $request->brand;
-        $model = $request->model;
-        $item_description = $request->item_description;
-        $quantity = $request->quantity;
-        $return_date = $request->return_date;
+    //     $id_number = $request->idNumber;
+    //     $first_name = $request->first_name;
+    //     $last_name = $request->last_name;
+    //     $item_category = $request->item_category;
+    //     $serial_number = $request->serial_number;
+    //     $brand = $request->brand;
+    //     $model = $request->model;
+    //     $item_description = $request->item_description;
+    //     $quantity = $request->quantity;
+    //     $return_date = $request->return_date;
 
-        $user = auth()->user();
-        if($user){
-            $firstName = $user->first_name;
-            $lastName = $user->last_name;
+    //     $user = auth()->user();
+    //     if($user){
+    //         $firstName = $user->first_name;
+    //         $lastName = $user->last_name;
 
-            Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'yes']);
-            $order = Order::create([
-                'id_number' => $id_number,
-                'first_name' => $first_name,
-                'last_name' => $last_name,
-                'category' => $item_category,
-                'serial_number' => $serial_number,
-                'brand' => $brand,
-                'model' => $model,
-                'item_description' => $item_description,
-                'quantity' => $quantity,
-                'return_date' => $return_date,
-                'order_status' => 'borrowed',
-                'release_by' => $lastName .', '. $firstName
+    //         Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'yes']);
+    //         $order = Order::create([
+    //             'id_number' => $id_number,
+    //             'first_name' => $first_name,
+    //             'last_name' => $last_name,
+    //             'category' => $item_category,
+    //             'serial_number' => $serial_number,
+    //             'brand' => $brand,
+    //             'model' => $model,
+    //             'item_description' => $item_description,
+    //             'quantity' => $quantity,
+    //             'return_date' => $return_date,
+    //             'order_status' => 'borrowed',
+    //             'release_by' => $lastName .', '. $firstName
 
                 
-            ]);
-            Session::flash('success', 'Successfuly Added Borrowed Item.');
-            return redirect('pending');
+    //         ]);
+    //         Session::flash('success', 'Successfuly Added Borrowed Item.');
+    //         return redirect('pending');
 
-        }
-    }
+    //     }
+    // }
 
-    public function addRemark(Request $request)
-    {
-        $serial_number = $request->serialreturn;
-        $user = auth()->user();
-        if($user){
-            $firstName = $user->first_name;
-            $lastName = $user->last_name;
-            Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
-            Order::where('serial_number','=',$serial_number)->update([ 'order_status' => 'returned']);
-            $order = Order::create([
-                'item_remark' => $request->item_remark,
-                'return_to' => $lastName .', '. $firstName
-            ]);
-             Session::flash('success', 'Successfuly Return.');
-            return redirect('borrowed');
-        }
-    }
+    // public function addRemark(Request $request)
+    // {
+    //     $serial_number = $request->serialreturn;
+    //     $user = auth()->user();
+    //     if($user){
+    //         $firstName = $user->first_name;
+    //         $lastName = $user->last_name;
+    //         Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
+    //         Order::where('serial_number','=',$serial_number)->update([ 'order_status' => 'returned']);
+    //         $order = Order::create([
+    //             'item_remark' => $request->item_remark,
+    //             'return_to' => $lastName .', '. $firstName
+    //         ]);
+    //          Session::flash('success', 'Successfuly Return.');
+    //         return redirect('borrowed');
+    //     }
+    // }
 
 
 }
