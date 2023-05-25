@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OrderItemTemp extends Model
@@ -16,8 +18,12 @@ class OrderItemTemp extends Model
         'quantity',
     ];
 
-    public function order_item(): HasOne
+    public function order_item(): HasMany
     {
-        return $this->hasOne(OrderItem::class);
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function order(): BelongsTo {
+        return $this->belongsTo(Order::class);
     }
 }

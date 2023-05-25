@@ -23,8 +23,7 @@ class CreateOrderItem extends Migration
             $table->string('remarks')->nullable();
             $table->string('order_serial_number');
             $table->date('date_returned');
-            $table->string('released_by');
-            $table->string('recieved_by');
+            $table->string('returned_to');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
