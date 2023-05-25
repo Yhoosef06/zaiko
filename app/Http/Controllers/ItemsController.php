@@ -86,7 +86,7 @@ class ItemsController extends Controller
             return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
         }
     }
-
+  
     public function saveEditedItemDetails(Request $request, $id)
     {
         $item = Item::find($id);
