@@ -21,7 +21,7 @@ class CreateOrderItem extends Migration
             $table->integer('quantity');
             $table->string('status');
             $table->string('remarks')->nullable();
-            $table->string('order_serial_number');
+            $table->string('order_serial_number')->nullable();
             $table->date('date_returned');
             $table->string('returned_to');
             $table->timestamps();
