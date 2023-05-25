@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Item extends Model
 {
@@ -38,5 +38,15 @@ class Item extends Model
 
     public function category(){
         return $this->belongsTo(ItemCategory::class, 'category_id', 'id');
+    }
+
+    public function order_item_temp(): HasMany
+    {
+        return $this->hasMany(OrderItemTemp::class);
+    }
+
+    public function order_item(): HasMany 
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

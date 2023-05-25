@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -55,5 +56,15 @@ class User extends Authenticatable
     public function departments(): HasOne
     {
         return $this->hasOne(Department::class, 'id', 'department_id');
+    }
+
+    public function order_item_temp(): HasMany
+    {
+        return $this->hasMany(OrderItemTemp::class);
+    }
+
+    public function order_item(): HasMany 
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

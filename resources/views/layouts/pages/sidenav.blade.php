@@ -42,7 +42,7 @@
                     <li class="nav-item">
                         <a href="{{ route('student.items') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
-                            <p>Items List</p>
+                            <p>Browse Items</p>
                         </a>
                     </li>
                     <li class="nav-item">

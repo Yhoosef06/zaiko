@@ -74,6 +74,8 @@ class ItemsController extends Controller
         if (Auth::user()->account_type == 'admin') {
             $item = Item::find($id);
             $rooms = Room::all();
+            $category = $item->category->category_name;
+            $item['category'] = $category;
             $itemCategories = ItemCategory::all();
             return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
         } else {
