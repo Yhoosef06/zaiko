@@ -71,22 +71,33 @@ class ItemsController extends Controller
 
     public function editItemPage($id)
     {
-        if (Auth::user()->account_type == 'admin') {
-            $item = Item::find($id);
-            $rooms = Room::all();
-            $category = $item->category->category_name;
-            $item['category'] = $category;
-            $itemCategories = ItemCategory::all();
-            return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
-        } else {
-            $item = Item::find($id);
-            $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->get();
-            $itemCategories = ItemCategory::all();
-            return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
-        }
+        // if (Auth::user()->account_type == 'admin') {
+        //     $item = Item::find($id);
+        //     $rooms = Room::all();
+        //     $category = $item->category->category_name;
+        //     $item['category'] = $category;
+        //     $itemCategories = ItemCategory::all();
+        //     return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
+        // } else {
+        //     $item = Item::find($id);
+        //     $user_dept_id = Auth::user()->department_id;
+        //     $rooms = Room::where('department_id', $user_dept_id)->get();
+        //     $itemCategories = ItemCategory::all();
+        //     return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
+        // }
+
+
+        $user = Auth::user();
+        $isAdmin = $user->account_type == 'admin';
+        $item = Item::find($id);
+
+        $rooms = $isAdmin ? Room::all() : Room::where('department_id', $user->department_id)->get();
+        $itemCategories = ItemCategory::all();
+        $category = $item->category ? $item->category->category_name : null;
+
+        return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories', 'category'));
     }
-  
+
     public function saveEditedItemDetails(Request $request, $id)
     {
         $item = Item::find($id);
@@ -166,7 +177,7 @@ class ItemsController extends Controller
                     'borrowed' => 'no',
                     'same_serial_numbers' => $isChecked,
                 ]);
-            }            
+            }
         } else {
             foreach ($serial_numbers as $serial_number) {
                 Item::create([
