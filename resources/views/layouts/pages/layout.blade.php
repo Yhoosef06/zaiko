@@ -311,7 +311,7 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 $('#profile').show();
-                $('.item-category').show();
+                $('#search-serial-desc').show();
                 $('#first_name').val(ui.item.firstName);
                 $('#last_name').val(ui.item.lastName);
             }
@@ -331,7 +331,7 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-    $("#serial_number").autocomplete({
+    $("#search_item").autocomplete({
         minLength: 2,
         source: function(request, response) {
             $.ajax({
@@ -348,12 +348,12 @@ $(document).ready(function() {
         },
         appendTo: "#user_id_container",
         open: function(event, ui) {
-            $("#item-serial .ui-autocomplete").css("top", "auto");r
+            $("#item-serial .ui-autocomplete").css("top", "auto");
         },
         // Custom rendering of autocomplete items
         response: function(event, ui) {
             if (!ui.content.length) {
-                var noResult = { value: "", brand: "No matching Serial Numbers found" };
+                var noResult = { value: "", brand: "No matching Serial Numbers and Description found" };
                 ui.content.push(noResult);
             }
         },
@@ -361,9 +361,24 @@ $(document).ready(function() {
             if (ui.item.value === "") {
                 event.preventDefault();
             } else {
-                $('#brand').val(ui.item.brand);
-                $('#model').val(ui.item.model);
-                $('#item_description').val(ui.item.description);
+                if(ui.item.item_category == 'Tools'){
+                    $('.item-category').show();
+                    $('#item_category').val(ui.item.item_category);
+                    $('#serial_number').val(ui.item.value);
+                    $('#brand').val(ui.item.brand);
+                    $('#model').val(ui.item.model);
+                    $('#item_description').val(ui.item.description);
+
+                }else{
+                    $('.item-category').show();
+                    $('#item_category').val(ui.item.item_category);
+                    $('#serial_number').val(ui.item.value);
+                    $('#brand').val(ui.item.brand);
+                    $('#model').val(ui.item.model);
+                    $("#quantity").prop("readonly", true);
+                    $('#item_description').val(ui.item.description);
+                }
+                
             }
         }
 

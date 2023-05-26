@@ -121,12 +121,12 @@
                     </div>
                  </div>
 
-                 <div class="row item-category">
+                 <div class="row" id="search-serial-desc" style="display: none;">
                     <div class="col-sm-12">
       
-                              <div class="form-group">
+                              <div class="form-group" >
                                 <label>Search Item</label>
-                                <div id="search_item">
+                                <div id="search-item">
                                 <input type="text" id="search_item" name="search_item" class="form-control" placeholder="Search Item to Borrow - Serial Number or Item Description" required>
                                 </div>
                                
@@ -140,20 +140,19 @@
                       
                     <div class="form-group">
                         <label>Item Category</label>
-                        <select class="form-control" id="item_category" name="item_category">
+                        <input type="text" class="form-control" id="item_category" name="item_category" required readOnly>
+                        <!-- <select class="form-control" id="item_category" name="item_category">
                           <option>Select Category</option>
                           @foreach ($items as $item)
                           <option value="{{ $item->category_name }}"> {{ $item->category_name }} </option>
                           @endforeach
-                        </select>
+                        </select> -->
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="form-group">
                         <label>Serial Number</label>
-                        <div id="item-serial">
-                        <input type="text" class="form-control" id="serial_number" name="serial_number" placeholder="Enter Serial Number...">
-                        </div>
+                        <input type="text" class="form-control" id="serial_number" name="serial_number" readOnly>
                       </div>
                     </div>
                  </div>
@@ -163,13 +162,13 @@
                     <div class="col-sm-6">
                     <div class="form-group">
                         <label>Brand</label>
-                        <input type="text" class="form-control" id="brand" name="brand" required>
+                        <input type="text" class="form-control" id="brand" name="brand" required readOnly>
                         </div> 
                     </div>
                     <div class="col-sm-6">
                       <div class="form-group">
                         <label>Model</label>
-                        <input type="text" class="form-control" id="model" name="model" required>
+                        <input type="text" class="form-control" id="model" name="model" required readOnly>
                       </div>
                     </div>
                  </div>
@@ -180,7 +179,13 @@
                       
                     <div class="form-group">
                         <label>Item Description</label>
-                        <input type="text" class="form-control" id="item_description" name="item_description">
+                        <input type="text" class="form-control" id="item_description" name="item_description" readOnly>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Return Date</label>
+                        <input type="date" class="form-control" id="return_date" name="return_date">
                       </div>
                     </div>
                  </div>
@@ -192,12 +197,7 @@
                         <input type="number" value="0" class="form-control" id="quantity" name="quantity" >
                       </div>
                   </div>
-                      <div class="col-sm-6">
-                    <div class="form-group">
-                        <label>Return Date</label>
-                        <input type="date" class="form-control" id="return_date" name="return_date">
-                      </div>
-                    </div>
+                     
                  </div>
 
 

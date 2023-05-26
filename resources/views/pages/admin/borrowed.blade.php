@@ -30,35 +30,35 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                <table id="borrowed" class="table table-bordered table-striped">
-  <thead>
-    <tr>
-      <th class="d-none">ID #</th>
-      <th>Serial #</th>
-      <th>Name</th>
-      <th>Brand</th>
-      <th>Release BY</th>
-      <th>Return Date</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach ($borrows as $borrow)
-    <tr>
-      <td class="d-none">{{ $borrow->id }}</td>
-      <td>{{ $borrow->serial_number }}</td>
-      <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
-      <td>{{ $borrow->brand }}</td>
-      <td>{{ $borrow->release_by }}</td>
-      <td>{{ $borrow->return_date }}</td>
-      <td>
-        <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showBorrow" data-borrow="{{ json_encode($borrow) }}"><i class="fa fa-eye"></i></button>
-        <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->id }}" data-serial="{{ $borrow->serial_number }}" data-bs-toggle="modal" data-bs-target="#returnBorrow"><i class="fa fa-check"></i></button>
-      </td>
-    </tr>
-    @endforeach
-  </tbody>
-</table>
+                <!-- <table id="borrowed" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th class="d-none">ID #</th>
+                      <th>Serial #</th>
+                      <th>Name</th>
+                      <th>Brand</th>
+                      <th>Release BY</th>
+                      <th>Return Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($borrows as $borrow)
+                    <tr>
+                      <td class="d-none">{{ $borrow->id }}</td>
+                      <td>{{ $borrow->serial_number }}</td>
+                      <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
+                      <td>{{ $borrow->brand }}</td>
+                      <td>{{ $borrow->release_by }}</td>
+                      <td>{{ $borrow->return_date }}</td>
+                      <td>
+                        <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showBorrow" data-borrow="{{ json_encode($borrow) }}"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->id }}" data-serial="{{ $borrow->serial_number }}" data-bs-toggle="modal" data-bs-target="#returnBorrow"><i class="fa fa-check"></i></button>
+                      </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+              </table> -->
                 </div>
                 <!-- /.card-body -->
               </div>
