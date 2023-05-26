@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\ItemCategory;
+use App\Models\OrderItemTemp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Console\Input\Input;
@@ -15,28 +16,53 @@ class CartController extends Controller
 {
     public function add_cart(Request $request, $id){
         
-        // dd($request);
-        $user = Auth::user();
-
-        // $cartcheck = Cart::where('id_number', '=', $user->id_number)->exists();
-        
+        // dd($id);
+        $user = Auth::user(); 
         $item = Item::find($id);
 
-        $cart = new Cart;
+        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
 
-        $categoryName = ItemCategory::where('id', $item->category_id)->value('category_name');
+        // dd(count($order));
 
-        $cart->id_number = $user->id_number;
-        $cart->category = $categoryName;
-        $cart->brand = $item->brand;
-        $cart->model = $item->model;
-        $cart->item_description = $item->description; 
-        $cart->quantity = $request->quantity;
-        $cart->ordered = 'no';
+        if(count($order) == 0){
+            $order_cart = new Order;
 
-        $cart->save();
+            $order_cart->user_id = $user->id_number;
+            $order_cart->save();
 
-        session()->flash('success','Item suceessfully added to cart.');
+            // dd($order_cart->id);
+
+            $item_temp = new OrderItemTemp;
+
+            $item_temp->order_id = $order_cart->id;
+            $item_temp->item_id = $item->id;
+            $item_temp->quantity = $request->quantity;
+
+            $item_temp->save();
+
+            dd($item_temp);
+
+        }       
+
+
+        
+        // dd($order_cart);
+
+        // $cart = new Cart;
+
+        // $categoryName = ItemCategory::where('id', $item->category_id)->value('category_name');
+
+        // $cart->id_number = $user->id_number;
+        // $cart->category = $categoryName;
+        // $cart->brand = $item->brand;
+        // $cart->model = $item->model;
+        // $cart->item_description = $item->description; 
+        // $cart->quantity = $request->quantity;
+        // $cart->ordered = 'no';
+
+        // $cart->save();
+
+        // session()->flash('success','Item suceessfully added to cart.');
 
         return redirect()->back();      
     }
