@@ -66,12 +66,13 @@ class BorrowController extends Controller
 
     public function pending()
     {
-        $pendings = OrderItemTemp::join('orders', 'order_item_temps.order_id', '=', 'orders.id')
-        ->whereNotNull('orders.date_submitted')
-        ->whereNull('orders.date_returned')
-        ->get();
-        $items = ItemCategory::all();
-        return view('pages.admin.pending')->with(compact('pendings','items')); 
+        $pendings = OrderItemTemp::join('orders', 'order_item_temps.order_id', '=', 'orders.id')->get();
+        $users = User::all();
+        // return view('pages.admin.pending')->with(compact('pendings','items')); 
+        // $pendings = Order::with('user')->whereNotNull('date_submitted')->whereNull('date_returned')->get();
+        // dd($pendings);
+        return view('pages.admin.pending')->with(compact('pendings','users    '));
+       
     }
 
     public function returned(){
