@@ -50,7 +50,7 @@
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Cart</p>
                             <i class="bi bi-cart text-right"></i>
-                            <span class="badge badge-danger navbar-badge">{{ $itemcount }}</span>
+                            <span class="badge badge-danger right">{{ $itemcount }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
