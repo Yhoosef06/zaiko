@@ -1,6 +1,11 @@
 @extends('layouts.pages.yields')
 
 @section('content')
+    @if (session('status'))
+        <div class="alert bg-danger text-m">
+            <i class="fa fa-thumbs-down"></i> {{ session('status') }}
+        </div>
+    @endif
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -67,14 +72,7 @@
                                                                 onclick="openItemModal('{{ $categoryItems->first()->id }}')">
                                                                 <i class="fa fa-eye"></i>
                                                             </button>
-                                                        @else
-                                                            <a href="{{ route('view_item_details', ['id' => $categoryItems->first()->id]) }}"
-                                                                class="btn btn-sm btn-primary"
-                                                                onclick="openNewWindow(event, '{{ route('view_item_details', ['id' => $categoryItems->first()->id]) }}')">
-                                                                <i class="fa fa-eye"></i>
-                                                        @endif
 
-                                                        @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
                                                             <form class="form_delete_btn" method="POST"
                                                                 action="{{ route('delete_item', $categoryItems->first()->id) }}">
                                                                 @csrf
@@ -84,6 +82,11 @@
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </form>
+                                                        @else
+                                                            <a href="{{ route('view_item_details', ['id' => $categoryItems->first()->id]) }}"
+                                                                class="btn btn-sm btn-primary"
+                                                                onclick="openNewWindow(event, '{{ route('view_item_details', ['id' => $categoryItems->first()->id]) }}')">
+                                                                <i class="fa fa-eye"></i>
                                                         @endif
                                                     </td>
                                                 </tr>

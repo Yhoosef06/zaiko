@@ -4,17 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Room;
-use App\Models\Brand;
 use App\Models\Order;
-use App\Models\College;
 use App\Models\Reference;
 use App\Models\Department;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 
 
@@ -87,7 +85,6 @@ class ItemsController extends Controller
         //     return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
         // }
 
-
         $user = Auth::user();
         $isAdmin = $user->account_type == 'admin';
         $item = Item::find($id);
@@ -125,13 +122,47 @@ class ItemsController extends Controller
         }
     }
 
+    // public function deleteItem($id)
+    // {
+    //     $item = Item::find($id);
+    //     if ($item->borrowed == 'yes') {
+    //         Session::flash('status', 'Warning: Unable to remove item that is currently being borrowed');
+    //         return redirect('list-of-items');
+    //     } else {
+    //         $item->delete();
+    //         Session::flash('success', 'Successfully Removed Item');
+    //         return redirect('list-of-items');
+    //     }
+    // }
+
     public function deleteItem($id)
     {
-        $item = Item::find($id);
-        $item->delete();
-        Session::flash('success', 'Successfully Removed Item');
-        return redirect('list-of-items');
+        try {
+            $item = Item::find($id);
+
+            // Check if the item is currently borrowed
+            if ($item->borrowed == 'yes') {
+                Session::flash('status', 'Warning: Unable to remove item that is currently being borrowed');
+                return  redirect('list-of-items');
+            }
+
+            // Delete the item
+            $item->delete();
+
+            Session::flash('success', 'Successfully Removed Item');
+            return redirect('list-of-items');
+        } catch (QueryException $e) {
+            // Check if the exception is due to a foreign key constraint violation
+            if ($e->getCode() === '23000') {
+                Session::flash('status', 'Cannot delete item because it is referenced by other records.');
+            } else {
+                Session::flash('status', 'An error occurred.');
+            }
+
+            return redirect('list-of-items');
+        }
     }
+
 
     public function saveNewItem(Request $request)
     {
@@ -146,12 +177,9 @@ class ItemsController extends Controller
                     $fail('Serial Numbers cannot be repeated');
                 }
             },
-            // 'brand' => 'required',
-            // 'model' => 'required',
             'item_category' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'nullable',
-            // 'unit_number' => 'required',
             'inventory_tag' => 'required',
             'quantity' => 'required|numeric',
             'status' => 'required',
@@ -407,10 +435,19 @@ class ItemsController extends Controller
 
     public function getUnitNumber()
     {
-        $unit_numbers = Item::distinct()->pluck('unit_number')->reject(function ($unit_number) {
-            return $unit_number === null;
-        })->toArray();
+        // $unit_numbers = Item::distinct()->pluck('unit_number')->reject(function ($unit_number) {
+        //     return $unit_number === null;
+        // })->toArray();
 
-        return response()->json($unit_numbers);
+        // return response()->json($unit_numbers);
+
+        $order = Order::find(1);
+        echo $order->orderItem->id;
+        if ($order) {
+            foreach ($order->orderItemTemp as $orderItemTemp) {
+                echo $orderItemTemp->item->id;
+                echo $orderItemTemp->item->location;
+            }
+        }
     }
 }
