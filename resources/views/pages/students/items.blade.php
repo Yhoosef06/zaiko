@@ -89,7 +89,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <input type="submit" class="btn btn-outline-dark" value="Add to cart">
+                                                    <i class="fas fa-cart-plus"></i><input type="submit" class="btn btn-outline-dark" value="Add to cart">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                 </div>
                                             </form>
