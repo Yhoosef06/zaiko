@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderItemTemp extends Migration
+class CreateOrderItemTemps extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOrderItemTemp extends Migration
      */
     public function up()
     {
-        Schema::create('order_item_temp', function (Blueprint $table) {
+        Schema::create('order_item_temps', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('item_id');
@@ -32,6 +32,6 @@ class CreateOrderItemTemp extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_item_temp');
+        Schema::dropIfExists('order_item_temps');
     }
 }

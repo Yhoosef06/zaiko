@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\Brand;
 use App\Models\Order;
 use App\Models\College;
+use App\Models\Reference;
 use App\Models\Department;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
@@ -71,20 +72,31 @@ class ItemsController extends Controller
 
     public function editItemPage($id)
     {
-        if (Auth::user()->account_type == 'admin') {
-            $item = Item::find($id);
-            $rooms = Room::all();
-            $category = $item->category->category_name;
-            $item['category'] = $category;
-            $itemCategories = ItemCategory::all();
-            return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
-        } else {
-            $item = Item::find($id);
-            $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->get();
-            $itemCategories = ItemCategory::all();
-            return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
-        }
+        // if (Auth::user()->account_type == 'admin') {
+        //     $item = Item::find($id);
+        //     $rooms = Room::all();
+        //     $category = $item->category->category_name;
+        //     $item['category'] = $category;
+        //     $itemCategories = ItemCategory::all();
+        //     return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
+        // } else {
+        //     $item = Item::find($id);
+        //     $user_dept_id = Auth::user()->department_id;
+        //     $rooms = Room::where('department_id', $user_dept_id)->get();
+        //     $itemCategories = ItemCategory::all();
+        //     return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
+        // }
+
+
+        $user = Auth::user();
+        $isAdmin = $user->account_type == 'admin';
+        $item = Item::find($id);
+
+        $rooms = $isAdmin ? Room::all() : Room::where('department_id', $user->department_id)->get();
+        $itemCategories = ItemCategory::all();
+        $category = $item->category ? $item->category->category_name : null;
+
+        return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories', 'category'));
     }
 
     public function saveEditedItemDetails(Request $request, $id)
@@ -166,7 +178,7 @@ class ItemsController extends Controller
                     'borrowed' => 'no',
                     'same_serial_numbers' => $isChecked,
                 ]);
-            }            
+            }
         } else {
             foreach ($serial_numbers as $serial_number) {
                 Item::create([
@@ -263,8 +275,6 @@ class ItemsController extends Controller
             $request,
             [
                 'location' => 'required',
-                // 'purpose' => 'nullable',
-                // 'department' => 'required',
                 'prepared_by' => 'required',
                 'verified_by' => 'required',
                 'noted_by' => 'required',
@@ -331,24 +341,35 @@ class ItemsController extends Controller
                 'role_3',
                 'role_4'
             ))->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
-            return view('pages.pdfReport')->with(compact(
-                'items',
-                'location',
-                'prepared_by',
-                'verified_by',
-                'noted_by',
-                'approved_by',
-                'department',
-                'rooms',
-                'role_1',
-                'role_2',
-                'role_3',
-                'role_4'
-            ));
-            // foreach ($rooms as $room) {
-            //     if ($room->id == $location)
-            //         return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
-            // }
+            Reference::create([
+                'location' => $request->location,
+                'prepared_by' => $request->prepared_by,
+                'verified_by' => $request->verified_by,
+                'noted_by' => $request->noted_by,
+                'approved_by' => $request->approved_by,
+                'role_1' => $request->role_1,
+                'role_2' => $request->role_2,
+                'role_3' => $request->role_3,
+                'role_4' => $request->role_4,
+            ]);
+            // return view('pages.pdfReport')->with(compact(
+            //     'items',
+            //     'location',
+            //     'prepared_by',
+            //     'verified_by',
+            //     'noted_by',
+            //     'approved_by',
+            //     'department',
+            //     'rooms',
+            //     'role_1',
+            //     'role_2',
+            //     'role_3',
+            //     'role_4'
+            // ));
+            foreach ($rooms as $room) {
+                if ($room->id == $location)
+                    return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
+            }
         }
     }
 

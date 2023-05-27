@@ -20,11 +20,11 @@ class CartController extends Controller
         $user = Auth::user(); 
         $item = Item::find($id);
 
-        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
+        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
 
-        // dd(count($order));
+        // dd($order);
 
-        if(count($order) == 0){
+        if($order == null){
             $order_cart = new Order;
 
             $order_cart->user_id = $user->id_number;
@@ -40,7 +40,18 @@ class CartController extends Controller
 
             $item_temp->save();
 
-            dd($item_temp);
+        }else{
+
+            // dd($order);
+            $item_temp = new OrderItemTemp;
+
+            $item_temp->order_id = $order->id;
+            $item_temp->item_id = $item->id;
+            $item_temp->quantity = $request->quantity;
+
+            $item_temp->save();
+
+            // dd($item_temp);
 
         }       
 
