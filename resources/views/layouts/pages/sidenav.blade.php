@@ -49,6 +49,8 @@
                         <a href="{{ route('cart.list') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Cart</p>
+                            <i class="bi bi-cart text-right"></i>
+                            <span class="badge badge-danger navbar-badge">{{ $itemcount }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
