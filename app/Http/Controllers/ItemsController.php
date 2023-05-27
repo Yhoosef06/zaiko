@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Room;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Reference;
 use App\Models\Department;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use App\Models\OrderItemTemp;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
+use Database\Seeders\OrderItemTempSeeder;
 
 
 class ItemsController extends Controller
@@ -142,7 +145,7 @@ class ItemsController extends Controller
 
             // Check if the item is currently borrowed
             if ($item->borrowed == 'yes') {
-                Session::flash('status', 'Warning: Unable to remove item that is currently being borrowed');
+                Session::flash('status', 'Warning: Unable to remove item that is currently being borrowed.');
                 return  redirect('list-of-items');
             }
 
@@ -162,7 +165,6 @@ class ItemsController extends Controller
             return redirect('list-of-items');
         }
     }
-
 
     public function saveNewItem(Request $request)
     {
@@ -441,13 +443,26 @@ class ItemsController extends Controller
 
         // return response()->json($unit_numbers);
 
-        $order = Order::find(1);
-        echo $order->orderItem->id;
-        if ($order) {
-            foreach ($order->orderItemTemp as $orderItemTemp) {
-                echo $orderItemTemp->item->id;
-                echo $orderItemTemp->item->location;
-            }
+        // $order = Order::find(1);
+        // echo $order->orderItem->id;
+        // if ($order) {
+        //     foreach ($order->orderItemTemp as $orderItemTemp) {
+        //         echo $orderItemTemp->item->id;
+        //         echo $orderItemTemp->item->location;
+        //     }
+        // }
+
+        // $order_item_temp = OrderItemTemp::find();
+
+        // echo ($order_item_temp->order->user_id);
+
+        $orderItemTemp = OrderItemTemp::find(16);
+
+        if ($orderItemTemp) {
+            $userId = $orderItemTemp->order->user_id;
+            echo $userId;
+        } else {
+            echo "OrderItemTemp not found.";
         }
     }
 }

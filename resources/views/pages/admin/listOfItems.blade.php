@@ -2,8 +2,9 @@
 
 @section('content')
     @if (session('status'))
-        <div class="alert bg-danger text-m">
-            <i class="fa fa-thumbs-down"></i> {{ session('status') }}
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <i class="icon fas fa-exclamation-triangle"></i>{{ session('status') }}
         </div>
     @endif
     <section class="content-header">
