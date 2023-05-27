@@ -199,78 +199,6 @@
 
 <script type="text/javascript">
 
-$(document).ready(function() {
-    $(document).on('click', '.show-borrow', function() {
-      var borrowData = $(this).data('borrow');
-      var modalBody = $('#borrowDetails');
-
-      // Clear previous data
-      modalBody.empty();
-
-
-    //   <div class="row">
-    //                 <div class="col-sm-6">
-                      
-    //                   <div class="form-group">
-    //                     <label>First Name</label>
-    //                     <input type="text" id="first_name" name="first_name" class="form-control" readOnly>
-    //                   </div>
-    //                 </div>
-    //                 <div class="col-sm-6">
-    //                   <div class="form-group">
-    //                     <label>Last Name</label>
-    //                     <input type="text" class="form-control" id="last_name" name="last_name" readOnly>
-    //                   </div>
-    //                 </div>
-    //              </div>
-
-      // Generate HTML for the borrowed item details
-    var html =  '<div class="row">';
-    html += '<div class="col-sm-6">';
-    html += '<div class="form-group">';
-    html += '<label>ID:</label>';
-    html += '<p>' + borrowData.id + '</p>';
-    html += '</div>';
-    html += '</div>';
-    html += '<div class="col-sm-6">';
-    html += '<div class="form-group">';
-    html += '<label>Serial Number:</label>';
-    html += '<p>' + borrowData.serial_number + '</p>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
-
-    html += '<div class="form-group">';
-    html += '<label>Serial Number:</label>';
-    html += '<p>' + borrowData.serial_number + '</p>';
-    html += '</div>';
-
-    html += '<div class="form-group">';
-    html += '<label>Name:</label>';
-    html += '<p>' + borrowData.first_name + ' ' + borrowData.last_name + '</p>';
-    html += '</div>';
-
-    html += '<div class="form-group">';
-    html += '<label>Brand:</label>';
-    html += '<p>' + borrowData.brand + '</p>';
-    html += '</div>';
-
-    html += '<div class="form-group">';
-    html += '<label>Released By:</label>';
-    html += '<p>' + borrowData.release_by + '</p>';
-    html += '</div>';
-
-    html += '<div class="form-group">';
-    html += '<label>Return Date:</label>';
-    html += '<p>' + borrowData.return_date + '</p>';
-    html += '</div>';
-
-      // Append the HTML to the modal body
-      modalBody.append(html);
-    });
-  });
-
-
    $(document).ready(function() {
     $(document).on('click', '#btn-return', function() {
       var dataId = $(this).attr("data-id");
@@ -291,6 +219,7 @@ $(document).ready(function() {
                     query: request.term
                 },
                 success: function(data) {
+                   
                     response(data);
                 }
             });
@@ -311,7 +240,7 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 $('#profile').show();
-                $('.item-category').show();
+                $('#search-serial-desc').show();
                 $('#first_name').val(ui.item.firstName);
                 $('#last_name').val(ui.item.lastName);
             }
@@ -331,7 +260,7 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-    $("#serial_number").autocomplete({
+    $("#search_item").autocomplete({
         minLength: 2,
         source: function(request, response) {
             $.ajax({
@@ -348,12 +277,18 @@ $(document).ready(function() {
         },
         appendTo: "#user_id_container",
         open: function(event, ui) {
-            $("#item-serial .ui-autocomplete").css("top", "auto");r
+            $("#item-serial .ui-autocomplete").css("top", "auto");
         },
         // Custom rendering of autocomplete items
         response: function(event, ui) {
             if (!ui.content.length) {
-                var noResult = { value: "", brand: "No matching Serial Numbers found" };
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
                 ui.content.push(noResult);
             }
         },
@@ -361,9 +296,26 @@ $(document).ready(function() {
             if (ui.item.value === "") {
                 event.preventDefault();
             } else {
-                $('#brand').val(ui.item.brand);
-                $('#model').val(ui.item.model);
-                $('#item_description').val(ui.item.description);
+                if(ui.item.item_category == 'Tools'){
+                    $('.item-category').show();
+                    $('#item_category').val(ui.item.item_category);
+                    $('#serial_number').val(ui.item.value);
+                    $('#brand').val(ui.item.brand);
+                    $('#model').val(ui.item.model);
+                    $('#item_description').val(ui.item.description);
+                    $('#item_id').val(ui.item.itemID);
+
+                }else{
+                    $('.item-category').show();
+                    $('#item_category').val(ui.item.item_category);
+                    $('#serial_number').val(ui.item.value);
+                    $('#brand').val(ui.item.brand);
+                    $('#model').val(ui.item.model);
+                    $("#quantity").prop("readonly", true);
+                    $('#item_description').val(ui.item.description);
+                    $('#item_id').val(ui.item.itemID);
+                }
+                
             }
         }
 
