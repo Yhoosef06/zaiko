@@ -19,6 +19,7 @@ class OrderItem extends Model
         'remarks',
         'order_serial_number',
         'date_returned',
+        'released_by',
         'returned_to'
     ];
 
