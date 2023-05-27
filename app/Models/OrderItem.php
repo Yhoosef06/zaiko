@@ -22,7 +22,7 @@ class OrderItem extends Model
         'returned_to'
     ];
 
-    public function orderItem(): BelongsTo {
-        return $this->belongsTo(OrderItem::class);
+    public function order_item(): BelongsTo {
+        return $this->belongsTo(OrderItemTemp::class);
     }
 }

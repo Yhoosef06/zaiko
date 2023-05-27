@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Cart;
+use App\Models\Department;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\ItemCategory;
@@ -80,10 +81,30 @@ class CartController extends Controller
 
     public function cart_list(){
 
-        $id = Auth::user()->id_number;
-        $cart = Cart::where('id_number','=',$id)->get();
+        $user = Auth::user(); 
+        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
 
-        return view('pages.students.cart-list')->with(compact('cart'));
+        $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
+
+
+
+        $user_dept_id = Auth::user()->department_id;
+       
+        $departments = Department::with('college')->get();
+    
+        $collegeId = null;
+        foreach ($departments as $department) {
+            if ($department->id == $user_dept_id) {
+                $collegeId =  $department->college->id;
+                break;
+            }
+        }
+       
+        $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
+            $query->where('id', $collegeId);
+        })->get();
+
+        return view('pages.students.cart-list')->with(compact('cartItems','items'));
 
     }
 
