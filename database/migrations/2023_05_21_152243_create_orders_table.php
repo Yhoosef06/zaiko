@@ -28,8 +28,6 @@ class CreateOrdersTable extends Migration
             $table->integer('user_id');
             $table->date('date_submitted')->nullable();
             $table->date('date_returned')->nullable();
-            $table->string('released_by')->nullable();
-            $table->string('returned_to')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id_number')->on('users');

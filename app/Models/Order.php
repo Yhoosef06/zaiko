@@ -12,9 +12,9 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'return_date',
-        'released_by',
-        'returned_to'
+        'date_submitted',
+        'date_returned'
+      
     ];
 
     public function orderItemTemp(): HasMany

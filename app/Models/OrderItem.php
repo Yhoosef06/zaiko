@@ -19,10 +19,11 @@ class OrderItem extends Model
         'remarks',
         'order_serial_number',
         'date_returned',
-        'returned_to'
+        'returned_to',
+        'released_by'
     ];
 
-    public function orderItem(): BelongsTo {
-        return $this->belongsTo(OrderItem::class);
+    public function order_item(): BelongsTo {
+        return $this->belongsTo(OrderItemTemp::class);
     }
 }

@@ -141,12 +141,6 @@
                     <div class="form-group">
                         <label>Item Category</label>
                         <input type="text" class="form-control" id="item_category" name="item_category" required readOnly>
-                        <!-- <select class="form-control" id="item_category" name="item_category">
-                          <option>Select Category</option>
-                          @foreach ($items as $item)
-                          <option value="{{ $item->category_name }}"> {{ $item->category_name }} </option>
-                          @endforeach
-                        </select> -->
                       </div>
                     </div>
                     <div class="col-sm-6">
@@ -185,7 +179,7 @@
                     <div class="col-sm-6">
                     <div class="form-group">
                         <label>Return Date</label>
-                        <input type="date" class="form-control" id="return_date" name="return_date">
+                        <input type="date" class="form-control" id="date_returned" name="date_returned">
                       </div>
                     </div>
                  </div>
@@ -195,6 +189,13 @@
                     <div class="form-group">
                         <label>Quantity</label>
                         <input type="number" value="0" class="form-control" id="quantity" name="quantity" >
+                      </div>
+                  </div>
+
+                  <div class="col-sm-6"  style="display: none;">
+                    <div class="form-group">
+                        <label>Item ID</label>
+                        <input type="text" class="form-control" id="item_id" name="item_id" >
                       </div>
                   </div>
                      

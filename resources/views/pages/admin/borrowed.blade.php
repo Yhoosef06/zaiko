@@ -30,12 +30,12 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                <!-- <table id="borrowed" class="table table-bordered table-striped">
+                <table id="borrowed" class="table table-bordered table-striped">
                   <thead>
                     <tr>
                       <th class="d-none">ID #</th>
+                      <th>ID Number</th>
                       <th>Serial #</th>
-                      <th>Name</th>
                       <th>Brand</th>
                       <th>Release BY</th>
                       <th>Return Date</th>
@@ -46,19 +46,99 @@
                     @foreach ($borrows as $borrow)
                     <tr>
                       <td class="d-none">{{ $borrow->id }}</td>
-                      <td>{{ $borrow->serial_number }}</td>
-                      <td>{{ $borrow->first_name }} {{ $borrow->last_name }}</td>
+                      <td>{{ $borrow->user_id }}</td>
+                      <td>{{ $borrow->order_serial_number}}</td>
                       <td>{{ $borrow->brand }}</td>
-                      <td>{{ $borrow->release_by }}</td>
-                      <td>{{ $borrow->return_date }}</td>
+                      <td>{{ $borrow->released_by }}</td>
+                      <td>{{ $borrow->date_returned }}</td>
                       <td>
-                        <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showBorrow" data-borrow="{{ json_encode($borrow) }}"><i class="fa fa-eye"></i></button>
-                        <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->id }}" data-serial="{{ $borrow->serial_number }}" data-bs-toggle="modal" data-bs-target="#returnBorrow"><i class="fa fa-check"></i></button>
+                        <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showBorrow{{$borrow->id}}"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->id }}" data-serial="{{ $borrow->order_serial_number }}" data-bs-toggle="modal" data-bs-target="#returnBorrow"><i class="fa fa-check"></i></button>
                       </td>
                     </tr>
+
+                    <div class="modal fade hide" id="showBorrow{{$borrow->id}}">
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Borrowed Item</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                              <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>ID Number: </label>
+                                  {{ $borrow->user_id }}
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Name: </label>
+                                  <span>{{ $borrow->last_name }},</span> <span>{{ $borrow->first_name }}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Category: </label>
+                                 @foreach ($categories as $category)
+                                        @if ($category->id == $borrow->category_id)
+                                            {{ $category->category_name }}
+                                        @endif
+                                  @endforeach
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Brand: </label>
+                                 {{ $borrow->brand }}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Model: </label>
+                                  {{ $borrow->model }}
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Serial Number: </label>
+                                 {{ $borrow->order_serial_number }}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Date Return: </label>
+                                  {{ $borrow->date_returned }}
+                                </div>
+                              </div>
+                              
+                            </div>
+
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                        <!-- /.modal-content -->
+                      </div>
+                      <!-- /.modal-dialog -->
+                    </div>
+                    
                     @endforeach
                   </tbody>
-              </table> -->
+              </table>
                 </div>
                 <!-- /.card-body -->
               </div>
@@ -76,30 +156,7 @@
 @endsection
 
 
-<div class="modal fade" id="showBorrow">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Borrowed Item</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div id="borrowDetails">
-        
-        </div>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
-      <div class="modal fade" id="returnBorrow">
+      <div class="modal fade hide" id="returnBorrow">
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
             <div class="modal-header">
@@ -117,6 +174,15 @@
                         <label>Remarks</label>
                         <textarea class="form-control" rows="3" name="item_remark" placeholder="Enter ..."></textarea>
             </div>
+            <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" name="status">
+                          <option value="Active">Active</option>
+                          <option value="Obsolete">Obsolete</option>
+                          <option value="Lost">Lost</option>
+                          <option value="For Repair">For Repair</option>   
+                        </select>
+            </div>
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -131,4 +197,4 @@
 
 
 
-     
+      <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
