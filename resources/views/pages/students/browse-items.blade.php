@@ -59,13 +59,14 @@
                                                 {{ $item->quantity }}
                                             </td>
                                             <td>
-                                                {{-- <button class="btn btn-default btn-sm">
+                                                <button class="btn btn-default btn-sm minus-btn">
                                                     <i class="fa fa-minus"></i>
-                                                </button> --}}
-                                                <input type="number" value="0" min="0" max="{{ $item->quantity }}">
-                                                {{-- <button class="btn btn-default btn-sm">
+                                                </button>
+                                                <input id="quantity-input" type="number" value="0" min="0"
+                                                    max="{{ $item->quantity }}">
+                                                <button class="btn btn-default btn-sm plus-btn">
                                                     <i class="fa fa-plus"></i>
-                                                </button> --}}
+                                                </button>
                                             </td>
                                             <td>
                                                 {{-- <button class="btn btn-sm btn-primary" data-toggle="modal"
@@ -77,7 +78,7 @@
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
                                                     onclick="openItemModal('{{ $item->id }}')">
-                                                  Add to cart
+                                                    Add to cart
                                                 </button>
 
                                                 {{-- <form class="form_delete_btn" method="POST"
@@ -107,3 +108,29 @@
         <!-- /.container-fluid -->
     </section>
 @endsection
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.plus-btn').click(function(e) {
+            e.preventDefault();
+            var input = $('#quantity-input');
+            var currentValue = parseInt(input.val());
+            var maxValue = parseInt(input.attr('max'));
+
+            if (currentValue < maxValue) {
+                input.val(currentValue + 1);
+            }
+        });
+
+        $('.minus-btn').click(function(e) {
+            e.preventDefault();
+            var input = $('#quantity-input');
+            var currentValue = parseInt(input.val());
+            var minValue = parseInt(input.attr('min'));
+
+            if (currentValue > minValue) {
+                input.val(currentValue - 1);
+            }
+        });
+    });
+</script>
