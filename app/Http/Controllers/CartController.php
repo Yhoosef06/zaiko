@@ -104,6 +104,8 @@ class CartController extends Controller
             $query->where('id', $collegeId);
         })->get();
 
+        
+
         return view('pages.students.cart-list')->with(compact('cartItems','items'));
 
     }

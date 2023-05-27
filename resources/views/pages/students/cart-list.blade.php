@@ -42,10 +42,21 @@
 
                                 <td class="text-center">
                                     @php 
-                                        $catItem = $items->where('category_id',$cart->item->category->id)->sortByDesc('id');
-                                        $groupedItems = $catItem->groupBy(function ($item) {
-                                            return $item->brand . '_' . $item->model;
-                                        });
+                                        $catItem = $items->where('category_id',$cart->item->category->id)->where('brand',$cart->item->brand)->where('model',$cart->item->model)->sortByDesc('id');
+                                        // dd($catItem);
+                                        // $groupedItems = $catItem->groupBy(function ($item) {
+                                        //     return $item->brand . '_' . $item->model;
+                                        // });
+                                        // dd($catItem);
+                                        // dd($groupedItems);
+
+                                        // $quantity = 0;
+
+                                        // foreach($groupedItems as $key =>$collection ){
+                                        //     $quantity += count($collection);
+                                        // }
+                                        // dd($quantity);
+                                        
                                     @endphp
                                     <button class="btn btn-default btn-sm minus-btn">
                                         <i class="fa fa-minus"></i>
@@ -62,32 +73,6 @@
                                 </td>
                             </tr>
 
-                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-                            <script>
-                                $(document).ready(function() {
-                                    $('.plus-btn').click(function(e) {
-                                        e.preventDefault();
-                                        var input = $('#quantity-input');
-                                        var currentValue = parseInt(input.val());
-                                        var maxValue = parseInt(input.attr('max'));
-
-                                        if (currentValue < maxValue) {
-                                            input.val(currentValue + 1);
-                                        }
-                                    });
-
-                                    $('.minus-btn').click(function(e) {
-                                        e.preventDefault();
-                                        var input = $('#quantity-input');
-                                        var currentValue = parseInt(input.val());
-                                        var minValue = parseInt(input.attr('min'));
-
-                                        if (currentValue > minValue) {
-                                            input.val(currentValue - 1);
-                                        }
-                                    });
-                                });
-                            </script>
 
                     @endforeach
 
