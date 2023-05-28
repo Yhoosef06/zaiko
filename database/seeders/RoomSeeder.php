@@ -18,15 +18,15 @@ class RoomSeeder extends Seeder
         $room = [
             [
                 'room_name' => 'BRD2',
-                'department_id' => '7'
+                'department_id' => '18'
             ],
             [
                 'room_name' => 'BCL4',
-                'department_id' => '7'
+                'department_id' => '19'
             ],
             [
                 'room_name' => 'BCL5',
-                'department_id' => '7'
+                'department_id' => '20'
             ],
             [
                 'room_name' => 'RM102',

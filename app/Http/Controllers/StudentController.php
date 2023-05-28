@@ -27,7 +27,7 @@ class StudentController extends Controller
         $categories = ItemCategory::all();
         $user_dept_id = Auth::user()->department_id;
         // $rooms = Room::where('department_id', $user_dept_id)->get();x    x   
-        $items = Item::all();
+        // $items = Item::all();
 
         $departments = Department::with('college')->get();
         // $rooms = Room::with('departments')->get();

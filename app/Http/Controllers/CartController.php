@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Cart;
+use App\Models\Department;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\ItemCategory;
+use App\Models\OrderItemTemp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Console\Input\Input;
@@ -15,38 +17,96 @@ class CartController extends Controller
 {
     public function add_cart(Request $request, $id){
         
-        // dd($request);
-        $user = Auth::user();
-
-        // $cartcheck = Cart::where('id_number', '=', $user->id_number)->exists();
-        
+        // dd($id);
+        $user = Auth::user(); 
         $item = Item::find($id);
 
-        $cart = new Cart;
+        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
 
-        $categoryName = ItemCategory::where('id', $item->category_id)->value('category_name');
+        // dd($order);
 
-        $cart->id_number = $user->id_number;
-        $cart->category = $categoryName;
-        $cart->brand = $item->brand;
-        $cart->model = $item->model;
-        $cart->item_description = $item->description; 
-        $cart->quantity = $request->quantity;
-        $cart->ordered = 'no';
+        if($order == null){
+            $order_cart = new Order;
 
-        $cart->save();
+            $order_cart->user_id = $user->id_number;
+            $order_cart->save();
 
-        session()->flash('success','Item suceessfully added to cart.');
+            // dd($order_cart->id);
+
+            $item_temp = new OrderItemTemp;
+
+            $item_temp->order_id = $order_cart->id;
+            $item_temp->item_id = $item->id;
+            $item_temp->quantity = $request->quantity;
+
+            $item_temp->save();
+
+        }else{
+
+            // dd($order);
+            $item_temp = new OrderItemTemp;
+
+            $item_temp->order_id = $order->id;
+            $item_temp->item_id = $item->id;
+            $item_temp->quantity = $request->quantity;
+
+            $item_temp->save();
+
+            // dd($item_temp);
+
+        }       
+
+
+        
+        // dd($order_cart);
+
+        // $cart = new Cart;
+
+        // $categoryName = ItemCategory::where('id', $item->category_id)->value('category_name');
+
+        // $cart->id_number = $user->id_number;
+        // $cart->category = $categoryName;
+        // $cart->brand = $item->brand;
+        // $cart->model = $item->model;
+        // $cart->item_description = $item->description; 
+        // $cart->quantity = $request->quantity;
+        // $cart->ordered = 'no';
+
+        // $cart->save();
+
+        // session()->flash('success','Item suceessfully added to cart.');
 
         return redirect()->back();      
     }
 
     public function cart_list(){
 
-        $id = Auth::user()->id_number;
-        $cart = Cart::where('id_number','=',$id)->get();
+        $user = Auth::user(); 
+        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
 
-        return view('pages.students.cart-list')->with(compact('cart'));
+        $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
+
+
+
+        $user_dept_id = Auth::user()->department_id;
+       
+        $departments = Department::with('college')->get();
+    
+        $collegeId = null;
+        foreach ($departments as $department) {
+            if ($department->id == $user_dept_id) {
+                $collegeId =  $department->college->id;
+                break;
+            }
+        }
+       
+        $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
+            $query->where('id', $collegeId);
+        })->get();
+
+        
+
+        return view('pages.students.cart-list')->with(compact('cartItems','items'));
 
     }
 

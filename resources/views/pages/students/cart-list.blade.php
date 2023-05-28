@@ -19,28 +19,64 @@
                     <tr>
                         <th style="width:10%" class="text-wrap">Category</th>
                         <th style="width:10%" class="text-wrap">Brand</th>
-                        <th style="width:15%" class="text-wrap">Model</th>
-                        <th style="width:45%" class="text-wrap">Description</th>
-                        <th style="width:10%" class="text-wrap text-center">Quantity</th>
-                        <th style="width:25%" class="text-wrap text-center">Actions</th>
+                        <th style="width:10%" class="text-wrap">Model</th>
+                        <th style="width:25%" class="text-wrap">Description</th>
+                        <th style="width:20%" class="text-wrap text-center">Quantity</th>
+                        <th style="width:10%" class="text-wrap text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($cart as $cart)
+                    @foreach($cartItems as $cart)
                         
                             <tr>
-                                <td class="text-wrap">{{ $cart['category'] }}</td>
-                                <td class="text-wrap">{{ $cart['brand'] }}</td>
-                                <td class="text-wrap">{{ $cart['model'] }}</td>
-                                <td class="text-wrap">{{ $cart['item_description'] }}</td>
-                                <td class="text-wrap text-center">{{ $cart['quantity'] }}</td>
+                               
+                                <td class="text-wrap">{{ $cart->item->category->category_name }}</td>
+                                <td class="text-wrap">{{ $cart->item->brand }}</td>
+                                <td class="text-wrap">{{ $cart->item->model }}</td>
+                                <td class="text-wrap">{{ $cart->item->description }}</td>
+                                {{-- <td class="text-wrap text-center">
+                                    <i class="fa fa-minus" onclick="updateQuantity('{{ $cart->id }}', -1)"></i>
+                                    <input type="text" name="" id="" value="{{ $cart->quantity }}">
+                                    <i class="fa fa-plus" onclick="updateQuantity('{{ $cart->id }}', 1)"></i>
+                                </td> --}}
+
                                 <td class="text-center">
+                                    @php 
+                                        $catItem = $items->where('category_id',$cart->item->category->id)->where('brand',$cart->item->brand)->where('model',$cart->item->model)->sortByDesc('id');
+                                        // dd($catItem);
+                                        // $groupedItems = $catItem->groupBy(function ($item) {
+                                        //     return $item->brand . '_' . $item->model;
+                                        // });
+                                        // dd($catItem);
+                                        // dd($groupedItems);
+
+                                        // $quantity = 0;
+
+                                        // foreach($groupedItems as $key =>$collection ){
+                                        //     $quantity += count($collection);
+                                        // }
+                                        // dd($quantity);
+                                        
+                                    @endphp
+                                    <button class="btn btn-default btn-sm minus-btn">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <input id="quantity-input" type="number" value="{{ $cart->quantity }}" min="0"
+                                        max="{{ count($catItem) }}">
+                                    <button class="btn btn-default btn-sm plus-btn">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </td>
                                     {{-- <button class="btn btn-danger btn-sm" id="cart_remove"><i class="bi bi-x-circle"></i> Remove</button> --}}
-                                <a class="border-0 text-danger text-decoration-underline" onclick="return confirm('Are you sure you want to remove item?')" href="{{ route('remove.cart', $cart->id)}}">Delete</a>
+                                <td class="text-center">
+                                    <a class="border-0 text-danger text-decoration-underline" onclick="return confirm('Are you sure you want to remove item?')" href="{{ route('remove.cart', $cart->id)}}">Delete</a>
                                 </td>
                             </tr>
 
+
                     @endforeach
+
+
                 </tbody>
                 <tfoot>
                     <tr>
