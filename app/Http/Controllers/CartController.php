@@ -176,7 +176,11 @@ class CartController extends Controller
 
     public function history(){
         
-        return view('pages.students.history');
+        $orderHistory = Order::whereNotNull('date_submitted')->whereNotNull('date_returned')->get();
+
+        // dd($orderHistory);
+
+        return view('pages.students.history')->with(compact('orderHistory'));
 
     }
 

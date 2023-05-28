@@ -27,7 +27,8 @@ class OrderSeeder extends Seeder
                 'user_id' => 2016331404,
                 'date_submitted' => null,
                 'date_returned' => null,
-            ]
+            ],
+            
         ];
         DB::table('orders')->insert($order); 
     }
