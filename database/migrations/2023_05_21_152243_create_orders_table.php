@@ -14,22 +14,10 @@ class CreateOrdersTable extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            // $table->id();
-            // $table->unsignedBigInteger('user_id');
-            // $table->date('date_submitted')->nullable();
-            // $table->date('date_returned')->nullable();
-            // $table->string('released_by')->nullable();
-            // $table->string('returned_to')->nullable();
-            // $table->timestamps();
-
-            // $table->foreign('user_id')->references('id')->on('users');
-
             $table->id();
             $table->integer('user_id');
             $table->date('date_submitted')->nullable();
             $table->date('date_returned')->nullable();
-            $table->string('released_by')->nullable();
-            $table->string('returned_to')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id_number')->on('users');

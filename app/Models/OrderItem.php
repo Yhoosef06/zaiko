@@ -19,7 +19,8 @@ class OrderItem extends Model
         'remarks',
         'order_serial_number',
         'date_returned',
-        'returned_to'
+        'returned_to',
+        'released_by'
     ];
 
     public function order_item(): BelongsTo {

@@ -34,29 +34,119 @@
                   <table id="returned" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                      <th>Name Of Borrower</th>
-                      <th>Item Name</th>
-                      <th>Serial #</th>           
-                      <th>Item Description</th>
-                      <th>Released By</th>
-                      <th>Returned To</th>
-                      <th>Date Borrowed</th>
-                      <th>Date Returned</th>
+                      <th class="d-none">ID #</th>
+                      <th>ID Number</th>
+                      <th>Serial #</th>
+                      <th>Brand</th>
+                      <th>Release BY</th>
+                      <th>Return Date</th>
+                      <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                   
                     @foreach ($forReturns as $forReturn)
-                        <tr>
-                            <td>{{ $forReturn->first_name }} {{ $forReturn->last_name }}</td>
-                            <td>{{ $forReturn->item_name }}</td>
-                            <td>{{ $forReturn->serial_number }}</td>
-                            <td>{{ Str::limit($forReturn->item_description, 20, '...') }}</td>
-                            <td>{{ $forReturn->release_by }}</td>
-                            <td>{{ $forReturn->return_to }}</td>
-                            <td>{{ $forReturn->created_at }}</td>
-                            <td>{{ $forReturn->updated_at }}</td>
-                        </tr>
+                    <tr>
+                      <td class="d-none">{{ $forReturn->id }}</td>
+                      <td>{{ $forReturn->user_id }}</td>
+                      <td>{{ $forReturn->order_serial_number}}</td>
+                      <td>{{ $forReturn->brand }}</td>
+                      <td>{{ $forReturn->released_by }}</td>
+                      <td>{{ $forReturn->date_returned }}</td>
+                      <td>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#showReturn{{$forReturn->id}}"><i class="fa fa-eye"></i></button>
+                    
+                      </td>
+                    </tr>
+
+                    <div class="modal fade hide" id="showReturn{{$forReturn->id}}">
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title"><span>{{ $forReturn->last_name }},</span> <span>{{ $forReturn->first_name }}</span></h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                              <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>ID Number: </label>
+                                  {{ $forReturn->user_id }}
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                      
+                                <div class="form-group">
+                                  <label>Date Return: </label>
+                                  {{ $forReturn->date_returned }}
+                                </div>
+                              
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Category: </label>
+                                 @foreach ($categories as $category)
+                                        @if ($category->id == $forReturn->category_id)
+                                            {{ $category->category_name }}
+                                        @endif
+                                  @endforeach
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Brand: </label>
+                                 {{ $forReturn->brand }}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Model: </label>
+                                  {{ $forReturn->model }}
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Serial Number: </label>
+                                 {{ $forReturn->order_serial_number }}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Remarks: </label>
+                                  {{ $forReturn->remarks }}
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Return TO: </label>
+                                 {{ $forReturn->returned_to }}
+                                </div>
+                              </div>
+                            </div>
+
+                           
+
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                        <!-- /.modal-content -->
+                      </div>
+                      <!-- /.modal-dialog -->
+                    </div>
+                    
                     @endforeach
                     </tbody>
                   

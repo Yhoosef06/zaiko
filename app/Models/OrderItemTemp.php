@@ -26,7 +26,6 @@ class OrderItemTemp extends Model
     public function order(): BelongsTo {
         return $this->belongsTo(Order::class);
     }
-
     public function item()
     {
         return $this->belongsTo(Item::class);

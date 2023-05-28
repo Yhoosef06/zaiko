@@ -15,7 +15,7 @@ class CreateOrderItems extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_temp_id');
+            $table->unsignedBigInteger('order_temp_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->unsignedBigInteger('item_id')->nullable();
             $table->integer('quantity');
@@ -23,7 +23,8 @@ class CreateOrderItems extends Migration
             $table->string('remarks')->nullable();
             $table->string('order_serial_number')->nullable();
             $table->date('date_returned');
-            $table->string('returned_to');
+            $table->string('released_by')->nullable();
+            $table->string('returned_to')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id_number')->on('users');
