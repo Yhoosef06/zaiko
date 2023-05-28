@@ -53,7 +53,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('borrow_list') }}" class="nav-link">
+                        <a href="{{ route('history') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>History</p>
                         </a>

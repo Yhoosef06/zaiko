@@ -84,8 +84,13 @@ class CartController extends Controller
         $user = Auth::user(); 
         $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
 
-        $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
+        if($order != null){
+            $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
+        }else{
+            $cartItems = null;
 
+        }
+        
 
 
         $user_dept_id = Auth::user()->department_id;
@@ -167,6 +172,12 @@ class CartController extends Controller
             }  
 
         return redirect()->route('student.dashboard');
+    }
+
+    public function history(){
+        
+        return view('pages.students.history');
+
     }
 
     
