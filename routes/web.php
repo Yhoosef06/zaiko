@@ -143,19 +143,19 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
                 Route::get('/student-dashboard', 'index')->name('student.dashboard');
                 Route::get('/student-items', 'items')->name('student.items');
                 Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
-                Route::get('/borrow-list', 'borrowList')->name('borrow_list');
             });
 
             //cart
             Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
             Route::get('/student-cart-list', [CartController::class, 'cart_list'])->name('cart.list');
-            Route::get('/remove-cart/{serial_number}', [CartController::class, 'remove_cart'])->name('remove.cart');
+            Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('remove.cart');
             Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
+            Route::get('/history', [CartController::class, 'history'])->name('history');
 
             //agreement
             Route::get('/agreement', [StudentController::class, 'agreement'])->name('agreement');
             Route::get('agreement-approve/{id}', [StudentController::class, 'agreement_approve'])->name('agreement.approve');
-            Route::get('/test',[PagesController::class,'test'])->name('test');
+            // Route::get('/test',[PagesController::class,'test'])->name('test');
 
             Route::post('/store-selected-category', 'App\Http\Controllers\CategoryController@storeSelectedCategory')->name('storeSelectedCategory');
 
