@@ -35,6 +35,7 @@
                             <table id="pending" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th>ORDERID</th>
                                         <th>ID</th>
                                         <th>Student Name</th>
                                         <th>Date Submitted</th>
@@ -44,7 +45,9 @@
                                 <tbody>
 
                                     @foreach ($pendings as $pending)
+                                    @if ($pending->date_submitted)
                                         <tr>
+                                            <td>{{ $pending->order_id }}</td>
                                             <td>{{ $pending->user_id }}</td>
                                             <td>
                                                 @foreach ($users as $user)
@@ -54,16 +57,17 @@
                                                 @endforeach
                                             </td>
 
-                                            @if ($pending->date_submitted != '0000-00-00')
+                                           
                                                 <td>{{ $pending->date_submitted }}</td>
-                                            @endif
-
+                                         
                                             <td>
-                                                <a href="{{ route('remove_borrow', $pending->id) }}"
-                                                    class="btn btn-sm btn-danger" title="Disregard">
-                                                    <i class="fa fa-trash"></i></a>
+                                                <a href="{{ route('view-order', $pending->order_id) }}"
+                                                    class="btn btn-sm btn-primary" title="Disregard">
+                                                    view</a>
                                             </td>
                                         </tr>
+                                        @endif
+
                                     @endforeach
                                 </tbody>
                             </table>

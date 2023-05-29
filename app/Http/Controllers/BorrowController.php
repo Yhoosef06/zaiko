@@ -71,7 +71,13 @@ class BorrowController extends Controller
         // return view('pages.admin.pending')->with(compact('pendings','items')); 
         // $pendings = Order::with('user')->whereNotNull('date_submitted')->whereNull('date_returned')->get();
         // dd($pendings);
-        return view('pages.admin.pending')->with(compact('pendings','users    '));
+
+        // echo '<pre>';
+        // print_r($pendings);
+        // echo '<pre>';
+        // exit;
+
+        return view('pages.admin.pending')->with(compact('pendings','users'));
        
     }
 
@@ -220,6 +226,23 @@ class BorrowController extends Controller
              Session::flash('success', 'Successfuly Return.');
             return redirect('borrowed');
         }
+    }
+
+    public function viewOrder($id)
+    {
+        $order_temp = OrderItemTemp::find($id);
+        $order = OrderItemTemp::join('orders', 'order_item_temps.order_id', '=', 'orders.id')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->where('order_item_temps.id', $id)
+            ->first();
+    
+        echo '<pre>';
+        print_r($order_temp);
+        echo '</pre>';
+        exit;
+    
+        return view('pages.admin.viewOrder')->with(compact('order_temp'));
     }
 
 
