@@ -136,40 +136,13 @@ class CartController extends Controller
         $user = Auth::user()->id_number;
         $usernames = Auth::user();
 
-        $data = Cart::where('id_number', '=', $user)->get();
+        // $data = Order::where('order', $user)->get();
+        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
+         
+        $order->date_submitted = now();
+        $order->save();
 
-            foreach($data as $data){
-                
-                // if($data->ordered == 'no'){
-                    $order = new Order;
-                    $order->id_number = $data->id_number;
-                    $order->first_name = $usernames->first_name;
-                    $order->last_name = $usernames->last_name;
-                    $order->category = $data->category;
-                    $order->brand = $data->brand;
-                    $order->model = $data->model;
-                    $order->item_description = $data->item_description;
-                    $order->quantity = $data->quantity;
-                    $order->order_status = "pending";
-                    
-                    // $affectedRows = Item::where('serial_number','=',$data->serial_number)->update(['borrowed' => 'pending']);
-                    
-                    // dd($order);
-                    
-                    $order->save();
-                    $data->delete();
-
-                    
-
-                    session()->flash('success','Your borrowing order is already in process.. Please go to the SCS office within 1 day to proceed to your borrowing process');
-                // }
-                // else{
-                //     session()->flash('success','You have already submitted a borrow request.');
-                //     break;
-                    
-                // }
-               
-            }  
+        session()->flash('success','Your borrowing order is already in process.. Please go to the SCS office within 1 day to proceed to your borrowing process');          
 
         return redirect()->route('student.dashboard');
     }
