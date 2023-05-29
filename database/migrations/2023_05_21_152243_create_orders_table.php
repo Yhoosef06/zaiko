@@ -18,6 +18,8 @@ class CreateOrdersTable extends Migration
             $table->integer('user_id');
             $table->date('date_submitted')->nullable();
             $table->date('date_returned')->nullable();
+            $table->date('approval_date')->nullable();
+            $table->string('approved_by')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id_number')->on('users');
