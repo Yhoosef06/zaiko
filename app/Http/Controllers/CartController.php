@@ -137,7 +137,7 @@ class CartController extends Controller
         $usernames = Auth::user();
 
         // $data = Order::where('order', $user)->get();
-        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
+        $order = Order::where('user_id', $user)->where('date_submitted', null)->first();
          
         $order->date_submitted = now();
         $order->save();
