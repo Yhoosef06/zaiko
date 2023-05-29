@@ -17,18 +17,18 @@ class OrderItemTempSeeder extends Seeder
         $order_item_temp = [
             [
                 'order_id' => 1,
-                'item_id' => 37,
-                'quantity' => 1,       
+                'item_id' => 1,
+                'quantity' => 3,       
 
             ],
             [
                 'order_id' => 1,
-                'item_id' => 38,
+                'item_id' => 2,
                 'quantity' => 1, 
             ],
             [
                 'order_id' => 2,
-                'item_id' => 41,
+                'item_id' => 5,
                 'quantity' => 1, 
             ]
         ];

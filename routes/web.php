@@ -109,12 +109,14 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('pending', [BorrowController::class, 'pending'])->name('pending');
     Route::get('returned', [BorrowController::class, 'returned'])->name('returned');
     // Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
-    Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
+    // Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
     Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
     Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
     Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
     Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
     Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
+    Route::get('view-order/{id}', [BorrowController::class, 'viewOrder'])->name('view-order');
+
 
     //storing references
     Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
