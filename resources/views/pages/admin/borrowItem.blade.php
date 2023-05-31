@@ -1,0 +1,125 @@
+@extends('layouts.pages.yields')
+
+@section('content')
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+        
+                    <div class="form-group">
+                        <label>ID Number</label>
+                        <div id="user_id_container">
+                            <input type="text" id="idNumber" name="idNumber" class="form-control"
+                                placeholder="Enter ID Number here...." required>
+                        </div>     
+                    </div>
+
+                    
+
+                </div>
+            </div>
+
+            <div class="row" id="search-serial-desc">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Search Item</label>
+                        <div id="search-item">
+                            <input type="text" id="search_item" name="search_item" class="form-control"
+                                placeholder="Search Item to Borrow - Serial Number or Item Description"
+                                required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    
+
+
+       <section class="content">
+        <div id="success-message"></div>
+        <div class="container-fluid">
+        
+              <div class="row">
+                <div class="col-12">
+                  <div class="card">
+                   
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0" style="height: 250px;">
+                      <table class="table table-head-fixed text-nowrap" id="notAdded">
+                        <thead>
+                          <tr>
+                            <th style="background-color:#ffc107; color:aliceblue">Brand</th>
+                            <th style="background-color:#ffc107; color:aliceblue">Model</th>
+                            <th style="background-color:#ffc107; color:aliceblue">Desctiption</th>
+                            <th style="background-color:#ffc107; color:aliceblue">Serial</th>
+                            <th style="background-color:#ffc107; color:aliceblue">Quantity</th>
+                            <th style="background-color:#ffc107; color:aliceblue">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                        
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.card -->
+                </div>
+              </div>
+
+
+
+              <div class="row">
+                <div class="col-12">
+                  <div class="card">
+                   
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0" style="height: 250px;">
+                    <form method="POST">
+                    <input type="text" id="student_id" name="student_id" class="form-control">
+                      <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                          <tr>
+                                <th style="background-color:#dc3545; color:aliceblue">Brand</th>
+                                <th style="background-color:#dc3545; color:aliceblue">Model</th>
+                                <th style="background-color:#dc3545; color:aliceblue">Description</th>
+                                <th style="background-color:#dc3545; color:aliceblue">Serial</th>
+                                <th style="background-color:#dc3545; color:aliceblue">Quantity</th>
+                               
+                          </tr>
+                        </thead>
+                        <tbody>
+                       
+                          <tr>
+                        
+                          </tr>
+                      
+                        </tbody>
+                      </table>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.card -->
+                </div>
+              </div>
+
+
+
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+            
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+@endsection
+

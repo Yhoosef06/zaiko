@@ -162,8 +162,9 @@ class BorrowController extends Controller
              $response = $items->map(function ($item) {
             $category = ItemCategory::find($item->category_id);
             return [
-                'value' => $item->serial_number,
+                'value' => $item->serial_number . ' - ' . $item->description,
                 'item_category' => $category ? $category->category_name : null,
+                'id' => $item->id,
                 'brand' => $item->brand,
                 'model' => $item->model,
                 'description' => $item->description,
@@ -228,21 +229,31 @@ class BorrowController extends Controller
         }
     }
 
-    public function viewOrder($id)
-    {
-        $order_temp = OrderItemTemp::find($id);
-        $order = OrderItemTemp::join('orders', 'order_item_temps.order_id', '=', 'orders.id')
-            ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
-            ->where('order_item_temps.id', $id)
-            ->first();
+    // public function viewOrder($id)
+    // {
+    //     $order_temp = OrderItemTemp::find($id);
+    //     $order = OrderItemTemp::join('orders', 'order_item_temps.order_id', '=', 'orders.id')
+    //         ->join('users', 'orders.user_id', '=', 'users.id_number')
+    //         ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+    //         ->where('order_item_temps.id', $id)
+    //         ->first();
     
-        echo '<pre>';
-        print_r($order_temp);
-        echo '</pre>';
-        exit;
+    //     echo '<pre>';
+    //     print_r($order_temp);
+    //     echo '</pre>';
+    //     exit;
     
-        return view('pages.admin.viewOrder')->with(compact('order_temp'));
+    //     return view('pages.admin.viewOrder')->with(compact('order_temp'));
+    // }
+
+    public function borrowItem(){
+        return view('pages.admin.borrowItem');
+    }
+
+    public function addItem($id){
+        $item = Item::find($id);
+
+        return response()->json($item);
     }
 
 

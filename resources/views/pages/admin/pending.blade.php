@@ -9,10 +9,14 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBorrow">
+                        {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBorrow">
                             <i class="fa fa-plus"> </i>
                             Add to Borrow
-                        </button>
+                        </button> --}}
+                        <a href="{{ route('borrowItem') }}" class="btn btn-primary" >
+                            <i class="fa fa-plus"> </i>
+                            Add to Borrow
+                        </a>
                     </ol>
                 </div>
             </div>
@@ -61,9 +65,9 @@
                                                 <td>{{ $pending->date_submitted }}</td>
                                          
                                             <td>
-                                                <a href="{{ route('view-order', $pending->order_id) }}"
+                                                {{-- <a href="{{ route('view-order', $pending->order_id) }}"
                                                     class="btn btn-sm btn-primary" title="Disregard">
-                                                    view</a>
+                                                    view</a> --}}
                                             </td>
                                         </tr>
                                         @endif
@@ -84,7 +88,7 @@
     </section>
 @endsection
 
-<div class="modal fade" id="addBorrow">
+{{-- <div class="modal fade" id="addBorrow">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -230,4 +234,4 @@
         <!-- /.modal-dialog -->
 
     </div>
-</div>
+</div> --}}

@@ -12,8 +12,8 @@
         }
 
     
-        /* .ui-autocomplete-loading {
-            background: white url('/images/loading.gif') right center no-repeat;
+        /* .pending-yellow{
+            col
         } */
  
     </style>
@@ -239,10 +239,11 @@ $(document).ready(function() {
             if (ui.item.value === "") {
                 event.preventDefault();
             } else {
-                $('#profile').show();
-                $('#search-serial-desc').show();
-                $('#first_name').val(ui.item.firstName);
-                $('#last_name').val(ui.item.lastName);
+                // $('#profile').show();
+                // $('#search-serial-desc').show();
+                // $('#first_name').val(ui.item.firstName);
+                // $('#last_name').val(ui.item.lastName);
+                $('#student_id').val(ui.item.value);
             }
         }
 
@@ -296,25 +297,48 @@ $(document).ready(function() {
             if (ui.item.value === "") {
                 event.preventDefault();
             } else {
-                if(ui.item.item_category == 'Tools'){
-                    $('.item-category').show();
-                    $('#item_category').val(ui.item.item_category);
-                    $('#serial_number').val(ui.item.value);
-                    $('#brand').val(ui.item.brand);
-                    $('#model').val(ui.item.model);
-                    $('#item_description').val(ui.item.description);
-                    $('#item_id').val(ui.item.itemID);
+                event.preventDefault();
+                var itemId = ui.item.id;
+                console.log(itemId);
 
-                }else{
-                    $('.item-category').show();
-                    $('#item_category').val(ui.item.item_category);
-                    $('#serial_number').val(ui.item.value);
-                    $('#brand').val(ui.item.brand);
-                    $('#model').val(ui.item.model);
-                    $("#quantity").prop("readonly", true);
-                    $('#item_description').val(ui.item.description);
-                    $('#item_id').val(ui.item.itemID);
-                }
+                var url = '/add-item/' + itemId;
+                
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        // Handle the response data
+                        console.log(response);
+
+                    var tableRow = $('<tr>').appendTo('#notAdded tbody');
+                    $('<td>').text(response.brand).appendTo(tableRow);
+                    $('<td>').text(response.model).appendTo(tableRow);
+                    $('<td>').text(response.description).appendTo(tableRow);
+                    $('<td>').text(response.serial_number).appendTo(tableRow);
+                    var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity).appendTo(tableRow);
+                    $('<td>').text('Action').appendTo(tableRow);
+
+
+                        quantityInput.on('input', function() {
+                        var enteredValue = parseInt($(this).val());
+                        var maxValue = parseInt($(this).attr('max'));
+                        if (enteredValue > maxValue) {  
+                            Swal.fire(
+                            'Quantity cannot exceed ' + maxValue,
+                            'Try input ' + maxValue + ' or below.',
+                            'question'
+                            )
+                            
+                        }
+                    });
+                    },
+
+
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
+                });
                 
             }
         }
@@ -325,7 +349,7 @@ $(document).ready(function() {
                 .append("<div>" + item.brand + "</div>")
                 .appendTo(ul);
         } else {
-            return $("<li>").append("<div>" + item.value +" - "+ item.brand  +" - "+ item.model +  "</div>").appendTo(ul);
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
         }
     };
  });
