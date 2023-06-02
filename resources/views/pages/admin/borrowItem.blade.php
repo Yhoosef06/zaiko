@@ -19,7 +19,7 @@
                 </div>
             </div>
 
-            <div class="row" id="search-serial-desc">
+            <div class="row" id="search-serial-desc" style="display: none;">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Search Item</label>
@@ -50,12 +50,12 @@
                       <table class="table table-head-fixed text-nowrap" id="notAdded">
                         <thead>
                           <tr>
-                            <th style="background-color:#ffc107; color:aliceblue">Brand</th>
-                            <th style="background-color:#ffc107; color:aliceblue">Model</th>
-                            <th style="background-color:#ffc107; color:aliceblue">Desctiption</th>
-                            <th style="background-color:#ffc107; color:aliceblue">Serial</th>
-                            <th style="background-color:#ffc107; color:aliceblue">Quantity</th>
-                            <th style="background-color:#ffc107; color:aliceblue">Action</th>
+                            <th class="d-none">ID</th>
+                            <th style="background-color:#343a40; color:aliceblue">Brand</th>
+                            <th style="background-color:#343a40; color:aliceblue">Model</th>
+                            <th style="background-color:#343a40; color:aliceblue">Desctiption</th>
+                            <th style="background-color:#343a40; color:aliceblue">Quantity</th>
+                            <th style="background-color:#343a40; color:aliceblue">Action</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -81,22 +81,22 @@
                     <div class="card-body table-responsive p-0" style="height: 250px;">
                     <form method="POST">
                     <input type="text" id="student_id" name="student_id" class="form-control">
-                      <table class="table table-head-fixed text-nowrap">
+                      <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                         <thead>
                           <tr>
-                                <th style="background-color:#dc3545; color:aliceblue">Brand</th>
-                                <th style="background-color:#dc3545; color:aliceblue">Model</th>
-                                <th style="background-color:#dc3545; color:aliceblue">Description</th>
-                                <th style="background-color:#dc3545; color:aliceblue">Serial</th>
-                                <th style="background-color:#dc3545; color:aliceblue">Quantity</th>
+                               <th class="d-none">ID</th>
+                                <th style="background-color:#28a745; color:aliceblue">Brand</th>
+                                <th style="background-color:#28a745; color:aliceblue">Model</th>
+                                <th style="background-color:#28a745; color:aliceblue">Description</th>
+                                <th style="background-color:#28a745; color:aliceblue">Serial</th>
+                                <th style="background-color:#28a745; color:aliceblue">Quantity</th>
+                                <th style="background-color:#28a745; color:aliceblue">Option</th>
                                
                           </tr>
                         </thead>
                         <tbody>
-                       
-                          <tr>
-                        
-                          </tr>
+                    
+                          
                       
                         </tbody>
                       </table>

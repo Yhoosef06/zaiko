@@ -240,7 +240,7 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 // $('#profile').show();
-                // $('#search-serial-desc').show();
+                $('#search-serial-desc').show();
                 // $('#first_name').val(ui.item.firstName);
                 // $('#last_name').val(ui.item.lastName);
                 $('#student_id').val(ui.item.value);
@@ -298,47 +298,118 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 event.preventDefault();
-                var itemId = ui.item.id;
-                console.log(itemId);
+                if (!ui.item.serialNumber || ui.item.serialNumber === 'N/A') {
+                    var userID = $("#student_id").val();
+                    var itemId = ui.item.id;
+                    console.log(userID);
 
-                var url = '/add-item/' + itemId;
-                
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        // Handle the response data
+                    var url = '/add-item/' + itemId;
+                    
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+                            // Handle the response data
                         console.log(response);
 
-                    var tableRow = $('<tr>').appendTo('#notAdded tbody');
-                    $('<td>').text(response.brand).appendTo(tableRow);
-                    $('<td>').text(response.model).appendTo(tableRow);
-                    $('<td>').text(response.description).appendTo(tableRow);
-                    $('<td>').text(response.serial_number).appendTo(tableRow);
-                    var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity).appendTo(tableRow);
-                    $('<td>').text('Action').appendTo(tableRow);
+                        var tableRow = $('<tr>').appendTo('#notAdded tbody');
+                        $('<td class="d-none">').text(userID).appendTo(tableRow);
+                        $('<td>').text(response.brand).appendTo(tableRow);
+                        $('<td>').text(response.model).appendTo(tableRow);
+                        $('<td>').text(response.description).appendTo(tableRow);
+                        var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity).appendTo(tableRow);
+                        var buttonCell = $('<td>').appendTo(tableRow);
+                        var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
+                        var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
 
 
-                        quantityInput.on('input', function() {
-                        var enteredValue = parseInt($(this).val());
-                        var maxValue = parseInt($(this).attr('max'));
-                        if (enteredValue > maxValue) {  
-                            Swal.fire(
-                            'Quantity cannot exceed ' + maxValue,
-                            'Try input ' + maxValue + ' or below.',
-                            'question'
-                            )
-                            
+
+                            quantityInput.on('input', function() {
+                            var enteredValue = parseInt($(this).val());
+                            var maxValue = parseInt($(this).attr('max'));
+                            if (enteredValue > maxValue) {  
+                                Swal.fire(
+                                'Quantity cannot exceed ' + maxValue,
+                                'Try input ' + maxValue + ' or below.',
+                                'question'
+                                )
+                                
+                            }
+                            });
+
+                            addButton.on('click', function() {
+                            // Perform the "Add" action here
+                            console.log('Add button clicked');
+                            });
+
+                            // Add click event listener to cancel button
+                            cancelButton.on('click', function() {
+                            // Perform the "Cancel" action here
+                            tableRow.remove();
+                            console.log('Cancel button clicked');
+                            });
+                        },
+
+
+                        error: function(xhr) {
+                            // Handle the error
+                            console.log(xhr.responseText);
                         }
                     });
-                    },
+                   
+                }else{
+                    var userID = $("#student_id").val();
+                    var itemId = ui.item.id;
+                    var serialNumber = ui.item.serialNumber;
+
+                    $.ajax({
+                        url: "{{ route('pendingBorrow') }}",
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        data: {
+                            userID: userID,
+                            itemId: itemId,
+                            serialNumber: serialNumber
+                        },
+                        success: function(response) {
+                            // Handle the response data
+                            Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Successfully Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+
+                            $('#alreadyAdded tbody').empty();
+
+                            for (var i = 0; i < response.length; i++) {
+                                var rowData = response[i];
+                                var tableRow = $('<tr>').appendTo('#alreadyAdded tbody');
+                                $('<td class="d-none">').text(rowData.user_id).appendTo(tableRow);
+                                $('<td>').text(rowData.brand).appendTo(tableRow);
+                                $('<td>').text(rowData.model).appendTo(tableRow);
+                                $('<td>').text(rowData.description).appendTo(tableRow);
+                                $('<td>').text(rowData.order_serial_number).appendTo(tableRow);
+                                $('<td>').text(rowData.quantity).appendTo(tableRow);
+                                var buttonCell = $('<td>').appendTo(tableRow);
+                                var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                            }
+
+                            },
 
 
-                    error: function(xhr) {
-                        // Handle the error
-                        console.log(xhr.responseText);
-                    }
-                });
+                        error: function(xhr) {
+                            // Handle the error
+                            console.log(xhr.responseText);
+                        }
+                    });
+
+                  
+                }
+               
                 
             }
         }

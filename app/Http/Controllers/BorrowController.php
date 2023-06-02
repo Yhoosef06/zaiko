@@ -165,6 +165,7 @@ class BorrowController extends Controller
                 'value' => $item->serial_number . ' - ' . $item->description,
                 'item_category' => $category ? $category->category_name : null,
                 'id' => $item->id,
+                'serialNumber' => $item->serial_number,
                 'brand' => $item->brand,
                 'model' => $item->model,
                 'description' => $item->description,
@@ -255,6 +256,30 @@ class BorrowController extends Controller
 
         return response()->json($item);
     }
+    public function pendingBorrow(Request $request)
+    {
+        $userID = $request->userID;
+        $itemId = $request->itemId;
+        $serialNumber = $request->serialNumber;
+    
+        Item::where('serial_number', '=', $serialNumber)->update(['borrowed' => 'yes']);
+    
+        $data = OrderItem::create([
+            'user_id' => $userID,
+            'item_id' => $itemId,
+            'quantity' => 1,
+            'status' => 'pending',
+            'order_serial_number' => $serialNumber
+        ]);
+    
+        $response = OrderItem::where('order_items.status', 'pending')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->where('order_items.user_id', $userID)
+            ->get();
+    
+        return response()->json($response);
+    }
+ 
 
 
 }
