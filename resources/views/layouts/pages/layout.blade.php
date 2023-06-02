@@ -314,6 +314,7 @@ $(document).ready(function() {
 
                         var tableRow = $('<tr>').appendTo('#notAdded tbody');
                         $('<td class="d-none">').text(userID).appendTo(tableRow);
+                        $('<td class="d-none">').text(response.id).appendTo(tableRow);
                         $('<td>').text(response.brand).appendTo(tableRow);
                         $('<td>').text(response.model).appendTo(tableRow);
                         $('<td>').text(response.description).appendTo(tableRow);
@@ -339,7 +340,27 @@ $(document).ready(function() {
 
                             addButton.on('click', function() {
                             // Perform the "Add" action here
-                            console.log('Add button clicked');
+                                console.log('Add button clicked');
+                                var userId = tableRow.find('td:nth-child(1)').text();
+                                var itemId = tableRow.find('td:nth-child(2)').text();
+                                var brand = tableRow.find('td:nth-child(3)').text();
+                                var model = tableRow.find('td:nth-child(4)').text();
+                                var description = tableRow.find('td:nth-child(5)').text();
+                                var serial = tableRow.find('td:nth-child(6)').text();
+                                var quantity = tableRow.find('input').val();
+
+                                // Create an object to send in the AJAX request
+                                var requestData = {
+                                    userId: userId,
+                                    itemId: itemId,
+                                    brand: brand,
+                                    model: model,
+                                    description: description,
+                                    serial: serial,
+                                    quantity: quantity
+                                };
+                                console.log(requestData);
+
                             });
 
                             // Add click event listener to cancel button
