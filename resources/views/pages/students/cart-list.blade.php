@@ -42,9 +42,10 @@
                                         <i class="fa fa-plus" onclick="updateQuantity('{{ $cart->id }}', 1)"></i>
                                     </td> --}}
 
-                                    <td class="text-center">
+                                    <td class="text-center position-relative">
                                         @php 
                                             $catItem = $items->where('category_id',$cart->item->category->id)->where('brand',$cart->item->brand)->where('model',$cart->item->model)->sortByDesc('id');
+                                            // @dd($cart->item->serial_number);
                                             // dd($catItem);
                                             // $groupedItems = $catItem->groupBy(function ($item) {
                                             //     return $item->brand . '_' . $item->model;
@@ -60,14 +61,38 @@
                                             // dd($quantity);
                                             
                                         @endphp
-                                        <button class="btn btn-default btn-sm minus-btn">
+                                        {{-- <button class="btn btn-default btn-sm minus-btn">
                                             <i class="fa fa-minus"></i>
-                                        </button>
-                                        <input id="quantity-input" type="number" value="{{ $cart->quantity }}" min="0"
-                                            max="{{ count($catItem) }}">
-                                        <button class="btn btn-default btn-sm plus-btn">
+                                        </button> --}}
+                                        @if($cart->item->serial_number == null)
+                                            {{-- <input id="quantity-input" type="number" value="{{ $cart->quantity }}" min="0"
+                                            max="{{ $cart->item->quantity }}"> --}}
+                                            <select class="form-control w-20 position-absolute top-50 start-50 translate-middle" id="quantity" name="quantity">
+                                                @for($i = 1; $i <= $cart->item->quantity; $i++)
+                                                {{-- <option value="{{$i}}">{{$i}}</option> --}}
+                                                @if($i == $cart->quantity)
+                                                    <option value="{{$i}}" selected>{{$i}}</option>
+                                                @else
+                                                    <option value="{{$i}}">{{$i}}</option>
+                                                @endif
+                                                @endfor
+                                            </select>
+                                        @else
+                                            {{-- <input id="quantity-input" type="number" value="{{ $cart->quantity }}" min="0"
+                                            max="{{ count($catItem) }}"> --}}
+                                            <select class="form-control w-20 position-absolute top-50 start-50 translate-middle" id="quantity" name="quantity">
+                                                @for($i = 1; $i <= count($catItem); $i++)
+                                                @if($i == $cart->quantity)
+                                                    <option value="{{$i}}" selected>{{$i}}</option>
+                                                @else
+                                                    <option value="{{$i}}">{{$i}}</option>
+                                                @endif
+                                                @endfor
+                                            </select>
+                                        @endif
+                                        {{-- <button class="btn btn-default btn-sm plus-btn">
                                             <i class="fa fa-plus"></i>
-                                        </button>
+                                        </button> --}}
                                     </td>
                                         {{-- <button class="btn btn-danger btn-sm" id="cart_remove"><i class="bi bi-x-circle"></i> Remove</button> --}}
                                     <td class="text-center">
