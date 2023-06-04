@@ -167,7 +167,13 @@
             "autoWidth": false
 
         });
-        $("#pending").DataTable({
+        $("#admin-pending").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false
+
+        });
+        $("#user-pending").DataTable({
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false

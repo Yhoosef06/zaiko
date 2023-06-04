@@ -66,24 +66,32 @@ class BorrowController extends Controller
 
     public function pending()
     {
-        $pendings = OrderItemTemp::join('orders', 'order_item_temps.order_id', '=', 'orders.id')->get();
-        $users = User::all();
-        // return view('pages.admin.pending')->with(compact('pendings','items')); 
-        // $pendings = Order::with('user')->whereNotNull('date_submitted')->whereNull('date_returned')->get();
-        // dd($pendings);
+        $adminPendings = OrderItem::join('users', 'order_items.user_id', '=', 'users.id_number')
+        ->join('items', 'order_items.item_id', '=', 'items.id')
+        ->where('order_items.status', '=', 'pending')
+        ->groupBy('order_items.user_id')
+        ->get();
 
+        $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
+        ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+        ->whereNotNull('orders.date_submitted')
+        ->whereNull('orders.date_returned')
+        ->groupBy('orders.user_id')
+        ->get();
         // echo '<pre>';
-        // print_r($pendings);
+        // print_r($userPending);
         // echo '<pre>';
         // exit;
 
-        return view('pages.admin.pending')->with(compact('pendings','users'));
+        return view('pages.admin.pending')->with(compact('adminPendings','userPendings'));
        
     }
 
     public function returned(){
         $forReturns =  $borrows = OrderItem::join('items', 'order_items.item_id', '=', 'items.id')->join('users', 'order_items.user_id', '=', 'users.id_number')->where('order_items.status', '=', 'returned')->get();
         $categories = ItemCategory::all();
+        
         return view('pages.admin.returned')->with(compact('forReturns','categories'));
     }
 
@@ -230,22 +238,21 @@ class BorrowController extends Controller
         }
     }
 
-    // public function viewOrder($id)
-    // {
-    //     $order_temp = OrderItemTemp::find($id);
-    //     $order = OrderItemTemp::join('orders', 'order_item_temps.order_id', '=', 'orders.id')
-    //         ->join('users', 'orders.user_id', '=', 'users.id_number')
-    //         ->join('items', 'order_item_temps.item_id', '=', 'items.id')
-    //         ->where('order_item_temps.id', $id)
-    //         ->first();
+    public function viewOrderAdmin($id)
+    {
+        $order = OrderItem::join('users', 'order_items.user_id', '=', 'users.id_number')
+                ->join('items', 'order_items.item_id', '=', 'items.id')
+                ->where('order_items.user_id', $id)
+                ->where('order_items.status','pending')
+                ->get();
+ 
+        // echo '<pre>';
+        // print_r($order);
+        // echo '</pre>';
+        // exit;
     
-    //     echo '<pre>';
-    //     print_r($order_temp);
-    //     echo '</pre>';
-    //     exit;
-    
-    //     return view('pages.admin.viewOrder')->with(compact('order_temp'));
-    // }
+        return view('pages.admin.viewOrderAdmin')->with(compact('order'));
+    }
 
     public function borrowItem(){
         return view('pages.admin.borrowItem');

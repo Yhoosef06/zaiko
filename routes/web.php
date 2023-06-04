@@ -119,7 +119,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
 
     // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
     // Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
-    // Route::get('view-order/{id}', [BorrowController::class, 'viewOrder'])->name('view-order');
+    Route::get('view-order-admin/{id}', [BorrowController::class, 'viewOrderAdmin'])->name('view-order-admin');
 
 
     //storing references
