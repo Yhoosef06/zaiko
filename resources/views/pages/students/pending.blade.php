@@ -25,7 +25,7 @@
                 @if($pendingHistory != null)
                 <tbody>
                    
-                        @foreach($pendingHistory as $order)
+                        @foreach($pendingOrder as $order)
                             
                                 <tr>
                                 
