@@ -101,7 +101,7 @@
                 </tbody>       
                 @endif
                 <tfoot>
-                    @if($orderHistory != null)
+                    @if($pendingOrder != null)
                     {{-- <tr>
                         <td colspan="10" class="text-right">
                             <a href="{{ route('student.items') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Continue Browsing Items</a>
