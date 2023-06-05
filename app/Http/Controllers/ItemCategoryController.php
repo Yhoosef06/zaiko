@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 
 class ItemCategoryController extends Controller
@@ -55,5 +56,24 @@ class ItemCategoryController extends Controller
             'category_name' => $request->category_name,
         ]);
         return response()->json(['success' => $request->category_name . ' category successfully added.'], 200);
+    }
+
+    public function deleteCategory($id)
+    {
+        try {
+            $category = ItemCategory::find($id);
+            $category->delete();
+
+            Session::flash('success', 'Successfully Removed');
+            return redirect('item-categories');
+        } catch (QueryException $e) {
+            // Check if the exception is due to a foreign key constraint violation
+            if ($e->getCode() === '23000') {
+                Session::flash('status', 'Cannot remove category because it is referenced by other records.');
+            } else {
+                Session::flash('status', 'An error occurred.');
+            }
+            return redirect('item-categories');
+        }
     }
 }

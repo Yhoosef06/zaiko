@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
-use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Validator;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 
 class RoomController extends Controller
@@ -93,5 +93,20 @@ class RoomController extends Controller
 
     public function deleteRoom($id)
     {
+        try {
+            $room = Room::find($id);
+            $room->delete();
+
+            Session::flash('success', 'Successfully Removed');
+            return redirect('rooms');
+        } catch (QueryException $e) {
+            // Check if the exception is due to a foreign key constraint violation
+            if ($e->getCode() === '23000') {
+                Session::flash('status', 'Cannot remove room because it is referenced by other records.');
+            } else {
+                Session::flash('status', 'An error occurred.');
+            }
+            return redirect('rooms');
+        }
     }
 }
