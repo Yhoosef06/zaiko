@@ -22,7 +22,7 @@
                         <th style="width:10%" class="text-wrap text-center">Actions</th>
                     </tr>
                 </thead>
-                @if($pendingHistory != null)
+                @if($pendingOrder != null)
                 <tbody>
                    
                         @foreach($pendingOrder as $order)
