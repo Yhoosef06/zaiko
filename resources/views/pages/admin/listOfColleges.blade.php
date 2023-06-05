@@ -1,16 +1,12 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    {{-- <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Inventory</h1>
-                </div>
-            </div>
-        </div><!-- /.container-fluid -->
-    </section> --}}
-
+    @if (session('status'))
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <i class="icon fas fa-exclamation-triangle"></i>{{ session('status') }}
+        </div>
+    @endif  
 
     <section class="content">
         <div class="container-fluid">
@@ -45,14 +41,14 @@
                                                     <i class="fa fa-eye"></i></a> --}}
                                                 {{-- {{ $item->id }} --}}
 
-                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                {{-- <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
                                                     onclick="openItemModal('{{ $college->id }}')">
                                                     <i class="fa fa-eye"></i>
-                                                </button>
+                                                </button> --}}
 
                                                 <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_item', $college->id) }}">
+                                                    action="{{ route('delete_college', $college->id) }}">
                                                     @csrf
                                                     <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                     <button type="submit"

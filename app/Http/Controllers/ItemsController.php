@@ -106,7 +106,7 @@ class ItemsController extends Controller
         $item->model = $request->model;
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
-        $item->item_category = $request->item_category;
+        $item->category_id = $request->item_category;
         $item->description = $request->description;
         $item->aquisition_date = $request->aquisition_date;
         $item->quantity = $request->quantity;
@@ -442,27 +442,5 @@ class ItemsController extends Controller
         // })->toArray();
 
         // return response()->json($unit_numbers);
-
-        // $order = Order::find(1);
-        // echo $order->orderItem->id;
-        // if ($order) {
-        //     foreach ($order->orderItemTemp as $orderItemTemp) {
-        //         echo $orderItemTemp->item->id;
-        //         echo $orderItemTemp->item->location;
-        //     }
-        // }
-
-        // $order_item_temp = OrderItemTemp::find();
-
-        // echo ($order_item_temp->order->user_id);
-
-        $orderItemTemp = OrderItemTemp::find(16);
-
-        if ($orderItemTemp) {
-            $userId = $orderItemTemp->order->user_id;
-            echo $userId;
-        } else {
-            echo "OrderItemTemp not found.";
-        }
     }
 }

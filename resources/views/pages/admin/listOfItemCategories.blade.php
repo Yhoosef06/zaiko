@@ -52,7 +52,7 @@
                                                 </button> --}}
 
                                                 <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_item', $category->id) }}">
+                                                    action="{{ route('delete_category', $category->id) }}">
                                                     @csrf
                                                     <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                     <button type="submit"

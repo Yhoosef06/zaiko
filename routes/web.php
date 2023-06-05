@@ -84,22 +84,22 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
 
     // FOR Colleges
     Route::get('colleges', [CollegeController::class, 'index'])->name('view_colleges');
+    Route::post('delete-college-{id}', [CollegeController::class, 'deleteCollege'])->name('delete_college');
     
     //FOR Departments
     Route::get('departments', [DepartmentController::class, 'index'])->name('view_departments');
-
-    // Route::middleware(['web'])->group(function () {
-    // your routes here
+    Route::post('delete-department-{id}', [DepartmentController::class, 'deleteDepartment'])->name('delete_department');
 
     // FOR ROOM
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
     Route::post('storing-new-room', [RoomController::class, 'storeNewRoom'])->name('store_new_room');
-    // });
+    Route::post('delete-room-{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
 
     // FOR Item Category
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
     Route::post('storing-new-category', [ItemCategoryController::class, 'storeNewCategory'])->name('store_new_category');
-
+    Route::post('delete-category-{$id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
+   
     //FOR BRAND
     Route::get('brands', [BrandController::class, 'index'])->name('view_brands');
     Route::post('storing-new-brand', [BrandController::class, 'storeNewBrand'])->name('store_new_brand');
