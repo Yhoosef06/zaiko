@@ -172,6 +172,15 @@ class CartController extends Controller
         return view('pages.students.history')->with(compact('orderHistory'));
 
     }
+    
+    public function pending(){
+        
+        $pendingOrder = Order::whereNotNull('date_submitted')->whereNull('date_returned')->get();
+
+        dd($pendingOrder);
+
+        return view('pages.students.pending')->with(compact('pendingOrder'));
+    }
 
     
     
