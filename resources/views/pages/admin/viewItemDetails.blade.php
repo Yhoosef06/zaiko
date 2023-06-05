@@ -85,11 +85,11 @@
                 <form id="edit-item-form">
                     <div class="form-group">
                         <label for="brand"> Brand:</label>
-                        <input type="text" id="brand" name="brand" class="form-control">
+                        <input value="{{$item->brand}}" type="text" id="brand" name="brand" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="model"> Model:</label>
-                        <input type="text" id="model" name="model" class="form-control">
+                        <input value="{{$item->model}}" type="text" id="model" name="model" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="Item name">Item Category:</label>
@@ -110,7 +110,7 @@
                     </div>
                     <div class="form-group">
                         <label for="Item Description">Item Description:</label>
-                        <input type="text" id="description" name="description" class="form-control">
+                        <input value="{{$item->description}}" type="text" id="description" name="description" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="aquisition date">Quantity:</label>
@@ -124,7 +124,7 @@
                     </div>
                     <div class="form-group">
                         <label for="serial number"> Serial Number:</label>
-                        <input type="text" id="serial_number" name="serial_number" class="form-control">
+                        <input value="{{$item->serial_number}}" type="text" id="serial_number" name="serial_number" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="location">Room/Location:</label>

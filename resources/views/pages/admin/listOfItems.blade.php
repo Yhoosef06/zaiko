@@ -50,7 +50,7 @@
                                                     <td>{{ $categoryItems->first()->id }}</td>
                                                     <td>{{ $categoryItems->first()->brand }}</td>
                                                     <td>{{ $categoryItems->first()->model }}</td>
-                                                    <td>{{ $categoryItems->first()->item_category }}</td>
+                                                    <td>{{ $categoryItems->first()->category->category_name }}</td>
                                                     <td>{{ Str::limit($categoryItems->first()->description, 20, '...') }}
                                                     </td>
                                                     @php
