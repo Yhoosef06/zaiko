@@ -55,7 +55,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('history') }}" class="nav-link">
+                        <a href="{{ route('pending-order') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Pending <i class="bi bi-card-list"></i></p>
                         </a>

@@ -161,6 +161,7 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('remove.cart');
             Route::post('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
             Route::get('/history', [CartController::class, 'history'])->name('history');
+            Route::get('/pending-order', [CartController:: class, 'pending'])->name('pending-order');
             Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
 
 

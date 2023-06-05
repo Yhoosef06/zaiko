@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Room;
 use App\Models\Department;
 use App\Models\College;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,15 @@ class StudentController extends Controller
     {
         $item = Item::find($serial_number);
         return view('pages.students.viewItem')->with('item', $item);
+    }
+
+    public function pending(){
+        
+        $pendingOrder = Order::whereNotNull('date_submitted')->whereNull('date_returned')->get();
+
+        dd($pendingOrder);
+
+        return view('pages.students.pending')->with(compact('pendingOrder'));
     }
 
     public function agreement()
