@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    @foreach($order as $index => $item)
+                    @foreach($orders as $index => $item)
                         @if($index === 0)
                             <h1>{{ $item->last_name }}, {{ $item->first_name }}</h1>
                         @endif
@@ -75,20 +75,36 @@
                           </tr>
                         </thead>
                         <tbody>
-                            @foreach ( $order as $item )
+                            @foreach ($orders as $item)
+                            @if ($item->category_name === 'Tools')
                                 <tr>
-                                    <td  class="d-none">  {{ $item->order_item_id }} </td>
-                                    <td> {{ $item->brand }} </td>
-                                    <td> {{ $item->model }} </td>
-                                    <td> {{ $item->description }} </td>
-                                    <td> {{ $item->serial_number }} </td>
-                                    <td> {{ $item->quantity }} </td>
+                                    <td class="d-none">{{ $item->order_item_id }}</td>
+                                    <td>{{ $item->brand }}</td>
+                                    <td>{{ $item->model }}</td>
+                                    <td>{{ $item->description }}</td>
+                                    <td>{{ $item->serial_number }}</td>
+                                    <td>{{ $item->quantity }}</td>
                                     <td> 
                                     
-                                      <a href="" class="btn btn-danger">Remove</a> 
-                                    </td>
+                                        <a href="" class="btn btn-danger">Remove</a> 
+                                      </td>
                                 </tr>
-                            @endforeach
+                            @else
+                                @for ($i = 1; $i <= $item->quantity; $i++)
+                                    <tr>
+                                        <td class="d-none">{{ $item->order_item_id }}</td>
+                                        <td>{{ $item->brand }}</td>
+                                        <td>{{ $item->model }}</td>
+                                        <td>{{ $item->description }}</td>
+                                        <td> <input type="text" name="user_serial_number" class="form-control user_serial_number"></td>
+                                        <td>1</td>
+                                        <td> 
+                                            <a href="" class="btn btn-danger">Remove</a> 
+                                          </td>
+                                    </tr>
+                                @endfor
+                            @endif
+                        @endforeach
                     
                           
                       

@@ -120,7 +120,7 @@
                                                             </td>
                                                             <td>{{ $pending->date_submitted }}</td>
                                                             <td>
-                                                                <a href=""
+                                                                <a href="{{ route('view-order-user', $pending->user_id) }}"
                                                                     class="btn btn-sm btn-primary" title="Disregard">
                                                                     view</a>
                                                             </td>

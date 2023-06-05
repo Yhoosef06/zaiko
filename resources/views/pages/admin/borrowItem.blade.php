@@ -80,8 +80,8 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                    <form method="POST">
-                    <input type="text" id="student_id" name="student_id" class="form-control">
+                    <form method="POST" id="submitAdmin">
+                    <input type="text" id="student_id" name="student_id" class="form-control" style="display: none;">
                       <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                         <thead>
                           <tr>

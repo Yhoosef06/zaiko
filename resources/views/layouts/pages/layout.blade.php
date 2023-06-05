@@ -316,7 +316,7 @@ $(document).ready(function() {
                         type: 'GET',
                         success: function(response) {
                             // Handle the response data
-                        console.log(response);
+                       
 
                         var tableRow = $('<tr>').appendTo('#notAdded tbody');
                         $('<td class="d-none">').text(userID).appendTo(tableRow);
@@ -344,30 +344,65 @@ $(document).ready(function() {
                             }
                             });
 
-                            addButton.on('click', function() {
-                            // Perform the "Add" action here
-                                console.log('Add button clicked');
-                                var userId = tableRow.find('td:nth-child(1)').text();
-                                var itemId = tableRow.find('td:nth-child(2)').text();
-                                var brand = tableRow.find('td:nth-child(3)').text();
-                                var model = tableRow.find('td:nth-child(4)').text();
-                                var description = tableRow.find('td:nth-child(5)').text();
-                                var serial = tableRow.find('td:nth-child(6)').text();
-                                var quantity = tableRow.find('input').val();
+                    addButton.on('click', function() {
+                    // Perform the "Add" action here
+                    console.log('Add button clicked');
+                    var userId = tableRow.find('td:nth-child(1)').text();
+                    var itemId = tableRow.find('td:nth-child(2)').text();
+                    var brand = tableRow.find('td:nth-child(3)').text();
+                    var model = tableRow.find('td:nth-child(4)').text();
+                    var description = tableRow.find('td:nth-child(5)').text();
+                    var serial = tableRow.find('td:nth-child(6)').text();
+                    var quantity = tableRow.find('input').val();
 
-                                // Create an object to send in the AJAX request
-                                var requestData = {
-                                    userId: userId,
-                                    itemId: itemId,
-                                    brand: brand,
-                                    model: model,
-                                    description: description,
-                                    serial: serial,
-                                    quantity: quantity
-                                };
-                                console.log(requestData);
+                    // Create an object to send in the AJAX request
+                    var requestData = {
+                        userId: userId,
+                        itemId: itemId,
+                        brand: brand,
+                        model: model,
+                        description: description,
+                        serial: serial,
+                        quantity: quantity
+                    };
 
+                    $.ajax({
+                        url: "{{ route('adminAddedOrder') }}",
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        data: requestData,
+                        success: function(response) {
+                            // Handle the response data
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Successfully Added',
+                                showConfirmButton: false,
+                                timer: 1500
                             });
+
+                            // Clear the inputs and remove the table row
+                            tableRow.find('input').val('');
+                            tableRow.remove();
+
+                            // Append the data to the alreadyAdded table
+                            var newRow = $('<tr>').appendTo('#alreadyAdded tbody');
+                            $('<td class="d-none">').text(response.userId).appendTo(newRow);
+                            $('<td>').text(response.brand).appendTo(newRow);
+                            $('<td>').text(response.model).appendTo(newRow);
+                            $('<td>').text(response.description).appendTo(newRow);
+                            $('<td>').text(response.serial).appendTo(newRow);
+                            $('<td>').text(response.quantity).appendTo(newRow);
+                            var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(newRow);
+                        },
+                        error: function(xhr) {
+                            // Handle the error
+                            console.log(xhr.responseText);
+                        }
+                            });
+                        });
 
                             // Add click event listener to cancel button
                             cancelButton.on('click', function() {
