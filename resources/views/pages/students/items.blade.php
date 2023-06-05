@@ -70,7 +70,11 @@
                                                 <div class="col">
                                                     <strong>Brand:</strong> {{ $item->brand }} <br>
                                                     <strong>Model:</strong> {{ $item->model }} <br>
-                                                    <strong>Available:</strong> {{$quantity}} <br>
+                                                    @if($item->serial_number == null)
+                                                        <strong>Available:</strong> {{$item->quantity}} <br>
+                                                    @else
+                                                        <strong>Available:</strong> {{$quantity}} <br>
+                                                    @endif
                                                 </div>
                                                 <div class="col">
                                                     <strong>Description:</strong> {{ $item->description }} <br>
@@ -82,11 +86,19 @@
                                                 @csrf
                                                 <div class="form-group col-2">
                                                     <label for="quantity">Quantity:</label>
-                                                    <select class="form-control" id="quantity" name="quantity">
-                                                        @for($i = 1; $i <= $quantity; $i++)
-                                                        <option value="{{$i}}">{{$i}}</option>
-                                                        @endfor
-                                                    </select>
+                                                    @if($item->serial_number == null)
+                                                        <select class="form-control" id="quantity" name="quantity">
+                                                            @for($i = 1; $i <= $item->quantity; $i++)
+                                                            <option value="{{$i}}">{{$i}}</option>
+                                                            @endfor
+                                                        </select>
+                                                    @else
+                                                        <select class="form-control" id="quantity" name="quantity">
+                                                            @for($i = 1; $i <= $quantity; $i++)
+                                                            <option value="{{$i}}">{{$i}}</option>
+                                                            @endfor
+                                                        </select>
+                                                    @endif
                                                 </div>
                                                 <div class="modal-footer">
                                                     <i class="fas fa-cart-plus"></i><input type="submit" class="btn btn-outline-dark" value="Add to cart">

@@ -49,7 +49,15 @@
                         <a href="{{ route('cart.list') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Cart <i class="bi bi-cart text-right"></i></p>
+                            @if($itemcount != 0)
                             <span class="badge badge-danger right">{{ $itemcount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('history') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Pending <i class="bi bi-card-list"></i></p>
                         </a>
                     </li>
                     <li class="nav-item">

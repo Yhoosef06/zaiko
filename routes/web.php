@@ -151,8 +151,10 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
             Route::get('/student-cart-list', [CartController::class, 'cart_list'])->name('cart.list');
             Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('remove.cart');
-            Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
+            Route::post('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
             Route::get('/history', [CartController::class, 'history'])->name('history');
+            Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
+
 
             //agreement
             Route::get('/agreement', [StudentController::class, 'agreement'])->name('agreement');

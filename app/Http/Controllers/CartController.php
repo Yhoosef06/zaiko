@@ -117,11 +117,25 @@ class CartController extends Controller
 
     public function remove_cart($id){
         
-        Cart::where('id','=',$id)->delete();
+        OrderItemTemp::where('id','=',$id)->delete();
 
         session()->flash('success','Item suceessfully removed.');
         return redirect()->back();
     }
+
+    public function update_cart(Request $request,$id){
+        // dd($id);
+       
+        $item = OrderItemTemp::find($id); // Replace $cartId with the actual cart ID
+        
+            $item->quantity = $request->quantity;
+            $item->save();
+            
+            session()->flash('success','Item quantity changed.');
+            return redirect()->back();
+        
+    }
+
 
     public function cart_notif(){
 
@@ -135,10 +149,12 @@ class CartController extends Controller
 
         $user = Auth::user()->id_number;
         $usernames = Auth::user();
+    
 
         // $data = Order::where('order', $user)->get();
         $order = Order::where('user_id', $user)->where('date_submitted', null)->first();
-         
+        
+        
         $order->date_submitted = now();
         $order->save();
 
@@ -157,5 +173,6 @@ class CartController extends Controller
 
     }
 
+    
     
 }
