@@ -177,8 +177,6 @@ class CartController extends Controller
         
         $pendingOrder = Order::whereNotNull('date_submitted')->whereNull('date_returned')->get();
 
-        dd($pendingOrder);
-
         return view('pages.students.pending')->with(compact('pendingOrder'));
     }
 
