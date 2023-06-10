@@ -17,6 +17,7 @@ class CreateOrderItems extends Migration
             $table->id();
             $table->unsignedBigInteger('order_temp_id')->nullable();
             $table->integer('user_id')->nullable();
+            $table->unsignedBigInteger('order_id')->nullable();
             $table->unsignedBigInteger('item_id')->nullable();
             $table->integer('quantity');
             $table->string('status');
@@ -30,6 +31,7 @@ class CreateOrderItems extends Migration
             $table->foreign('user_id')->references('id_number')->on('users');
             $table->foreign('item_id')->references('id')->on('items');
             $table->foreign('order_temp_id')->references('id')->on('order_item_temps');
+            $table->foreign('order_id')->references('id')->on('orders');
         });
     }
 
