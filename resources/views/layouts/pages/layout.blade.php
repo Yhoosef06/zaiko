@@ -234,7 +234,6 @@ $(document).ready(function() {
         open: function(event, ui) {
             $("#user_id_container .ui-autocomplete").css("top", "auto");
         },
-        // Custom rendering of autocomplete items
         response: function(event, ui) {
             if (!ui.content.length) {
                 var noResult = { value: "", label: "No matching ID numbers found" };
@@ -245,11 +244,35 @@ $(document).ready(function() {
             if (ui.item.value === "") {
                 event.preventDefault();
             } else {
-                // $('#profile').show();
-                $('#search-serial-desc').show();
-                // $('#first_name').val(ui.item.firstName);
-                // $('#last_name').val(ui.item.lastName);
-                $('#student_id').val(ui.item.value);
+                var userID = ui.item.value;
+                var url = '/check-userID/' + userID;
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.exists) {
+                            Swal.fire(
+                                ui.item.lastName +', '+ ui.item.firstName,
+                                'Has already pending borrowing. Please go to the pending table to update. Thank you.',
+                                'error'
+                            );
+                            $('#idNumber').val('');
+                            // User ID exists
+                            // Handle the case when the user ID already exists
+                        } else {
+                            $('#search-serial-desc').show();
+               
+
+                        }
+                    },
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
+                });
+
+                
             }
         }
 
@@ -339,7 +362,9 @@ $(document).ready(function() {
                                 'Quantity cannot exceed ' + maxValue,
                                 'Try input ' + maxValue + ' or below.',
                                 'question'
-                                )
+                                );
+
+                                $(this).val(maxValue);
                                 
                             }
                             });

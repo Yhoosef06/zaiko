@@ -11,6 +11,7 @@ use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
+use Carbon\Carbon;
 
 
 class BorrowController extends Controller
@@ -39,10 +40,7 @@ class BorrowController extends Controller
         ->whereNull('orders.date_returned')
         ->groupBy('orders.user_id')
         ->get();
-        // echo '<pre>';
-        // print_r($userPending);
-        // echo '<pre>';
-        // exit;
+      
 
         return view('pages.admin.pending')->with(compact('adminPendings','userPendings'));
        
@@ -218,10 +216,7 @@ class BorrowController extends Controller
                 ->where('order_items.status', 'pending')
                 ->get();
  
-        // echo '<pre>';
-        // print_r($order);
-        // echo '</pre>';
-        // exit;
+       
     
         return view('pages.admin.viewOrderAdmin')->with(compact('order'));
     }
@@ -237,10 +232,7 @@ class BorrowController extends Controller
                     ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
                     ->get();
  
-        // echo '<pre>';
-        // print_r($orders);
-        // echo '</pre>';
-        // exit;
+     
     
         return view('pages.admin.viewOrderUser')->with(compact('orders'));
     }
@@ -280,27 +272,58 @@ class BorrowController extends Controller
 
    
     public function adminAddedOrder(Request $request)
-    {
-        // Access the data from the request
-        $userId = $request->userId;
-        $itemId = $request->itemId;
-        $brand = $request->brand;
-        $model = $request->model;
-        $description = $request->description;
-        $serial = $request->serial;
-        $quantity = $request->quantity;
+{
+    $userId = $request->userId;
+    $itemId = $request->itemId;
+    $brand = $request->brand;
+    $model = $request->model;
+    $description = $request->description;
+    $serial = $request->serial;
+    $quantity = $request->quantity;
+    
 
-        // Perform any necessary operations with the data
-        $data = OrderItem::create([
+    $dataOrder = Order::where('user_id', $userId)
+        ->whereNotNull('date_submitted')
+        ->whereNull('date_returned')
+        ->get();
+
+    if ($dataOrder->isEmpty()) {
+        $insertOrder = Order::create([
             'user_id' => $userId,
+            'date_submitted' => Carbon::today()
+        ]);
+
+        if ($insertOrder) {
+            $orderId = $insertOrder->id;
+            $data = OrderItem::create([
+                'order_id' => $orderId,
+                'item_id' => $itemId,
+                'quantity' => $quantity,
+                'status' => 'pending',
+                'order_serial_number' => $serial
+            ]);
+
+            $responseData = [
+                'userId' => $userId,
+                'brand' => $brand,
+                'model' => $model,
+                'description' => $description,
+                'serial' => $serial,
+                'quantity' => $quantity
+            ];
+
+            return response()->json($responseData);
+        }
+    } else {
+        $orderId = $dataOrder->first()->id;
+        $data = OrderItem::create([
+            'order_id' => $orderId,
             'item_id' => $itemId,
             'quantity' => $quantity,
             'status' => 'pending',
             'order_serial_number' => $serial
         ]);
 
-
-        // Prepare the response data
         $responseData = [
             'userId' => $userId,
             'brand' => $brand,
@@ -310,8 +333,25 @@ class BorrowController extends Controller
             'quantity' => $quantity
         ];
 
-        // Return the response data
         return response()->json($responseData);
+    }
+}
+
+
+    public function checkUserId($id)
+    { 
+        $checkUser = Order::where('user_id', $id)
+        ->whereNotNull('date_submitted')
+        ->whereNull('date_returned')
+        ->get();
+
+        if ($checkUser->count() > 0) {
+        // User ID already exists
+        return response()->json(['exists' => true]);
+        } else {
+        // User ID does not exist
+        return response()->json(['exists' => false]);
+        }
     }
     
 

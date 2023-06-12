@@ -115,6 +115,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
     Route::get('/borrow-item', [BorrowController::class, 'borrowItem'])->name('borrowItem');
     Route::get('/add-item/{id}', [BorrowController::class, 'addItem'])->name('addItem');
+    Route::get('/check-userID/{id}', [BorrowController::class, 'checkUserId'])->name('checkUserId');
     Route::post('/pending-borrow', [BorrowController::class, 'pendingBorrow'])->name('pendingBorrow');
 
     // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
@@ -159,7 +160,7 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
             Route::get('/student-cart-list', [CartController::class, 'cart_list'])->name('cart.list');
             Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('remove.cart');
-            Route::post('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
+            Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
             Route::get('/history', [CartController::class, 'history'])->name('history');
             Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
 
