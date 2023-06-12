@@ -262,6 +262,7 @@ $(document).ready(function() {
                             // Handle the case when the user ID already exists
                         } else {
                             $('#search-serial-desc').show();
+                            $('#student_id').val(ui.item.value);
                
 
                         }
@@ -338,105 +339,108 @@ $(document).ready(function() {
                         url: url,
                         type: 'GET',
                         success: function(response) {
-                            // Handle the response data
-                       
+  Swal.fire({
+    position: 'top-end',
+    icon: 'success',
+    title: 'Successfully Added',
+    showConfirmButton: false,
+    timer: 1500
+  });
 
-                        var tableRow = $('<tr>').appendTo('#notAdded tbody');
-                        $('<td class="d-none">').text(userID).appendTo(tableRow);
-                        $('<td class="d-none">').text(response.id).appendTo(tableRow);
-                        $('<td>').text(response.brand).appendTo(tableRow);
-                        $('<td>').text(response.model).appendTo(tableRow);
-                        $('<td>').text(response.description).appendTo(tableRow);
-                        var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity).appendTo(tableRow);
-                        var buttonCell = $('<td>').appendTo(tableRow);
-                        var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
-                        var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+  var tableRow = $('<tr>');
+  $('<td class="d-none">').text(userID).appendTo(tableRow);
+  $('<td class="d-none">').text(response.id).appendTo(tableRow);
+  $('<td>').text(response.brand).appendTo(tableRow);
+  $('<td>').text(response.model).appendTo(tableRow);
+  $('<td>').text(response.description).appendTo(tableRow);
+  var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity);
+  $('<td>').append(quantityInput).appendTo(tableRow);
+  var buttonCell = $('<td>');
+  var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
+  var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+  tableRow.append(buttonCell);
+  tableRow.appendTo('#notAdded tbody');
 
+  quantityInput.on('input', function() {
+    var enteredValue = parseInt($(this).val());
+    var maxValue = parseInt($(this).attr('max'));
+    if (enteredValue > maxValue) {  
+      Swal.fire(
+        'Quantity cannot exceed ' + maxValue,
+        'Try input ' + maxValue + ' or below.',
+        'question'
+      );
+      $(this).val(maxValue);
+    }
+  });
 
+  addButton.on('click', function() {
+    // Perform the "Add" action here
+    console.log('Add button clicked');
+    var userId = $(this).closest('tr').find('td:nth-child(1)').text();
+    var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
+    var brand = $(this).closest('tr').find('td:nth-child(3)').text();
+    var model = $(this).closest('tr').find('td:nth-child(4)').text();
+    var description = $(this).closest('tr').find('td:nth-child(5)').text();
+    var serial = $(this).closest('tr').find('td:nth-child(6)').text();
+    var quantity = $(this).closest('tr').find('input').val();
 
-                            quantityInput.on('input', function() {
-                            var enteredValue = parseInt($(this).val());
-                            var maxValue = parseInt($(this).attr('max'));
-                            if (enteredValue > maxValue) {  
-                                Swal.fire(
-                                'Quantity cannot exceed ' + maxValue,
-                                'Try input ' + maxValue + ' or below.',
-                                'question'
-                                );
+    // Create an object to send in the AJAX request
+    var requestData = {
+      userId: userId,
+      itemId: itemId,
+      brand: brand,
+      model: model,
+      description: description,
+      serial: serial,
+      quantity: quantity
+    };
 
-                                $(this).val(maxValue);
-                                
-                            }
-                            });
+    $.ajax({
+      url: "{{ route('adminAddedOrder') }}",
+      type: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken
+      },
+      data: requestData,
+      success: function(response) {
+        // Handle the response data
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Successfully Added',
+          showConfirmButton: false,
+          timer: 1500
+        });
 
-                    addButton.on('click', function() {
-                    // Perform the "Add" action here
-                    console.log('Add button clicked');
-                    var userId = tableRow.find('td:nth-child(1)').text();
-                    var itemId = tableRow.find('td:nth-child(2)').text();
-                    var brand = tableRow.find('td:nth-child(3)').text();
-                    var model = tableRow.find('td:nth-child(4)').text();
-                    var description = tableRow.find('td:nth-child(5)').text();
-                    var serial = tableRow.find('td:nth-child(6)').text();
-                    var quantity = tableRow.find('input').val();
+        // Clear the inputs and remove the table row
+        tableRow.find('input').val('');
+        tableRow.remove();
 
-                    // Create an object to send in the AJAX request
-                    var requestData = {
-                        userId: userId,
-                        itemId: itemId,
-                        brand: brand,
-                        model: model,
-                        description: description,
-                        serial: serial,
-                        quantity: quantity
-                    };
+        // Append the data to the alreadyAdded table
+        var newRow = $('<tr>');
+        $('<td class="d-none">').text(response.userId).appendTo(newRow);
+        $('<td>').text(response.brand).appendTo(newRow);
+        $('<td>').text(response.model).appendTo(newRow);
+        $('<td>').text(response.description).appendTo(newRow);
+        $('<td>').text(response.serial).appendTo(newRow);
+        $('<td>').text(response.quantity).appendTo(newRow);
+        var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(newRow);
+        newRow.appendTo('#alreadyAdded tbody');
+      },
+      error: function(xhr) {
+        // Handle the error
+        console.log(xhr.responseText);
+      }
+    });
+  });
 
-                    $.ajax({
-                        url: "{{ route('adminAddedOrder') }}",
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        data: requestData,
-                        success: function(response) {
-                            // Handle the response data
-                            Swal.fire({
-                                position: 'top-end',
-                                icon: 'success',
-                                title: 'Successfully Added',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-
-                            // Clear the inputs and remove the table row
-                            tableRow.find('input').val('');
-                            tableRow.remove();
-
-                            // Append the data to the alreadyAdded table
-                            var newRow = $('<tr>').appendTo('#alreadyAdded tbody');
-                            $('<td class="d-none">').text(response.userId).appendTo(newRow);
-                            $('<td>').text(response.brand).appendTo(newRow);
-                            $('<td>').text(response.model).appendTo(newRow);
-                            $('<td>').text(response.description).appendTo(newRow);
-                            $('<td>').text(response.serial).appendTo(newRow);
-                            $('<td>').text(response.quantity).appendTo(newRow);
-                            var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(newRow);
-                        },
-                        error: function(xhr) {
-                            // Handle the error
-                            console.log(xhr.responseText);
-                        }
-                            });
-                        });
-
-                            // Add click event listener to cancel button
-                            cancelButton.on('click', function() {
-                            // Perform the "Cancel" action here
-                            tableRow.remove();
-                            console.log('Cancel button clicked');
-                            });
-                        },
-
+  cancelButton.on('click', function() {
+    // Perform the "Cancel" action here
+    tableRow.remove();
+    console.log('Cancel button clicked');
+  });
+},
 
                         error: function(xhr) {
                             // Handle the error
@@ -461,31 +465,32 @@ $(document).ready(function() {
                             serialNumber: serialNumber
                         },
                         success: function(response) {
-                            // Handle the response data
-                            Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Successfully Added',
-                            showConfirmButton: false,
-                            timer: 1500
-                            });
+ 
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Successfully Added',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
 
-                            $('#alreadyAdded tbody').empty();
+                                $('#alreadyAdded tbody').empty();
 
-                            for (var i = 0; i < response.length; i++) {
-                                var rowData = response[i];
-                                var tableRow = $('<tr>').appendTo('#alreadyAdded tbody');
-                                $('<td class="d-none">').text(rowData.user_id).appendTo(tableRow);
-                                $('<td>').text(rowData.brand).appendTo(tableRow);
-                                $('<td>').text(rowData.model).appendTo(tableRow);
-                                $('<td>').text(rowData.description).appendTo(tableRow);
-                                $('<td>').text(rowData.order_serial_number).appendTo(tableRow);
-                                $('<td>').text(rowData.quantity).appendTo(tableRow);
-                                var buttonCell = $('<td>').appendTo(tableRow);
-                                var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
-                            }
-
-                            },
+                                for (var i = 0; i < response.length; i++) {
+                                    var rowData = response[i];
+                                    var tableRow = $('<tr>');
+                                    $('<td class="d-none">').text(rowData.user_id).appendTo(tableRow);
+                                    $('<td>').text(rowData.brand).appendTo(tableRow);
+                                    $('<td>').text(rowData.model).appendTo(tableRow);
+                                    $('<td>').text(rowData.description).appendTo(tableRow);
+                                    $('<td>').text(rowData.order_serial_number).appendTo(tableRow);
+                                    $('<td>').text(rowData.quantity).appendTo(tableRow);
+                                    var buttonCell = $('<td>');
+                                    var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                                    buttonCell.appendTo(tableRow);
+                                    tableRow.appendTo('#alreadyAdded tbody');
+                                }
+                                },
 
 
                         error: function(xhr) {
