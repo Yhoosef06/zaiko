@@ -57,19 +57,36 @@
                                                 <tbody>
 
                                                     @foreach ($userPendings as $pending)
+
+                                                    @if ( $pending->created_by == 'admin')
+                                                    <tr>
+                                                        <td>{{ $pending->user_id }}</td>
+                                                        <td>
+                                                            {{ $pending->first_name }} {{ $pending->last_name }}
+                                                        </td>
+                                                        <td>{{ $pending->date_submitted }}</td>
+                                                        <td>
+                                                            <a href="{{ route('view-order-admin', $pending->user_id) }}"
+                                                                class="btn btn-sm btn-primary" title="Disregard">
+                                                                view</a>
+                                                        </td>
+                                                    </tr>
+                                                    @else
+                                                    <tr>
+                                                        <td>{{ $pending->user_id }}</td>
+                                                        <td>
+                                                            {{ $pending->first_name }} {{ $pending->last_name }}
+                                                        </td>
+                                                        <td>{{ $pending->date_submitted }}</td>
+                                                        <td>
+                                                            <a href="{{ route('view-order-user', $pending->user_id) }}"
+                                                                class="btn btn-sm btn-primary" title="Disregard">
+                                                                view</a>
+                                                        </td>
+                                                    </tr>
+                                                    @endif
                                                 
-                                                        <tr>
-                                                            <td>{{ $pending->user_id }}</td>
-                                                            <td>
-                                                                {{ $pending->first_name }} {{ $pending->last_name }}
-                                                            </td>
-                                                            <td>{{ $pending->date_submitted }}</td>
-                                                            <td>
-                                                                <a href="{{ route('view-order-user', $pending->user_id) }}"
-                                                                    class="btn btn-sm btn-primary" title="Disregard">
-                                                                    view</a>
-                                                            </td>
-                                                        </tr>
+                                                        
                                                       
 
                                                     @endforeach
