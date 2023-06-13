@@ -34,8 +34,6 @@ class BorrowController extends Controller
         ->get();
 
         $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
-        ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
-        ->join('items', 'order_item_temps.item_id', '=', 'items.id')
         ->whereNotNull('orders.date_submitted')
         ->whereNull('orders.date_returned')
         ->groupBy('orders.user_id')
@@ -246,63 +244,70 @@ class BorrowController extends Controller
 
         return response()->json($item);
     }
+
     public function pendingBorrow(Request $request)
     {
-        $userId = $request->input('userID');
-        $itemId = $request->input('itemId');
-        $serialNumber = $request->input('serialNumber');
-    
-        $dataOrder = Order::where('user_id', $userId)
+        $userID = $request->userID;
+        $itemId = $request->itemId;
+        $serialNumber = $request->serialNumber;
+
+        $dataOrder = Order::where('user_id', $userID)
             ->whereNotNull('date_submitted')
             ->whereNull('date_returned')
             ->get();
-    
+        
         if ($dataOrder->isEmpty()) {
             $insertOrder = Order::create([
-                'user_id' => $userId,
+                'user_id' => $userID,
                 'created_by' => 'admin',
                 'date_submitted' => Carbon::today()
             ]);
-    
             if ($insertOrder) {
                 $orderId = $insertOrder->id;
-                Item::where('serial_number', $serialNumber)->update(['borrowed' => 'yes']);
+                Item::where('serial_number', '=', $serialNumber)->update(['borrowed' => 'yes']);
                 $data = OrderItem::create([
+                    'user_id' => $userID,
                     'order_id' => $orderId,
                     'item_id' => $itemId,
                     'quantity' => 1,
                     'status' => 'pending',
                     'order_serial_number' => $serialNumber
                 ]);
-    
+            
                 $response = OrderItem::where('order_items.status', 'pending')
                     ->join('items', 'order_items.item_id', '=', 'items.id')
-                    ->where('order_items.user_id', $userId)
+                    ->where('order_items.user_id', $userID)
                     ->get();
-    
+            
                 return response()->json($response);
             }
-        } else {
+        }else{
             $order = $dataOrder->first();
-            Item::where('serial_number', $serialNumber)->update(['borrowed' => 'yes']);
             $orderId = $order->id;
-    
-            $data = OrderItem::create([
-                'order_id' => $orderId,
-                'item_id' => $itemId,
-                'quantity' => 1,
-                'status' => 'pending',
-                'order_serial_number' => $serialNumber
-            ]);
-    
-            $response = OrderItem::where('order_items.status', 'pending')
-                ->join('items', 'order_items.item_id', '=', 'items.id')
-                ->where('order_items.user_id', $userId)
-                ->get();
-    
-            return response()->json($response);
+            Item::where('serial_number', '=', $serialNumber)->update(['borrowed' => 'yes']);
+                $data = OrderItem::create([
+                    'user_id' => $userID,
+                    'order_id' => $orderId,
+                    'item_id' => $itemId,
+                    'quantity' => 1,
+                    'status' => 'pending',
+                    'order_serial_number' => $serialNumber
+                ]);
+            
+                $response = OrderItem::where('order_items.status', 'pending')
+                    ->join('items', 'order_items.item_id', '=', 'items.id')
+                    ->where('order_items.user_id', $userID)
+                    ->get();
+            
+                return response()->json($response);
         }
+    
+       
+    
+        
     }
+
+
    
     public function adminAddedOrder(Request $request)
     {
