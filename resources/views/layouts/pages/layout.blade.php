@@ -516,6 +516,65 @@ $(document).ready(function() {
  });
 
 
+ $(document).ready(function() {
+    $(".search_for_serial").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_id_container",
+        open: function(event, ui) {
+            $("#item-serial .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+
+
+
+
 
 
     $(document).ready(function() {

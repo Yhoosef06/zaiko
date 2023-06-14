@@ -96,7 +96,7 @@
                                         <td>{{ $item->brand }}</td>
                                         <td>{{ $item->model }}</td>
                                         <td>{{ $item->description }}</td>
-                                        <td> <input type="text" name="user_serial_number" class="form-control user_serial_number"></td>
+                                        <td> <input type="text" name="user_serial_number" class="form-control search_for_serial"></td>
                                         <td>1</td>
                                         <td> 
                                             <a href="" class="btn btn-danger">Remove</a> 

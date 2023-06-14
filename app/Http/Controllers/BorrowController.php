@@ -149,6 +149,35 @@ class BorrowController extends Controller
         return response()->json($response);
     }
 
+    public function searchForSerial(Request $request)
+    {
+       
+        $query = $request->input('query');
+    
+        $items = Item::where('borrowed', 'no')
+            ->where(function ($queryBuilder) use ($query) {
+                $queryBuilder->where('serial_number', 'LIKE', $query . '%')
+                    ->orWhere('description', 'LIKE', $query . '%');
+            })->take(10)->get();
+
+    
+             $response = $items->map(function ($item) {
+            $category = ItemCategory::find($item->category_id);
+            return [
+                'value' => $item->serial_number . ' - ' . $item->description,
+                'item_category' => $category ? $category->category_name : null,
+                'id' => $item->id,
+                'serialNumber' => $item->serial_number,
+                'brand' => $item->brand,
+                'model' => $item->model,
+                'description' => $item->description,
+                'itemID' => $item->id
+            ];
+        });
+    
+        return response()->json($response);
+    }
+
     public function addOrder(Request $request)
     {
 
@@ -205,32 +234,25 @@ class BorrowController extends Controller
 
     public function viewOrderAdmin($id)
     {
-      
-
-        $order = OrderItem::select('order_items.id as order_item_id', 'items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name', 'items.brand', 'items.model', 'items.description', 'items.serial_number', 'order_items.quantity')
-                ->join('users', 'order_items.user_id', '=', 'users.id_number')
-                ->join('items', 'order_items.item_id', '=', 'items.id')
-                ->where('order_items.user_id', $id)
-                ->where('order_items.status', 'pending')
-                ->get();
- 
-       
+        $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->select('orders.*', 'users.*', 'order_items.*', 'items.*')
+            ->where('users.id_number', $id) // Filter orders for a specific user ID
+            ->get();
     
         return view('pages.admin.viewOrderAdmin')->with(compact('order'));
     }
-
+    
     public function viewOrderUser($id)
     {
-      
-
         $orders = Order::select('item_categories.category_name','items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name', 'items.brand', 'items.model', 'items.description', 'order_item_temps.quantity')
-                    ->join('users', 'orders.user_id', '=', 'users.id_number')
-                    ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
-                    ->join('items', 'order_item_temps.item_id', '=', 'items.id')
-                    ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-                    ->get();
- 
-     
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+            ->where('users.id_number', $id) // Filter orders for a specific user ID
+            ->get();
     
         return view('pages.admin.viewOrderUser')->with(compact('orders'));
     }

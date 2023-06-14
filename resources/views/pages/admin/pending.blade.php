@@ -9,10 +9,6 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBorrow">
-                            <i class="fa fa-plus"> </i>
-                            Add to Borrow
-                        </button> --}}
                         <a href="{{ route('borrowItem') }}" class="btn btn-primary" >
                             <i class="fa fa-plus"> </i>
                             Add to Borrow
@@ -48,6 +44,7 @@
                                             <table id="user-pending" class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
+                                                        <th class="d-none">UserID</th>
                                                         <th>ID</th>
                                                         <th>Student Name</th>
                                                         <th>Date Submitted</th>
@@ -64,7 +61,8 @@
                                                         <td>
                                                             {{ $pending->first_name }} {{ $pending->last_name }}
                                                         </td>
-                                                        <td>{{ $pending->date_submitted }}</td>
+                                                       
+                                                        <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
                                                             <a href="{{ route('view-order-admin', $pending->user_id) }}"
                                                                 class="btn btn-sm btn-primary" title="Disregard">
@@ -77,7 +75,7 @@
                                                         <td>
                                                             {{ $pending->first_name }} {{ $pending->last_name }}
                                                         </td>
-                                                        <td>{{ $pending->date_submitted }}</td>
+                                                        <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
                                                             <a href="{{ route('view-order-user', $pending->user_id) }}"
                                                                 class="btn btn-sm btn-primary" title="Disregard">
