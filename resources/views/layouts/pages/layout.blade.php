@@ -306,9 +306,9 @@ $(document).ready(function() {
                 }
             });
         },
-        appendTo: "#user_id_container",
+        appendTo: "#search-item",
         open: function(event, ui) {
-            $("#item-serial .ui-autocomplete").css("top", "auto");
+            $("#search-item .ui-autocomplete").css("top", "auto");
         },
         // Custom rendering of autocomplete items
         response: function(event, ui) {
@@ -532,9 +532,119 @@ $(document).ready(function() {
                 }
             });
         },
-        appendTo: "#user_id_container",
+        appendTo: ".user_serial",
         open: function(event, ui) {
-            $("#item-serial .ui-autocomplete").css("top", "auto");
+            $(".user_serial .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+
+ $(document).ready(function() {
+    $("#searchItemAdmin").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchItemForAdmin') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#search-item-admin-to-borrow",
+        open: function(event, ui) {
+            $("#search-item-admin-to-borrow .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+ $(document).ready(function() {
+    $("#searchItemUser").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchItemForUser') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#search-item-user-to-borrow",
+        open: function(event, ui) {
+            $("#search-item-user-to-borrow .ui-autocomplete").css("top", "auto");
         },
         // Custom rendering of autocomplete items
         response: function(event, ui) {

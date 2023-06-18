@@ -109,7 +109,7 @@
                                         <td>{{ $item->brand }}</td>
                                         <td>{{ $item->model }}</td>
                                         <td>{{ $item->description }}</td>
-                                        <td> <input type="text" name="user_serial_number" class="form-control search_for_serial"></td>
+                                        <td><div id="search-item-user-to-borrow"> <input type="text" name="user_serial_number" class="form-control search_for_serial"> </div></td>
                                         <td>1</td>
                                         <td> 
                                             <a href="" class="btn btn-danger">Remove</a> 

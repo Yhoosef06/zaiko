@@ -161,7 +161,65 @@ class BorrowController extends Controller
             })->take(10)->get();
 
     
-             $response = $items->map(function ($item) {
+            $response = $items->map(function ($item) {
+            $category = ItemCategory::find($item->category_id);
+            return [
+                'value' => $item->serial_number . ' - ' . $item->description,
+                'item_category' => $category ? $category->category_name : null,
+                'id' => $item->id,
+                'serialNumber' => $item->serial_number,
+                'brand' => $item->brand,
+                'model' => $item->model,
+                'description' => $item->description,
+                'itemID' => $item->id
+            ];
+        });
+    
+        return response()->json($response);
+    }
+
+    public function searchItemForAdmin(Request $request)
+    {
+       
+        $query = $request->input('query');
+    
+        $items = Item::where('borrowed', 'no')
+            ->where(function ($queryBuilder) use ($query) {
+                $queryBuilder->where('serial_number', 'LIKE', $query . '%')
+                    ->orWhere('description', 'LIKE', $query . '%');
+            })->take(10)->get();
+
+    
+            $response = $items->map(function ($item) {
+            $category = ItemCategory::find($item->category_id);
+            return [
+                'value' => $item->serial_number . ' - ' . $item->description,
+                'item_category' => $category ? $category->category_name : null,
+                'id' => $item->id,
+                'serialNumber' => $item->serial_number,
+                'brand' => $item->brand,
+                'model' => $item->model,
+                'description' => $item->description,
+                'itemID' => $item->id
+            ];
+        });
+    
+        return response()->json($response);
+    }
+
+    public function searchItemForUser(Request $request)
+    {
+       
+        $query = $request->input('query');
+    
+        $items = Item::where('borrowed', 'no')
+            ->where(function ($queryBuilder) use ($query) {
+                $queryBuilder->where('serial_number', 'LIKE', $query . '%')
+                    ->orWhere('description', 'LIKE', $query . '%');
+            })->take(10)->get();
+
+    
+            $response = $items->map(function ($item) {
             $category = ItemCategory::find($item->category_id);
             return [
                 'value' => $item->serial_number . ' - ' . $item->description,

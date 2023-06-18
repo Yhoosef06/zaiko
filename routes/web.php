@@ -114,6 +114,8 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
     Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
     Route::get('/searchForSerial', [BorrowController::class, 'searchForSerial'])->name('searchForSerial');
+    Route::get('/searchItemForAdmin', [BorrowController::class, 'searchItemForAdmin'])->name('searchItemForAdmin');
+    Route::get('/searchItemForUser', [BorrowController::class, 'searchItemForUser'])->name('searchItemForUser');
     Route::get('/borrow-item', [BorrowController::class, 'borrowItem'])->name('borrowItem');
     Route::get('/add-item/{id}', [BorrowController::class, 'addItem'])->name('addItem');
     Route::get('/check-userID/{id}', [BorrowController::class, 'checkUserId'])->name('checkUserId');
