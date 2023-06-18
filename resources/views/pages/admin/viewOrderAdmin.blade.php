@@ -11,8 +11,23 @@
                         @endif
                     @endforeach
                 </div>
+
+                <div class="col-sm-6">
+        
+                  <div class="form-group">
+                      <div id="search-item-admin-to-borrow">
+                          <input type="text" id="searchItemAdmin" name="searchItemAdmin" class="form-control"
+                              placeholder="Search Item to Borrow - Serial Number or Item Description" required>
+                      </div>     
+                  </div>
+
+                  
+
+              </div>
              
             </div>
+
+            
         </div><!-- /.container-fluid -->
     </section>
 

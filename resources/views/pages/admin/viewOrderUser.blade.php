@@ -11,6 +11,19 @@
                         @endif
                     @endforeach
                 </div>
+
+                <div class="col-sm-6">
+        
+                  <div class="form-group">
+                      <div id="search-item-user-to-borrow">
+                          <input type="text" id="searchItemUser" name="searchItemUser" class="form-control"
+                              placeholder="Search Item to Borrow - Serial Number or Item Description" required>
+                      </div>     
+                  </div>
+
+                  
+
+              </div>
              
             </div>
         </div><!-- /.container-fluid -->
