@@ -74,12 +74,12 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                    <form method="POST">
-                  
+                    <form method="POST" action="{{ route('submitAdminBorrow') }}">
+                   @csrf
                       <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                         <thead>
                           <tr>
-                                <th  class="d-none">ID</th>
+                                <th>ID</th>
                                 <th style="background-color:#28a745; color:aliceblue">Brand</th>
                                 <th style="background-color:#28a745; color:aliceblue">Model</th>
                                 <th style="background-color:#28a745; color:aliceblue">Description</th>
@@ -92,7 +92,7 @@
                         <tbody>
                             @foreach ( $order as $item )
                                 <tr>
-                                    <td  class="d-none">  {{ $item->order_item_id }} </td>
+                                    <td> {{ $item->order_id }} </td>
                                     <td> {{ $item->brand }} </td>
                                     <td> {{ $item->model }} </td>
                                     <td> {{ $item->description }} </td>

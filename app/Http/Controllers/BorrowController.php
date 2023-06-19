@@ -295,8 +295,8 @@ class BorrowController extends Controller
         $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
-            ->select('orders.*', 'users.*', 'order_items.*', 'items.*')
-            ->where('users.id_number', $id) // Filter orders for a specific user ID
+            ->select('orders.id as order_id', 'users.*', 'order_items.*', 'items.*')
+            ->where('users.id_number', $id)
             ->get();
     
         return view('pages.admin.viewOrderAdmin')->with(compact('order'));
@@ -309,7 +309,7 @@ class BorrowController extends Controller
             ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
             ->join('items', 'order_item_temps.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-            ->where('users.id_number', $id) // Filter orders for a specific user ID
+            ->where('users.id_number', $id)
             ->get();
     
         return view('pages.admin.viewOrderUser')->with(compact('orders'));
@@ -475,7 +475,20 @@ class BorrowController extends Controller
     
 
 
- 
+    public function submitAdminBorrow(Request $request)
+    {
+        $orderItems = $request->input('order_id');
+    
+        $orders = Order::whereIn('order_id', $orderItems)->get();
+    
+        if ($orders->isNotEmpty()) {
+            echo '<pre>';
+            print_r($orders);
+            echo '</pre>';
+        } else {
+            echo 'No orders found';
+        }
+    }
 
 
 }

@@ -120,6 +120,8 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('/add-item/{id}', [BorrowController::class, 'addItem'])->name('addItem');
     Route::get('/check-userID/{id}', [BorrowController::class, 'checkUserId'])->name('checkUserId');
     Route::post('/pending-borrow', [BorrowController::class, 'pendingBorrow'])->name('pendingBorrow');
+    Route::post('/submitAdminBorrow', [BorrowController::class, 'submitAdminBorrow'])->name('submitAdminBorrow');
+    
 
     // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
     // Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
