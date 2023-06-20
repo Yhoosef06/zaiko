@@ -77,7 +77,8 @@
                       <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                         <thead>
                           <tr>
-                                <th  class="d-none">ID</th>
+                                <th>ID</th>
+                                <th>ORDER ID</th>
                                 <th style="background-color:#28a745; color:aliceblue">Brand</th>
                                 <th style="background-color:#28a745; color:aliceblue">Model</th>
                                 <th style="background-color:#28a745; color:aliceblue">Description</th>
@@ -91,7 +92,8 @@
                             @foreach ($orders as $item)
                             @if ($item->category_name === 'Tools')
                                 <tr>
-                                    <td class="d-none">{{ $item->order_item_id }}</td>
+                                    <td>{{ $item->item_id }}</td>
+                                    <td>{{ $item->order_id }}</td>
                                     <td>{{ $item->brand }}</td>
                                     <td>{{ $item->model }}</td>
                                     <td>{{ $item->description }}</td>
@@ -105,7 +107,8 @@
                             @else
                                 @for ($i = 1; $i <= $item->quantity; $i++)
                                     <tr>
-                                        <td class="d-none">{{ $item->order_item_id }}</td>
+                                        <td>{{ $item->item_id }}</td>
+                                        <td>{{ $item->order_id }}</td>
                                         <td>{{ $item->brand }}</td>
                                         <td>{{ $item->model }}</td>
                                         <td>{{ $item->description }}</td>

@@ -124,7 +124,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     
 
     // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
-    // Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
+    Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
     Route::get('view-order-admin/{id}', [BorrowController::class, 'viewOrderAdmin'])->name('view-order-admin');
     Route::get('view-order-user/{id}', [BorrowController::class, 'viewOrderUser'])->name('view-order-user');
     Route::post('/admin-added-order', [BorrowController::class, 'adminAddedOrder'])->name('adminAddedOrder');

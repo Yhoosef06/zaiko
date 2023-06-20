@@ -692,9 +692,20 @@ $(document).ready(function() {
             type: "POST",
             data: formData,
             success: function(response) {
-                // Handle success response, if needed
-                alert('Successfully added borrowed item.');
-                window.location.href = "{{ url('pending') }}";
+                if (response.success) {
+                    Swal.fire(
+                    'Success',
+                    'Successfully Borrowed',
+                    'success'
+                    );
+                    window.location.href = "{{ url('pending') }}";
+                } else if (response.error) {
+                    Swal.fire(
+                    'Error',
+                    'Date Not Provided',
+                    'error'
+                    );
+                }
             },
             error: function(xhr, status, error) {
                 // Handle error response, if needed
