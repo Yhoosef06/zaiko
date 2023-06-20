@@ -74,42 +74,39 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                    <form method="POST" action="{{ route('submitAdminBorrow') }}">
-                   @csrf
-                      <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
-                        <thead>
-                          <tr>
-                                <th>ID</th>
-                                <th style="background-color:#28a745; color:aliceblue">Brand</th>
-                                <th style="background-color:#28a745; color:aliceblue">Model</th>
-                                <th style="background-color:#28a745; color:aliceblue">Description</th>
-                                <th style="background-color:#28a745; color:aliceblue">Serial</th>
-                                <th style="background-color:#28a745; color:aliceblue">Quantity</th>
-                                <th style="background-color:#28a745; color:aliceblue">Option</th>
-                               
-                          </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ( $order as $item )
+                      <form id="submitForm" action="{{ route('submitAdminBorrow') }}" method="POST" >
+                        @csrf
+                        <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
+                            <thead>
                                 <tr>
-                                    <td> {{ $item->order_id }} </td>
-                                    <td> {{ $item->brand }} </td>
-                                    <td> {{ $item->model }} </td>
-                                    <td> {{ $item->description }} </td>
-                                    <td> {{ $item->serial_number }} </td>
-                                    <td> {{ $item->quantity }} </td>
-                                    <td> 
-                                    
-                                      <a href="" class="btn btn-danger">Remove</a> 
+                                    <th>ID</th>
+                                    <th style="background-color:#28a745; color:aliceblue">Brand</th>
+                                    <th style="background-color:#28a745; color:aliceblue">Model</th>
+                                    <th style="background-color:#28a745; color:aliceblue">Description</th>
+                                    <th style="background-color:#28a745; color:aliceblue">Serial</th>
+                                    <th style="background-color:#28a745; color:aliceblue">Quantity</th>
+                                    <th style="background-color:#28a745; color:aliceblue">Option</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($order as $item)
+                                <tr>
+                                    <td>{{ $item->order_id }}</td>
+                                    <td>{{ $item->brand }}</td>
+                                    <td>{{ $item->model }}</td>
+                                    <td>{{ $item->description }}</td>
+                                    <td>{{ $item->serial_number }}</td>
+                                    <td>{{ $item->quantity }}</td>
+                                    <td>
+                                      <input type="hidden" name="order_id[]" value="{{ $item->order_id }}">
+                                       gg
                                     </td>
                                 </tr>
-                            @endforeach
-                    
-                          
-                      
-                        </tbody>
-                      </table>
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <input type="date" class="form-control" name="date_returned">
+                        <button type="submit" id="button-submit-admin" class="btn btn-primary">Submit</button>
                     </form>
                     </div>
                     <!-- /.card-body -->

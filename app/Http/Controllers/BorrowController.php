@@ -27,11 +27,6 @@ class BorrowController extends Controller
 
     public function pending()
     {
-        $adminPendings = OrderItem::join('users', 'order_items.user_id', '=', 'users.id_number')
-        ->join('items', 'order_items.item_id', '=', 'items.id')
-        ->where('order_items.status', '=', 'pending')
-        ->groupBy('order_items.user_id')
-        ->get();
 
         $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
         ->whereNotNull('orders.date_submitted')
@@ -40,7 +35,7 @@ class BorrowController extends Controller
         ->get();
       
 
-        return view('pages.admin.pending')->with(compact('adminPendings','userPendings'));
+        return view('pages.admin.pending')->with(compact('userPendings'));
        
     }
 
@@ -63,8 +58,7 @@ class BorrowController extends Controller
 
     //         $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'borrowed', 'release_by' => $firstName .' '. $lastName, 'number_of_days' => $num]);
     //         $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'yes']);
-    //         Session::flash('success', 'Borrow has been Approved.');
-    //         return redirect('pending');
+    //          
     //     }
         
     // }
@@ -465,10 +459,8 @@ class BorrowController extends Controller
         ->get();
 
         if ($checkUser->count() > 0) {
-        // User ID already exists
         return response()->json(['exists' => true]);
         } else {
-        // User ID does not exist
         return response()->json(['exists' => false]);
         }
     }
@@ -477,17 +469,17 @@ class BorrowController extends Controller
 
     public function submitAdminBorrow(Request $request)
     {
-        $orderItems = $request->input('order_id');
-    
-        $orders = Order::whereIn('order_id', $orderItems)->get();
-    
-        if ($orders->isNotEmpty()) {
-            echo '<pre>';
-            print_r($orders);
-            echo '</pre>';
-        } else {
-            echo 'No orders found';
+        $orderIds = $request->input('order_id');
+
+        // Update orders and order_items
+        if (!empty($orderIds)) {
+            Order::whereIn('id', $orderIds)->update([
+                'date_returned' => $request->input('date_returned')
+            ]);
+            OrderItem::whereIn('order_id', $orderIds)->where('status', 'pending')->update(['status' => 'borrowed']);
         }
+
+        return response()->json(['success' => 'Successfully added borrowed item.']);
     }
 
 

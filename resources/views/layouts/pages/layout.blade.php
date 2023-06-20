@@ -681,6 +681,30 @@ $(document).ready(function() {
  });
 
 
+ $(document).ready(function() {
+    $('#submitForm').submit(function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = $(this).serialize(); // Serialize the form data
+
+        $.ajax({
+            url: "{{ route('submitAdminBorrow') }}",
+            type: "POST",
+            data: formData,
+            success: function(response) {
+                // Handle success response, if needed
+                alert('Successfully added borrowed item.');
+                window.location.href = "{{ url('pending') }}";
+            },
+            error: function(xhr, status, error) {
+                // Handle error response, if needed
+                console.log(xhr.responseText);
+            }
+        });
+    });
+});
+
+
 
 
 
