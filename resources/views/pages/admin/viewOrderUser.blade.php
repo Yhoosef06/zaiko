@@ -72,7 +72,7 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                    <form method="POST">
+                    <form action method="POST">
                   
                       <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                         <thead>
