@@ -486,7 +486,7 @@ class BorrowController extends Controller
                     ]);
                     OrderItem::whereIn('order_id', $orderIds)
                                ->where('status', 'pending')
-                               ->update(['status' => 'borrowed', 'released_by' => $firstName .' '. $lastName ]);
+                               ->update(['status' => 'borrowed', 'released_by' => $firstName .' '. $lastName , 'date_returned' => $date_return] );
                     return response()->json(['success' => 'Successfully added borrowed item.']);
                 } else {
                     return response()->json(['error' => 'Error: Date not provided.']);
@@ -495,6 +495,16 @@ class BorrowController extends Controller
                 return response()->json(['error' => 'Error: No order selected.']);
             }
         }
+    }
+    public function submitUserBorrow(Request $request){
+        $orderId = $request->input('order_id');
+        $serial_number = $request->input('user_serial_number');
+
+        echo '<pre>';
+        print_r($serial_number);
+        echo '</pre>';
+        exit;
+        
     }
 
 

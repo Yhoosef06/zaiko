@@ -74,7 +74,7 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                      <form id="submitForm" action="{{ route('submitAdminBorrow') }}" method="POST" >
+                      <form id="submitForm" method="POST" >
                         @csrf
                         <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                             <thead>

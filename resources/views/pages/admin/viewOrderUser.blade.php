@@ -72,12 +72,12 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                    <form action method="POST">
-                  
+                    <form id="submitFormUser" method="POST">
+                      @csrf
                       <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                         <thead>
                           <tr>
-                                <th>ID</th>
+                           
                                 <th>ORDER ID</th>
                                 <th style="background-color:#28a745; color:aliceblue">Brand</th>
                                 <th style="background-color:#28a745; color:aliceblue">Model</th>
@@ -92,8 +92,8 @@
                             @foreach ($orders as $item)
                             @if ($item->category_name === 'Tools')
                                 <tr>
-                                    <td>{{ $item->item_id }}</td>
-                                    <td>{{ $item->order_id }}</td>
+                      
+                                    <td><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
                                     <td>{{ $item->brand }}</td>
                                     <td>{{ $item->model }}</td>
                                     <td>{{ $item->description }}</td>
@@ -106,13 +106,12 @@
                                 </tr>
                             @else
                                 @for ($i = 1; $i <= $item->quantity; $i++)
-                                    <tr>
-                                        <td>{{ $item->item_id }}</td>
-                                        <td>{{ $item->order_id }}</td>
+                                    <tr> 
+                                        <td><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
                                         <td>{{ $item->brand }}</td>
                                         <td>{{ $item->model }}</td>
                                         <td>{{ $item->description }}</td>
-                                        <td><div class="user_serial"> <input type="text" name="user_serial_number" class="form-control search_for_serial"> </div></td>
+                                        <td><div class="user_serial"> <input type="text" name="user_serial_number[]" class="form-control search_for_serial"> </div></td>
                                         <td>1</td>
                                         <td> 
                                             <a href="" class="btn btn-danger">Remove</a> 

@@ -554,6 +554,7 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 event.preventDefault();
+                $('.search_for_serial').val(ui.item.value);
                
                 
             }
@@ -610,6 +611,7 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 event.preventDefault();
+                $('#searchItemAdmin').val(ui.item.serialNumber);
                
                 
             }
@@ -664,6 +666,7 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 event.preventDefault();
+                $('#searchItemUser').val(ui.item.serialNumber);
                
                 
             }
@@ -683,9 +686,8 @@ $(document).ready(function() {
 
  $(document).ready(function() {
     $('#submitForm').submit(function(event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        var formData = $(this).serialize(); // Serialize the form data
+        event.preventDefault(); 
+        var formData = $(this).serialize(); 
 
         $.ajax({
             url: "{{ route('submitAdminBorrow') }}",
@@ -714,6 +716,29 @@ $(document).ready(function() {
         });
     });
 });
+
+$(document).ready(function() {
+            $('#submitFormUser').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: "{{ route('submitUserBorrow') }}",
+                    type: "POST",
+                    data: formData,
+                    success: function(response) {
+                        if (response.success) {
+                            // Handle success
+                        } else if (response.error) {
+                            // Handle error
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
 
 
 
