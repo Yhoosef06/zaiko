@@ -104,8 +104,14 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="row mb-2">
+                          <div class="col-sm-6">
                         <input type="date" class="form-control" name="date_returned">
+                      </div>
+                      <div class="col-sm-6">
                         <button type="submit" id="button-submit-admin" class="btn btn-primary">Submit</button>
+                      </div>
+                      </div>
                     </form>
                     </div>
                     <!-- /.card-body -->

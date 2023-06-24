@@ -498,13 +498,47 @@ class BorrowController extends Controller
     }
     public function submitUserBorrow(Request $request){
         $orderId = $request->input('order_id');
+        $date_return = $request->input('date_returned');
         $serial_number = $request->input('user_serial_number');
+        $quantity = $request->input('quantity');
+        $getItem = Item::whereIn('serial_number',$serial_number)->get();
+        $itemIds = $getItem->pluck('id');
+        $user = auth()->user();
 
-        echo '<pre>';
-        print_r($serial_number);
-        echo '</pre>';
-        exit;
+        // echo '<pre>';
+        // print_r($itemIds);
+        // echo '</pre>';
+
+        if($user){
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
+            if (!empty($orderId)) {
+                if (!empty($date_return)) {
+                    Item::whereIn('serial_number',$serial_number)->update(['borrowed' => 'yes']);
+                    Order::whereIn('id', $orderId)->update([
+                        'date_returned' =>$date_return,
+                        'approval_date' => Carbon::today(),
+                        'approved_by' => $firstName .' '. $lastName
+                    ]);
+                    OrderItem::create([
+                        'order_id' => $orderId,
+                        'item_id' => $itemIds,
+                        'quantity' => $quantity,
+                        'status' => 'borrowed',
+                        'order_serial_number' => $serial_number,
+                        'date_returned' => $date_return,
+                        'released_by' => $lastName .' '. $firstName
         
+                    ]);
+                    return response()->json(['success' => 'Successfully added borrowed item.']);
+                } else {
+                    return response()->json(['error' => 'Error: Date not provided.']);
+                }
+            } else {
+                return response()->json(['error' => 'Error: No order selected.']);
+            }
+            
+        }  
     }
 
 

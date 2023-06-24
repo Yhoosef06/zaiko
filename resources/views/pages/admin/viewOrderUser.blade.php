@@ -98,7 +98,7 @@
                                     <td>{{ $item->model }}</td>
                                     <td>{{ $item->description }}</td>
                                     <td>{{ $item->serial_number }}</td>
-                                    <td>{{ $item->quantity }}</td>
+                                    <td><input type="hidden" name="quantity[]" value="{{ $item->quantity }}">{{ $item->quantity }}</td>
                                     <td> 
                                     
                                         <a href="" class="btn btn-danger">Remove</a> 
@@ -111,8 +111,8 @@
                                         <td>{{ $item->brand }}</td>
                                         <td>{{ $item->model }}</td>
                                         <td>{{ $item->description }}</td>
-                                        <td><div class="user_serial"> <input type="text" name="user_serial_number[]" class="form-control search_for_serial"> </div></td>
-                                        <td>1</td>
+                                        <td><div class="user_serial"> <input type="text" name="user_serial_number[]" class="form-control search_for_serial" required> </div></td>
+                                        <td><input type="hidden" name="quantity[]" value="1">1</td>
                                         <td> 
                                             <a href="" class="btn btn-danger">Remove</a> 
                                           </td>
@@ -125,7 +125,14 @@
                       
                         </tbody>
                       </table>
+                      <div class="row mb-2">
+                      <div class="col-sm-6">
+                      <input type="date" class="form-control" name="date_returned">
+                      </div>
+                      <div class="col-sm-6">
                       <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </div>
                     </form>
                     </div>
                     <!-- /.card-body -->

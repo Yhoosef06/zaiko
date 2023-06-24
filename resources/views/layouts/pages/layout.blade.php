@@ -728,9 +728,18 @@ $(document).ready(function() {
                     data: formData,
                     success: function(response) {
                         if (response.success) {
-                            // Handle success
+                            Swal.fire(
+                            'Success',
+                            'Successfully Borrowed',
+                            'success'
+                            );
+                            window.location.href = "{{ url('pending') }}";
                         } else if (response.error) {
-                            // Handle error
+                            Swal.fire(
+                            'Error',
+                            'Date Not Provided',
+                            'error'
+                            );
                         }
                     },
                     error: function(xhr, status, error) {
