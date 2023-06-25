@@ -299,7 +299,7 @@ class BorrowController extends Controller
     
     public function viewOrderUser($id)
     {
-        $orders = Order::select('orders.id as order_id','item_categories.category_name','items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name', 'items.brand', 'items.model', 'items.description', 'order_item_temps.quantity')
+        $orders = Order::select('orders.id as order_id','item_categories.category_name','items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','items.brand', 'items.model', 'items.description', 'order_item_temps.quantity')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
             ->join('items', 'order_item_temps.item_id', '=', 'items.id')
@@ -496,40 +496,45 @@ class BorrowController extends Controller
             }
         }
     }
-    public function submitUserBorrow(Request $request){
+    public function submitUserBorrow(Request $request)
+    {
         $orderId = $request->input('order_id');
         $date_return = $request->input('date_returned');
         $serial_number = $request->input('user_serial_number');
         $quantity = $request->input('quantity');
-        $getItem = Item::whereIn('serial_number',$serial_number)->get();
-        $itemIds = $getItem->pluck('id');
+        $itemId = $request->input('itemId');
         $user = auth()->user();
-
-        // echo '<pre>';
-        // print_r($itemIds);
-        // echo '</pre>';
-
-        if($user){
+    
+        if ($user) {
             $firstName = $user->first_name;
             $lastName = $user->last_name;
+    
             if (!empty($orderId)) {
                 if (!empty($date_return)) {
-                    Item::whereIn('serial_number',$serial_number)->update(['borrowed' => 'yes']);
+                    Item::whereIn('serial_number', $serial_number)->update(['borrowed' => 'yes']);
                     Order::whereIn('id', $orderId)->update([
-                        'date_returned' =>$date_return,
-                        'approval_date' => Carbon::today(),
-                        'approved_by' => $firstName .' '. $lastName
-                    ]);
-                    OrderItem::create([
-                        'order_id' => $orderId,
-                        'item_id' => $itemIds,
-                        'quantity' => $quantity,
-                        'status' => 'borrowed',
-                        'order_serial_number' => $serial_number,
                         'date_returned' => $date_return,
-                        'released_by' => $lastName .' '. $firstName
-        
+                        'approval_date' => Carbon::today(),
+                        'approved_by' => $firstName . ' ' . $lastName
                     ]);
+    
+                    foreach ($orderId as $index => $order) {
+                        if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serial_number[$index])) {
+                            OrderItem::create([
+                                'order_id' => $order,
+                                'item_id' => $itemId[$index],
+                                'quantity' => $quantity[$index],
+                                'status' => 'borrowed',
+                                'order_serial_number' => $serial_number[$index],
+                                'date_returned' => $date_return,
+                                'released_by' => $lastName . ' ' . $firstName
+                            ]);
+                        } else {
+                            // Handle the case where the array key is undefined or missing
+                            // You can log an error or skip the iteration
+                        }
+                    }
+    
                     return response()->json(['success' => 'Successfully added borrowed item.']);
                 } else {
                     return response()->json(['error' => 'Error: Date not provided.']);
@@ -537,8 +542,7 @@ class BorrowController extends Controller
             } else {
                 return response()->json(['error' => 'Error: No order selected.']);
             }
-            
-        }  
+        }
     }
 
 

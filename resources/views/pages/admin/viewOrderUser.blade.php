@@ -72,68 +72,68 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                    <form id="submitFormUser" method="POST">
-                      @csrf
-                      <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
-                        <thead>
-                          <tr>
-                           
+                        <form id="submitFormUser" method="POST">
+                          @csrf
+                          <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
+                            <thead>
+                              <tr>
                                 <th>ORDER ID</th>
+                                <th>Item ID</th>
                                 <th style="background-color:#28a745; color:aliceblue">Brand</th>
                                 <th style="background-color:#28a745; color:aliceblue">Model</th>
                                 <th style="background-color:#28a745; color:aliceblue">Description</th>
                                 <th style="background-color:#28a745; color:aliceblue">Serial</th>
                                 <th style="background-color:#28a745; color:aliceblue">Quantity</th>
                                 <th style="background-color:#28a745; color:aliceblue">Option</th>
-                               
-                          </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($orders as $item)
-                            @if ($item->category_name === 'Tools')
-                                <tr>
-                      
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @foreach ($orders as $item)
+                                @if ($item->category_name === 'Tools')
+                                  <tr>
                                     <td><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
+                                    <td><input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}</td>
                                     <td>{{ $item->brand }}</td>
                                     <td>{{ $item->model }}</td>
                                     <td>{{ $item->description }}</td>
-                                    <td>{{ $item->serial_number }}</td>
+                                    <td><input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}</td>
                                     <td><input type="hidden" name="quantity[]" value="{{ $item->quantity }}">{{ $item->quantity }}</td>
                                     <td> 
-                                    
+                                      <a href="" class="btn btn-danger">Remove</a> 
+                                    </td>
+                                  </tr>
+                                @else
+                                  @for ($i = 1; $i <= $item->quantity; $i++)
+                                    <tr> 
+                                      <td><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
+                                      <td><input type="text" name="itemId[]" id="itemID_{{ $i }}"></td>
+                                      <td>{{ $item->brand }}</td>
+                                      <td>{{ $item->model }}</td>
+                                      <td>{{ $item->description }}</td>
+                                      <td>
+                                        <div id="user_serial_{{ $i }}">
+                                          <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control" required>
+                                        </div>
+                                      </td>
+                                      <td><input type="hidden" name="quantity[]" value="1">1</td>
+                                      <td> 
                                         <a href="" class="btn btn-danger">Remove</a> 
                                       </td>
-                                </tr>
-                            @else
-                                @for ($i = 1; $i <= $item->quantity; $i++)
-                                    <tr> 
-                                        <td><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
-                                        <td>{{ $item->brand }}</td>
-                                        <td>{{ $item->model }}</td>
-                                        <td>{{ $item->description }}</td>
-                                        <td><div class="user_serial"> <input type="text" name="user_serial_number[]" class="form-control search_for_serial" required> </div></td>
-                                        <td><input type="hidden" name="quantity[]" value="1">1</td>
-                                        <td> 
-                                            <a href="" class="btn btn-danger">Remove</a> 
-                                          </td>
                                     </tr>
-                                @endfor
-                            @endif
-                        @endforeach
-                    
-                          
-                      
-                        </tbody>
-                      </table>
-                      <div class="row mb-2">
-                      <div class="col-sm-6">
-                      <input type="date" class="form-control" name="date_returned">
-                      </div>
-                      <div class="col-sm-6">
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                      </div>
-                    </div>
-                    </form>
+                                  @endfor
+                                @endif
+                              @endforeach
+                            </tbody>
+                          </table>
+                          <div class="row mb-2">
+                            <div class="col-sm-6">
+                              <input type="date" class="form-control" name="date_returned">
+                            </div>
+                            <div class="col-sm-6">
+                              <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                          </div>
+                        </form>
                     </div>
                     <!-- /.card-body -->
                   </div>
