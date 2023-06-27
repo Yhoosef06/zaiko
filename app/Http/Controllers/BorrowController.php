@@ -43,11 +43,16 @@ class BorrowController extends Controller
        
     }
 
-    public function returned(){
-        $forReturns =  $borrows = OrderItem::join('items', 'order_items.item_id', '=', 'items.id')->join('users', 'order_items.user_id', '=', 'users.id_number')->where('order_items.status', '=', 'returned')->get();
+    public function returned()
+    {
+        $forReturns = OrderItem::join('items', 'order_items.item_id', '=', 'items.id')
+                            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+                            ->where('order_items.status', '=', 'returned')
+                            ->get();
         $categories = ItemCategory::all();
+        $users = User::all();
         
-        return view('pages.admin.returned')->with(compact('forReturns','categories'));
+        return view('pages.admin.returned', compact('forReturns', 'categories', 'users'));
     }
 
     // public function pendingItem(Request $request,$id,$serial_number){
