@@ -41,7 +41,7 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                      <table class="table table-head-fixed text-nowrap" id="notAdded">
+                      <table class="table table-head-fixed text-nowrap" id="orderAdmin">
                         <thead>
                           <tr>
                             <th class="d-none">ID</th>
