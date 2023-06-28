@@ -452,7 +452,7 @@ $(document).ready(function() {
                     var userID = $("#student_id").val();
                     var itemId = ui.item.id;
                     var serialNumber = ui.item.serialNumber;
-                    console.log('added');
+                   
 
                     $.ajax({
                     url: "{{ route('pendingBorrow') }}",
@@ -466,7 +466,7 @@ $(document).ready(function() {
                         serialNumber: serialNumber
                     },
                     success: function(response) {
-                        // Handle the response data
+                       
                         Swal.fire({
                             position: 'top-end',
                             icon: 'success',
@@ -474,8 +474,9 @@ $(document).ready(function() {
                             showConfirmButton: false,
                             timer: 1500
                         });
+                    
 
-                        // Clear the alreadyAdded table
+                       
                         $('#alreadyAdded tbody').empty();
 
                         for (var i = 0; i < response.length; i++) {
@@ -1241,12 +1242,43 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 event.preventDefault();
-                $('#searchItemAdmin').val(ui.item.serialNumber);
-               
-                
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Successfully Added',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                var tableRow = $('<tr>');
+                $('<td class="d-none">').text(ui.item.id).appendTo(tableRow);
+                $('<td class="d-none">').text(ui.item.itemID).appendTo(tableRow);
+                $('<td>').text(ui.item.brand).appendTo(tableRow);
+                $('<td>').text(ui.item.model).appendTo(tableRow);
+                $('<td>').text(ui.item.description).appendTo(tableRow);
+                $('<td>').text(ui.item.serialNumber).appendTo(tableRow);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', 1).val(1);
+                $('<td>').append(quantityInput).appendTo(tableRow);
+                var buttonCell = $('<td>');
+                var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
+                var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                tableRow.append(buttonCell);
+                tableRow.appendTo('#orderAdmin tbody');
+
+                quantityInput.on('input', function() {
+                    var enteredValue = parseInt($(this).val());
+                    var maxValue = parseInt($(this).attr('max'));
+                    if (enteredValue > maxValue) {  
+                    Swal.fire(
+                        'Quantity cannot exceed ' + maxValue,
+                        'Try input ' + maxValue + ' or below.',
+                        'question'
+                    );
+                    $(this).val(maxValue);
+                    }
+                });
             }
         }
-
     }).autocomplete("instance")._renderItem = function(ul, item) {
         if (item.value === "") {
             return $("<li>")
@@ -1256,7 +1288,8 @@ $(document).ready(function() {
             return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
         }
     };
- });
+});
+
 
  $(document).ready(function() {
     $("#searchItemUser").autocomplete({

@@ -74,7 +74,7 @@
                     <div class="card-body table-responsive p-0" style="height: 250px;">
                         <form id="submitFormUser" method="POST">
                           @csrf
-                          <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
+                          <table class="table table-head-fixed text-nowrap" id="submitUser">
                             <thead>
                               <tr>
                                 <th class="d-none">ORDER ID</th>

@@ -49,6 +49,7 @@
                             <th style="background-color:#343a40; color:aliceblue">Brand</th>
                             <th style="background-color:#343a40; color:aliceblue">Model</th>
                             <th style="background-color:#343a40; color:aliceblue">Desctiption</th>
+                            <th style="background-color:#343a40; color:aliceblue">Serial Number</th>
                             <th style="background-color:#343a40; color:aliceblue">Quantity</th>
                             <th style="background-color:#343a40; color:aliceblue">Action</th>
                           </tr>
@@ -76,7 +77,7 @@
                     <div class="card-body table-responsive p-0" style="height: 250px;">
                       <form id="submitForm" method="POST" >
                         @csrf
-                        <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
+                        <table class="table table-head-fixed text-nowrap" id="submitAdmin">
                             <thead>
                                 <tr>
                                     <th class="d-none">ID</th>
