@@ -532,9 +532,6 @@ class BorrowController extends Controller
                                 'date_returned' => $date_return,
                                 'released_by' => $lastName . ' ' . $firstName
                             ]);
-                        } else {
-                            // Handle the case where the array key is undefined or missing
-                            // You can log an error or skip the iteration
                         }
                     }
     
@@ -545,6 +542,62 @@ class BorrowController extends Controller
             } else {
                 return response()->json(['error' => 'Error: No order selected.']);
             }
+        }
+    }
+    
+    public function adminNewOrder(Request $request){
+        $userId = $request->userId;
+        $itemId = $request->itemId;
+        $orderId = $request->orderId;
+        $brand = $request->brand;
+        $model = $request->model;
+        $description = $request->description;
+        $serial = $request->serial;
+        $quantity = $request->quantity;
+
+        $user = auth()->user();
+
+        if($user){
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
+            Item::where('serial_number', $serial)->update(['borrowed' => 'yes']);
+            OrderItem::create([
+                'order_id' => $orderId,
+                'item_id' => $itemId,
+                'quantity' => $quantity,
+                'status' => 'borrowed',
+                'released_by' => $firstName .' '. $lastName,
+                'order_serial_number' => $serial
+            ]);
+            return response()->json(['success' => 'Successfully added borrowed item.']);
+        }
+    }
+
+    public function userNewOrder(Request $request){
+        $userId = $request->userId;
+        $itemId = $request->itemId;
+        $orderId = $request->orderId;
+        $brand = $request->brand;
+        $model = $request->model;
+        $description = $request->description;
+        $serial = $request->serial;
+        $quantity = $request->quantity;
+
+        $user = auth()->user();
+
+        if($user){
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
+            Item::where('serial_number', $serial)->update(['borrowed' => 'yes']);
+            OrderItem::create([
+                'order_id' => $orderId,
+                'item_id' => $itemId,
+                'quantity' => $quantity,
+                'status' => 'borrowed',
+                'released_by' => $firstName .' '. $lastName,
+                'order_serial_number' => $serial
+            ]);
+            return response()->json(['success' => 'Successfully added borrowed item.']);
         }
     }
 

@@ -44,6 +44,7 @@
                           <tr>
                             <th class="d-none">ID</th>
                             <th class="d-none">ItemId</th>
+                            <th class="d-none">Order ID</th>
                             <th style="background-color:#343a40; color:aliceblue">Brand</th>
                             <th style="background-color:#343a40; color:aliceblue">Model</th>
                             <th style="background-color:#343a40; color:aliceblue">Desctiption</th>

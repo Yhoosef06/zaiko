@@ -375,7 +375,7 @@ $(document).ready(function() {
                 });
 
                 addButton.on('click', function() {
-                    // Perform the "Add" action here
+                   
                     console.log('Add button clicked');
                     var userId = $(this).closest('tr').find('td:nth-child(1)').text();
                     var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
@@ -385,7 +385,7 @@ $(document).ready(function() {
                     var serial = $(this).closest('tr').find('td:nth-child(6)').text();
                     var quantity = $(this).closest('tr').find('input').val();
 
-                    // Create an object to send in the AJAX request
+               
                     var requestData = {
                     userId: userId,
                     itemId: itemId,
@@ -413,11 +413,11 @@ $(document).ready(function() {
                         timer: 1500
                         });
 
-                        // Clear the inputs and remove the table row
+                        
                         tableRow.find('input').val('');
                         tableRow.remove();
 
-                        // Append the data to the alreadyAdded table
+                       
                         var newRow = $('<tr>');
                         $('<td class="d-none">').text(response.userId).appendTo(newRow);
                         $('<td>').text(response.brand).appendTo(newRow);
@@ -1164,7 +1164,7 @@ $(document).ready(function() {
         open: function(event, ui) {
             $("#user_serial_12 .ui-autocomplete").css("top", "auto");
         },
-        // Custom rendering of autocomplete items
+       
         response: function(event, ui) {
             if (!ui.content.length) {
                 var noResult = {
@@ -1224,7 +1224,7 @@ $(document).ready(function() {
         open: function(event, ui) {
             $("#search-item-admin-to-borrow .ui-autocomplete").css("top", "auto");
         },
-        // Custom rendering of autocomplete items
+      
         response: function(event, ui) {
             if (!ui.content.length) {
                 var noResult = {
@@ -1242,6 +1242,7 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 event.preventDefault();
+                var orderID = $("#orderID").val();
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
@@ -1253,6 +1254,7 @@ $(document).ready(function() {
                 var tableRow = $('<tr>');
                 $('<td class="d-none">').text(ui.item.id).appendTo(tableRow);
                 $('<td class="d-none">').text(ui.item.itemID).appendTo(tableRow);
+                $('<td class="d-none">').text(orderID).appendTo(tableRow);
                 $('<td>').text(ui.item.brand).appendTo(tableRow);
                 $('<td>').text(ui.item.model).appendTo(tableRow);
                 $('<td>').text(ui.item.description).appendTo(tableRow);
@@ -1276,6 +1278,71 @@ $(document).ready(function() {
                     );
                     $(this).val(maxValue);
                     }
+                });
+
+                cancelButton.on('click', function() {
+                 
+                    tableRow.remove();
+                    Swal.fire({
+                    
+                        icon: 'success',
+                        title: 'Successfuly Removed',
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
+                   
+                });
+
+                addButton.on('click', function() {
+                   
+                    console.log('Add button clicked');
+                    var userId = $(this).closest('tr').find('td:nth-child(1)').text();
+                    var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
+                    var orderId = $(this).closest('tr').find('td:nth-child(3)').text();
+                    var brand = $(this).closest('tr').find('td:nth-child(4)').text();
+                    var model = $(this).closest('tr').find('td:nth-child(5)').text();
+                    var description = $(this).closest('tr').find('td:nth-child(6)').text();
+                    var serial = $(this).closest('tr').find('td:nth-child(7)').text();
+                    var quantity = $(this).closest('tr').find('input').val();
+
+               
+                    var requestData = {
+                    userId: userId,
+                    itemId: itemId,
+                    orderId: orderId,
+                    brand: brand,
+                    model: model,
+                    description: description,
+                    serial: serial,
+                    quantity: quantity
+                    };
+
+                    $.ajax({
+                    url: "{{ route('adminNewOrder') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: requestData,
+                    success: function(response) {
+                        if(response.success){
+                            tableRow.remove();
+                            Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Successfully Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                        }
+                        
+
+                    },
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
+                    });
                 });
             }
         }
@@ -1329,7 +1396,107 @@ $(document).ready(function() {
                 event.preventDefault();
             } else {
                 event.preventDefault();
-                $('#searchItemUser').val(ui.item.serialNumber);
+                var orderID = $("#orderID").val();
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Successfully Added',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                var tableRow = $('<tr>');
+                $('<td class="d-none">').text(ui.item.id).appendTo(tableRow);
+                $('<td class="d-none">').text(ui.item.itemID).appendTo(tableRow);
+                $('<td class="d-none">').text(orderID).appendTo(tableRow);
+                $('<td>').text(ui.item.brand).appendTo(tableRow);
+                $('<td>').text(ui.item.model).appendTo(tableRow);
+                $('<td>').text(ui.item.description).appendTo(tableRow);
+                $('<td>').text(ui.item.serialNumber).appendTo(tableRow);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', 1).val(1);
+                $('<td>').append(quantityInput).appendTo(tableRow);
+                var buttonCell = $('<td>');
+                var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
+                var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                tableRow.append(buttonCell);
+                tableRow.appendTo('#orderAdmin tbody');
+
+                quantityInput.on('input', function() {
+                    var enteredValue = parseInt($(this).val());
+                    var maxValue = parseInt($(this).attr('max'));
+                    if (enteredValue > maxValue) {  
+                    Swal.fire(
+                        'Quantity cannot exceed ' + maxValue,
+                        'Try input ' + maxValue + ' or below.',
+                        'question'
+                    );
+                    $(this).val(maxValue);
+                    }
+                });
+
+                cancelButton.on('click', function() {
+                 
+                    tableRow.remove();
+                    Swal.fire({
+                    
+                        icon: 'success',
+                        title: 'Successfuly Removed',
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
+                   
+                });
+
+                addButton.on('click', function() {
+                   
+                    console.log('Add button clicked');
+                    var userId = $(this).closest('tr').find('td:nth-child(1)').text();
+                    var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
+                    var orderId = $(this).closest('tr').find('td:nth-child(3)').text();
+                    var brand = $(this).closest('tr').find('td:nth-child(4)').text();
+                    var model = $(this).closest('tr').find('td:nth-child(5)').text();
+                    var description = $(this).closest('tr').find('td:nth-child(6)').text();
+                    var serial = $(this).closest('tr').find('td:nth-child(7)').text();
+                    var quantity = $(this).closest('tr').find('input').val();
+
+               
+                    var requestData = {
+                    userId: userId,
+                    itemId: itemId,
+                    orderId: orderId,
+                    brand: brand,
+                    model: model,
+                    description: description,
+                    serial: serial,
+                    quantity: quantity
+                    };
+
+                    $.ajax({
+                    url: "{{ route('userNewOrder') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: requestData,
+                    success: function(response) {
+                        if(response.success){
+                            tableRow.remove();
+                            Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Successfully Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                        }
+                        
+
+                    },
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
+                    });
+                });
                
                 
             }

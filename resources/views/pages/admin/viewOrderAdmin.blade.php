@@ -8,6 +8,7 @@
                     @foreach($order as $index => $item)
                         @if($index === 0)
                             <h1>{{ $item->last_name }}, {{ $item->first_name }}</h1>
+                            <input type="hidden" name="orderID" id="orderID" value="{{ $item->order_id }}">
                         @endif
                     @endforeach
                 </div>
@@ -46,6 +47,7 @@
                           <tr>
                             <th class="d-none">ID</th>
                             <th class="d-none">ItemId</th>
+                            <th class="d-none">Order ID</th>
                             <th style="background-color:#343a40; color:aliceblue">Brand</th>
                             <th style="background-color:#343a40; color:aliceblue">Model</th>
                             <th style="background-color:#343a40; color:aliceblue">Desctiption</th>
