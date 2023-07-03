@@ -80,8 +80,12 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                    <form method="POST" id="submitAdmin">
+                     
                     <input type="text" id="student_id" name="student_id" class="form-control" style="display: none;">
+                    <form method="POST" id="submitAdmin">
+                  
+                    <div id="tableContainer">
+                    
                     <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                       <thead>
                           <tr>
@@ -98,7 +102,9 @@
                       </tbody>
                   </table>
                       <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                    
+                </div>
+                </form>
                     </div>
                     <!-- /.card-body -->
                   </div>

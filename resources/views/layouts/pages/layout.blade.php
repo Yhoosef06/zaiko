@@ -1646,13 +1646,63 @@ $(document).ready(function() {
 
 
 
-    //     Swal.fire(
-    //       'Deleted!',
-    //       'Your file has been deleted.',
-    //       'success'
-    //     )
-    //   }
-    // })
+    $(document).ready(function() {
+  
+
+    // Add an event listener to the form submission
+    $('#submitAdmin').on('submit', function(event) {
+        event.preventDefault(); 
+        var rows = $('#tableContainer #alreadyAdded tbody tr');
+
+        // Create an array to store the data from each row
+        var rowData = [];
+
+        // Loop through each row and extract the data
+        rows.each(function() {
+            var row = $(this);
+
+            // Get the values from the row cells
+            var userId = row.find('td:nth-child(1)').text();
+            var brand = row.find('td:nth-child(2)').text();
+            var model = row.find('td:nth-child(3)').text();
+            var description = row.find('td:nth-child(4)').text();
+            var serial = row.find('td:nth-child(5)').text();
+            var quantity = row.find('td:nth-child(6)').text();
+
+            // Create an object with the row data
+            var rowDataItem = {
+                userId: userId,
+                brand: brand,
+                model: model,
+                description: description,
+                serial: serial,
+                quantity: quantity
+            };
+
+            // Add the row data to the array
+            rowData.push(rowDataItem);
+        });
+
+        // Send the data to the server using AJAX
+        $.ajax({
+            url: "{{ route('submitAdminOrder') }}", // Replace with your Laravel route
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken // Make sure to define csrfToken variable
+            },
+            data: { data: rowData }, // Pass the row data to the server
+            success: function(response) {
+                // Handle the success response
+                console.log(response);
+                // Optionally, you can show a success message or redirect the user
+            },
+            error: function(xhr) {
+                // Handle the error
+                console.log(xhr.responseText);
+            }
+        });
+    });
+});
 </script>
 
 

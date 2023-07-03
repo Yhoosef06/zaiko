@@ -601,5 +601,17 @@ class BorrowController extends Controller
         }
     }
 
+    public function submitAdminOrder(Request $request){
+        $rowData = $request->input('data');
+
+        // Process the row data as needed (e.g., save to the database)
+        echo '<pre>';
+        echo print_r($rowData);
+        echo '</pre>';
+        exit;
+        // Return a response if necessary
+        // return response()->json(['message' => 'Data submitted successfully']);
+    }
+
 
 }
