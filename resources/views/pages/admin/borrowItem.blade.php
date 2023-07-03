@@ -50,8 +50,8 @@
                       <table class="table table-head-fixed text-nowrap" id="notAdded">
                         <thead>
                           <tr>
-                            <th class="d-none">ID</th>
-                            <th class="d-none">ItemId</th>
+                            <th>ID</th>
+                            <th>ItemId</th>
                             <th style="background-color:#343a40; color:aliceblue">Brand</th>
                             <th style="background-color:#343a40; color:aliceblue">Model</th>
                             <th style="background-color:#343a40; color:aliceblue">Desctiption</th>
@@ -89,7 +89,8 @@
                     <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                       <thead>
                           <tr>
-                              <th class="d-none">ID</th>
+                              <th>ID</th>
+                              <th>Item ID</th>
                               <th style="background-color:#28a745; color:aliceblue">Brand</th>
                               <th style="background-color:#28a745; color:aliceblue">Model</th>
                               <th style="background-color:#28a745; color:aliceblue">Description</th>
@@ -101,7 +102,7 @@
                       <tbody>
                       </tbody>
                   </table>
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="submit" class="btn btn-primary" id="btn-already-submit">Submit</button>
                     
                 </div>
                 </form>

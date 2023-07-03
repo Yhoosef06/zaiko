@@ -88,8 +88,8 @@
     @endif
 </script> -->
 <!-- Include jQuery library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> --}}
 <!-- Include jQuery UI library -->
 <!-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script> -->
 <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css"> -->
@@ -419,7 +419,8 @@ $(document).ready(function() {
 
                        
                         var newRow = $('<tr>');
-                        $('<td class="d-none">').text(response.userId).appendTo(newRow);
+                        $('<td>').text(response.userId).appendTo(newRow);
+                        $('<td>').text(response.itemId).appendTo(newRow);
                         $('<td>').text(response.brand).appendTo(newRow);
                         $('<td>').text(response.model).appendTo(newRow);
                         $('<td>').text(response.description).appendTo(newRow);
@@ -482,7 +483,8 @@ $(document).ready(function() {
                         for (var i = 0; i < response.length; i++) {
                             var rowData = response[i];
                             var tableRow = $('<tr>').appendTo('#alreadyAdded tbody');
-                            $('<td class="d-none">').text(rowData.user_id).appendTo(tableRow);
+                            $('<td>').text(rowData.user_id).appendTo(tableRow);
+                            $('<td>').text(rowData.item_id).appendTo(tableRow);
                             $('<td>').text(rowData.brand).appendTo(tableRow);
                             $('<td>').text(rowData.model).appendTo(tableRow);
                             $('<td>').text(rowData.description).appendTo(tableRow);
@@ -1647,17 +1649,28 @@ $(document).ready(function() {
 
 
     $(document).ready(function() {
-  
+    //     function checkTableEmpty() {
+    //     var table = $('#tableContainer #alreadyAdded');
+
+    //     if (table.find('tbody tr').length === 0) {
+    //         table.hide();
+    //         $('#btn-already-submit').hide();
+    //     } else {
+    //         table.show();
+    //         $('#btn-already-submit').show();
+    //     }
+    // }
 
     // Add an event listener to the form submission
     $('#submitAdmin').on('submit', function(event) {
         event.preventDefault(); 
+        // checkTableEmpty();
         var rows = $('#tableContainer #alreadyAdded tbody tr');
 
-        // Create an array to store the data from each row
+       
         var rowData = [];
 
-        // Loop through each row and extract the data
+        
         rows.each(function() {
             var row = $(this);
 

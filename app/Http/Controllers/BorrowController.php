@@ -422,6 +422,7 @@ class BorrowController extends Controller
 
                 $responseData = [
                     'userId' => $userId,
+                    'itemId' => $itemId,
                     'brand' => $brand,
                     'model' => $model,
                     'description' => $description,
@@ -443,6 +444,7 @@ class BorrowController extends Controller
 
             $responseData = [
                 'userId' => $userId,
+                'itemId' => $itemId,
                 'brand' => $brand,
                 'model' => $model,
                 'description' => $description,
