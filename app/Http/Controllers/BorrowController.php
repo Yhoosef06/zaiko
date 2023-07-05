@@ -603,16 +603,44 @@ class BorrowController extends Controller
         }
     }
 
-    public function submitAdminOrder(Request $request){
-        $rowData = $request->input('data');
 
-        // Process the row data as needed (e.g., save to the database)
-        echo '<pre>';
-        echo print_r($rowData);
-        echo '</pre>';
-        exit;
-        // Return a response if necessary
-        // return response()->json(['message' => 'Data submitted successfully']);
+    public function submitAdminOrder(Request $request)
+    {
+        $rowData = $request->input('data');
+        $date_return = $request->input('date_returned');
+        $user = auth()->user();
+    
+        if ($user) {
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
+    
+            if (!empty($date_return)) {
+                $orderIds = [];
+    
+                foreach ($rowData as $row) {
+                    $orderId = $row['orderId'];
+                    $orderIds[] = $orderId;
+                }
+    
+                Order::whereIn('id', $orderIds)->update([
+                    'date_returned' => $date_return,
+                    'approval_date' => Carbon::today(),
+                    'approved_by' => $firstName . ' ' . $lastName
+                ]);
+    
+                OrderItem::whereIn('order_id', $orderIds)
+                    ->where('status', 'pending')
+                    ->update([
+                        'status' => 'borrowed',
+                        'released_by' => $firstName . ' ' . $lastName,
+                        'date_returned' => $date_return
+                    ]);
+    
+                return response()->json(['success' => 'Successfully added borrowed item.']);
+            } else {
+                return response()->json(['error' => 'Error: Date not provided.']);
+            }
+        }
     }
 
 

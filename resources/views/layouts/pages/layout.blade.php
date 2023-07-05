@@ -484,6 +484,7 @@ $(document).ready(function() {
                             var rowData = response[i];
                             var tableRow = $('<tr>').appendTo('#alreadyAdded tbody');
                             $('<td>').text(rowData.user_id).appendTo(tableRow);
+                            $('<td>').text(rowData.order_id).appendTo(tableRow);
                             $('<td>').text(rowData.item_id).appendTo(tableRow);
                             $('<td>').text(rowData.brand).appendTo(tableRow);
                             $('<td>').text(rowData.model).appendTo(tableRow);
@@ -1666,6 +1667,7 @@ $(document).ready(function() {
         event.preventDefault(); 
         // checkTableEmpty();
         var rows = $('#tableContainer #alreadyAdded tbody tr');
+        var dateReturned = $('input[name="date_returned"]').val();
 
        
         var rowData = [];
@@ -1676,15 +1678,19 @@ $(document).ready(function() {
 
             // Get the values from the row cells
             var userId = row.find('td:nth-child(1)').text();
-            var brand = row.find('td:nth-child(2)').text();
-            var model = row.find('td:nth-child(3)').text();
-            var description = row.find('td:nth-child(4)').text();
-            var serial = row.find('td:nth-child(5)').text();
-            var quantity = row.find('td:nth-child(6)').text();
+            var orderId = row.find('td:nth-child(2)').text();
+            var itemId = row.find('td:nth-child(3)').text();
+            var brand = row.find('td:nth-child(4)').text();
+            var model = row.find('td:nth-child(5)').text();
+            var description = row.find('td:nth-child(6)').text();
+            var serial = row.find('td:nth-child(7)').text();
+            var quantity = row.find('td:nth-child(8)').text();
 
             // Create an object with the row data
             var rowDataItem = {
                 userId: userId,
+                orderId: orderId,
+                itemId: itemId,
                 brand: brand,
                 model: model,
                 description: description,
@@ -1692,22 +1698,36 @@ $(document).ready(function() {
                 quantity: quantity
             };
 
-            // Add the row data to the array
+            
             rowData.push(rowDataItem);
         });
 
-        // Send the data to the server using AJAX
+        
         $.ajax({
-            url: "{{ route('submitAdminOrder') }}", // Replace with your Laravel route
+            url: "{{ route('submitAdminOrder') }}", 
             type: 'POST',
             headers: {
-                'X-CSRF-TOKEN': csrfToken // Make sure to define csrfToken variable
+                'X-CSRF-TOKEN': csrfToken 
             },
-            data: { data: rowData }, // Pass the row data to the server
+            data: { data: rowData,  date_returned: dateReturned}, 
             success: function(response) {
-                // Handle the success response
-                console.log(response);
-                // Optionally, you can show a success message or redirect the user
+                
+                if (response.success) {
+                    Swal.fire(
+                    'Success',
+                    'Successfully Borrowed',
+                    'success'
+                    );
+                    window.location.href = "{{ url('pending') }}";
+                } else if (response.error) {
+                    Swal.fire(
+                    'Error',
+                    'Date Not Provided',
+                    'error'
+                    );
+                }
+               
+                
             },
             error: function(xhr) {
                 // Handle the error

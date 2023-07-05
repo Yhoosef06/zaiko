@@ -90,6 +90,7 @@
                       <thead>
                           <tr>
                               <th>ID</th>
+                              <th>Order ID</th>
                               <th>Item ID</th>
                               <th style="background-color:#28a745; color:aliceblue">Brand</th>
                               <th style="background-color:#28a745; color:aliceblue">Model</th>
@@ -102,7 +103,15 @@
                       <tbody>
                       </tbody>
                   </table>
+                      
+                      <div class="row mb-2">
+                        <div class="col-sm-6">
+                      <input type="date" class="form-control" name="date_returned">
+                    </div>
+                    <div class="col-sm-6">
                       <button type="submit" class="btn btn-primary" id="btn-already-submit">Submit</button>
+                    </div>
+                    </div>
                     
                 </div>
                 </form>
