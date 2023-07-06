@@ -63,7 +63,11 @@
                       <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h4 class="modal-title"><span>{{ $forReturn->last_name }},</span> <span>{{ $forReturn->first_name }}</span></h4>
+                            <h4 class="modal-title"><span> @foreach ($users as $user)
+                              @if ($user->id_number == $forReturn->user_id)
+                              {{ $user->last_name }}, {{ $user->first_name }} 
+                              @endif
+                        @endforeach</span></h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>

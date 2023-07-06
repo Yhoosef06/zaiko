@@ -13,6 +13,7 @@ class OrderItem extends Model
     protected $fillable = [
         'order_temp_id',
         'user_id',
+        'order_id',
         'item_id',
         'quantity',
         'status',
@@ -25,5 +26,12 @@ class OrderItem extends Model
 
     public function order_item(): BelongsTo {
         return $this->belongsTo(OrderItemTemp::class);
+    }
+    public function order(): BelongsTo {
+        return $this->belongsTo(Order::class);
+    }
+    public function items()
+    {
+        return $this->belongsToMany(Item::class);
     }
 }
