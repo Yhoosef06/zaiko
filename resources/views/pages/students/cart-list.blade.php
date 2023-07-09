@@ -69,7 +69,7 @@
                                         @if($cart->item->serial_number == null)
                                             <div class="row">
                                                 <div class="col md-6">
-                                                    <select class="form-control" id="quantity" name="quantity">
+                                                    <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
                                                         @for($i = 1; $i <= $cart->item->quantity; $i++)
                                                         @if($i == $cart->quantity)
                                                             <option value="{{$i}}" selected>{{$i}}</option>
@@ -79,16 +79,13 @@
                                                         @endfor
                                                     </select>
                                                 </div>
-                                                <div class="col md-6">
-                                                    <button type="submit" class="btn btn-outline-dark">Change</button>
-                                                </div>
                                             </div>      
                                         @else
                                             {{-- <input id="quantity-input" type="number" value="{{ $cart->quantity }}" min="0"
                                             max="{{ count($catItem) }}"> --}}
                                             <div class="row">
                                                 <div class="col md-6">
-                                                    <select class="form-control" id="quantity" name="quantity">
+                                                    <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
                                                         @for($i = 1; $i <= count($catItem); $i++)
                                                         @if($i == $cart->quantity)
                                                             <option value="{{$i}}" selected>{{$i}}</option>
@@ -97,9 +94,6 @@
                                                         @endif
                                                         @endfor
                                                     </select>
-                                                </div>
-                                                <div class="col md-6">
-                                                    <button type="submit" class="btn btn-outline-dark">Change</button>
                                                 </div>
                                             </div>
                                         @endif

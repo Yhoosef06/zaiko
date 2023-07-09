@@ -19,6 +19,7 @@ class CreateOrdersTable extends Migration
             $table->date('date_submitted')->nullable();
             $table->date('date_returned')->nullable();
             $table->date('approval_date')->nullable();
+            $table->string('created_by')->nullable();
             $table->string('approved_by')->nullable();
             $table->timestamps();
 

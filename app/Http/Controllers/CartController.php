@@ -131,7 +131,7 @@ class CartController extends Controller
             $item->quantity = $request->quantity;
             $item->save();
             
-            session()->flash('success','Item quantity changed.');
+            // session()->flash('success','Item quantity changed.');
             return redirect()->back();
         
     }

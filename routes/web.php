@@ -108,20 +108,32 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');
     Route::get('pending', [BorrowController::class, 'pending'])->name('pending');
     Route::get('returned', [BorrowController::class, 'returned'])->name('returned');
+
     // Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
     // Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
     Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
     Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
     Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
+    Route::get('/searchForSerial', [BorrowController::class, 'searchForSerial'])->name('searchForSerial');
+    Route::get('/searchItemForAdmin', [BorrowController::class, 'searchItemForAdmin'])->name('searchItemForAdmin');
+    Route::get('/searchItemForUser', [BorrowController::class, 'searchItemForUser'])->name('searchItemForUser');
     Route::get('/borrow-item', [BorrowController::class, 'borrowItem'])->name('borrowItem');
     Route::get('/add-item/{id}', [BorrowController::class, 'addItem'])->name('addItem');
+    Route::get('/check-userID/{id}', [BorrowController::class, 'checkUserId'])->name('checkUserId');
     Route::post('/pending-borrow', [BorrowController::class, 'pendingBorrow'])->name('pendingBorrow');
+    Route::post('/submitAdminBorrow', [BorrowController::class, 'submitAdminBorrow'])->name('submitAdminBorrow');
+    Route::post('/submitUserBorrow', [BorrowController::class, 'submitUserBorrow'])->name('submitUserBorrow');
+    Route::post('/submit-admin-order', [BorrowController::class, 'submitAdminOrder'])->name('submitAdminOrder');
+
+    
 
     // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
-    // Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
+    Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
     Route::get('view-order-admin/{id}', [BorrowController::class, 'viewOrderAdmin'])->name('view-order-admin');
     Route::get('view-order-user/{id}', [BorrowController::class, 'viewOrderUser'])->name('view-order-user');
     Route::post('/admin-added-order', [BorrowController::class, 'adminAddedOrder'])->name('adminAddedOrder');
+    Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
+    Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
     Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
 
 

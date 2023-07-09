@@ -31,8 +31,8 @@
                                 <tr>
                                 
                                     <td class="text-wrap">{{ $order->id }}</td>
-                                    <td class="text-wrap">{{ $order->date_submitted }}</td>
-                                    <td class="text-wrap">{{ $order->date_returned }}</td>
+                                    <td class="text-wrap">{{ date('F j, Y',strToTime($order->date_submitted)) }}</td>
+                                    <td class="text-wrap">{{ date('F j, Y',strToTime($order->date_returned)) }}</td>
                                     <td class="text-center">    
                                         <a href="#" class="link-secondary">
                                             <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#itemModal">

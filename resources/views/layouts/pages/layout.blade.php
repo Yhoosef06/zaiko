@@ -88,8 +88,8 @@
     @endif
 </script> -->
 <!-- Include jQuery library -->
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> --}}
 <!-- Include jQuery UI library -->
 <!-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script> -->
 <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css"> -->
@@ -148,7 +148,7 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script> -->
 <!-- <script src="sweetalert2/dist/sweetalert2.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 <script>
@@ -234,7 +234,6 @@ $(document).ready(function() {
         open: function(event, ui) {
             $("#user_id_container .ui-autocomplete").css("top", "auto");
         },
-        // Custom rendering of autocomplete items
         response: function(event, ui) {
             if (!ui.content.length) {
                 var noResult = { value: "", label: "No matching ID numbers found" };
@@ -245,11 +244,36 @@ $(document).ready(function() {
             if (ui.item.value === "") {
                 event.preventDefault();
             } else {
-                // $('#profile').show();
-                $('#search-serial-desc').show();
-                // $('#first_name').val(ui.item.firstName);
-                // $('#last_name').val(ui.item.lastName);
-                $('#student_id').val(ui.item.value);
+                var userID = ui.item.value;
+                var url = '/check-userID/' + userID;
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.exists) {
+                            Swal.fire(
+                                ui.item.lastName +', '+ ui.item.firstName,
+                                'Has already pending borrowing. Please go to the pending table to update. Thank you.',
+                                'error'
+                            );
+                            $('#idNumber').val('');
+                            // User ID exists
+                            // Handle the case when the user ID already exists
+                        } else {
+                            $('#search-serial-desc').show();
+                            $('#student_id').val(ui.item.value);
+               
+
+                        }
+                    },
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
+                });
+
+                
             }
         }
 
@@ -282,9 +306,9 @@ $(document).ready(function() {
                 }
             });
         },
-        appendTo: "#user_id_container",
+        appendTo: "#search-item",
         open: function(event, ui) {
-            $("#item-serial .ui-autocomplete").css("top", "auto");
+            $("#search-item .ui-autocomplete").css("top", "auto");
         },
         // Custom rendering of autocomplete items
         response: function(event, ui) {
@@ -315,159 +339,167 @@ $(document).ready(function() {
                         url: url,
                         type: 'GET',
                         success: function(response) {
-                            // Handle the response data
-                       
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Successfully Added',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
 
-                        var tableRow = $('<tr>').appendTo('#notAdded tbody');
-                        $('<td class="d-none">').text(userID).appendTo(tableRow);
-                        $('<td class="d-none">').text(response.id).appendTo(tableRow);
-                        $('<td>').text(response.brand).appendTo(tableRow);
-                        $('<td>').text(response.model).appendTo(tableRow);
-                        $('<td>').text(response.description).appendTo(tableRow);
-                        var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity).appendTo(tableRow);
-                        var buttonCell = $('<td>').appendTo(tableRow);
-                        var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
-                        var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                var tableRow = $('<tr>');
+                $('<td class="d-none">').text(userID).appendTo(tableRow);
+                $('<td class="d-none">').text(response.id).appendTo(tableRow);
+                $('<td>').text(response.brand).appendTo(tableRow);
+                $('<td>').text(response.model).appendTo(tableRow);
+                $('<td>').text(response.description).appendTo(tableRow);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity);
+                $('<td>').append(quantityInput).appendTo(tableRow);
+                var buttonCell = $('<td>');
+                var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
+                var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                tableRow.append(buttonCell);
+                tableRow.appendTo('#notAdded tbody');
 
+                quantityInput.on('input', function() {
+                    var enteredValue = parseInt($(this).val());
+                    var maxValue = parseInt($(this).attr('max'));
+                    if (enteredValue > maxValue) {  
+                    Swal.fire(
+                        'Quantity cannot exceed ' + maxValue,
+                        'Try input ' + maxValue + ' or below.',
+                        'question'
+                    );
+                    $(this).val(maxValue);
+                    }
+                });
 
-
-                            quantityInput.on('input', function() {
-                            var enteredValue = parseInt($(this).val());
-                            var maxValue = parseInt($(this).attr('max'));
-                            if (enteredValue > maxValue) {  
-                                Swal.fire(
-                                'Quantity cannot exceed ' + maxValue,
-                                'Try input ' + maxValue + ' or below.',
-                                'question'
-                                )
-                                
-                            }
-                            });
-
-                    addButton.on('click', function() {
-                    // Perform the "Add" action here
+                addButton.on('click', function() {
+                   
                     console.log('Add button clicked');
-                    var userId = tableRow.find('td:nth-child(1)').text();
-                    var itemId = tableRow.find('td:nth-child(2)').text();
-                    var brand = tableRow.find('td:nth-child(3)').text();
-                    var model = tableRow.find('td:nth-child(4)').text();
-                    var description = tableRow.find('td:nth-child(5)').text();
-                    var serial = tableRow.find('td:nth-child(6)').text();
-                    var quantity = tableRow.find('input').val();
+                    var userId = $(this).closest('tr').find('td:nth-child(1)').text();
+                    var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
+                    var brand = $(this).closest('tr').find('td:nth-child(3)').text();
+                    var model = $(this).closest('tr').find('td:nth-child(4)').text();
+                    var description = $(this).closest('tr').find('td:nth-child(5)').text();
+                    var serial = $(this).closest('tr').find('td:nth-child(6)').text();
+                    var quantity = $(this).closest('tr').find('input').val();
 
-                    // Create an object to send in the AJAX request
+               
                     var requestData = {
-                        userId: userId,
-                        itemId: itemId,
-                        brand: brand,
-                        model: model,
-                        description: description,
-                        serial: serial,
-                        quantity: quantity
+                    userId: userId,
+                    itemId: itemId,
+                    brand: brand,
+                    model: model,
+                    description: description,
+                    serial: serial,
+                    quantity: quantity
                     };
 
                     $.ajax({
-                        url: "{{ route('adminAddedOrder') }}",
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        data: requestData,
-                        success: function(response) {
-                            // Handle the response data
-                            Swal.fire({
-                                position: 'top-end',
-                                icon: 'success',
-                                title: 'Successfully Added',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-
-                            // Clear the inputs and remove the table row
-                            tableRow.find('input').val('');
-                            tableRow.remove();
-
-                            // Append the data to the alreadyAdded table
-                            var newRow = $('<tr>').appendTo('#alreadyAdded tbody');
-                            $('<td class="d-none">').text(response.userId).appendTo(newRow);
-                            $('<td>').text(response.brand).appendTo(newRow);
-                            $('<td>').text(response.model).appendTo(newRow);
-                            $('<td>').text(response.description).appendTo(newRow);
-                            $('<td>').text(response.serial).appendTo(newRow);
-                            $('<td>').text(response.quantity).appendTo(newRow);
-                            var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(newRow);
-                        },
-                        error: function(xhr) {
-                            // Handle the error
-                            console.log(xhr.responseText);
-                        }
-                            });
+                    url: "{{ route('adminAddedOrder') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: requestData,
+                    success: function(response) {
+                        // Handle the response data
+                        Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Successfully Added',
+                        showConfirmButton: false,
+                        timer: 1500
                         });
 
-                            // Add click event listener to cancel button
-                            cancelButton.on('click', function() {
-                            // Perform the "Cancel" action here
-                            tableRow.remove();
-                            console.log('Cancel button clicked');
-                            });
-                        },
+                        
+                        tableRow.find('input').val('');
+                        tableRow.remove();
 
-
-                        error: function(xhr) {
-                            // Handle the error
-                            console.log(xhr.responseText);
-                        }
+                       
+                        var newRow = $('<tr>');
+                        $('<td>').text(response.userId).appendTo(newRow);
+                        $('<td>').text(response.itemId).appendTo(newRow);
+                        $('<td>').text(response.brand).appendTo(newRow);
+                        $('<td>').text(response.model).appendTo(newRow);
+                        $('<td>').text(response.description).appendTo(newRow);
+                        $('<td>').text(response.serial).appendTo(newRow);
+                        $('<td>').text(response.quantity).appendTo(newRow);
+                        var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(newRow);
+                        newRow.appendTo('#alreadyAdded tbody');
+                    },
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
                     });
+                });
+
+                cancelButton.on('click', function() {
+                    // Perform the "Cancel" action here
+                    tableRow.remove();
+                    console.log('Cancel button clicked');
+                });
+                },
+
+                                        error: function(xhr) {
+                                            // Handle the error
+                                            console.log(xhr.responseText);
+                                        }
+                                    });
                    
                 }else{
                     var userID = $("#student_id").val();
                     var itemId = ui.item.id;
                     var serialNumber = ui.item.serialNumber;
+                   
 
                     $.ajax({
-                        url: "{{ route('pendingBorrow') }}",
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        data: {
-                            userID: userID,
-                            itemId: itemId,
-                            serialNumber: serialNumber
-                        },
-                        success: function(response) {
-                            // Handle the response data
-                            Swal.fire({
+                    url: "{{ route('pendingBorrow') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: {
+                        userID: userID,
+                        itemId: itemId,
+                        serialNumber: serialNumber
+                    },
+                    success: function(response) {
+                       
+                        Swal.fire({
                             position: 'top-end',
                             icon: 'success',
                             title: 'Successfully Added',
                             showConfirmButton: false,
                             timer: 1500
-                            });
+                        });
+                    
 
-                            $('#alreadyAdded tbody').empty();
+                       
+                        $('#alreadyAdded tbody').empty();
 
-                            for (var i = 0; i < response.length; i++) {
-                                var rowData = response[i];
-                                var tableRow = $('<tr>').appendTo('#alreadyAdded tbody');
-                                $('<td class="d-none">').text(rowData.user_id).appendTo(tableRow);
-                                $('<td>').text(rowData.brand).appendTo(tableRow);
-                                $('<td>').text(rowData.model).appendTo(tableRow);
-                                $('<td>').text(rowData.description).appendTo(tableRow);
-                                $('<td>').text(rowData.order_serial_number).appendTo(tableRow);
-                                $('<td>').text(rowData.quantity).appendTo(tableRow);
-                                var buttonCell = $('<td>').appendTo(tableRow);
-                                var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
-                            }
-
-                            },
-
-
-                        error: function(xhr) {
-                            // Handle the error
-                            console.log(xhr.responseText);
+                        for (var i = 0; i < response.length; i++) {
+                            var rowData = response[i];
+                            var tableRow = $('<tr>').appendTo('#alreadyAdded tbody');
+                            $('<td>').text(rowData.user_id).appendTo(tableRow);
+                            $('<td>').text(rowData.order_id).appendTo(tableRow);
+                            $('<td>').text(rowData.item_id).appendTo(tableRow);
+                            $('<td>').text(rowData.brand).appendTo(tableRow);
+                            $('<td>').text(rowData.model).appendTo(tableRow);
+                            $('<td>').text(rowData.description).appendTo(tableRow);
+                            $('<td>').text(rowData.order_serial_number).appendTo(tableRow);
+                            $('<td>').text(rowData.quantity).appendTo(tableRow);
+                            var buttonCell = $('<td>').appendTo(tableRow);
+                            var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
                         }
-                    });
+                    },
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
+                });
 
                   
                 }
@@ -486,6 +518,1073 @@ $(document).ready(function() {
         }
     };
  });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_1").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_1",
+        open: function(event, ui) {
+            $("#user_serial_1 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_1').val(ui.item.serialNumber);
+                $('#itemID_1').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+ $(document).ready(function() {
+    $("#search_for_serial_2").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_2",
+        open: function(event, ui) {
+            $("#user_serial_2 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_2').val(ui.item.serialNumber);
+                $('#itemID_2').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_3").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_3",
+        open: function(event, ui) {
+            $(".user_serial .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_3').val(ui.item.serialNumber);
+                $('#itemID_3').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_4").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_4",
+        open: function(event, ui) {
+            $("#user_serial_4 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_4').val(ui.item.serialNumber);
+                $('#itemID_4').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_5").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_5",
+        open: function(event, ui) {
+            $("#user_serial_5 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_5').val(ui.item.serialNumber);
+                $('#itemID_5').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_6").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_6",
+        open: function(event, ui) {
+            $("#user_serial_6 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_6').val(ui.item.serialNumber);
+                $('#itemID_2').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_7").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_7",
+        open: function(event, ui) {
+            $("#user_serial_7 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_7').val(ui.item.serialNumber);
+                $('#itemID_7').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_8").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_8",
+        open: function(event, ui) {
+            $("#user_serial_8 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_8').val(ui.item.serialNumber);
+                $('#itemID_8').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_9").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_9",
+        open: function(event, ui) {
+            $("#user_serial_9 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_9').val(ui.item.serialNumber);
+                $('#itemID_9').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_10").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_10",
+        open: function(event, ui) {
+            $("#user_serial_10 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_10').val(ui.item.serialNumber);
+                $('#itemID_10').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_11").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_11",
+        open: function(event, ui) {
+            $("#user_serial_11 .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_11').val(ui.item.serialNumber);
+                $('#itemID_11').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $("#search_for_serial_12").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchForSerial') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#user_serial_12",
+        open: function(event, ui) {
+            $("#user_serial_12 .ui-autocomplete").css("top", "auto");
+        },
+       
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                $('#search_for_serial_12').val(ui.item.serialNumber);
+                $('#itemID_12').val(ui.item.itemID);
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+
+
+
+ $(document).ready(function() {
+    $("#searchItemAdmin").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchItemForAdmin') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#search-item-admin-to-borrow",
+        open: function(event, ui) {
+            $("#search-item-admin-to-borrow .ui-autocomplete").css("top", "auto");
+        },
+      
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                var orderID = $("#orderID").val();
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Successfully Added',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                var tableRow = $('<tr>');
+                $('<td class="d-none">').text(ui.item.id).appendTo(tableRow);
+                $('<td class="d-none">').text(ui.item.itemID).appendTo(tableRow);
+                $('<td class="d-none">').text(orderID).appendTo(tableRow);
+                $('<td>').text(ui.item.brand).appendTo(tableRow);
+                $('<td>').text(ui.item.model).appendTo(tableRow);
+                $('<td>').text(ui.item.description).appendTo(tableRow);
+                $('<td>').text(ui.item.serialNumber).appendTo(tableRow);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', 1).val(1);
+                $('<td>').append(quantityInput).appendTo(tableRow);
+                var buttonCell = $('<td>');
+                var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
+                var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                tableRow.append(buttonCell);
+                tableRow.appendTo('#orderAdmin tbody');
+
+                quantityInput.on('input', function() {
+                    var enteredValue = parseInt($(this).val());
+                    var maxValue = parseInt($(this).attr('max'));
+                    if (enteredValue > maxValue) {  
+                    Swal.fire(
+                        'Quantity cannot exceed ' + maxValue,
+                        'Try input ' + maxValue + ' or below.',
+                        'question'
+                    );
+                    $(this).val(maxValue);
+                    }
+                });
+
+                cancelButton.on('click', function() {
+                 
+                    tableRow.remove();
+                    Swal.fire({
+                    
+                        icon: 'success',
+                        title: 'Successfuly Removed',
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
+                   
+                });
+
+                addButton.on('click', function() {
+                   
+                    console.log('Add button clicked');
+                    var userId = $(this).closest('tr').find('td:nth-child(1)').text();
+                    var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
+                    var orderId = $(this).closest('tr').find('td:nth-child(3)').text();
+                    var brand = $(this).closest('tr').find('td:nth-child(4)').text();
+                    var model = $(this).closest('tr').find('td:nth-child(5)').text();
+                    var description = $(this).closest('tr').find('td:nth-child(6)').text();
+                    var serial = $(this).closest('tr').find('td:nth-child(7)').text();
+                    var quantity = $(this).closest('tr').find('input').val();
+
+               
+                    var requestData = {
+                    userId: userId,
+                    itemId: itemId,
+                    orderId: orderId,
+                    brand: brand,
+                    model: model,
+                    description: description,
+                    serial: serial,
+                    quantity: quantity
+                    };
+
+                    $.ajax({
+                    url: "{{ route('adminNewOrder') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: requestData,
+                    success: function(response) {
+                        if(response.success){
+                            tableRow.remove();
+                            Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Successfully Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                        }
+                        
+
+                    },
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
+                    });
+                });
+            }
+        }
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+});
+
+
+ $(document).ready(function() {
+    $("#searchItemUser").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchItemForUser') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#search-item-user-to-borrow",
+        open: function(event, ui) {
+            $("#search-item-user-to-borrow .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                event.preventDefault();
+                var orderID = $("#orderID").val();
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Successfully Added',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                var tableRow = $('<tr>');
+                $('<td class="d-none">').text(ui.item.id).appendTo(tableRow);
+                $('<td class="d-none">').text(ui.item.itemID).appendTo(tableRow);
+                $('<td class="d-none">').text(orderID).appendTo(tableRow);
+                $('<td>').text(ui.item.brand).appendTo(tableRow);
+                $('<td>').text(ui.item.model).appendTo(tableRow);
+                $('<td>').text(ui.item.description).appendTo(tableRow);
+                $('<td>').text(ui.item.serialNumber).appendTo(tableRow);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', 1).val(1);
+                $('<td>').append(quantityInput).appendTo(tableRow);
+                var buttonCell = $('<td>');
+                var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
+                var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                tableRow.append(buttonCell);
+                tableRow.appendTo('#orderAdmin tbody');
+
+                quantityInput.on('input', function() {
+                    var enteredValue = parseInt($(this).val());
+                    var maxValue = parseInt($(this).attr('max'));
+                    if (enteredValue > maxValue) {  
+                    Swal.fire(
+                        'Quantity cannot exceed ' + maxValue,
+                        'Try input ' + maxValue + ' or below.',
+                        'question'
+                    );
+                    $(this).val(maxValue);
+                    }
+                });
+
+                cancelButton.on('click', function() {
+                 
+                    tableRow.remove();
+                    Swal.fire({
+                    
+                        icon: 'success',
+                        title: 'Successfuly Removed',
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
+                   
+                });
+
+                addButton.on('click', function() {
+                   
+                    console.log('Add button clicked');
+                    var userId = $(this).closest('tr').find('td:nth-child(1)').text();
+                    var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
+                    var orderId = $(this).closest('tr').find('td:nth-child(3)').text();
+                    var brand = $(this).closest('tr').find('td:nth-child(4)').text();
+                    var model = $(this).closest('tr').find('td:nth-child(5)').text();
+                    var description = $(this).closest('tr').find('td:nth-child(6)').text();
+                    var serial = $(this).closest('tr').find('td:nth-child(7)').text();
+                    var quantity = $(this).closest('tr').find('input').val();
+
+               
+                    var requestData = {
+                    userId: userId,
+                    itemId: itemId,
+                    orderId: orderId,
+                    brand: brand,
+                    model: model,
+                    description: description,
+                    serial: serial,
+                    quantity: quantity
+                    };
+
+                    $.ajax({
+                    url: "{{ route('userNewOrder') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: requestData,
+                    success: function(response) {
+                        if(response.success){
+                            tableRow.remove();
+                            Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Successfully Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                        }
+                        
+
+                    },
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
+                    });
+                });
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
+
+ $(document).ready(function() {
+    $('#submitForm').submit(function(event) {
+        event.preventDefault(); 
+        var formData = $(this).serialize(); 
+
+        $.ajax({
+            url: "{{ route('submitAdminBorrow') }}",
+            type: "POST",
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire(
+                    'Success',
+                    'Successfully Borrowed',
+                    'success'
+                    );
+                    window.location.href = "{{ url('pending') }}";
+                } else if (response.error) {
+                    Swal.fire(
+                    'Error',
+                    'Date Not Provided',
+                    'error'
+                    );
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle error response, if needed
+                console.log(xhr.responseText);
+            }
+        });
+    });
+});
+
+$(document).ready(function() {
+            $('#submitFormUser').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: "{{ route('submitUserBorrow') }}",
+                    type: "POST",
+                    data: formData,
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire(
+                            'Success',
+                            'Successfully Borrowed',
+                            'success'
+                            );
+                            window.location.href = "{{ url('pending') }}";
+                        } else if (response.error) {
+                            Swal.fire(
+                            'Error',
+                            'Date Not Provided',
+                            'error'
+                            );
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+
+
+
 
 
 
@@ -550,13 +1649,93 @@ $(document).ready(function() {
 
 
 
-    //     Swal.fire(
-    //       'Deleted!',
-    //       'Your file has been deleted.',
-    //       'success'
-    //     )
-    //   }
-    // })
+    $(document).ready(function() {
+    //     function checkTableEmpty() {
+    //     var table = $('#tableContainer #alreadyAdded');
+
+    //     if (table.find('tbody tr').length === 0) {
+    //         table.hide();
+    //         $('#btn-already-submit').hide();
+    //     } else {
+    //         table.show();
+    //         $('#btn-already-submit').show();
+    //     }
+    // }
+
+    // Add an event listener to the form submission
+    $('#submitAdmin').on('submit', function(event) {
+        event.preventDefault(); 
+        // checkTableEmpty();
+        var rows = $('#tableContainer #alreadyAdded tbody tr');
+        var dateReturned = $('input[name="date_returned"]').val();
+
+       
+        var rowData = [];
+
+        
+        rows.each(function() {
+            var row = $(this);
+
+            // Get the values from the row cells
+            var userId = row.find('td:nth-child(1)').text();
+            var orderId = row.find('td:nth-child(2)').text();
+            var itemId = row.find('td:nth-child(3)').text();
+            var brand = row.find('td:nth-child(4)').text();
+            var model = row.find('td:nth-child(5)').text();
+            var description = row.find('td:nth-child(6)').text();
+            var serial = row.find('td:nth-child(7)').text();
+            var quantity = row.find('td:nth-child(8)').text();
+
+            // Create an object with the row data
+            var rowDataItem = {
+                userId: userId,
+                orderId: orderId,
+                itemId: itemId,
+                brand: brand,
+                model: model,
+                description: description,
+                serial: serial,
+                quantity: quantity
+            };
+
+            
+            rowData.push(rowDataItem);
+        });
+
+        
+        $.ajax({
+            url: "{{ route('submitAdminOrder') }}", 
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken 
+            },
+            data: { data: rowData,  date_returned: dateReturned}, 
+            success: function(response) {
+                
+                if (response.success) {
+                    Swal.fire(
+                    'Success',
+                    'Successfully Borrowed',
+                    'success'
+                    );
+                    window.location.href = "{{ url('pending') }}";
+                } else if (response.error) {
+                    Swal.fire(
+                    'Error',
+                    'Date Not Provided',
+                    'error'
+                    );
+                }
+               
+                
+            },
+            error: function(xhr) {
+                // Handle the error
+                console.log(xhr.responseText);
+            }
+        });
+    });
+});
 </script>
 
 

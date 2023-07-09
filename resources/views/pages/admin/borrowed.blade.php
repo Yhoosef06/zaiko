@@ -77,7 +77,13 @@
                               <div class="col-sm-6">
                                 <div class="form-group">
                                   <label>Name: </label>
-                                  <span>{{ $borrow->last_name }},</span> <span>{{ $borrow->first_name }}</span>
+                                  <span>
+                                    @foreach ($users as $user)
+                                        @if ($user->id_number == $borrow->user_id)
+                                        {{ $user->last_name }}, {{ $user->first_name }} 
+                                        @endif
+                                  @endforeach
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -182,6 +188,10 @@
                           <option value="Lost">Lost</option>
                           <option value="For Repair">For Repair</option>   
                         </select>
+            </div>
+            <div class="form-group">
+              <label>Quantity</label>
+              <input class="form-control" name="quantity_return" placeholder="Enter ...">
             </div>
             </div>
             <div class="modal-footer justify-content-between">

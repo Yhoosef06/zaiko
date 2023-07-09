@@ -15,6 +15,7 @@ class Order extends Model
         'user_id',
         'date_submitted',
         'date_returned',
+        'created_by',
         'approval_date',
         'approved_by'
     ];

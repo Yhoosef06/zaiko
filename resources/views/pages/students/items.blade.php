@@ -11,9 +11,48 @@
             </div>
         </div>
     </div>
+    
 @endsection
-
+<link rel="stylesheet" href="{{ asset('plugins/preloader.css') }}">
 @section('content')
+
+<div id="preloader" class="d-flex align-items-center justify-content-center">
+    <div class="spinner-grow text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-danger" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-info" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-light" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+</div>
+
+<script>
+    $(window).on('load', function() {
+  // Remove the preloader and show the content section when the page is fully loaded
+    $('#preloader').fadeOut('slow', function() {
+        $(this).remove(); // Remove the preloader element from the DOM
+        $('.content').fadeIn('slow');
+    });
+    });
+</script>
+
 
 <section class="content">
     <div id="categoryContainer">

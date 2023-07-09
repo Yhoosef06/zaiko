@@ -50,8 +50,8 @@
                       <table class="table table-head-fixed text-nowrap" id="notAdded">
                         <thead>
                           <tr>
-                            <th class="d-none">ID</th>
-                            <th class="d-none">ItemId</th>
+                            <th>ID</th>
+                            <th>ItemId</th>
                             <th style="background-color:#343a40; color:aliceblue">Brand</th>
                             <th style="background-color:#343a40; color:aliceblue">Model</th>
                             <th style="background-color:#343a40; color:aliceblue">Desctiption</th>
@@ -80,29 +80,41 @@
                    
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 250px;">
-                    <form method="POST" id="submitAdmin">
+                     
                     <input type="text" id="student_id" name="student_id" class="form-control" style="display: none;">
-                      <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
-                        <thead>
-                          <tr>
-                               <th class="d-none">ID</th>
-                                <th style="background-color:#28a745; color:aliceblue">Brand</th>
-                                <th style="background-color:#28a745; color:aliceblue">Model</th>
-                                <th style="background-color:#28a745; color:aliceblue">Description</th>
-                                <th style="background-color:#28a745; color:aliceblue">Serial</th>
-                                <th style="background-color:#28a745; color:aliceblue">Quantity</th>
-                                <th style="background-color:#28a745; color:aliceblue">Option</th>
-                               
-                          </tr>
-                        </thead>
-                        <tbody>
+                    <form method="POST" id="submitAdmin">
+                  
+                    <div id="tableContainer">
                     
-                          
+                    <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
+                      <thead>
+                          <tr>
+                              <th>ID</th>
+                              <th>Order ID</th>
+                              <th>Item ID</th>
+                              <th style="background-color:#28a745; color:aliceblue">Brand</th>
+                              <th style="background-color:#28a745; color:aliceblue">Model</th>
+                              <th style="background-color:#28a745; color:aliceblue">Description</th>
+                              <th style="background-color:#28a745; color:aliceblue">Serial</th>
+                              <th style="background-color:#28a745; color:aliceblue">Quantity</th>
+                              <th style="background-color:#28a745; color:aliceblue">Option</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                  </table>
                       
-                        </tbody>
-                      </table>
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                      <div class="row mb-2">
+                        <div class="col-sm-6">
+                      <input type="date" class="form-control" name="date_returned">
+                    </div>
+                    <div class="col-sm-6">
+                      <button type="submit" class="btn btn-primary" id="btn-already-submit">Submit</button>
+                    </div>
+                    </div>
+                    
+                </div>
+                </form>
                     </div>
                     <!-- /.card-body -->
                   </div>
