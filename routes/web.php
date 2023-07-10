@@ -34,8 +34,13 @@ Route::get('/qr-reader', function () {
     return view('qr-reader');
 });
 
+//for student
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store']);
+
+//for faculty
+Route::get('/register-faculty', [RegisterController::class, 'indexFaculty'])->name('register-faculty');
+Route::post('/register-faculty', [RegisterController::class, 'storeFaculty']);
 
 Route::get('/', [SignInController::class, 'index'])->name('signin.page');
 Route::post('/signin', [SignInController::class, 'store'])->name('signin');

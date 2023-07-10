@@ -6,10 +6,10 @@
             background-color: rgb(190, 203, 201);
         }
     </style>
-    <form class="form-signin" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
+    <form class="form-signin" action="{{ route('register-faculty') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <H1 class="header">Zaiko.</H1>
-        <H5>Register as a Student Account</H5>
+        <H5>Register as a Faculty Account</H5>
 
         <label for="inputIdNumber" class="sr-only">I.D. Number</label>
         <input type="" id="id_number" name="id_number" class="form-control @error('id_number') border-danger @enderror"
@@ -43,10 +43,10 @@
             </div>
         @enderror
 
-        <label for="Item name">Degree Program:</label>
+        <label for="Item name">Department:</label>
         <select id="department_id" name="department_id"
             class="form-control col-sm-8 @error('department_id') border-danger @enderror">
-            <option value="" disabled selected>Select Degree Program</option>
+            <option value="" disabled selected>Select a Department</option>
             @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
                 <optgroup label="{{ $collegeName }}">
                     @foreach ($departmentsGroup as $department)
@@ -115,6 +115,6 @@
         <hr>
         <a href="{{ route('signin.page') }}" class="btn btn-md btn-outline-success">Cancel</a>
         <button class="btn btn-md btn-success btn-block" type="submit">Submit</button>
-        <a href="{{ route('register-faculty') }}" class="btn btn-md btn-outline-dark">Register as a Faculty</a>
+        <a href="{{ route('signin.page') }}" class="btn btn-md btn-outline-dark">Register as a Faculty</a>
     </form>
 @endsection

@@ -21,8 +21,6 @@ class SignInController extends Controller
             'password' => 'required'
         ]);
         
-        
-        
         // $this->validate($request, [
         //     'id_number' => 'required',
         //     'password' => 'required'
@@ -42,7 +40,7 @@ class SignInController extends Controller
         // }
         
 
-        if (auth()->attempt(['id_number' => $input['id_number'], 'password' => $input['password']])){
+        if (auth()->attempt(['id_number' => $input['id_number'], 'password' => $input['password']], $request->remember)){
             if(auth()->user()->account_type == 'admin'){
                 return redirect()->route('admin.dashboard');
             }else if(auth()->user()->account_type == 'reads'){
