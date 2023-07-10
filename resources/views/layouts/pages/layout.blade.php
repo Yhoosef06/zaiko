@@ -327,7 +327,7 @@ $(document).ready(function() {
             if (ui.item.value === "") {
                 event.preventDefault();
             } else {
-                event.preventDefault();
+                // event.preventDefault();
                 if (!ui.item.serialNumber || ui.item.serialNumber === 'N/A') {
                     var userID = $("#student_id").val();
                     var itemId = ui.item.id;
@@ -376,7 +376,7 @@ $(document).ready(function() {
 
                 addButton.on('click', function() {
                    
-                    console.log('Add button clicked');
+                   
                     var userId = $(this).closest('tr').find('td:nth-child(1)').text();
                     var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
                     var brand = $(this).closest('tr').find('td:nth-child(3)').text();
@@ -385,9 +385,8 @@ $(document).ready(function() {
                     var serial = $(this).closest('tr').find('td:nth-child(6)').text();
                     var quantity = $(this).closest('tr').find('input').val();
 
-               
+                    console.log(userId);
                     var requestData = {
-                    userId: userId,
                     itemId: itemId,
                     brand: brand,
                     model: model,
@@ -397,7 +396,7 @@ $(document).ready(function() {
                     };
 
                     $.ajax({
-                    url: "{{ route('adminAddedOrder') }}",
+                    url: "/borrow-item/" + userId,
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken

@@ -387,9 +387,9 @@ class BorrowController extends Controller
 
 
    
-    public function adminAddedOrder(Request $request)
+    public function borrowItemAdmin(Request $request,$id)
     {
-        $userId = $request->userId;
+        $userId = $id;
         $itemId = $request->itemId;
         $brand = $request->brand;
         $model = $request->model;
@@ -397,63 +397,66 @@ class BorrowController extends Controller
         $serial = $request->serial;
         $quantity = $request->quantity;
         
+        echo $quantity;
+        // exit;
+        return view('pages.admin.borrowItemAdmin');
 
-        $dataOrder = Order::where('user_id', $userId)
-            ->whereNotNull('date_submitted')
-            ->whereNull('date_returned')
-            ->get();
+        // $dataOrder = Order::where('user_id', $userId)
+        //     ->whereNotNull('date_submitted')
+        //     ->whereNull('date_returned')
+        //     ->get();
 
-        if ($dataOrder->isEmpty()) {
-            $insertOrder = Order::create([
-                'user_id' => $userId,
-                'created_by' => 'admin',
-                'date_submitted' => Carbon::today()
-            ]);
+        // if ($dataOrder->isEmpty()) {
+        //     $insertOrder = Order::create([
+        //         'user_id' => $userId,
+        //         'created_by' => 'admin',
+        //         'date_submitted' => Carbon::today()
+        //     ]);
 
-            if ($insertOrder) {
-                $orderId = $insertOrder->id;
-                $data = OrderItem::create([
-                    'order_id' => $orderId,
-                    'item_id' => $itemId,
-                    'quantity' => $quantity,
-                    'status' => 'pending',
-                    'order_serial_number' => $serial
-                ]);
+        //     if ($insertOrder) {
+        //         $orderId = $insertOrder->id;
+        //         $data = OrderItem::create([
+        //             'order_id' => $orderId,
+        //             'item_id' => $itemId,
+        //             'quantity' => $quantity,
+        //             'status' => 'pending',
+        //             'order_serial_number' => $serial
+        //         ]);
 
-                $responseData = [
-                    'userId' => $userId,
-                    'itemId' => $itemId,
-                    'brand' => $brand,
-                    'model' => $model,
-                    'description' => $description,
-                    'serial' => $serial,
-                    'quantity' => $quantity
-                ];
+        //         $responseData = [
+        //             'userId' => $userId,
+        //             'itemId' => $itemId,
+        //             'brand' => $brand,
+        //             'model' => $model,
+        //             'description' => $description,
+        //             'serial' => $serial,
+        //             'quantity' => $quantity
+        //         ];
 
-                return response()->json($responseData);
-            }
-        } else {
-            $orderId = $dataOrder->first()->id;
-            $data = OrderItem::create([
-                'order_id' => $orderId,
-                'item_id' => $itemId,
-                'quantity' => $quantity,
-                'status' => 'pending',
-                'order_serial_number' => $serial
-            ]);
+        //         return response()->json($responseData);
+        //     }
+        // } else {
+        //     $orderId = $dataOrder->first()->id;
+        //     $data = OrderItem::create([
+        //         'order_id' => $orderId,
+        //         'item_id' => $itemId,
+        //         'quantity' => $quantity,
+        //         'status' => 'pending',
+        //         'order_serial_number' => $serial
+        //     ]);
 
-            $responseData = [
-                'userId' => $userId,
-                'itemId' => $itemId,
-                'brand' => $brand,
-                'model' => $model,
-                'description' => $description,
-                'serial' => $serial,
-                'quantity' => $quantity
-            ];
+        //     $responseData = [
+        //         'userId' => $userId,
+        //         'itemId' => $itemId,
+        //         'brand' => $brand,
+        //         'model' => $model,
+        //         'description' => $description,
+        //         'serial' => $serial,
+        //         'quantity' => $quantity
+        //     ];
 
-            return response()->json($responseData);
-        }
+        //     return response()->json($responseData);
+        // }
     }
 
 
