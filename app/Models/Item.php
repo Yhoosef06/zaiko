@@ -49,4 +49,9 @@ class Item extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function item_mode(): HasMany 
+    {
+        return $this->hasMany(ItemMode::class);
+    }
 }
