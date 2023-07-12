@@ -89,8 +89,8 @@
                     <table class="table table-head-fixed text-nowrap">
                       <thead>
                           <tr>
-                              <th>ID</th>
-                              <th>Order ID</th>
+                              {{-- <th>ID</th>
+                              <th>Order ID</th> --}}
                               <th>Item ID</th>
                               <th style="background-color:#28a745; color:aliceblue">Brand</th>
                               <th style="background-color:#28a745; color:aliceblue">Model</th>
@@ -101,6 +101,19 @@
                           </tr>
                       </thead>
                       <tbody>
+                        @foreach ($order as $item)
+                                <tr>
+                                    <td class="d-none"><input type="hidden" name="order_id[]" value="{{ $item->order_id }}">{{ $item->order_id }}</td>
+                                    <td>{{ $item->brand }}</td>
+                                    <td>{{ $item->model }}</td>
+                                    <td>{{ $item->description }}</td>
+                                    <td>{{ $item->serial_number }}</td>
+                                    <td>{{ $item->orderQuantity }}</td>
+                                    <td>
+                                      <a href="" class="btn btn-danger">Remove</a> 
+                                    </td>
+                                </tr>
+                                @endforeach
                       </tbody>
                   </table>
                       

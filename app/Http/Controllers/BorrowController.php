@@ -293,7 +293,7 @@ class BorrowController extends Controller
         $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
-            ->select('orders.id as order_id', 'users.*', 'order_items.*', 'items.*')
+            ->select('orders.id as order_id', 'users.*', 'order_items.quantity as orderQuantity', 'items.*')
             ->where('users.id_number', $id)
             ->get();
     
@@ -387,7 +387,7 @@ class BorrowController extends Controller
 
 
    
-    public function borrowItemAdmin(Request $request,$id)
+    public function borrowItemAdmin(Request $request, $id)
     {
         $userId = $id;
         $itemId = $request->itemId;
@@ -395,68 +395,49 @@ class BorrowController extends Controller
         $model = $request->model;
         $description = $request->description;
         $serial = $request->serial;
-        $quantity = $request->quantity;
-        
-        echo $quantity;
-        // exit;
-        return view('pages.admin.borrowItemAdmin');
-
-        // $dataOrder = Order::where('user_id', $userId)
-        //     ->whereNotNull('date_submitted')
-        //     ->whereNull('date_returned')
-        //     ->get();
-
-        // if ($dataOrder->isEmpty()) {
-        //     $insertOrder = Order::create([
-        //         'user_id' => $userId,
-        //         'created_by' => 'admin',
-        //         'date_submitted' => Carbon::today()
-        //     ]);
-
-        //     if ($insertOrder) {
-        //         $orderId = $insertOrder->id;
-        //         $data = OrderItem::create([
-        //             'order_id' => $orderId,
-        //             'item_id' => $itemId,
-        //             'quantity' => $quantity,
-        //             'status' => 'pending',
-        //             'order_serial_number' => $serial
-        //         ]);
-
-        //         $responseData = [
-        //             'userId' => $userId,
-        //             'itemId' => $itemId,
-        //             'brand' => $brand,
-        //             'model' => $model,
-        //             'description' => $description,
-        //             'serial' => $serial,
-        //             'quantity' => $quantity
-        //         ];
-
-        //         return response()->json($responseData);
-        //     }
-        // } else {
-        //     $orderId = $dataOrder->first()->id;
-        //     $data = OrderItem::create([
-        //         'order_id' => $orderId,
-        //         'item_id' => $itemId,
-        //         'quantity' => $quantity,
-        //         'status' => 'pending',
-        //         'order_serial_number' => $serial
-        //     ]);
-
-        //     $responseData = [
-        //         'userId' => $userId,
-        //         'itemId' => $itemId,
-        //         'brand' => $brand,
-        //         'model' => $model,
-        //         'description' => $description,
-        //         'serial' => $serial,
-        //         'quantity' => $quantity
-        //     ];
-
-        //     return response()->json($responseData);
-        // }
+        $orderQuantity = $request->orderQuantity;
+    
+        $dataOrder = Order::where('user_id', $userId)
+            ->whereNotNull('date_submitted')
+            ->whereNull('date_returned')
+            ->get();
+    
+        if ($dataOrder->isEmpty()) {
+            $insertOrder = Order::create([
+                'user_id' => $userId,
+                'created_by' => 'admin',
+                'date_submitted' => Carbon::today()
+            ]);
+    
+            if ($insertOrder) {
+                $orderId = $insertOrder->id;
+                OrderItem::create([
+                    'order_id' => $orderId,
+                    'item_id' => $itemId,
+                    'quantity' => $orderQuantity,
+                    'status' => 'pending',
+                    'order_serial_number' => $serial
+                ]);
+            }
+        } else {
+            $orderId = $dataOrder->first()->id;
+            OrderItem::create([
+                'order_id' => $orderId,
+                'item_id' => $itemId,
+                'quantity' => $orderQuantity,
+                'status' => 'pending',
+                'order_serial_number' => $serial
+            ]);
+        }
+    
+        $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->select('orders.id as order_id', 'users.*', 'order_items.quantity as orderQuantity', 'items.*')
+            ->where('users.id_number', $id)
+            ->get();
+    
+        return view('pages.admin.borrowItemAdmin')->with(compact('order'));
     }
 
 
