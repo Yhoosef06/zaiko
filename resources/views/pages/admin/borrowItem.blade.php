@@ -46,7 +46,7 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 250px;">
+                    <div class="card-body table-responsive p-0" id="showNotAddedTable" style="height: 250px; display: none;">
                       <table class="table table-head-fixed text-nowrap" id="notAdded">
                         <thead>
                           <tr>
@@ -79,12 +79,10 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 250px;">
+                    <div class="card-body table-responsive p-0" style="height: 400px;">
                      
                     <input type="text" id="student_id" name="student_id" class="form-control" style="display: none;">
-                    <form method="POST" id="submitAdmin">
                   
-                    <div id="tableContainer">
                     
                     <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                       <thead>
@@ -113,8 +111,7 @@
                     </div>
                     </div>
                     
-                </div>
-                </form>
+                
                     </div>
                     <!-- /.card-body -->
                   </div>

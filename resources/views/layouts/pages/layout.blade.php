@@ -331,7 +331,7 @@ $(document).ready(function() {
                 if (!ui.item.serialNumber || ui.item.serialNumber === 'N/A') {
                     var userID = $("#student_id").val();
                     var itemId = ui.item.id;
-                    console.log(userID);
+                    
 
                     var url = '/add-item/' + itemId;
                     
@@ -339,14 +339,8 @@ $(document).ready(function() {
                         url: url,
                         type: 'GET',
                         success: function(response) {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Successfully Added',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-
+               
+                $('#showNotAddedTable').show();
                 var tableRow = $('<tr>');
                 $('<td class="d-none">').text(userID).appendTo(tableRow);
                 $('<td class="d-none">').text(response.id).appendTo(tableRow);
@@ -387,23 +381,24 @@ $(document).ready(function() {
 
                  
                     var requestData = {
+                    userId: userId,
                     itemId: itemId,
                     brand: brand,
                     model: model,
                     description: description,
                     serial: serial,
-                    quantity: order_quantity 
+                    quantity: order_quantity
                     };
-                    console.log(requestData);
+
                     $.ajax({
-                    url: "/borrow-item/" + userId,
+                    url: "{{ route('adminAddedOrder') }}",
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken
                     },
                     data: requestData,
                     success: function(response) {
-                        // Handle the response data
+                        
                         Swal.fire({
                         position: 'top-end',
                         icon: 'success',
@@ -415,41 +410,29 @@ $(document).ready(function() {
                         window.location.href = '/borrow-item/' + userId;
 
                         
-                        // tableRow.find('input').val('');
-                        // tableRow.remove();
-
-                       
-                        // var newRow = $('<tr>');
-                        // $('<td>').text(response.userId).appendTo(newRow);
-                        // $('<td>').text(response.itemId).appendTo(newRow);
-                        // $('<td>').text(response.brand).appendTo(newRow);
-                        // $('<td>').text(response.model).appendTo(newRow);
-                        // $('<td>').text(response.description).appendTo(newRow);
-                        // $('<td>').text(response.serial).appendTo(newRow);
-                        // $('<td>').text(response.quantity).appendTo(newRow);
-                        // var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(newRow);
-                        // newRow.appendTo('#alreadyAdded tbody');
+                      
                     },
                     error: function(xhr) {
-                        // Handle the error
+                       
                         console.log(xhr.responseText);
                     }
                     });
                 });
 
                 cancelButton.on('click', function() {
-                    // Perform the "Cancel" action here
+                    
                     tableRow.remove();
-                    console.log('Cancel button clicked');
+                    $('#showNotAddedTable').hide();
+                    
                 });
                 },
 
-                                        error: function(xhr) {
-                                            // Handle the error
-                                            console.log(xhr.responseText);
-                                        }
-                                    });
-                   
+                    error: function(xhr) {
+                            // Handle the error
+                            console.log(xhr.responseText);
+                        }
+                    });
+
                 }else{
                     var userID = $("#student_id").val();
                     var itemId = ui.item.id;
@@ -476,25 +459,7 @@ $(document).ready(function() {
                             showConfirmButton: false,
                             timer: 1500
                         });
-                    
-
-                       
-                        $('#alreadyAdded tbody').empty();
-
-                        for (var i = 0; i < response.length; i++) {
-                            var rowData = response[i];
-                            var tableRow = $('<tr>').appendTo('#alreadyAdded tbody');
-                            $('<td>').text(rowData.user_id).appendTo(tableRow);
-                            $('<td>').text(rowData.order_id).appendTo(tableRow);
-                            $('<td>').text(rowData.item_id).appendTo(tableRow);
-                            $('<td>').text(rowData.brand).appendTo(tableRow);
-                            $('<td>').text(rowData.model).appendTo(tableRow);
-                            $('<td>').text(rowData.description).appendTo(tableRow);
-                            $('<td>').text(rowData.order_serial_number).appendTo(tableRow);
-                            $('<td>').text(rowData.quantity).appendTo(tableRow);
-                            var buttonCell = $('<td>').appendTo(tableRow);
-                            var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
-                        }
+                        window.location.href = '/borrow-item/' + userID;
                     },
                     error: function(xhr) {
                         // Handle the error
@@ -519,6 +484,202 @@ $(document).ready(function() {
         }
     };
  });
+
+ $(document).ready(function() {
+    $("#admin_search_item").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ route('searchItemAdmin') }}",
+                dataType: "json",
+                data: {
+                    query: request.term
+                },
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
+        },
+        appendTo: "#search-item-admin-added",
+        open: function(event, ui) {
+            $("#search-item-admin-added .ui-autocomplete").css("top", "auto");
+        },
+        // Custom rendering of autocomplete items
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                var noResult = {
+                    value: "",
+                    brand: "No matching Serial Numbers and Description found",
+                    item_category: null,
+                    model: null,
+                    description: null
+                };
+                ui.content.push(noResult);
+            }
+        },
+        select: function(event, ui) {
+            if (ui.item.value === "") {
+                event.preventDefault();
+            } else {
+                // event.preventDefault();
+                if (!ui.item.serialNumber || ui.item.serialNumber === 'N/A') {
+                    var userID = $("#student_id_added").val();
+                    var itemId = ui.item.id;
+                    
+
+                    var url = '/add-item/' + itemId;
+                    
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+               
+                $('#showNotAddedAdmin').show();
+                var tableRow = $('<tr>');
+                $('<td class="d-none">').text(userID).appendTo(tableRow);
+                $('<td class="d-none">').text(response.id).appendTo(tableRow);
+                $('<td>').text(response.brand).appendTo(tableRow);
+                $('<td>').text(response.model).appendTo(tableRow);
+                $('<td>').text(response.description).appendTo(tableRow);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity);
+                $('<td>').append(quantityInput).appendTo(tableRow);
+                var buttonCell = $('<td>');
+                var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
+                var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                tableRow.append(buttonCell);
+                tableRow.appendTo('#notAddedAdmin tbody');
+
+                quantityInput.on('input', function() {
+                    var enteredValue = parseInt($(this).val());
+                    var maxValue = parseInt($(this).attr('max'));
+                    if (enteredValue > maxValue) {  
+                    Swal.fire(
+                        'Quantity cannot exceed ' + maxValue,
+                        'Try input ' + maxValue + ' or below.',
+                        'question'
+                    );
+                    $(this).val(maxValue);
+                    }
+                });
+
+                addButton.on('click', function() {
+                   
+                   
+                    var userId = $(this).closest('tr').find('td:nth-child(1)').text();
+                    var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
+                    var brand = $(this).closest('tr').find('td:nth-child(3)').text();
+                    var model = $(this).closest('tr').find('td:nth-child(4)').text();
+                    var description = $(this).closest('tr').find('td:nth-child(5)').text();
+                    var serial = $(this).closest('tr').find('td:nth-child(6)').text();
+                    var order_quantity  = $(this).closest('tr').find('input').val();
+
+                 
+                    var requestData = {
+                    userId: userId,
+                    itemId: itemId,
+                    brand: brand,
+                    model: model,
+                    description: description,
+                    serial: serial,
+                    quantity: order_quantity
+                    };
+
+                    $.ajax({
+                    url: "{{ route('adminAddedOrder') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: requestData,
+                    success: function(response) {
+                        
+                        Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Successfully Added',
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
+
+                        window.location.href = '/borrow-item/' + userId.trim();
+
+                        
+                      
+                    },
+                    error: function(xhr) {
+                       
+                        console.log(xhr.responseText);
+                    }
+                    });
+                });
+
+                cancelButton.on('click', function() {
+                    
+                    tableRow.remove();
+                    $('#showNotAddedAdmin').hide();
+                    
+                });
+                },
+
+                    error: function(xhr) {
+                            // Handle the error
+                            console.log(xhr.responseText);
+                        }
+                    });
+
+                }else{
+                    var userID = $("#student_id_added").val();
+                    var itemId = ui.item.id;
+                    var serialNumber = ui.item.serialNumber;
+                   
+
+                    $.ajax({
+                    url: "{{ route('pendingBorrow') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: {
+                        userID: userID,
+                        itemId: itemId,
+                        serialNumber: serialNumber
+                    },
+                    success: function(response) {
+                       
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Successfully Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        window.location.href = '/borrow-item/' + userID.trim();
+                    },
+                    error: function(xhr) {
+                        // Handle the error
+                        console.log(xhr.responseText);
+                    }
+                });
+
+                  
+                }
+               
+                
+            }
+        }
+
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        if (item.value === "") {
+            return $("<li>")
+                .append("<div>" + item.brand + "</div>")
+                .appendTo(ul);
+        } else {
+            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
+        }
+    };
+ });
+
 
 
  $(document).ready(function() {
@@ -1522,32 +1683,49 @@ $(document).ready(function() {
     $('#submitForm').submit(function(event) {
         event.preventDefault(); 
         var formData = $(this).serialize(); 
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to make changes again!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, submit it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+            )
+        }
+        })
 
-        $.ajax({
-            url: "{{ route('submitAdminBorrow') }}",
-            type: "POST",
-            data: formData,
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire(
-                    'Success',
-                    'Successfully Borrowed',
-                    'success'
-                    );
-                    window.location.href = "{{ url('pending') }}";
-                } else if (response.error) {
-                    Swal.fire(
-                    'Error',
-                    'Date Not Provided',
-                    'error'
-                    );
-                }
-            },
-            error: function(xhr, status, error) {
-                // Handle error response, if needed
-                console.log(xhr.responseText);
-            }
-        });
+        // $.ajax({
+        //     url: "{{ route('submitAdminBorrow') }}",
+        //     type: "POST",
+        //     data: formData,
+        //     success: function(response) {
+        //         if (response.success) {
+        //             Swal.fire(
+        //             'Success',
+        //             'Successfully Borrowed',
+        //             'success'
+        //             );
+        //             window.location.href = "{{ url('pending') }}";
+        //         } else if (response.error) {
+        //             Swal.fire(
+        //             'Error',
+        //             'Date Not Provided',
+        //             'error'
+        //             );
+        //         }
+        //     },
+        //     error: function(xhr, status, error) {
+        //         // Handle error response, if needed
+        //         console.log(xhr.responseText);
+        //     }
+        // });
     });
 });
 
@@ -1648,71 +1826,25 @@ $(document).ready(function() {
 
     });
 
-
-
-    $(document).ready(function() {
-    //     function checkTableEmpty() {
-    //     var table = $('#tableContainer #alreadyAdded');
-
-    //     if (table.find('tbody tr').length === 0) {
-    //         table.hide();
-    //         $('#btn-already-submit').hide();
-    //     } else {
-    //         table.show();
-    //         $('#btn-already-submit').show();
-    //     }
-    // }
-
-    // Add an event listener to the form submission
-    $('#submitAdmin').on('submit', function(event) {
+     $(document).ready(function() {
+    $('#submitAdmin').submit(function(event) {
         event.preventDefault(); 
-        // checkTableEmpty();
-        var rows = $('#tableContainer #alreadyAdded tbody tr');
-        var dateReturned = $('input[name="date_returned"]').val();
-
-       
-        var rowData = [];
-
-        
-        rows.each(function() {
-            var row = $(this);
-
-            // Get the values from the row cells
-            var userId = row.find('td:nth-child(1)').text();
-            var orderId = row.find('td:nth-child(2)').text();
-            var itemId = row.find('td:nth-child(3)').text();
-            var brand = row.find('td:nth-child(4)').text();
-            var model = row.find('td:nth-child(5)').text();
-            var description = row.find('td:nth-child(6)').text();
-            var serial = row.find('td:nth-child(7)').text();
-            var quantity = row.find('td:nth-child(8)').text();
-
-            // Create an object with the row data
-            var rowDataItem = {
-                userId: userId,
-                orderId: orderId,
-                itemId: itemId,
-                brand: brand,
-                model: model,
-                description: description,
-                serial: serial,
-                quantity: quantity
-            };
-
-            
-            rowData.push(rowDataItem);
-        });
-
-        
-        $.ajax({
-            url: "{{ route('submitAdminOrder') }}", 
-            type: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken 
-            },
-            data: { data: rowData,  date_returned: dateReturned}, 
+        var formData = $(this).serialize(); 
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to make changes again!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, submit it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+            url: "{{ route('submitAdminBorrow') }}",
+            type: "POST",
+            data: formData,
             success: function(response) {
-                
                 if (response.success) {
                     Swal.fire(
                     'Success',
@@ -1727,16 +1859,22 @@ $(document).ready(function() {
                     'error'
                     );
                 }
-               
-                
             },
-            error: function(xhr) {
-                // Handle the error
+            error: function(xhr, status, error) {
+                // Handle error response, if needed
                 console.log(xhr.responseText);
             }
         });
+        }
+        })
+
+        
     });
 });
+
+
+
+
 </script>
 
 

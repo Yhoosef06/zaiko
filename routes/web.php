@@ -114,11 +114,12 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('remove-borrow-{serial_number}', [BorrowController::class, 'removeBorrow'])->name('remove_borrow');
     Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
     Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
+    Route::get('/searchItemAdmin', [BorrowController::class, 'searchItemAdmin'])->name('searchItemAdmin');
     Route::get('/searchForSerial', [BorrowController::class, 'searchForSerial'])->name('searchForSerial');
     Route::get('/searchItemForAdmin', [BorrowController::class, 'searchItemForAdmin'])->name('searchItemForAdmin');
     Route::get('/searchItemForUser', [BorrowController::class, 'searchItemForUser'])->name('searchItemForUser');
     Route::get('/borrow-item', [BorrowController::class, 'borrowItem'])->name('borrowItem');
-    Route::match(['get', 'post'], '/borrow-item/{id}', [BorrowController::class, 'borrowItemAdmin'])->name('borrowItemAdmin');
+    Route::get('/borrow-item/{id}', [BorrowController::class, 'borrowItemAdmin'])->name('borrowItemAdmin');
     Route::get('/add-item/{id}', [BorrowController::class, 'addItem'])->name('addItem');
     Route::get('/check-userID/{id}', [BorrowController::class, 'checkUserId'])->name('checkUserId');
     Route::post('/pending-borrow', [BorrowController::class, 'pendingBorrow'])->name('pendingBorrow');

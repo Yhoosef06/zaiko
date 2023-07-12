@@ -9,8 +9,12 @@
                     <div class="form-group">
                         <label>ID Number</label>
                         <div id="user_id_container">
-                            <input type="text" id="userIdNumber" name="userIdNumber" class="form-control"
-                                placeholder="Enter ID Number here...." required>
+                            <input type="text" id="userIdNumber" name="userIdNumber" value="@foreach($order as $index => $item)
+                            @if($index === 0)
+                                {{$item->user_id}}
+                            @endif
+                        @endforeach" class="form-control"
+                              readonly>
                         </div>     
                     </div>
 
@@ -19,11 +23,11 @@
                 </div>
             </div>
 
-            <div class="row" id="search-serial-desc" style="display: none;">
+            <div class="row" id="search-serial-desc">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Search Item</label>
-                        <div id="search-item">
+                        <div id="search-item-admin-added">
                             <input type="text" id="admin_search_item" name="admin_search_item" class="form-control"
                                 placeholder="Search Item to Borrow - Serial Number or Item Description"
                                 required>
@@ -46,8 +50,8 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 250px;">
-                      <table class="table table-head-fixed text-nowrap">
+                    <div class="card-body table-responsive p-0" id="showNotAddedAdmin" style="height: 250px; display:none">
+                      <table class="table table-head-fixed text-nowrap" id="notAddedAdmin">
                         <thead>
                           <tr>
                             <th>ID</th>
@@ -79,12 +83,16 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 250px;">
+                    <div class="card-body table-responsive p-0" style="height: 400px;">
                      
-                    {{-- <input type="text" id="student_id" name="student_id" class="form-control" style="display: none;"> --}}
-                    {{-- <form method="POST" id="submitAdmin"> --}}
-                  
-                    {{-- <div id="tableContainer"> --}}
+                    <input type="text" id="student_id_added" name="student_id_added" value="@foreach($order as $index => $item)
+                    @if($index === 0)
+                        {{$item->user_id}}
+                    @endif
+                 @endforeach" class="form-control" style="display:none;">
+                    <form method="POST" id="submitAdmin">
+                      @csrf
+              
                     
                     <table class="table table-head-fixed text-nowrap">
                       <thead>
@@ -103,19 +111,43 @@
                       </thead>
                       <tbody>
                         @foreach ($order as $item)
-                                <tr>
-                                    <td ><input type="hidden" name="order_id[]" value="{{ $item->order_id }}">{{ $item->order_id }}</td>
-                                    <td ><input type="hidden" name="order_item_id[]" value="{{ $item->order_item_id }}">{{ $item->order_item_id }}</td>
-                                    <td>{{ $item->brand }}</td>
-                                    <td>{{ $item->model }}</td>
-                                    <td>{{ $item->description }}</td>
-                                    <td>{{ $item->serial_number }}</td>
-                                    <td>{{ $item->order_quantity }}</td>
-                                    <td>
-                                      <a href="" class="btn btn-danger">Remove</a> 
-                                    </td>
-                                </tr>
-                                @endforeach
+                          @if ($item->category_name =="Tools")
+                            <tr>
+                              <td ><input type="hidden" name="order_id[]" value="{{ $item->order_id }}">{{ $item->order_id }}</td>
+                              <td ><input type="hidden" name="order_item_id[]" value="{{ $item->order_item_id }}">{{ $item->order_item_id }}</td>
+                              <td>{{ $item->brand }}</td>
+                              <td>{{ $item->model }}</td>
+                              <td>{{ $item->description }}</td>
+                              <td>{{ $item->serial_number }}</td>
+                              <td>
+                                <select name="quantity[]" class="form-control">
+                                  @for ($i = 1; $i <= $item->quantity; $i++)
+                                    <option value="{{ $i }}" {{ $i == $item->order_quantity ? 'selected' : '' }}>
+                                      {{ $i }}
+                                    </option>
+                                  @endfor
+                                </select>
+                            </td>
+                              <td>
+                                <a href="" class="btn btn-danger">Remove</a> 
+                              </td>
+                          </tr>
+                          @else
+                            <tr>
+                              <td ><input type="hidden" name="order_id[]" value="{{ $item->order_id }}">{{ $item->order_id }}</td>
+                              <td ><input type="hidden" name="order_item_id[]" value="{{ $item->order_item_id }}">{{ $item->order_item_id }}</td>
+                              <td>{{ $item->brand }}</td>
+                              <td>{{ $item->model }}</td>
+                              <td>{{ $item->description }}</td>
+                              <td>{{ $item->serial_number }}</td>
+                              <td><input type="hidden" name="quantity[]" value="{{ $item->order_quantity }}">{{ $item->order_quantity }}</td>
+                              <td>
+                                <a href="" class="btn btn-danger">Remove</a> 
+                              </td>
+                          </tr>
+                          @endif
+                                
+                        @endforeach
                       </tbody>
                   </table>
                       
@@ -128,8 +160,8 @@
                     </div>
                     </div>
                     
-                {{-- </div> --}}
-                {{-- </form> --}}
+               
+                </form>
                     </div>
                     <!-- /.card-body -->
                   </div>
