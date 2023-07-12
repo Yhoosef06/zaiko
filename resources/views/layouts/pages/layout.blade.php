@@ -383,18 +383,18 @@ $(document).ready(function() {
                     var model = $(this).closest('tr').find('td:nth-child(4)').text();
                     var description = $(this).closest('tr').find('td:nth-child(5)').text();
                     var serial = $(this).closest('tr').find('td:nth-child(6)').text();
-                    var orderQuantity = $(this).closest('tr').find('input').val();
+                    var order_quantity  = $(this).closest('tr').find('input').val();
 
-                    console.log(userId);
+                 
                     var requestData = {
                     itemId: itemId,
                     brand: brand,
                     model: model,
                     description: description,
                     serial: serial,
-                    orderQuantity: orderQuantity
+                    quantity: order_quantity 
                     };
-
+                    console.log(requestData);
                     $.ajax({
                     url: "/borrow-item/" + userId,
                     type: 'POST',

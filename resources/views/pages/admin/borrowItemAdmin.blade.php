@@ -91,7 +91,8 @@
                           <tr>
                               {{-- <th>ID</th>
                               <th>Order ID</th> --}}
-                              <th>Item ID</th>
+                              <th>Order ID</th>
+                              <th>OrderItem ID</th>
                               <th style="background-color:#28a745; color:aliceblue">Brand</th>
                               <th style="background-color:#28a745; color:aliceblue">Model</th>
                               <th style="background-color:#28a745; color:aliceblue">Description</th>
@@ -103,12 +104,13 @@
                       <tbody>
                         @foreach ($order as $item)
                                 <tr>
-                                    <td class="d-none"><input type="hidden" name="order_id[]" value="{{ $item->order_id }}">{{ $item->order_id }}</td>
+                                    <td ><input type="hidden" name="order_id[]" value="{{ $item->order_id }}">{{ $item->order_id }}</td>
+                                    <td ><input type="hidden" name="order_item_id[]" value="{{ $item->order_item_id }}">{{ $item->order_item_id }}</td>
                                     <td>{{ $item->brand }}</td>
                                     <td>{{ $item->model }}</td>
                                     <td>{{ $item->description }}</td>
                                     <td>{{ $item->serial_number }}</td>
-                                    <td>{{ $item->orderQuantity }}</td>
+                                    <td>{{ $item->order_quantity }}</td>
                                     <td>
                                       <a href="" class="btn btn-danger">Remove</a> 
                                     </td>

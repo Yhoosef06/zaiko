@@ -99,7 +99,7 @@
                                     <td>{{ $item->model }}</td>
                                     <td>{{ $item->description }}</td>
                                     <td>{{ $item->serial_number }}</td>
-                                    <td>{{ $item->orderQuantity }}</td>
+                                    <td>{{ $item->order_quantity }}</td>
                                     <td>
                                       <a href="" class="btn btn-danger">Remove</a> 
                                     </td>

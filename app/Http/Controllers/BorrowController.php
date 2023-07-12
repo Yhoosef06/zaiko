@@ -293,7 +293,7 @@ class BorrowController extends Controller
         $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
-            ->select('orders.id as order_id', 'users.*', 'order_items.quantity as orderQuantity', 'items.*')
+            ->select('orders.id as order_id', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*')
             ->where('users.id_number', $id)
             ->get();
     
@@ -395,7 +395,8 @@ class BorrowController extends Controller
         $model = $request->model;
         $description = $request->description;
         $serial = $request->serial;
-        $orderQuantity = $request->orderQuantity;
+        $orderQuantity = $request->quantity;
+        
     
         $dataOrder = Order::where('user_id', $userId)
             ->whereNotNull('date_submitted')
@@ -413,8 +414,9 @@ class BorrowController extends Controller
                 $orderId = $insertOrder->id;
                 OrderItem::create([
                     'order_id' => $orderId,
+                    'user_id' => $userId,
                     'item_id' => $itemId,
-                    'quantity' => $orderQuantity,
+                    'order_quantity' => $orderQuantity,
                     'status' => 'pending',
                     'order_serial_number' => $serial
                 ]);
@@ -423,8 +425,9 @@ class BorrowController extends Controller
             $orderId = $dataOrder->first()->id;
             OrderItem::create([
                 'order_id' => $orderId,
+                'user_id' => $userId,
                 'item_id' => $itemId,
-                'quantity' => $orderQuantity,
+                'order_quantity' => $orderQuantity,
                 'status' => 'pending',
                 'order_serial_number' => $serial
             ]);
@@ -433,7 +436,7 @@ class BorrowController extends Controller
         $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
-            ->select('orders.id as order_id', 'users.*', 'order_items.quantity as orderQuantity', 'items.*')
+            ->select('orders.id as order_id', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*')
             ->where('users.id_number', $id)
             ->get();
     
