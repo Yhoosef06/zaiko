@@ -327,7 +327,7 @@ $(document).ready(function() {
             if (ui.item.value === "") {
                 event.preventDefault();
             } else {
-                event.preventDefault();
+                // event.preventDefault();
                 if (!ui.item.serialNumber || ui.item.serialNumber === 'N/A') {
                     var userID = $("#student_id").val();
                     var itemId = ui.item.id;
@@ -376,28 +376,27 @@ $(document).ready(function() {
 
                 addButton.on('click', function() {
                    
-                    console.log('Add button clicked');
+                   
                     var userId = $(this).closest('tr').find('td:nth-child(1)').text();
                     var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
                     var brand = $(this).closest('tr').find('td:nth-child(3)').text();
                     var model = $(this).closest('tr').find('td:nth-child(4)').text();
                     var description = $(this).closest('tr').find('td:nth-child(5)').text();
                     var serial = $(this).closest('tr').find('td:nth-child(6)').text();
-                    var quantity = $(this).closest('tr').find('input').val();
+                    var orderQuantity = $(this).closest('tr').find('input').val();
 
-               
+                    console.log(userId);
                     var requestData = {
-                    userId: userId,
                     itemId: itemId,
                     brand: brand,
                     model: model,
                     description: description,
                     serial: serial,
-                    quantity: quantity
+                    orderQuantity: orderQuantity
                     };
 
                     $.ajax({
-                    url: "{{ route('adminAddedOrder') }}",
+                    url: "/borrow-item/" + userId,
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken
@@ -413,21 +412,23 @@ $(document).ready(function() {
                         timer: 1500
                         });
 
+                        window.location.href = '/borrow-item/' + userId;
+
                         
-                        tableRow.find('input').val('');
-                        tableRow.remove();
+                        // tableRow.find('input').val('');
+                        // tableRow.remove();
 
                        
-                        var newRow = $('<tr>');
-                        $('<td>').text(response.userId).appendTo(newRow);
-                        $('<td>').text(response.itemId).appendTo(newRow);
-                        $('<td>').text(response.brand).appendTo(newRow);
-                        $('<td>').text(response.model).appendTo(newRow);
-                        $('<td>').text(response.description).appendTo(newRow);
-                        $('<td>').text(response.serial).appendTo(newRow);
-                        $('<td>').text(response.quantity).appendTo(newRow);
-                        var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(newRow);
-                        newRow.appendTo('#alreadyAdded tbody');
+                        // var newRow = $('<tr>');
+                        // $('<td>').text(response.userId).appendTo(newRow);
+                        // $('<td>').text(response.itemId).appendTo(newRow);
+                        // $('<td>').text(response.brand).appendTo(newRow);
+                        // $('<td>').text(response.model).appendTo(newRow);
+                        // $('<td>').text(response.description).appendTo(newRow);
+                        // $('<td>').text(response.serial).appendTo(newRow);
+                        // $('<td>').text(response.quantity).appendTo(newRow);
+                        // var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(newRow);
+                        // newRow.appendTo('#alreadyAdded tbody');
                     },
                     error: function(xhr) {
                         // Handle the error
