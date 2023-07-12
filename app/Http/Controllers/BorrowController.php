@@ -387,7 +387,7 @@ class BorrowController extends Controller
 
 
    
-    public function borrowItemAdmin(Request $request, $id)
+    public function adminAddedOrder(Request $request,$id)
     {
         $userId = $id;
         $itemId = $request->itemId;
@@ -432,7 +432,17 @@ class BorrowController extends Controller
                 'order_serial_number' => $serial
             ]);
         }
+        return response()->json(['success' => true]);
+        // $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        //     ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+        //     ->join('items', 'order_items.item_id', '=', 'items.id')
+        //     ->select('orders.id as order_id', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*')
+        //     ->where('users.id_number', $id)
+        //     ->get();
     
+        // return view('pages.admin.borrowItemAdmin')->with(compact('order'));
+    }
+    public function borrowItemAdmin($id){
         $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
