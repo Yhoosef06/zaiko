@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemMode extends Migration
+class CreateItemLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateItemMode extends Migration
      */
     public function up()
     {
-        Schema::create('item_mode', function (Blueprint $table) {
+        Schema::create('item_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_item_id');
             $table->unsignedBigInteger('item_id');
@@ -34,6 +34,6 @@ class CreateItemMode extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_mode');
+        Schema::dropIfExists('item_logs');
     }
 }
