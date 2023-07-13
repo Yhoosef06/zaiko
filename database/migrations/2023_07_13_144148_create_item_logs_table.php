@@ -15,8 +15,8 @@ class CreateItemLogsTable extends Migration
     {
         Schema::create('item_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_item_id');
-            $table->unsignedBigInteger('item_id');
+            $table->unsignedBigInteger('order_item_id')->nullable();
+            $table->unsignedBigInteger('item_id')->nullable();
             $table->integer('quantity');
             $table->string('mode');
             $table->date('date');
