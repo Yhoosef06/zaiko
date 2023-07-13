@@ -310,7 +310,7 @@ $(document).ready(function() {
         open: function(event, ui) {
             $("#search-item .ui-autocomplete").css("top", "auto");
         },
-        // Custom rendering of autocomplete items
+       
         response: function(event, ui) {
             if (!ui.content.length) {
                 var noResult = {
@@ -347,6 +347,7 @@ $(document).ready(function() {
                 $('<td>').text(response.brand).appendTo(tableRow);
                 $('<td>').text(response.model).appendTo(tableRow);
                 $('<td>').text(response.description).appendTo(tableRow);
+                $('<td>').text(response.serial_number).appendTo(tableRow);
                 var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity);
                 $('<td>').append(quantityInput).appendTo(tableRow);
                 var buttonCell = $('<td>');
@@ -389,7 +390,7 @@ $(document).ready(function() {
                     serial: serial,
                     quantity: order_quantity
                     };
-
+                    console.log(requestData)
                     $.ajax({
                     url: "{{ route('adminAddedOrder') }}",
                     type: 'POST',
@@ -1408,13 +1409,7 @@ $(document).ready(function() {
             } else {
                 event.preventDefault();
                 var orderID = $("#orderID").val();
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Successfully Added',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+               
 
                 var tableRow = $('<tr>');
                 $('<td class="d-none">').text(ui.item.id).appendTo(tableRow);
@@ -1481,33 +1476,33 @@ $(document).ready(function() {
                     serial: serial,
                     quantity: quantity
                     };
+                    console.log(requestData);
+                    // $.ajax({
+                    // url: "{{ route('adminNewOrder') }}",
+                    // type: 'POST',
+                    // headers: {
+                    //     'X-CSRF-TOKEN': csrfToken
+                    // },
+                    // data: requestData,
+                    // success: function(response) {
+                    //     if(response.success){
+                    //         tableRow.remove();
+                    //         Swal.fire({
+                    //         position: 'top-end',
+                    //         icon: 'success',
+                    //         title: 'Successfully Added',
+                    //         showConfirmButton: false,
+                    //         timer: 1500
+                    //         });
+                    //     }
+                    //     window.location.href = '/view-order-admin/' + userId.trim();
 
-                    $.ajax({
-                    url: "{{ route('adminNewOrder') }}",
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    data: requestData,
-                    success: function(response) {
-                        if(response.success){
-                            tableRow.remove();
-                            Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Successfully Added',
-                            showConfirmButton: false,
-                            timer: 1500
-                            });
-                        }
-                        
-
-                    },
-                    error: function(xhr) {
-                        // Handle the error
-                        console.log(xhr.responseText);
-                    }
-                    });
+                    // },
+                    // error: function(xhr) {
+                    //     // Handle the error
+                    //     console.log(xhr.responseText);
+                    // }
+                    // });
                 });
             }
         }

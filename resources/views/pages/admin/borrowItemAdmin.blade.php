@@ -50,7 +50,7 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" id="showNotAddedAdmin" style="height: 250px; display:none">
+                    <div class="card-body table-responsive p-0" id="showNotAddedAdmin" style="height: 130px; display:none">
                       <table class="table table-head-fixed text-nowrap" id="notAddedAdmin">
                         <thead>
                           <tr>

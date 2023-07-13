@@ -46,7 +46,7 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" id="showNotAddedTable" style="height: 250px; display: none;">
+                    <div class="card-body table-responsive p-0" id="showNotAddedTable" style="height: 130px; display: none;">
                       <table class="table table-head-fixed text-nowrap" id="notAdded">
                         <thead>
                           <tr>
@@ -102,15 +102,7 @@
                       </tbody>
                   </table>
                       
-                      <div class="row mb-2">
-                        <div class="col-sm-6">
-                      <input type="date" class="form-control" name="date_returned">
-                    </div>
-                    <div class="col-sm-6">
-                      <button type="submit" class="btn btn-primary" id="btn-already-submit">Submit</button>
-                    </div>
-                    </div>
-                    
+                      
                 
                     </div>
                     <!-- /.card-body -->

@@ -411,7 +411,6 @@ class BorrowController extends Controller
         $description = $request->description;
         $serial = $request->serial;
         $orderQuantity = $request->quantity;
-        
     
         $dataOrder = Order::where('user_id', $userId)
             ->whereNotNull('date_submitted')
@@ -486,7 +485,7 @@ class BorrowController extends Controller
         $date_return = $request->input('date_returned');
         $user = auth()->user();
             // echo '<pre>';
-            // echo print_r($quantities);
+            // echo print_r($quantity);
             // echo '</pre>';
             // exit;
     
@@ -496,22 +495,25 @@ class BorrowController extends Controller
             if (!empty($orderIds)) {
                 if (!empty($date_return)) {
                     Order::whereIn('id', $orderIds)->update([
-                        'date_returned' =>$date_return,
+                        'date_returned' => $date_return,
                         'approval_date' => Carbon::today(),
-                        'approved_by' => $firstName .' '. $lastName
+                        'approved_by' => $firstName . ' ' . $lastName
                     ]);
-                    foreach ($orderIds as $index => $order) {
-                        if (isset($quantity[$index]) && isset($orderIds[$index])) {
-                            OrderItem::where('order_id', $orderIds[$index])
-                               ->where('status', 'pending')
-                               ->update([
-                                    'order_quantity' => $quantity[$index],
-                                    'status' => 'borrowed', 
-                                    'released_by' => $firstName .' '. $lastName , 
-                                    'date_returned' => $date_return
-                               ] );
+            
+                    foreach ($orderIds as $index => $orderId) {
+                        $orderItem = OrderItem::where('order_id', $orderId)
+                            ->where('status', 'pending')
+                            ->first();
+            
+                        if ($orderItem) {
+                            $orderItem->order_quantity = $quantity[$index];
+                            $orderItem->status = 'borrowed';
+                            $orderItem->released_by = $firstName . ' ' . $lastName;
+                            $orderItem->date_returned = $date_return;
+                            $orderItem->save();
                         }
                     }
+            
                     return response()->json(['success' => 'Successfully added borrowed item.']);
                 } else {
                     return response()->json(['error' => 'Error: Date not provided.']);
@@ -587,7 +589,7 @@ class BorrowController extends Controller
                 'order_id' => $orderId,
                 'item_id' => $itemId,
                 'quantity' => $quantity,
-                'status' => 'borrowed',
+                'status' => 'pending',
                 'released_by' => $firstName .' '. $lastName,
                 'order_serial_number' => $serial
             ]);
