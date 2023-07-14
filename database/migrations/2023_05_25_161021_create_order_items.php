@@ -19,7 +19,7 @@ class CreateOrderItems extends Migration
             $table->integer('user_id')->nullable();
             $table->unsignedBigInteger('order_id')->nullable();
             $table->unsignedBigInteger('item_id')->nullable();
-            $table->integer('quantity');
+            $table->integer('order_quantity');
             $table->string('status');
             $table->string('remarks')->nullable();
             $table->string('order_serial_number')->nullable();

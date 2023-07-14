@@ -16,7 +16,7 @@ class OrderItem extends Model
         'user_id',
         'order_id',
         'item_id',
-        'quantity',
+        'order_quantity',
         'status',
         'remarks',
         'order_serial_number',

@@ -38,7 +38,7 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 250px;">
+                    <div class="card-body table-responsive p-0" style="height: 130px;">
                       <table class="table table-head-fixed text-nowrap" id="orderUser">
                         <thead>
                           <tr>
@@ -78,8 +78,8 @@
                           <table class="table table-head-fixed text-nowrap" id="submitUser">
                             <thead>
                               <tr>
-                                <th class="d-none">ORDER ID</th>
-                                <th class="d-none">Item ID</th>
+                                <th >ORDER ID</th>
+                                <th>Item ID</th>
                                 <th style="background-color:#28a745; color:aliceblue">Brand</th>
                                 <th style="background-color:#28a745; color:aliceblue">Model</th>
                                 <th style="background-color:#28a745; color:aliceblue">Description</th>
@@ -92,13 +92,21 @@
                               @foreach ($orders as $item)
                                 @if ($item->category_name === 'Tools')
                                   <tr>
-                                    <td class="d-none"><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
-                                    <td class="d-none"><input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}</td>
+                                    <td ><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
+                                    <td ><input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}</td>
                                     <td>{{ $item->brand }}</td>
                                     <td>{{ $item->model }}</td>
                                     <td>{{ $item->description }}</td>
                                     <td><input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}</td>
-                                    <td><input type="hidden" name="quantity[]" value="{{ $item->quantity }}">{{ $item->quantity }}</td>
+                                    <td>
+                                      <select name="quantity[]" class="form-control">
+                                        @for ($i = 1; $i <= $item->itemQuantity; $i++)
+                                          <option value="{{ $i }}" {{ $i == $item->order_quantity ? 'selected' : '' }}>
+                                            {{ $i }}
+                                          </option>
+                                        @endfor
+                                      </select>
+                                    </td>
                                     <td> 
                                       <a href="" class="btn btn-danger">Remove</a> 
                                     </td>
@@ -106,8 +114,8 @@
                                 @else
                                   @for ($i = 1; $i <= $item->quantity; $i++)
                                     <tr> 
-                                      <td class="d-none"><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
-                                      <td class="d-none"><input type="text" name="itemId[]" id="itemID_{{ $i }}"></td>
+                                      <td ><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
+                                      <td><input type="text" name="itemId[]" id="itemID_{{ $i }}"></td>
                                       <td>{{ $item->brand }}</td>
                                       <td>{{ $item->model }}</td>
                                       <td>{{ $item->description }}</td>
