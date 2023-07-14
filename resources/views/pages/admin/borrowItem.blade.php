@@ -50,11 +50,12 @@
                       <table class="table table-head-fixed text-nowrap" id="notAdded">
                         <thead>
                           <tr>
-                            <th>ID</th>
-                            <th>ItemId</th>
+                            <th class="d-none">ID</th>
+                            <th class="d-none">ItemId</th>
                             <th style="background-color:#343a40; color:aliceblue">Brand</th>
                             <th style="background-color:#343a40; color:aliceblue">Model</th>
                             <th style="background-color:#343a40; color:aliceblue">Desctiption</th>
+                            <th style="background-color:#343a40; color:aliceblue">Serial</th>
                             <th style="background-color:#343a40; color:aliceblue">Quantity</th>
                             <th style="background-color:#343a40; color:aliceblue">Action</th>
                           </tr>
@@ -87,9 +88,9 @@
                     <table class="table table-head-fixed text-nowrap" id="alreadyAdded">
                       <thead>
                           <tr>
-                              <th>ID</th>
-                              <th>Order ID</th>
-                              <th>Item ID</th>
+                              <th class="d-none">ID</th>
+                              <th class="d-none">Order ID</th>
+                              <th class="d-none">Item ID</th>
                               <th style="background-color:#28a745; color:aliceblue">Brand</th>
                               <th style="background-color:#28a745; color:aliceblue">Model</th>
                               <th style="background-color:#28a745; color:aliceblue">Description</th>

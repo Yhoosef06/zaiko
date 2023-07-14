@@ -55,55 +55,29 @@ class BorrowController extends Controller
         return view('pages.admin.returned', compact('forReturns', 'categories', 'users'));
     }
 
-    // public function pendingItem(Request $request,$id,$serial_number){
-    //     $num = $request->number_of_days;
+  
 
-    //     // echo $id;
-    //     // exit;
-    //     $user = auth()->user();
-    //     if($user){
-    //         $firstName = $user->first_name;
-    //         $lastName = $user->last_name;
-
-    //         $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'borrowed', 'release_by' => $firstName .' '. $lastName, 'number_of_days' => $num]);
-    //         $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'yes']);
-    //          
-    //     }
-        
-    // }
-
-    // public function borrowItem(Request $request,$id,$serial_number){
-    //     $remarks = $request->item_remark;
-    //     // echo $serial_number;
-    //     // exit;
-    //     $user = auth()->user();
-    //     if($user){
-    //         $firstName = $user->first_name;
-    //         $lastName = $user->last_name;
-
-    //         $affectedRows = Order::where('id','=',$id)->update(['order_status' => 'returned', 'return_to' => $firstName .' '. $lastName,'item_remark' => $remarks]);
-    //         $affectedRows1 = Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no']);
-    //         Session::flash('success', 'Successfuly Return Borrowed Item.');
-    //         return redirect('borrowed');
-    //     }
-       
-       
-    // }
-
-    public function removeBorrow($order_item_id, $serial_number, $description)
+    public function removeBorrow($id)
     {
-        if (empty($serial_number) || $serial_number == 'N/A') {
-            Item::where('description', $description)->update(['borrowed' => 'no']);
-            OrderItem::where('id', '=', $order_item_id)->delete();
-            Session::flash('success', 'Successfully removed the borrowed item.');
-            return redirect('pending');
-        }
+        $row = OrderItem::find($id);
 
-        // Continue with the removal logic if the serial number is valid
-        $affectedRows = OrderItem::where('id', '=', $order_item_id)->delete();
-        $affectedRows1 = Item::where('serial_number', '=', $serial_number)->update(['borrowed' => 'no']);
-        Session::flash('success', 'Successfully removed the borrowed item.');
-        return redirect('view-order');
+        echo '<pre>';
+        echo print_r($row);
+        echo '</pre>';
+        exit;
+    
+        // if (empty($serial_number) || $serial_number == 'N/A') {
+        //     Item::where('description', $description)->update(['borrowed' => 'no']);
+        //     OrderItem::where('id', '=', $order_item_id)->delete();
+        //     Session::flash('success', 'Successfully removed the borrowed item.');
+        //     return redirect('pending');
+        // }
+
+        // // Continue with the removal logic if the serial number is valid
+        // $affectedRows = OrderItem::where('id', '=', $order_item_id)->delete();
+        // $affectedRows1 = Item::where('serial_number', '=', $serial_number)->update(['borrowed' => 'no']);
+        // Session::flash('success', 'Successfully removed the borrowed item.');
+        // return redirect('view-order');
     }
 
     public function searchUser(Request $request)
@@ -114,10 +88,10 @@ class BorrowController extends Controller
 
         $response = $users->map(function ($user) {
             return [
-                'value' => $user->id_number, // User ID
-                'label' => $user->id_number, // User display name
-                'firstName' => $user->first_name, // User first name
-                'lastName' => $user->last_name // User last name
+                'value' => $user->id_number, 
+                'label' => $user->id_number, 
+                'firstName' => $user->first_name, 
+                'lastName' => $user->last_name 
             ];
         });
         return response()->json($response);
@@ -321,8 +295,10 @@ class BorrowController extends Controller
         $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
-            ->select('orders.id as order_id', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*')
+            ->join('item_categories', 'items.category_id', 'item_categories.id')
+            ->select('orders.id as order_id', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
             ->where('users.id_number', $id)
+            ->where('order_items.status', 'pending')
             ->get();
     
         return view('pages.admin.viewOrderAdmin')->with(compact('order'));
@@ -330,7 +306,7 @@ class BorrowController extends Controller
     
     public function viewOrderUser($id)
     {
-        $orders = Order::select('orders.id as order_id','item_categories.category_name','items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','items.brand', 'items.model', 'items.description', 'order_item_temps.quantity')
+        $orders = Order::select('orders.id as order_id','item_categories.category_name','items.id as item_id', 'items.quantity as itemQuantity', 'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','items.brand', 'items.model', 'items.description', 'order_item_temps.quantity')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
             ->join('items', 'order_item_temps.item_id', '=', 'items.id')
@@ -456,6 +432,7 @@ class BorrowController extends Controller
             ->join('item_categories', 'items.category_id', 'item_categories.id')
             ->select('orders.id as order_id', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
             ->where('users.id_number', $id)
+            ->where('order_items.status', 'pending')
             ->get();
     
         return view('pages.admin.borrowItemAdmin')->with(compact('order'));
@@ -587,6 +564,7 @@ class BorrowController extends Controller
             Item::where('serial_number', $serial)->update(['borrowed' => 'yes']);
             OrderItem::create([
                 'order_id' => $orderId,
+                'user_id' => $userId,
                 'item_id' => $itemId,
                 'quantity' => $quantity,
                 'status' => 'pending',
@@ -615,6 +593,7 @@ class BorrowController extends Controller
             Item::where('serial_number', $serial)->update(['borrowed' => 'yes']);
             OrderItem::create([
                 'order_id' => $orderId,
+                'user_id' => $userId,
                 'item_id' => $itemId,
                 'quantity' => $quantity,
                 'status' => 'borrowed',
