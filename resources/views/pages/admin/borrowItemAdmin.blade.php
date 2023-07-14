@@ -97,8 +97,7 @@
                     <table class="table table-head-fixed text-nowrap">
                       <thead>
                           <tr>
-                              {{-- <th>ID</th>
-                              <th>Order ID</th> --}}
+                      
                               <th class="d-none">Order ID</th>
                               <th class="d-none">OrderItem ID</th>
                               <th style="background-color:#28a745; color:aliceblue">Brand</th>
