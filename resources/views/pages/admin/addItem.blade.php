@@ -50,7 +50,7 @@
                         border-danger @enderror">
                                 <option value="option_select" disabled selected>Select a category</option>
                                 @foreach ($itemCategories as $category)
-                                    @if (old('item_category') == $category->category_name)
+                                    @if (old('item_category'))
                                         <option value="{{ old('item_category') }}" selected>{{ $category->category_name }}
                                         </option>
                                     @else
@@ -176,7 +176,9 @@
                     <div class="form-group" id="serial_numbers_container"
                         data-error-message="{{ $errors->first('serial_numbers') }}">
                         @error('serial_numbers')
-                            <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">
+                                <p>{{ $message }}</p>
+                            </span>
                         @enderror
                     </div>
 
@@ -429,11 +431,13 @@
     //     const container = document.getElementById('serial_numbers_container');
     //     const checkbox = document.getElementById('checkbox');
 
-    //     // Clear the existing input fields
+    //     // Check if there are existing input fields
     //     container.innerHTML = '';
 
-    //     // Generate the new input field(s)
+    //     // Generate the new input field(s) and error messages
     //     const quantity = parseInt(quantityField.value) || 0;
+    //     const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
+
     //     if (checkbox.checked) {
     //         // If checkbox is checked, generate one input field with a fixed label
     //         const label = document.createElement('label');
@@ -449,6 +453,12 @@
 
     //         container.appendChild(label);
     //         container.appendChild(input);
+
+    //         // Add error message element
+    //         const errorSpan = document.createElement('p');
+    //         errorSpan.classList.add('text-danger');
+    //         errorSpan.textContent = errorMessage;
+    //         container.appendChild(errorSpan);
     //     } else {
     //         // If checkbox is not checked, generate multiple input fields with numbered labels
     //         for (let i = 1; i <= quantity; i++) {
@@ -465,6 +475,12 @@
 
     //             container.appendChild(label);
     //             container.appendChild(input);
+
+    //             // Add error message element
+    //             const errorSpan = document.createElement('span');
+    //             errorSpan.classList.add('text-danger');
+    //             errorSpan.textContent = errorMessage;
+    //             container.appendChild(errorSpan);
     //         }
     //     }
     // }
@@ -474,36 +490,20 @@
         const container = document.getElementById('serial_numbers_container');
         const checkbox = document.getElementById('checkbox');
 
-        // Clear the existing input fields and error messages
-        container.innerHTML = '';
+        // Clear the existing error message
+        const errorMessageElement = container.querySelector('.text-danger');
+        if (errorMessageElement) {
+            errorMessageElement.remove();
+        }
 
         // Generate the new input field(s) and error messages
         const quantity = parseInt(quantityField.value) || 0;
         const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
 
-        if (checkbox.checked) {
-            // If checkbox is checked, generate one input field with a fixed label
-            const label = document.createElement('label');
-            label.for = `serial_number_1`;
-            label.textContent = `Serial Number:`;
+        // Clear any existing input fields
+        container.innerHTML = '';
 
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = `serial_numbers[]`;
-            input.id = `serial_number_1`;
-            input.classList.add('form-control', 'col-sm-5');
-            input.placeholder = 'Leave blank if none.';
-
-            container.appendChild(label);
-            container.appendChild(input);
-
-            // Add error message element
-            const errorSpan = document.createElement('span');
-            errorSpan.classList.add('text-danger');
-            errorSpan.textContent = errorMessage;
-            container.appendChild(errorSpan);
-        } else {
-            // If checkbox is not checked, generate multiple input fields with numbered labels
+        if (quantity > 0) {
             for (let i = 1; i <= quantity; i++) {
                 const label = document.createElement('label');
                 label.for = `serial_number_${i}`;
@@ -518,13 +518,15 @@
 
                 container.appendChild(label);
                 container.appendChild(input);
-
-                // Add error message element
-                const errorSpan = document.createElement('span');
-                errorSpan.classList.add('text-danger');
-                errorSpan.textContent = errorMessage;
-                container.appendChild(errorSpan);
             }
+        }
+
+        // Add error message element if needed
+        if (errorMessage && quantity === 0) {
+            const errorSpan = document.createElement('span');
+            errorSpan.classList.add('text-danger');
+            errorSpan.textContent = errorMessage;
+            container.appendChild(errorSpan);
         }
     }
 

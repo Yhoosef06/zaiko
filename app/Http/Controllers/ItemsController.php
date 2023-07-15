@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Room;
 use App\Models\Order;
+use App\Models\ItemLog;
 use App\Models\OrderItem;
 use App\Models\Reference;
 use App\Models\Department;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use App\Models\OrderItemTemp;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -171,14 +173,18 @@ class ItemsController extends Controller
         // dd($request->checkbox);
         $this->validate($request, [
             'location' => 'required',
-            'serial_numbers' => 'required|array|min:1',
-            'serial_numbers.*' => function ($value, $fail) use ($request) {
-                if (empty($value)) {
-                    $fail('Serial Number field cannot be empty');
-                } elseif (!$request->checkbox && count(array_keys($request->serial_numbers, $value)) > 1) {
-                    $fail('Serial Numbers cannot be repeated');
-                }
-            },
+            'serial_numbers' => [
+                'required',
+                'array',
+                'min:1',
+                Rule::unique('items', 'serial_number')->where(function ($query) use ($request) {
+                    return $query->where('location', $request->location);
+                }),
+            ],
+            'serial_numbers.*.serial_numbers' => Rule::unique('items', 'serial_number')
+                ->where(function ($query) use ($request) {
+                    $query->where('location', $request->location);
+                }),
             'item_category' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'nullable',
@@ -194,7 +200,7 @@ class ItemsController extends Controller
         $serial_numbers = $request->serial_numbers;
         if (count($serial_numbers) > 1) {
             foreach ($serial_numbers as $serial_number) {
-                Item::create([
+                $item = Item::create([
                     'serial_number' => $serial_number,
                     'location' => $request->location,
                     'category_id' => $request->item_category,
@@ -208,10 +214,17 @@ class ItemsController extends Controller
                     'borrowed' => 'no',
                     'same_serial_numbers' => $isChecked,
                 ]);
+                // dd($item);
+                $itemLog = new ItemLog();
+                $itemLog->item_id = $item->id;
+                $itemLog->quantity = $item->quantity;
+                $itemLog->mode = 'added';
+                $itemLog->date = now(); // Set the current date
+                $itemLog->save();
             }
         } else {
             foreach ($serial_numbers as $serial_number) {
-                Item::create([
+                $item = Item::create([
                     'serial_number' => $serial_number,
                     'location' => $request->location,
                     'category_id' => $request->item_category,
@@ -225,6 +238,13 @@ class ItemsController extends Controller
                     'borrowed' => 'no',
                     'same_serial_numbers' => $isChecked,
                 ]);
+                // dd($item);
+                $itemLog = new ItemLog();
+                $itemLog->item_id = $item->id;
+                $itemLog->quantity = $item->quantity;
+                $itemLog->mode = 'added';
+                $itemLog->date = now(); // Set the current date
+                $itemLog->save();
             }
         }
 
