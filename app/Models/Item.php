@@ -23,6 +23,7 @@ class Item extends Model
         'model',
         'description',
         'quantity',
+        'available_quantity',
         'aquisition_date',
         'status',
         'borrowed',

@@ -109,7 +109,7 @@
                                   <td>{{ $item->serial_number }}</td>
                                   <td>
                                     <select name="quantity[]" class="form-control">
-                                      @for ($i = 1; $i <= $item->quantity; $i++)
+                                      @for ($i = 1; $i <= $item->available_quantity + $item->order_quantity; $i++)
                                         <option value="{{ $i }}" {{ $i == $item->order_quantity ? 'selected' : '' }}>
                                           {{ $i }}
                                         </option>

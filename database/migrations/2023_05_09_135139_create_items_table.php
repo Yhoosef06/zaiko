@@ -21,6 +21,7 @@ class CreateItemsTable extends Migration
             $table->string('model')->nullable();
             $table->string('description');
             $table->integer('quantity');
+            $table->integer('available_quantity');
             $table->integer('same_serial_numbers');
             $table->date('aquisition_date')->nullable();
             $table->string('status');

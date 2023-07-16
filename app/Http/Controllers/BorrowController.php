@@ -393,6 +393,16 @@ class BorrowController extends Controller
             ->whereNotNull('date_submitted')
             ->whereNull('date_returned')
             ->get();
+        $available = Item::find($itemId);
+
+        $availableQuantity = $available->available_quantity;
+
+        $availableQuantity -= $orderQuantity;
+        // echo '<pre>';
+        // echo print_r($orderQuantity);
+        // echo '</pre>';
+        // echo $availableQuantity;
+        // exit;
     
         if ($dataOrder->isEmpty()) {
             $insertOrder = Order::create([
@@ -403,6 +413,7 @@ class BorrowController extends Controller
     
             if ($insertOrder) {
                 $orderId = $insertOrder->id;
+                Item::where('id', $itemId)->update(['available_quantity' => $availableQuantity]);
                 OrderItem::create([
                     'order_id' => $orderId,
                     'user_id' => $userId,
@@ -414,6 +425,7 @@ class BorrowController extends Controller
             }
         } else {
             $orderId = $dataOrder->first()->id;
+            Item::where('id', $itemId)->update(['available_quantity' => $availableQuantity]);
             OrderItem::create([
                 'order_id' => $orderId,
                 'user_id' => $userId,
