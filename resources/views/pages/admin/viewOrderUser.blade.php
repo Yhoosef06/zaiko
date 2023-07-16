@@ -89,6 +89,7 @@
                               </tr>
                             </thead>
                             <tbody>
+                              {{-- @dd($orders); --}}
                               @foreach ($orders as $item)
                                 @if ($item->category_name === 'Tools')
                                   <tr>
@@ -101,11 +102,20 @@
                                     <td>
                                       <select name="quantity[]" class="form-control">
                                         @for ($i = 1; $i <= $item->itemQuantity; $i++)
-                                          <option value="{{ $i }}" {{ $i == $item->order_quantity ? 'selected' : '' }}>
+                                          <option value="{{ $i }}" {{ $i == $item->quantity ? 'selected' : '' }}>
                                             {{ $i }}
                                           </option>
                                         @endfor
                                       </select>
+                                      {{-- <select name="quantity[]" class="form-control">
+                                        @for ($i = 1; $i <= $item->itemQuantity; $i++)
+                                          @if($i == $item->quantity)
+                                            <option value="{{$i}}" selected>{{$i}}</option>
+                                        @else
+                                            <option value="{{$i}}">{{$i}}</option>
+                                        @endif
+                                        @endfor
+                                      </select> --}}
                                     </td>
                                     <td> 
                                       <a href="" class="btn btn-danger">Remove</a> 
