@@ -300,6 +300,7 @@ class BorrowController extends Controller
             ->where('users.id_number', $id)
             ->where('order_items.status', 'pending')
             ->get();
+       
     
         return view('pages.admin.viewOrderAdmin')->with(compact('order'));
     }
