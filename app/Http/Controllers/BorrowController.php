@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\OrderItem;
 use App\Models\OrderItemTemp;
 use App\Models\ItemCategory;
+use App\Models\ItemLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -286,6 +287,8 @@ class BorrowController extends Controller
         $user = auth()->user();
 
         if($user){
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
         if($categoryName == 'Tools'){
             if( $quantity_return < $borrowOrderQuantity){
                 $available = Item::find($itemIdReturn);
@@ -316,8 +319,7 @@ class BorrowController extends Controller
                 return redirect('borrowed');
             }
         }else{
-            $firstName = $user->first_name;
-            $lastName = $user->last_name;
+           
             Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'status' => $status]);
             OrderItem::where('order_serial_number','=',$serial_number)->update([ 'status' => 'returned', 'remarks' =>  $remark, 'returned_to' => $lastName .', '. $firstName ]);
     
