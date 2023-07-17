@@ -19,14 +19,16 @@ class BorrowController extends Controller
 
     public function borrowed()
     {   
-        $borrows = OrderItem::join('items', 'order_items.item_id', '=', 'items.id')
+        $borrows = OrderItem::join('users', 'order_items.user_id', '=', 'users.id_number')
                             ->join('orders', 'order_items.order_id', '=', 'orders.id')
+                            ->join('items', 'order_items.item_id', '=', 'items.id')
+                            ->join('item_categories', 'items.category_id', 'item_categories.id')
+                            ->select('orders.id as order_id','orders.date_submitted as date_submitted', 'users.*','order_items.id as order_item_id', 'order_items.*','items.id as item_id_borrow' ,'items.*','item_categories.*')
                             ->where('order_items.status', '=', 'borrowed')
                             ->get();
-        $categories = ItemCategory::all();
-        $users = User::all();
+       
 
-        return view('pages.admin.borrowed')->with(compact('borrows','categories','users'));
+        return view('pages.admin.borrowed')->with(compact('borrows'));
     }
 
     public function pending()
@@ -277,7 +279,7 @@ class BorrowController extends Controller
         $status = $request->status;
         $serial_number = $request->serialreturn;
         $remark = $request->item_remark;
-        echo 
+        
         $user = auth()->user();
         if($user){
             $firstName = $user->first_name;
@@ -656,6 +658,26 @@ class BorrowController extends Controller
             }
         }
     }
+
+    public function updateQuantity(Request $request)
+{
+    $quantity = $request->input('quantity');
+    $itemId = $request->input('itemId');
+    $orderItemId = $request->input('orderItemId');
+
+    $orderItem = OrderItem::find($orderItemId);
+    $available = Item::find($itemId);
+
+    $availableQuantity = $available->available_quantity;
+    $currentOrderQuantity = $orderItem->order_quantity;
+
+    $availableQuantity += $currentOrderQuantity;
+    $availableQuantity -= $quantity;
+
+    Item::where('id', $itemId)->update(['available_quantity' => $availableQuantity]);
+    OrderItem::where('id', $orderItemId)->update(['order_quantity' => $quantity]);
+}
+    
 
 
 }

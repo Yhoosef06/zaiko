@@ -1900,6 +1900,67 @@ $(document).ready(function() {
     });
 });
 
+function updateItemQuantity(quantity, rowIndex) {
+  var itemId = $('#item_id_' + rowIndex).val();
+  var orderItemId = $('#order_item_id_' + rowIndex).val();
+
+  console.log(itemId);
+  console.log(quantity);
+
+  $.ajax({
+    url: "{{ route('updateQuantity') }}", 
+    method: 'POST',
+    headers: {
+        'X-CSRF-TOKEN': csrfToken
+    },
+    data: {
+      quantity: quantity,
+      itemId: itemId,
+      orderItemId: orderItemId,
+    },
+    success: function(response) {
+    
+      console.log(response);
+    //   $('#quantity_' + rowIndex).text(quantity);
+    },
+    error: function(xhr, status, error) {
+      // Handle errors
+      console.error(error);
+    }
+  });
+}
+
+function borrowUpdateItemQuantity(quantity, rowIndex) {
+  var itemId = $('#borrow_item_id_' + rowIndex).val();
+  var orderItemId = $('#borrow_order_item_id_' + rowIndex).val();
+
+  console.log(itemId);
+  console.log(quantity);
+
+  $.ajax({
+    url: "{{ route('updateQuantity') }}", 
+    method: 'POST',
+    headers: {
+        'X-CSRF-TOKEN': csrfToken
+    },
+    data: {
+      quantity: quantity,
+      itemId: itemId,
+      orderItemId: orderItemId,
+    },
+    success: function(response) {
+    
+      console.log(response);
+   
+    },
+    error: function(xhr, status, error) {
+      // Handle errors
+      console.error(error);
+    }
+  });
+}
+
+
 
 
 
