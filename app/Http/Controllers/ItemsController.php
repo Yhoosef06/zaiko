@@ -219,7 +219,7 @@ class ItemsController extends Controller
                 $itemLog->item_id = $item->id;
                 $itemLog->quantity = $item->quantity;
                 $itemLog->mode = 'added';
-                $itemLog->date = now(); // Set the current date
+                $itemLog->date = now(); 
                 $itemLog->save();
             }
         } else {
@@ -243,7 +243,7 @@ class ItemsController extends Controller
                 $itemLog->item_id = $item->id;
                 $itemLog->quantity = $item->quantity;
                 $itemLog->mode = 'added';
-                $itemLog->date = now(); // Set the current date
+                $itemLog->date = now(); 
                 $itemLog->save();
             }
         }
