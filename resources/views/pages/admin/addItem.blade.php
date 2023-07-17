@@ -347,21 +347,18 @@
     $(document).ready(function() {
         $('#brand').autocomplete({
             source: function(request, response) {
-                // Send an AJAX request to the server to get the brand names
                 $.ajax({
                     url: '{!! url('get-brand') !!}',
                     dataType: 'json',
                     data: {
                         query: request
-                            .term // Pass the user's input as the 'query' parameter
+                            .term 
                     },
                     success: function(data) {
-                        // Filter the brand names to only include those that start with the user's input
                         var filteredData = $.grep(data, function(item) {
                             return item.substr(0, request.term.length)
                                 .toLowerCase() === request.term.toLowerCase();
                         });
-                        // Call the response callback with the filtered data
                         response(filteredData);
                     }
                 });
@@ -374,22 +371,19 @@
     $(document).ready(function() {
         $('#model').autocomplete({
             source: function(request, response) {
-                // Send an AJAX request to the server to get the brand names
                 $.ajax({
                     url: '{!! url('get-model') !!}',
                     dataType: 'json',
                     data: {
                         query: request
-                            .term // Pass the user's input as the 'query' parameter
+                            .term 
                     },
                     success: function(data) {
                         console.log(data);
-                        // Filter the brand names to only include those that start with the user's input
                         var filteredData = $.grep(data, function(item) {
                             return item.substr(0, request.term.length)
                                 .toLowerCase() === request.term.toLowerCase();
                         });
-                        // Call the response callback with the filtered data
                         response(filteredData);
                     }
                 });
@@ -402,21 +396,18 @@
     $(document).ready(function() {
         $('#unit_number').autocomplete({
             source: function(request, response) {
-                // Send an AJAX request to the server to get the brand names
                 $.ajax({
                     url: '{!! url('get-unit-number') !!}',
                     dataType: 'json',
                     data: {
                         query: request
-                            .term // Pass the user's input as the 'query' parameter
+                            .term
                     },
                     success: function(data) {
-                        // Filter the brand names to only include those that start with the user's input
                         var filteredData = $.grep(data, function(item) {
                             return item.substr(0, request.term.length)
                                 .toLowerCase() === request.term.toLowerCase();
                         });
-                        // Call the response callback with the filtered data
                         response(filteredData);
                     }
                 });
@@ -431,15 +422,12 @@
         const container = document.getElementById('serial_numbers_container');
         const checkbox = document.getElementById('checkbox');
 
-        // Check if there are existing input fields
         container.innerHTML = '';
 
-        // Generate the new input field(s) and error messages
         const quantity = parseInt(quantityField.value) || 0;
-        const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
-
+        const errorMessage = container.dataset.errorMessage; 
         if (checkbox.checked) {
-            // If checkbox is checked, generate one input field with a fixed label
+
             const label = document.createElement('label');
             label.for = `serial_number_1`;
             label.textContent = `Serial Number:`;
@@ -454,13 +442,11 @@
             container.appendChild(label);
             container.appendChild(input);
 
-            // Add error message element
             const errorSpan = document.createElement('p');
             errorSpan.classList.add('text-danger');
             errorSpan.textContent = errorMessage;
             container.appendChild(errorSpan);
         } else {
-            // If checkbox is not checked, generate multiple input fields with numbered labels
             for (let i = 1; i <= quantity; i++) {
                 const label = document.createElement('label');
                 label.for = `serial_number_${i}`;
@@ -476,7 +462,6 @@
                 container.appendChild(label);
                 container.appendChild(input);
 
-                // Add error message element
                 const errorSpan = document.createElement('span');
                 errorSpan.classList.add('text-danger');
                 errorSpan.textContent = errorMessage;
@@ -485,50 +470,6 @@
         }
     }
 
-    // function updateSerialNumberFields() {
-    //     const quantityField = document.getElementById('quantity');
-    //     const container = document.getElementById('serial_numbers_container');
-    //     const checkbox = document.getElementById('checkbox');
-
-    //     // Clear the existing error message
-    //     const errorMessageElement = container.querySelector('.text-danger');
-    //     if (errorMessageElement) {
-    //         errorMessageElement.remove();
-    //     }
-
-    //     // Generate the new input field(s) and error messages
-    //     const quantity = parseInt(quantityField.value) || 0;
-    //     const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
-
-    //     // Clear any existing input fields
-    //     container.innerHTML = '';
-
-    //     if (quantity > 0) {
-    //         for (let i = 1; i <= quantity; i++) {
-    //             const label = document.createElement('label');
-    //             label.for = `serial_number_${i}`;
-    //             label.textContent = `Serial Number ${i}:`;
-
-    //             const input = document.createElement('input');
-    //             input.type = 'text';
-    //             input.name = `serial_numbers[]`;
-    //             input.id = `serial_number_${i}`;
-    //             input.classList.add('form-control', 'col-sm-5');
-    //             input.placeholder = 'Leave blank if none.';
-
-    //             container.appendChild(label);
-    //             container.appendChild(input);
-    //         }
-    //     }
-
-    //     // Add error message element if needed
-    //     if (errorMessage && quantity === 0) {
-    //         const errorSpan = document.createElement('span');
-    //         errorSpan.classList.add('text-danger');
-    //         errorSpan.textContent = errorMessage;
-    //         container.appendChild(errorSpan);
-    //     }
-    // }
 
     // FOR ADDING ROOM
     $(document).ready(function() {
@@ -562,12 +503,8 @@
                         roomName);
                     $('#location').append(newOption);
 
-                    // Restore the input values
                     $('#brand').val(currentRoomName);
                     $('#model').val(currentDepartment);
-
-                    // Select the newly added option
-                    // $('#location').val(roomName);
                 },
                 error: function(xhr) {
                     console.log(xhr);
@@ -619,8 +556,7 @@
                         .text(
                             category_name);
                     $('#item_category').append(newOption);
-
-                    // Select the newly added option
+                    
                     $('#item_category').val(category_name);
                 },
                 error: function(xhr) {
