@@ -147,8 +147,10 @@
                           <div class="modal-body">
                           <form method="POST" action="{{ route('addRemark') }}">
                             @csrf
-                            <input type="hidden"  class="form-control" id="idreturn" name="idreturn">
-                            <input type="hidden"  class="form-control" id="serialreturn" name="serialreturn">
+                            <input type="text"  class="form-control" value="{{ $borrow->order_item_id }}" name="orderItemReturn">
+                            <input type="text"  class="form-control" value="{{ $borrow->item_id_borrow }}" name="itemIdReturn">
+                            <input type="text"  class="form-control" value="{{ $borrow->order_quantity }}" name="borrowOrderQuantity">
+                            <input type="text"  class="form-control" value="{{ $borrow->category_name }}" name="categoryName">
                           <div class="form-group">
                                       <label>Remarks</label>
                                       <textarea class="form-control" rows="3" name="item_remark" placeholder="Enter ..."></textarea>

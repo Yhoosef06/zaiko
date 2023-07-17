@@ -276,20 +276,62 @@ class BorrowController extends Controller
 
     public function addRemark(Request $request)
     {
+        $orderItemReturn = $request->orderItemReturn;
+        $itemIdReturn = $request->itemIdReturn;
+        $borrowOrderQuantity = $request->borrowOrderQuantity;
+        $item_remark = $request->item_remark;
         $status = $request->status;
-        $serial_number = $request->serialreturn;
-        $remark = $request->item_remark;
-        
+        $quantity_return = $request->quantity_return;
+        $categoryName = $request->categoryName;
         $user = auth()->user();
+
         if($user){
+        if($categoryName == 'Tools'){
+            if( $quantity_return < $borrowOrderQuantity){
+                $available = Item::find($itemIdReturn);
+
+                $availableQuantity = $available->available_quantity;
+                $availableQuantity += $quantity_return;
+
+                $borrowOrderQuantity -= $quantity_return;
+        
+
+
+                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'status' => $status, 'available_quantity' => $availableQuantity]);
+                OrderItem::where('id',$orderItemReturn)->update([ 'status' => 'returned','order_quantity' => $quantity_return , 'remarks' => $item_remark, 'returned_to' => $lastName .', '. $firstName ]);
+                ItemLog::create([
+                    'order_item_id' => $orderItemReturn,
+                    'item_id' => $itemIdReturn,
+                    'quantity' => $borrowOrderQuantity,
+                    'mode' => 'missing',
+                    'date' => Carbon::today(),
+
+                ]);
+                Session::flash('success', 'Successfuly Return.');
+                return redirect('borrowed');
+            }else{
+                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'status' => $status, 'available_quantity' => $availableQuantity]);
+                OrderItem::where('id',$orderItemReturn)->update([ 'status' => 'returned','order_quantity' => $quantity_return , 'remarks' => $item_remark, 'returned_to' => $lastName .', '. $firstName ]);
+                Session::flash('success', 'Successfuly Return.');
+                return redirect('borrowed');
+            }
+        }else{
             $firstName = $user->first_name;
             $lastName = $user->last_name;
-            Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'no', 'status' => $status]);
+            Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'status' => $status]);
             OrderItem::where('order_serial_number','=',$serial_number)->update([ 'status' => 'returned', 'remarks' =>  $remark, 'returned_to' => $lastName .', '. $firstName ]);
     
             Session::flash('success', 'Successfuly Return.');
             return redirect('borrowed');
         }
+        
+            
+        }
+
+        
+
+
+     
     }
 
     public function viewOrderAdmin($id)
