@@ -426,64 +426,64 @@
         });
     });
 
-    // function updateSerialNumberFields() {
-    //     const quantityField = document.getElementById('quantity');
-    //     const container = document.getElementById('serial_numbers_container');
-    //     const checkbox = document.getElementById('checkbox');
+    function updateSerialNumberFields() {
+        const quantityField = document.getElementById('quantity');
+        const container = document.getElementById('serial_numbers_container');
+        const checkbox = document.getElementById('checkbox');
 
-    //     // Check if there are existing input fields
-    //     container.innerHTML = '';
+        // Check if there are existing input fields
+        container.innerHTML = '';
 
-    //     // Generate the new input field(s) and error messages
-    //     const quantity = parseInt(quantityField.value) || 0;
-    //     const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
+        // Generate the new input field(s) and error messages
+        const quantity = parseInt(quantityField.value) || 0;
+        const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
 
-    //     if (checkbox.checked) {
-    //         // If checkbox is checked, generate one input field with a fixed label
-    //         const label = document.createElement('label');
-    //         label.for = `serial_number_1`;
-    //         label.textContent = `Serial Number:`;
+        if (checkbox.checked) {
+            // If checkbox is checked, generate one input field with a fixed label
+            const label = document.createElement('label');
+            label.for = `serial_number_1`;
+            label.textContent = `Serial Number:`;
 
-    //         const input = document.createElement('input');
-    //         input.type = 'text';
-    //         input.name = `serial_numbers[]`;
-    //         input.id = `serial_number_1`;
-    //         input.classList.add('form-control', 'col-sm-5');
-    //         input.placeholder = 'Leave blank if none.';
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = `serial_numbers[]`;
+            input.id = `serial_number_1`;
+            input.classList.add('form-control', 'col-sm-5');
+            input.placeholder = 'Leave blank if none.';
 
-    //         container.appendChild(label);
-    //         container.appendChild(input);
+            container.appendChild(label);
+            container.appendChild(input);
 
-    //         // Add error message element
-    //         const errorSpan = document.createElement('p');
-    //         errorSpan.classList.add('text-danger');
-    //         errorSpan.textContent = errorMessage;
-    //         container.appendChild(errorSpan);
-    //     } else {
-    //         // If checkbox is not checked, generate multiple input fields with numbered labels
-    //         for (let i = 1; i <= quantity; i++) {
-    //             const label = document.createElement('label');
-    //             label.for = `serial_number_${i}`;
-    //             label.textContent = `Serial Number ${i}:`;
+            // Add error message element
+            const errorSpan = document.createElement('p');
+            errorSpan.classList.add('text-danger');
+            errorSpan.textContent = errorMessage;
+            container.appendChild(errorSpan);
+        } else {
+            // If checkbox is not checked, generate multiple input fields with numbered labels
+            for (let i = 1; i <= quantity; i++) {
+                const label = document.createElement('label');
+                label.for = `serial_number_${i}`;
+                label.textContent = `Serial Number ${i}:`;
 
-    //             const input = document.createElement('input');
-    //             input.type = 'text';
-    //             input.name = `serial_numbers[]`;
-    //             input.id = `serial_number_${i}`;
-    //             input.classList.add('form-control', 'col-sm-5');
-    //             input.placeholder = 'Leave blank if none.';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = `serial_numbers[]`;
+                input.id = `serial_number_${i}`;
+                input.classList.add('form-control', 'col-sm-5');
+                input.placeholder = 'Leave blank if none.';
 
-    //             container.appendChild(label);
-    //             container.appendChild(input);
+                container.appendChild(label);
+                container.appendChild(input);
 
-    //             // Add error message element
-    //             const errorSpan = document.createElement('span');
-    //             errorSpan.classList.add('text-danger');
-    //             errorSpan.textContent = errorMessage;
-    //             container.appendChild(errorSpan);
-    //         }
-    //     }
-    // }
+                // Add error message element
+                const errorSpan = document.createElement('span');
+                errorSpan.classList.add('text-danger');
+                errorSpan.textContent = errorMessage;
+                container.appendChild(errorSpan);
+            }
+        }
+    }
 
     function updateSerialNumberFields() {
         const quantityField = document.getElementById('quantity');
