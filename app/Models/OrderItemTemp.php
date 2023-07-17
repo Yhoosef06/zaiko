@@ -13,8 +13,9 @@ class OrderItemTemp extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'order_id',
         'item_id',
+        'temp_serial_number',
         'quantity',
     ];
 
