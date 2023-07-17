@@ -348,7 +348,7 @@ $(document).ready(function() {
                 $('<td>').text(response.model).appendTo(tableRow);
                 $('<td>').text(response.description).appendTo(tableRow);
                 $('<td>').text(response.serial_number).appendTo(tableRow);
-                var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', response.available_quantity).val(response.available_quantity);
                 $('<td>').append(quantityInput).appendTo(tableRow);
                 var buttonCell = $('<td>');
                 var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
@@ -543,7 +543,7 @@ $(document).ready(function() {
                 $('<td>').text(response.brand).appendTo(tableRow);
                 $('<td>').text(response.model).appendTo(tableRow);
                 $('<td>').text(response.description).appendTo(tableRow);
-                var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', response.available_quantity).val(response.available_quantity);
                 $('<td>').append(quantityInput).appendTo(tableRow);
                 var buttonCell = $('<td>');
                 var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
@@ -1427,7 +1427,7 @@ $(document).ready(function() {
                 $('<td>').text(response.brand).appendTo(tableRow);
                 $('<td>').text(response.model).appendTo(tableRow);
                 $('<td>').text(response.description).appendTo(tableRow);
-                var quantityInput = $('<input>').attr('type', 'number').attr('max', response.quantity).val(response.quantity);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', response.available_quantity).val(response.available_quantity);
                 $('<td>').append(quantityInput).appendTo(tableRow);
                 var buttonCell = $('<td>');
                 var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
@@ -1899,6 +1899,67 @@ $(document).ready(function() {
         
     });
 });
+
+function updateItemQuantity(quantity, rowIndex) {
+  var itemId = $('#item_id_' + rowIndex).val();
+  var orderItemId = $('#order_item_id_' + rowIndex).val();
+
+  console.log(itemId);
+  console.log(quantity);
+
+  $.ajax({
+    url: "{{ route('updateQuantity') }}", 
+    method: 'POST',
+    headers: {
+        'X-CSRF-TOKEN': csrfToken
+    },
+    data: {
+      quantity: quantity,
+      itemId: itemId,
+      orderItemId: orderItemId,
+    },
+    success: function(response) {
+    
+      console.log(response);
+    //   $('#quantity_' + rowIndex).text(quantity);
+    },
+    error: function(xhr, status, error) {
+      // Handle errors
+      console.error(error);
+    }
+  });
+}
+
+function borrowUpdateItemQuantity(quantity, rowIndex) {
+  var itemId = $('#borrow_item_id_' + rowIndex).val();
+  var orderItemId = $('#borrow_order_item_id_' + rowIndex).val();
+
+  console.log(itemId);
+  console.log(quantity);
+
+  $.ajax({
+    url: "{{ route('updateQuantity') }}", 
+    method: 'POST',
+    headers: {
+        'X-CSRF-TOKEN': csrfToken
+    },
+    data: {
+      quantity: quantity,
+      itemId: itemId,
+      orderItemId: orderItemId,
+    },
+    success: function(response) {
+    
+      console.log(response);
+   
+    },
+    error: function(xhr, status, error) {
+      // Handle errors
+      console.error(error);
+    }
+  });
+}
+
 
 
 

@@ -126,6 +126,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::post('/submitAdminBorrow', [BorrowController::class, 'submitAdminBorrow'])->name('submitAdminBorrow');
     Route::post('/submitUserBorrow', [BorrowController::class, 'submitUserBorrow'])->name('submitUserBorrow');
     Route::post('/submit-admin-order', [BorrowController::class, 'submitAdminOrder'])->name('submitAdminOrder');
+    Route::post('/updateQuantity', [BorrowController::class, 'updateQuantity'])->name('updateQuantity');
 
     
 

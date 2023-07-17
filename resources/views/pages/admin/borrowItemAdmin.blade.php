@@ -97,10 +97,10 @@
                     <table class="table table-head-fixed text-nowrap">
                       <thead>
                           <tr>
-                              {{-- <th>ID</th>
-                              <th>Order ID</th> --}}
+                      
                               <th class="d-none">Order ID</th>
                               <th class="d-none">OrderItem ID</th>
+                              <th class="d-none">Item ID</th>
                               <th style="background-color:#28a745; color:aliceblue">Brand</th>
                               <th style="background-color:#28a745; color:aliceblue">Model</th>
                               <th style="background-color:#28a745; color:aliceblue">Description</th>
@@ -110,44 +110,66 @@
                           </tr>
                       </thead>
                       <tbody>
-                        @foreach ($order as $item)
-                          @if ($item->category_name =="Tools")
-                            <tr>
-                              <td class="d-none"><input type="hidden" name="order_id[]" value="{{ $item->order_id }}">{{ $item->order_id }}</td>
-                              <td class="d-none"><input type="hidden" name="order_item_id[]" value="{{ $item->order_item_id }}">{{ $item->order_item_id }}</td>
-                              <td>{{ $item->brand }}</td>
-                              <td>{{ $item->model }}</td>
-                              <td>{{ $item->description }}</td>
-                              <td>{{ $item->serial_number }}</td>
-                              <td>
-                                <select name="quantity[]" class="form-control">
-                                  @for ($i = 1; $i <= $item->quantity; $i++)
-                                    <option value="{{ $i }}" {{ $i == $item->order_quantity ? 'selected' : '' }}>
-                                      {{ $i }}
-                                    </option>
-                                  @endfor
-                                </select>
-                            </td>
-                              <td>
-                                <a href="" class="btn btn-danger">Remove</a> 
-                              </td>
-                          </tr>
-                          @else
-                            <tr>
-                              <td class="d-none"><input type="hidden" name="order_id[]" value="{{ $item->order_id }}">{{ $item->order_id }}</td>
-                              <td class="d-none"><input type="hidden" name="order_item_id[]" value="{{ $item->order_item_id }}">{{ $item->order_item_id }}</td>
-                              <td>{{ $item->brand }}</td>
-                              <td>{{ $item->model }}</td>
-                              <td>{{ $item->description }}</td>
-                              <td>{{ $item->serial_number }}</td>
-                              <td><input type="hidden" name="quantity[]" value="{{ $item->order_quantity }}">{{ $item->order_quantity }}</td>
-                              <td>
-                                <a href="{{ route('remove-borrow', ['id' => $item->order_item_id]) }}" class="btn btn-danger">Remove</a> 
-                              </td>
-                          </tr>
-                          @endif
-                                
-                        @endforeach
+                        @foreach ($order as $index => $item)
+                              @if ($item->category_name =="Tools")
+                                <tr>
+                                  <td class="d-none">
+                                    <input type="hidden" name="order_id[]" value="{{ $item->order_id }}">
+                                    {{ $item->order_id }}
+                                  </td>
+                                  <td class="d-none">
+                                    <input type="hidden" name="order_item_id[]" id="borrow_order_item_id_{{ $index }}" value="{{ $item->order_item_id }}">
+                                    {{ $item->order_item_id }}
+                                  </td>
+                                  <td class="d-none">
+                                    <input type="hidden" name="item_id[]" value="{{ $item->item_id }}" id="borrow_item_id_{{ $index }}">
+                                    {{ $item->item_id }}
+                                  </td>
+                                  <td>{{ $item->brand }}</td>
+                                  <td>{{ $item->model }}</td>
+                                  <td>{{ $item->description }}</td>
+                                  <td>{{ $item->serial_number }}</td>
+                                  <td id="quantity_{{ $index }}">
+                                    <select name="quantity[]" class="form-control" onchange="borrowUpdateItemQuantity(this.value, {{ $index }})">
+                                      @for ($i = 1; $i <= $item->available_quantity + $item->order_quantity; $i++)
+                                        <option value="{{ $i }}" {{ $i == $item->order_quantity ? 'selected' : '' }}>
+                                          {{ $i }}
+                                        </option>
+                                      @endfor
+                                    </select>
+                                  </td>
+                                  <td>
+                                    <a href="" class="btn btn-danger">Remove</a> 
+                                  </td>
+                                </tr>
+                              @else
+                                <tr>
+                                  <td class="d-none">
+                                    <input type="hidden" name="order_id[]" value="{{ $item->order_id }}">
+                                    {{ $item->order_id }}
+                                  </td>
+                                  <td class="d-none">
+                                    <input type="hidden" name="order_item_id[]" id="borrow_order_item_id_{{ $index }}" value="{{ $item->order_item_id }}">
+                                    {{ $item->order_item_id }}
+                                  </td>
+                                  <td class="d-none">
+                                    <input type="hidden" name="item_id[]" value="{{ $item->item_id }}" id="borrow_item_id_{{ $index }}">
+                                    {{ $item->item_id }}
+                                  </td>
+                                  <td>{{ $item->brand }}</td>
+                                  <td>{{ $item->model }}</td>
+                                  <td>{{ $item->description }}</td>
+                                  <td>{{ $item->serial_number }}</td>
+                                  <td>
+                                    <input type="hidden" name="quantity[]" value="{{ $item->order_quantity }}">
+                                    {{ $item->order_quantity }}
+                                  </td>
+                                  <td>
+                                    <a href="{{ route('remove-borrow', ['id' => $item->order_item_id]) }}" class="btn btn-danger">Remove</a> 
+                                  </td>
+                                </tr>
+                              @endif
+                            @endforeach
                       </tbody>
                   </table>
                       
