@@ -18,14 +18,15 @@ class CreateUsersTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('password');
-            $table->string('front_of_id');
-            $table->string('back_of_id');
             $table->string('account_type');
             $table->string('account_status');
+            $table->unsignedBigInteger('security_question_id');
+            $table->string('answer');
             $table->unsignedBigInteger('department_id');
             $table->rememberToken();
             $table->timestamps();
 
+            $table->foreign('security_question_id')->references('id')->on('security_questions');
             $table->foreign('department_id')->references('id')->on('departments');
         });
     }

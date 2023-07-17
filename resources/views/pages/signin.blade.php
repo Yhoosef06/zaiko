@@ -42,7 +42,7 @@
                             </div>
                         @enderror
                         <div>
-                            <a href="#">Forgot Password?</a>
+                            <a href="{{ route('password_reset') }}">Forgot Password?</a>
                         </div>
                     </div>
                     <div class="checkbox mb-3">

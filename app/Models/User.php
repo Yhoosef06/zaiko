@@ -22,7 +22,7 @@ class User extends Authenticatable
      */
     protected $primaryKey = 'id_number';
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_number',
         'first_name',
@@ -32,7 +32,9 @@ class User extends Authenticatable
         'back_of_id',
         'account_type',
         'account_status',
-        'department_id'
+        'department_id',
+        'security_question_id',
+        'answer'
     ];
 
     /**
@@ -64,11 +66,18 @@ class User extends Authenticatable
         return $this->hasMany(OrderItemTemp::class);
     }
 
-    public function order_item(): HasMany 
+    public function order_item(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
-    public function order(): HasMany{
+
+    public function order(): HasMany
+    {
         return $this->hasMany(Order::class);
+    }
+
+    public function securityQuestion()
+    {
+        return $this->hasOne(SecurityQuestion::class);
     }
 }
