@@ -485,50 +485,50 @@
         }
     }
 
-    function updateSerialNumberFields() {
-        const quantityField = document.getElementById('quantity');
-        const container = document.getElementById('serial_numbers_container');
-        const checkbox = document.getElementById('checkbox');
+    // function updateSerialNumberFields() {
+    //     const quantityField = document.getElementById('quantity');
+    //     const container = document.getElementById('serial_numbers_container');
+    //     const checkbox = document.getElementById('checkbox');
 
-        // Clear the existing error message
-        const errorMessageElement = container.querySelector('.text-danger');
-        if (errorMessageElement) {
-            errorMessageElement.remove();
-        }
+    //     // Clear the existing error message
+    //     const errorMessageElement = container.querySelector('.text-danger');
+    //     if (errorMessageElement) {
+    //         errorMessageElement.remove();
+    //     }
 
-        // Generate the new input field(s) and error messages
-        const quantity = parseInt(quantityField.value) || 0;
-        const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
+    //     // Generate the new input field(s) and error messages
+    //     const quantity = parseInt(quantityField.value) || 0;
+    //     const errorMessage = container.dataset.errorMessage; // Retrieve the error message from the data attribute
 
-        // Clear any existing input fields
-        container.innerHTML = '';
+    //     // Clear any existing input fields
+    //     container.innerHTML = '';
 
-        if (quantity > 0) {
-            for (let i = 1; i <= quantity; i++) {
-                const label = document.createElement('label');
-                label.for = `serial_number_${i}`;
-                label.textContent = `Serial Number ${i}:`;
+    //     if (quantity > 0) {
+    //         for (let i = 1; i <= quantity; i++) {
+    //             const label = document.createElement('label');
+    //             label.for = `serial_number_${i}`;
+    //             label.textContent = `Serial Number ${i}:`;
 
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = `serial_numbers[]`;
-                input.id = `serial_number_${i}`;
-                input.classList.add('form-control', 'col-sm-5');
-                input.placeholder = 'Leave blank if none.';
+    //             const input = document.createElement('input');
+    //             input.type = 'text';
+    //             input.name = `serial_numbers[]`;
+    //             input.id = `serial_number_${i}`;
+    //             input.classList.add('form-control', 'col-sm-5');
+    //             input.placeholder = 'Leave blank if none.';
 
-                container.appendChild(label);
-                container.appendChild(input);
-            }
-        }
+    //             container.appendChild(label);
+    //             container.appendChild(input);
+    //         }
+    //     }
 
-        // Add error message element if needed
-        if (errorMessage && quantity === 0) {
-            const errorSpan = document.createElement('span');
-            errorSpan.classList.add('text-danger');
-            errorSpan.textContent = errorMessage;
-            container.appendChild(errorSpan);
-        }
-    }
+    //     // Add error message element if needed
+    //     if (errorMessage && quantity === 0) {
+    //         const errorSpan = document.createElement('span');
+    //         errorSpan.classList.add('text-danger');
+    //         errorSpan.textContent = errorMessage;
+    //         container.appendChild(errorSpan);
+    //     }
+    // }
 
     // FOR ADDING ROOM
     $(document).ready(function() {
