@@ -347,7 +347,7 @@ class BorrowController extends Controller
             ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
             ->join('items', 'order_item_temps.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-            ->where('users.id_number', $id)
+            ->where('orders.id', $id)
             ->get();
     
         return view('pages.admin.viewOrderUser')->with(compact('orders'));
