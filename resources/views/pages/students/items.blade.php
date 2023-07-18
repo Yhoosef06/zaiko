@@ -109,7 +109,7 @@
                                                 <div class="col">
                                                     <strong>Brand:</strong> {{ $item->brand }} <br>
                                                     <strong>Model:</strong> {{ $item->model }} <br>
-                                                    @if($item->serial_number == null)
+                                                    @if($item->serial_number == null || $item->category->category_name = 'tools')
                                                         <strong>Available:</strong> {{$item->quantity}} <br>
                                                     @else
                                                         <strong>Available:</strong> {{$quantity}} <br>
