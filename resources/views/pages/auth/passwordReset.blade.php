@@ -6,7 +6,7 @@
             background-color: rgb(190, 203, 201);
         }
     </style>
-    <form class="form-signin" action="{{ route('verify') }}" method="POST" enctype="multipart/form-data">
+    <form class="form-signin" action="{{ route('reset_password', $id_number) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @if (session('message'))
             <div class="alert alert-danger alert-dismissible">
@@ -14,21 +14,21 @@
             </div>
         @endif
         <H1 class="header">Zaiko.</H1>
-        <H5>Change Password</H5>
+        <H5>Reset Password</H5>
 
-        <label for="inputIdNumber" class="sr-only">New Password</label>
-        <input type="" id="new_password" name="id_number"
-            class="form-control @error('id_number') border-danger @enderror" placeholder="I.D. Number">
-        @error('id_number')
+        <label for="" class="sr-only">New Password:</label>
+        <input type="password" name="new_password" id="new_password" class="form-control @error('new_password') border-danger @enderror"
+            placeholder="Your new password">
+        @error('new_password')
             <div class="text-danger">
                 {{ $message }}
             </div>
         @enderror
 
-        <label for="" class="sr-only">Answer:</label>
-        <input type="" name="answer" id="answer" class="form-control @error('answer') border-danger @enderror"
-            placeholder="Your answer">
-        @error('answer')
+        <label for="" class="sr-only">Confirm Password:</label>
+        <input type="password" name="password_confirmation" id="password_confirmation"
+            class="form-control @error('password_confirmation') border-danger @enderror" placeholder="Confirm Password">
+        @error('password_confirmation')
             <div class="text-danger">
                 {{ $message }}
             </div>

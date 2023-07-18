@@ -5,24 +5,45 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\SecurityQuestion;
+use Illuminate\Support\Facades\Hash;
 
 class SecurityQuestionController extends Controller
 {
-    public function index()
+    public function getIdNumber()
     {
-        $securityQuestions = SecurityQuestion::all();
-
-        return view('pages.securityQuestion')->with(compact('securityQuestions'));
+        $id_number = 1;
+        return view('pages.auth.getIdNumber', compact('id_number'));
     }
 
-    public function verify(Request $request)
+    public function securityQuestion(Request $request)
     {
-        $idNumber = $request->input('id_number');
+
+        $id_number = $request->input('id_number');
+
+        $request->validate([
+            'id_number' => 'required',
+        ]);
+
+        $user = User::where('id_number', $id_number)->first();
+
+        if ($user) {
+            $securityQuestions = SecurityQuestion::all();
+            return view('pages.auth.securityQuestion')->with(compact('securityQuestions', 'id_number'));
+        } else {
+            return redirect()->back()->with(['message' => 'Invalid I.D. Number.']);
+        }
+
+        return view('pages.auth.securityQuestion')->with(compact('securityQuestions'));
+    }
+
+    public function verifySecurityQuestion(Request $request, $id_number)
+    {
+
+        $idNumber = $id_number;
         $questionId = $request->input('question');
         $answer = $request->input('answer');
 
         $request->validate([
-            'id_number' => 'required',
             'question' => 'required',
             'answer' => 'required',
         ]);
@@ -32,12 +53,22 @@ class SecurityQuestionController extends Controller
 
         if ($user) {
             if ($user->security_question_id == $questionId && $user->answer == $answer) {
-              dd('change pass here');
+                return view('pages.auth.passwordReset')->with(compact('id_number'));
             } else {
                 return redirect()->back()->with('message', 'Invalid security question or answer.');
             }
-        } else {
-            return redirect()->back()->with(['message' => 'User not found.']);
         }
+    }
+
+    public function resetPassword(Request $request, $id_number)
+    {   
+        $request->validate([
+            'new_password' => 'required|min:7',
+            'password_confirmation' => ['same:new_password'],
+        ]);
+
+        User::find($id_number)->update(['password' => Hash::make($request->new_password)]);
+
+        return view('pages.auth.passwordResetSucessfully');
     }
 }

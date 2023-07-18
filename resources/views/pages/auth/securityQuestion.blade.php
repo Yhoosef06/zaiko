@@ -6,7 +6,7 @@
             background-color: rgb(190, 203, 201);
         }
     </style>
-    <form class="form-signin" action="{{ route('verify') }}" method="POST" enctype="multipart/form-data">
+    <form class="form-signin" action="{{ route('verify_security_question', $id_number) }}" method="GET" enctype="multipart/form-data">
         @csrf
         @if (session('message'))
             <div class="alert alert-danger alert-dismissible">
@@ -14,20 +14,11 @@
             </div>
         @endif
         <H1 class="header">Zaiko.</H1>
-        <H5>Password Reset</H5>
+        <H5>Security Question</H5>
 
-        <label for="inputIdNumber" class="sr-only">I.D. Number</label>
-        <input type="" id="id_number" name="id_number"
-            class="form-control @error('id_number') border-danger @enderror" placeholder="I.D. Number">
-        @error('id_number')
-            <div class="text-danger">
-                {{ $message }}
-            </div>
-        @enderror
-
-        <label for="" class="sr-only">Security Question</label>
+        <label for="" class="sr-only">Question</label>
         <select name="question" id="question" class="form-control @error('question') border-danger @enderror">
-            <option value="">Select a security question</option>
+            <option value="">Select a question</option>
             @foreach ($securityQuestions as $question)
                 <option value="{{ $question->id }}">{{ $question->question }}</option>
             @endforeach

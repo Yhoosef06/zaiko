@@ -64,7 +64,7 @@
             </div>
         @enderror
 
-        <label for="" class="sr-only">Password</label>
+        <label for="" class="sr-only">Password:</label>
         <input type="password" name="password" id="password"
             class="form-control @error('password') border-danger @enderror" placeholder="Password">
         @error('password')
@@ -73,7 +73,7 @@
             </div>
         @enderror
 
-        <label for="" class="sr-only">Confirm Password</label>
+        <label for="" class="sr-only">Confirm Password:</label>
         <input type="password" name="password_confirmation" id="password_confirmation"
             class="form-control @error('password_confirmation') border-danger @enderror" placeholder="Confirm Password">
         @error('password_confirmation')

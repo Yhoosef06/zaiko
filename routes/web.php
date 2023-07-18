@@ -44,8 +44,10 @@ Route::post('/signin', [SignInController::class, 'store'])->name('signin');
 
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
-Route::get('/password-reset', [SecurityQuestionController::class, 'index'])->name('password_reset');
-Route::post('/verify-question', [SecurityQuestionController::class, 'verify'])->name('verify');
+Route::get('/security-question-input-id-number', [SecurityQuestionController::class, 'getIdNumber'])->name('get_id_number');
+Route::get('/security-question/{id_number}', [SecurityQuestionController::class, 'securityQuestion'])->name('security_questions');
+Route::get('/verify-security-question/{id_number}', [SecurityQuestionController::class, 'verifySecurityQuestion'])->name('verify_security_question');
+Route::post('/reset-password/{id_number}', [SecurityQuestionController::class, 'resetPassword'])->name('reset_password');
 
 // Route::group(['middleware' => ['auth']], function(){
 // Route::middleware(['user-role:admin'])->group(function(){
