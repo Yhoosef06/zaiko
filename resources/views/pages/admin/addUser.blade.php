@@ -110,7 +110,7 @@
                         <hr>
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                         <Button type="submit" class="btn btn-success"
-                            onclick="return confirm('You are about to create a new user. Do you wish to continue?')">Save</Button>
+                            onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')">Save</Button>
                     </div>
                 </div>
             </form>

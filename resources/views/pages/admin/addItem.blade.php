@@ -182,7 +182,7 @@
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                     <Button type="submit" class="btn btn-success" data-toggle="modal"
                         data-target="#modal-submitConfirmation"
-                        onclick="return confirm('You are about to save a new item into your inventory. Do you wish to continue?')">Save</Button>
+                        onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')">Save</Button>
                 </div>
             </div>
         </form>
