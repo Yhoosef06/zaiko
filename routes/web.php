@@ -99,17 +99,17 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     
     //FOR Departments
     Route::get('departments', [DepartmentController::class, 'index'])->name('view_departments');
-    Route::post('delete-department-{id}', [DepartmentController::class, 'deleteDepartment'])->name('delete_department');
+    Route::post('delete-department/{id}', [DepartmentController::class, 'deleteDepartment'])->name('delete_department');
 
     // FOR ROOM
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
     Route::post('storing-new-room', [RoomController::class, 'storeNewRoom'])->name('store_new_room');
-    Route::post('delete-room-{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
+    Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
 
     // FOR Item Category
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
     Route::post('storing-new-category', [ItemCategoryController::class, 'storeNewCategory'])->name('store_new_category');
-    Route::post('delete-category-{$id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
+    Route::post('delete-category/{id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
    
     //FOR BRAND
     Route::get('brands', [BrandController::class, 'index'])->name('view_brands');

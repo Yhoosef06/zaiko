@@ -77,25 +77,4 @@
         </div>
         <!-- /.container-fluid -->
     </section>
-
-    <!-- Modal -->
-    <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
-        aria-labelledby="modal-item-details-label">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modal-item-details-label">Item Details</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    <a href="{{ route('edit_item_details', ['id' => $category->id]) }}" class="btn btn-primary">Edit</a>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
