@@ -74,7 +74,7 @@
                                                         </td>
                                                         <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
-                                                            <a href="{{ route('view-order-user', $pending->id) }}"
+                                                            <a href="{{ route('view-order-user', $pending->user_id) }}"
                                                                 class="btn btn-sm btn-primary" title="Disregard">
                                                                 view</a>
                                                         </td>
