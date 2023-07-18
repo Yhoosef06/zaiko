@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Models\SecurityQuestion;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QRController;
 use App\Http\Controllers\CartController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\SecurityQuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +44,10 @@ Route::post('/signin', [SignInController::class, 'store'])->name('signin');
 
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
+Route::get('/security-question-input-id-number', [SecurityQuestionController::class, 'getIdNumber'])->name('get_id_number');
+Route::get('/security-question/{id_number}', [SecurityQuestionController::class, 'securityQuestion'])->name('security_questions');
+Route::get('/verify-security-question/{id_number}', [SecurityQuestionController::class, 'verifySecurityQuestion'])->name('verify_security_question');
+Route::post('/reset-password/{id_number}', [SecurityQuestionController::class, 'resetPassword'])->name('reset_password');
 
 // Route::group(['middleware' => ['auth']], function(){
 // Route::middleware(['user-role:admin'])->group(function(){

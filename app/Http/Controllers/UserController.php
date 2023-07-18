@@ -148,7 +148,6 @@ class UserController extends Controller
     public function saveUserNewPassword(Request $request, $id_number)
     {
         $request->validate([
-            // 'current_password' => ['required', new MatchOldPassword],
             'new_password' => 'required|min:7',
             'password_confirmation' => ['same:new_password'],
         ]);

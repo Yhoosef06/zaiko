@@ -64,7 +64,7 @@
             </div>
         @enderror
 
-        <label for="" class="sr-only">Password</label>
+        <label for="" class="sr-only">Password:</label>
         <input type="password" name="password" id="password"
             class="form-control @error('password') border-danger @enderror" placeholder="Password">
         @error('password')
@@ -73,10 +73,32 @@
             </div>
         @enderror
 
-        <label for="" class="sr-only">Confirm Password</label>
+        <label for="" class="sr-only">Confirm Password:</label>
         <input type="password" name="password_confirmation" id="password_confirmation"
             class="form-control @error('password_confirmation') border-danger @enderror" placeholder="Confirm Password">
         @error('password_confirmation')
+            <div class="text-danger">
+                {{ $message }}
+            </div>
+        @enderror
+
+        <label for="Item name">Password Security Question:</label>
+        <select name="question" id="question" class="form-control">
+            <option value="">Select a security question</option>
+            @foreach ($securityQuestions as $question)
+                <option value="{{ $question->id }}">{{ $question->question }}</option>
+            @endforeach
+        </select>
+        @error('question')
+            <div class="text-danger">
+                {{ $message }}
+            </div>
+        @enderror
+
+        <label for="" class="sr-only">Answer:</label>
+        <input type="" name="answer" id="answer"
+            class="form-control @error('answer') border-danger @enderror" placeholder="Your answer">
+        @error('answer')
             <div class="text-danger">
                 {{ $message }}
             </div>

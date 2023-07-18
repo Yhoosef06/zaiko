@@ -33,14 +33,17 @@
                         @enderror
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control @error('password') border-danger @enderror" name="password" id="password"
-                            placeholder="Password">
+                        <input type="password" class="form-control @error('password') border-danger @enderror"
+                            name="password" id="password" placeholder="Password">
                         <label for="floatingPassword">Password</label>
                         @error('password')
-                        <div class="text-danger">
-                            {{ $message }}
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        <div>
+                            <a href="{{ route('get_id_number') }}">Forgot Password?</a>
                         </div>
-                    @enderror
                     </div>
                     <div class="checkbox mb-3">
                         <label>
