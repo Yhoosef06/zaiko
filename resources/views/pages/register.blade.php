@@ -9,7 +9,7 @@
     <form class="form-signin" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <H1 class="header">Zaiko.</H1>
-        <H5>Register as a Student Account</H5>
+        <H5>Register as a Student</H5>
 
         <label for="inputIdNumber" class="sr-only">I.D. Number</label>
         <input type="" id="id_number" name="id_number" class="form-control @error('id_number') border-danger @enderror"
@@ -92,7 +92,7 @@
         </select>
 
         <label for="" class="sr-only">Your Answer:</label>
-        <input type="text" class="form-control" name="your_answer" id="your_answer">
+        <input type="text" class="form-control" name="your_answer" id="your_answer" placeholder="Your answer">
 
         {{-- <label for="" class="sr-only">Upload Front of ID</label>
         <input type="file" name="front_of_id" id="front_of_id"
@@ -115,6 +115,6 @@
         <hr>
         <a href="{{ route('signin.page') }}" class="btn btn-md btn-outline-success">Cancel</a>
         <button class="btn btn-md btn-success btn-block" type="submit">Submit</button>
-        <a href="{{ route('register-faculty') }}" class="btn btn-md btn-outline-dark">Register as a Faculty</a>
+        <a href="{{ route('register-faculty') }}" class="btn btn-md btn-dark">Register as a Faculty</a>
     </form>
 @endsection

@@ -67,6 +67,7 @@ class RegisterController extends Controller
                 'account_type' => 'student',
                 'account_status' => 'pending',
                 'department_id' => $request->department_id
+                
             ]);
 
             return redirect('/')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
