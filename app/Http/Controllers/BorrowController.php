@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\OrderItem;
 use App\Models\OrderItemTemp;
 use App\Models\ItemCategory;
+use App\Models\ItemLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -19,15 +20,16 @@ class BorrowController extends Controller
 
     public function borrowed()
     {   
-        $borrows = OrderItem::join('users', 'order_items.user_id', '=', 'users.id_number')
-                            ->join('orders', 'order_items.order_id', '=', 'orders.id')
-                            ->join('items', 'order_items.item_id', '=', 'items.id')
-                            ->join('item_categories', 'items.category_id', 'item_categories.id')
-                            ->select('orders.id as order_id','orders.date_submitted as date_submitted', 'users.*','order_items.id as order_item_id', 'order_items.*','items.id as item_id_borrow' ,'items.*','item_categories.*')
-                            ->where('order_items.status', '=', 'borrowed')
-                            ->get();
-       
+        $borrows = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        ->whereNotNull('orders.approval_date')
+        ->whereNotNull('orders.approved_by')
+        ->groupBy('orders.user_id')
+        ->get();
 
+        // echo '<pre>';
+        // echo print_r($borrows);
+        // echo '</pre>';
+        // exit;
         return view('pages.admin.borrowed')->with(compact('borrows'));
     }
 
@@ -241,38 +243,6 @@ class BorrowController extends Controller
         return response()->json($response);
     }
 
-    public function addOrder(Request $request)
-    {
-
-        $id_number = $request->idNumber;
-        $item_id = $request->item_id;
-        $serial_number = $request->serial_number;
-        $quantity = $request->quantity;
-        $return_date = $request->date_returned;
-        $user = auth()->user();
-        // dd($user);
-        if($user){
-            $firstName = $user->first_name;
-            $lastName = $user->last_name;
-            // echo $lastName;
-            // exit;
-
-            Item::where('serial_number','=',$serial_number)->update(['borrowed' => 'yes']);
-            $order = OrderItem::create([
-                'user_id' => $id_number,
-                'item_id' => $item_id,
-                'quantity' => $quantity,
-                'status' => 'borrowed',
-                'order_serial_number' => $serial_number,
-                'date_returned' => $return_date,
-                'released_by' => $lastName .' '. $firstName
-
-            ]);
-            Session::flash('success', 'Successfuly Added Borrowed Item.');
-            return redirect('pending');
-
-        }
-    }
 
     public function addRemark(Request $request)
     {
@@ -280,12 +250,13 @@ class BorrowController extends Controller
         $itemIdReturn = $request->itemIdReturn;
         $borrowOrderQuantity = $request->borrowOrderQuantity;
         $item_remark = $request->item_remark;
-        $status = $request->status;
         $quantity_return = $request->quantity_return;
         $categoryName = $request->categoryName;
         $user = auth()->user();
 
         if($user){
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
         if($categoryName == 'Tools'){
             if( $quantity_return < $borrowOrderQuantity){
                 $available = Item::find($itemIdReturn);
@@ -297,7 +268,7 @@ class BorrowController extends Controller
         
 
 
-                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'status' => $status, 'available_quantity' => $availableQuantity]);
+                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'available_quantity' => $availableQuantity]);
                 OrderItem::where('id',$orderItemReturn)->update([ 'status' => 'returned','order_quantity' => $quantity_return , 'remarks' => $item_remark, 'returned_to' => $lastName .', '. $firstName ]);
                 ItemLog::create([
                     'order_item_id' => $orderItemReturn,
@@ -310,15 +281,14 @@ class BorrowController extends Controller
                 Session::flash('success', 'Successfuly Return.');
                 return redirect('borrowed');
             }else{
-                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'status' => $status, 'available_quantity' => $availableQuantity]);
+                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'available_quantity' => $availableQuantity]);
                 OrderItem::where('id',$orderItemReturn)->update([ 'status' => 'returned','order_quantity' => $quantity_return , 'remarks' => $item_remark, 'returned_to' => $lastName .', '. $firstName ]);
                 Session::flash('success', 'Successfuly Return.');
                 return redirect('borrowed');
             }
         }else{
-            $firstName = $user->first_name;
-            $lastName = $user->last_name;
-            Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'status' => $status]);
+           
+            Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no']);
             OrderItem::where('order_serial_number','=',$serial_number)->update([ 'status' => 'returned', 'remarks' =>  $remark, 'returned_to' => $lastName .', '. $firstName ]);
     
             Session::flash('success', 'Successfuly Return.');
@@ -348,10 +318,31 @@ class BorrowController extends Controller
     
         return view('pages.admin.viewOrderAdmin')->with(compact('order'));
     }
+
+    public function viewBorrowItem($id){
+        $borrows = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('item_categories', 'items.category_id', 'item_categories.id')
+            ->select('orders.id as order_id', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
+            ->where('orders.id', $id)
+            ->where('order_items.status', 'borrowed')
+            ->get();
+
+         
+    //    echo '<pre>';
+    //     echo print_r($borrows);
+    //     echo '</pre>';
+     
+    //     exit;
+    
+        return view('pages.admin.viewBorrowItem')->with(compact('borrows'));
+
+    }
     
     public function viewOrderUser($id)
     {
-        $orders = Order::select('orders.id as order_id','item_categories.category_name','items.id as item_id', 'items.quantity as itemQuantity', 'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','items.brand', 'items.model', 'items.description', 'order_item_temps.quantity')
+        $orders = Order::select('orders.id as order_id','item_categories.category_name','items.id as item_id', 'items.available_quantity as itemQuantity', 'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','items.brand', 'items.model', 'items.description', 'order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
             ->join('items', 'order_item_temps.item_id', '=', 'items.id')
@@ -414,6 +405,49 @@ class BorrowController extends Controller
                     'order_quantity' => 1,
                     'status' => 'pending',
                     'order_serial_number' => $serialNumber
+                ]);
+
+        }
+        return response()->json(['success' => true]);
+   
+    }
+
+    public function userPendingBorrow(Request $request)
+    {
+        $userID = $request->userID;
+        $itemId = $request->itemId;
+        $serialNumber = $request->serialNumber;
+
+
+        $dataOrder = Order::where('user_id', $userID)
+            ->whereNotNull('date_submitted')
+            ->whereNull('date_returned')
+            ->get();
+        
+        if ($dataOrder->isEmpty()) {
+            $insertOrder = Order::create([
+                'user_id' => $userID,
+                'created_by' => 'user',
+                'date_submitted' => Carbon::today()
+            ]);
+            if ($insertOrder) {
+                $orderId = $insertOrder->id;
+                OrderItemTemp::create([
+                    'order_id' => $orderId,
+                    'item_id' => $itemId,
+                    'quantity' => 1,
+                    'temp_serial_number' => $serialNumber
+                ]);
+            
+               
+            }
+        }else{
+            $orderId = $dataOrder->first()->id;
+                OrderItemTemp::create([
+                    'order_id' => $orderId,
+                    'item_id' => $itemId,
+                    'quantity' => 1,
+                    'temp_serial_number' => $serialNumber   
                 ]);
 
         }
@@ -561,46 +595,72 @@ class BorrowController extends Controller
     {
         $orderId = $request->input('order_id');
         $date_return = $request->input('date_returned');
+        $student_id_added_user = $request->input('student_id_added_user');
         $serial_number = $request->input('user_serial_number');
         $quantity = $request->input('quantity');
         $itemId = $request->input('itemId');
         $user = auth()->user();
-    
+
+
         if ($user) {
             $firstName = $user->first_name;
             $lastName = $user->last_name;
-    
-            if (!empty($orderId)) {
-                if (!empty($date_return)) {
-                    Item::whereIn('serial_number', $serial_number)->update(['borrowed' => 'yes']);
-                    Order::whereIn('id', $orderId)->update([
-                        'date_returned' => $date_return,
-                        'approval_date' => Carbon::today(),
-                        'approved_by' => $firstName . ' ' . $lastName
-                    ]);
-    
-                    foreach ($orderId as $index => $order) {
-                        if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serial_number[$index])) {
-                            OrderItem::create([
-                                'order_id' => $order,
-                                'item_id' => $itemId[$index],
-                                'quantity' => $quantity[$index],
-                                'status' => 'borrowed',
-                                'order_serial_number' => $serial_number[$index],
+            if (!empty($date_return)) {
+                            Order::whereIn('id', $orderId)->update([
                                 'date_returned' => $date_return,
-                                'released_by' => $lastName . ' ' . $firstName
+                                'approval_date' => Carbon::today(),
+                                'approved_by' => $firstName . ' ' . $lastName
                             ]);
-                        }
+                    foreach ($itemId as $index => $id) {
+                        $item = Item::join('item_categories', 'items.category_id', '=', 'item_categories.id')
+                            ->where('items.id', $id)
+                            ->first();
+                            if ($item->category_name === 'Tools') {
+                                foreach ($orderId as $index => $order) {
+                                    if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serial_number[$index])) {
+                                        OrderItem::create([
+                                            'order_id' => $order,
+                                            'user_id' => $student_id_added_user,
+                                            'item_id' => $itemId[$index],
+                                            'order_quantity' => $quantity[$index],
+                                            'status' => 'borrowed',
+                                            'order_serial_number' => $serial_number[$index],
+                                            'date_returned' => $date_return,
+                                            'released_by' => $lastName . ' ' . $firstName
+                                        ]);
+                                    }
+                                }
+                            } else {
+                                foreach ($orderId as $index => $order) {
+                                    if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serial_number[$index])) {
+                                        OrderItem::create([
+                                            'order_id' => $order,
+                                            'user_id' => $student_id_added_user,
+                                            'item_id' => $itemId[$index],
+                                            'order_quantity' => $quantity[$index],
+                                            'status' => 'borrowed',
+                                            'order_serial_number' => $serial_number[$index],
+                                            'date_returned' => $date_return,
+                                            'released_by' => $lastName . ' ' . $firstName
+                                        ]);
+                                    }
+                                }
+                            
+                                Item::whereIn('id', $itemId)->update(['borrowed' => 'yes']);
+                            }
+                            
+                
+                        
+                        return response()->json(['success' => 'Successfully added borrowed item.']);
+                      
+                                        
+                      
                     }
-    
-                    return response()->json(['success' => 'Successfully added borrowed item.']);
-                } else {
-                    return response()->json(['error' => 'Error: Date not provided.']);
-                }
-            } else {
-                return response()->json(['error' => 'Error: No order selected.']);
+             }else {
+                return response()->json(['error' => 'Error: Date not provided.']);
             }
         }
+        
     }
     
     public function adminNewOrder(Request $request){
@@ -635,30 +695,46 @@ class BorrowController extends Controller
     public function userNewOrder(Request $request){
         $userId = $request->userId;
         $itemId = $request->itemId;
-        $orderId = $request->orderId;
         $brand = $request->brand;
         $model = $request->model;
         $description = $request->description;
         $serial = $request->serial;
-        $quantity = $request->quantity;
+        $orderQuantity = $request->quantity;
 
-        $user = auth()->user();
 
-        if($user){
-            $firstName = $user->first_name;
-            $lastName = $user->last_name;
-            Item::where('serial_number', $serial)->update(['borrowed' => 'yes']);
-            OrderItem::create([
-                'order_id' => $orderId,
-                'user_id' => $userId,
-                'item_id' => $itemId,
-                'quantity' => $quantity,
-                'status' => 'borrowed',
-                'released_by' => $firstName .' '. $lastName,
-                'order_serial_number' => $serial
-            ]);
-            return response()->json(['success' => 'Successfully added borrowed item.']);
-        }
+
+        $dataOrder = Order::where('user_id', $userId)
+            ->whereNotNull('date_submitted')
+            ->whereNull('date_returned')
+            ->get();
+
+            if ($dataOrder->isEmpty()) {
+                $insertOrder = Order::create([
+                    'user_id' => $userId,
+                    'created_by' => 'user',
+                    'date_submitted' => Carbon::today()
+                ]);
+        
+                if ($insertOrder) {
+                    $orderId = $insertOrder->id;
+                    OrderItemTemp::create([
+                        'order_id' => $orderId,
+                        'item_id' => $itemId,
+                        'quantity' => $orderQuantity,
+                        'temp_serial_number' => 'N/A'
+                    ]);
+                }
+            } else {
+                $orderId = $dataOrder->first()->id;
+                OrderItemTemp::create([
+                    'order_id' => $orderId,
+                    'item_id' => $itemId,
+                    'quantity' => $orderQuantity,
+                    'temp_serial_number' => 'N/A'
+                ]);
+            }
+            return response()->json(['success' => true]);
+ 
     }
 
 

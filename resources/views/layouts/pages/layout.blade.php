@@ -1600,18 +1600,29 @@ $(document).ready(function() {
             if (ui.item.value === "") {
                 event.preventDefault();
             } else {
-                event.preventDefault();
-                var orderID = $("#orderID").val();
-              
+
+                if (!ui.item.serialNumber || ui.item.serialNumber === 'N/A') {
+                    var userID = $("#student_id_added_user").val();
+                    var itemId = ui.item.id;
+
+                    console.log(userID);
+                    
+
+                    var url = '/add-item/' + itemId;
+                    
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+               
+                $('#viewOrderUserShowTable').show();
                 var tableRow = $('<tr>');
-                $('<td class="d-none">').text(ui.item.id).appendTo(tableRow);
-                $('<td class="d-none">').text(ui.item.itemID).appendTo(tableRow);
-                $('<td class="d-none">').text(orderID).appendTo(tableRow);
-                $('<td>').text(ui.item.brand).appendTo(tableRow);
-                $('<td>').text(ui.item.model).appendTo(tableRow);
-                $('<td>').text(ui.item.description).appendTo(tableRow);
-                $('<td>').text(ui.item.serialNumber).appendTo(tableRow);
-                var quantityInput = $('<input>').attr('type', 'number').attr('max', 1).val(1);
+                $('<td class="d-none">').text(userID).appendTo(tableRow);
+                $('<td class="d-none">').text(response.id).appendTo(tableRow);
+                $('<td>').text(response.brand).appendTo(tableRow);
+                $('<td>').text(response.model).appendTo(tableRow);
+                $('<td>').text(response.description).appendTo(tableRow);
+                var quantityInput = $('<input>').attr('type', 'number').attr('max', response.available_quantity).val(response.available_quantity);
                 $('<td>').append(quantityInput).appendTo(tableRow);
                 var buttonCell = $('<td>');
                 var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
@@ -1632,41 +1643,26 @@ $(document).ready(function() {
                     }
                 });
 
-                cancelButton.on('click', function() {
-                 
-                    tableRow.remove();
-                    Swal.fire({
-                    
-                        icon: 'success',
-                        title: 'Successfuly Removed',
-                        showConfirmButton: false,
-                        timer: 1500
-                        });
-                   
-                });
-
                 addButton.on('click', function() {
                    
-                    console.log('Add button clicked');
+                   
                     var userId = $(this).closest('tr').find('td:nth-child(1)').text();
                     var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
-                    var orderId = $(this).closest('tr').find('td:nth-child(3)').text();
-                    var brand = $(this).closest('tr').find('td:nth-child(4)').text();
-                    var model = $(this).closest('tr').find('td:nth-child(5)').text();
-                    var description = $(this).closest('tr').find('td:nth-child(6)').text();
-                    var serial = $(this).closest('tr').find('td:nth-child(7)').text();
-                    var quantity = $(this).closest('tr').find('input').val();
+                    var brand = $(this).closest('tr').find('td:nth-child(3)').text();
+                    var model = $(this).closest('tr').find('td:nth-child(4)').text();
+                    var description = $(this).closest('tr').find('td:nth-child(5)').text();
+                    var serial = $(this).closest('tr').find('td:nth-child(6)').text();
+                    var order_quantity  = $(this).closest('tr').find('input').val();
 
-               
+                 
                     var requestData = {
                     userId: userId,
                     itemId: itemId,
-                    orderId: orderId,
                     brand: brand,
                     model: model,
                     description: description,
                     serial: serial,
-                    quantity: quantity
+                    quantity: order_quantity
                     };
 
                     $.ajax({
@@ -1677,25 +1673,173 @@ $(document).ready(function() {
                     },
                     data: requestData,
                     success: function(response) {
-                        if(response.success){
-                            tableRow.remove();
-                            Swal.fire({
+                        
+                        Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Successfully Added',
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
+
+                        window.location.href = '/view-order-user/' + userId.trim();
+
+                        
+                      
+                    },
+                    error: function(xhr) {
+                       
+                        console.log(xhr.responseText);
+                    }
+                    });
+                });
+
+                cancelButton.on('click', function() {
+                    
+                    tableRow.remove();
+                    $('#viewOrderUserShowTable').hide();
+                    
+                });
+                },
+
+                    error: function(xhr) {
+                            // Handle the error
+                            console.log(xhr.responseText);
+                        }
+                    });
+
+                }else{
+                    var userID = $("#student_id_added_user").val();
+                    var itemId = ui.item.id;
+                    var serialNumber = ui.item.serialNumber;
+                   
+
+                    $.ajax({
+                    url: "{{ route('userPendingBorrow') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: {
+                        userID: userID,
+                        itemId: itemId,
+                        serialNumber: serialNumber
+                    },
+                    success: function(response) {
+                       
+                        Swal.fire({
                             position: 'top-end',
                             icon: 'success',
                             title: 'Successfully Added',
                             showConfirmButton: false,
                             timer: 1500
-                            });
-                        }
-                        
-
+                        });
+                        window.location.href = '/view-order-user/' + userID.trim();
                     },
                     error: function(xhr) {
                         // Handle the error
                         console.log(xhr.responseText);
                     }
-                    });
                 });
+
+                  
+                }
+                // event.preventDefault();
+                // var orderID = $("#orderID").val();
+              
+                // var tableRow = $('<tr>');
+                // $('<td class="d-none">').text(ui.item.id).appendTo(tableRow);
+                // $('<td class="d-none">').text(ui.item.itemID).appendTo(tableRow);
+                // $('<td class="d-none">').text(orderID).appendTo(tableRow);
+                // $('<td>').text(ui.item.brand).appendTo(tableRow);
+                // $('<td>').text(ui.item.model).appendTo(tableRow);
+                // $('<td>').text(ui.item.description).appendTo(tableRow);
+                // $('<td>').text(ui.item.serialNumber).appendTo(tableRow);
+                // var quantityInput = $('<input>').attr('type', 'number').attr('max', 1).val(1);
+                // $('<td>').append(quantityInput).appendTo(tableRow);
+                // var buttonCell = $('<td>');
+                // var addButton = $('<button class="btn btn-success">').text('Add').appendTo(buttonCell);
+                // var cancelButton = $('<button class="btn btn-danger">').text('Cancel').appendTo(buttonCell);
+                // tableRow.append(buttonCell);
+                // tableRow.appendTo('#orderUser tbody');
+
+                // quantityInput.on('input', function() {
+                //     var enteredValue = parseInt($(this).val());
+                //     var maxValue = parseInt($(this).attr('max'));
+                //     if (enteredValue > maxValue) {  
+                //     Swal.fire(
+                //         'Quantity cannot exceed ' + maxValue,
+                //         'Try input ' + maxValue + ' or below.',
+                //         'question'
+                //     );
+                //     $(this).val(maxValue);
+                //     }
+                // });
+
+                // cancelButton.on('click', function() {
+                 
+                //     tableRow.remove();
+                //     Swal.fire({
+                    
+                //         icon: 'success',
+                //         title: 'Successfuly Removed',
+                //         showConfirmButton: false,
+                //         timer: 1500
+                //         });
+                   
+                // });
+
+                // addButton.on('click', function() {
+                   
+                //     console.log('Add button clicked');
+                //     var userId = $(this).closest('tr').find('td:nth-child(1)').text();
+                //     var itemId = $(this).closest('tr').find('td:nth-child(2)').text();
+                //     var orderId = $(this).closest('tr').find('td:nth-child(3)').text();
+                //     var brand = $(this).closest('tr').find('td:nth-child(4)').text();
+                //     var model = $(this).closest('tr').find('td:nth-child(5)').text();
+                //     var description = $(this).closest('tr').find('td:nth-child(6)').text();
+                //     var serial = $(this).closest('tr').find('td:nth-child(7)').text();
+                //     var quantity = $(this).closest('tr').find('input').val();
+
+               
+                //     var requestData = {
+                //     userId: userId,
+                //     itemId: itemId,
+                //     orderId: orderId,
+                //     brand: brand,
+                //     model: model,
+                //     description: description,
+                //     serial: serial,
+                //     quantity: quantity
+                //     };
+
+                //     $.ajax({
+                //     url: "{{ route('userNewOrder') }}",
+                //     type: 'POST',
+                //     headers: {
+                //         'X-CSRF-TOKEN': csrfToken
+                //     },
+                //     data: requestData,
+                //     success: function(response) {
+                //         if(response.success){
+                //             tableRow.remove();
+                //             Swal.fire({
+                //             position: 'top-end',
+                //             icon: 'success',
+                //             title: 'Successfully Added',
+                //             showConfirmButton: false,
+                //             timer: 1500
+                //             });
+                //         }
+                        
+
+                //     },
+                //     error: function(xhr) {
+                //         // Handle the error
+                //         console.log(xhr.responseText);
+                //     }
+                //     });
+                // });
                
                 
             }
@@ -1761,8 +1905,17 @@ $(document).ready(function() {
             $('#submitFormUser').submit(function(event) {
                 event.preventDefault();
                 var formData = $(this).serialize();
-
-                $.ajax({
+                Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to make changes again!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, submit it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
                     url: "{{ route('submitUserBorrow') }}",
                     type: "POST",
                     data: formData,
@@ -1786,6 +1939,10 @@ $(document).ready(function() {
                         console.log(xhr.responseText);
                     }
                 });
+        }
+        })
+
+               
             });
         });
 

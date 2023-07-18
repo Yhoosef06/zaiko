@@ -1,214 +1,303 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-
-<section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Manage Borrowings</h1>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-</section>
-
-<section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-           
-            <!-- <form action="{{ route('download_borrowed_pdf', ['download' => 'pdf']) }}" method="POST"> -->
-              <!-- @csrf -->
-              <div class="card">
-                <div class="card-header row">
-                  <div class="col md-8">
-                    <h3 class="card-title"><strong>Borrowed Items</strong></h3>
-                  </div>
-                  <div class="col md-4 text-right">
-                    <Button type="submit" class="btn btn-success">Generate Report</Button>
-                  </div>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Manage Borrowings</h1>
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                <table id="borrowed" class="table table-bordered table-striped">
-                  <thead>
-                    <tr>
-                      <th>Order ID</th>
-                      <th>Date Borrowed</th>
-                      <th>Name</th>
-                      <th>Serial</th>
-                      <th>QTY Borrowed</th>
-                      <th>Brand</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($borrows as $borrow)
-                    <tr>
-                      <td>{{ $borrow->order_id }}</td>
-                      <td>{{ \Carbon\Carbon::parse($borrow->date_submitted )->format('F d, Y') }}</td>
-                      <td>{{ $borrow->last_name }}, {{$borrow->first_name}}</td>
-                      <td>{{ $borrow->order_serial_number }}</td>
-                      <td>{{ $borrow->order_quantity }}</td>
-                      <td>{{ $borrow->brand }}</td>
-                      <td>
-                        <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showBorrow{{$borrow->order_item_id}}"><i class="fa fa-eye"></i></button>
-                        <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#returnBorrow{{$borrow->order_item_id}}"><i class="fa fa-check"></i></button>
-                      </td>
-                    </tr>
-
-                    <div class="modal fade hide" id="showBorrow{{$borrow->order_item_id}}">
-                      <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h4 class="modal-title">{{ $borrow->last_name }}, {{$borrow->first_name}}</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                              <div class="row">
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label>ID Number: </label>
-                                  {{ $borrow->user_id }}
-                                </div>
-                              </div>
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label>Item Description: </label>
-                                  <span>
-                                    {{ $borrow->description }}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label>Category: </label>
-                                    {{ $borrow->category_name }}
-                                </div>
-                              </div>
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label>Brand: </label>
-                                 {{ $borrow->brand }}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label>Model: </label>
-                                  {{ $borrow->model }}
-                                </div>
-                              </div>
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label>Serial Number: </label>
-                                 {{ $borrow->order_serial_number }}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label>Date Return: </label>
-                                  {{ $borrow->date_returned }}
-                                </div>
-                              </div>
-                              
-                            </div>
-
-                          </div>
-                          <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                          </div>
-                        </div>
-                        <!-- /.modal-content -->
-                      </div>
-                      <!-- /.modal-dialog -->
-                    </div>
-
-
-                    <div class="modal fade hide" id="returnBorrow{{$borrow->order_item_id}}">
-                      <div class="modal-dialog modal-sm">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h4 class="modal-title">Add Remark</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                          <form method="POST" action="{{ route('addRemark') }}">
-                            @csrf
-                            <input type="hidden"  class="form-control" value="{{ $borrow->order_item_id }}" name="orderItemReturn">
-                            <input type="hidden"  class="form-control" value="{{ $borrow->item_id_borrow }}" name="itemIdReturn">
-                            <input type="hidden"  class="form-control" value="{{ $borrow->order_quantity }}" name="borrowOrderQuantity">
-                            <input type="hidden"  class="form-control" value="{{ $borrow->category_name }}" name="categoryName">
-                          <div class="form-group">
-                                      <label>Remarks</label>
-                                      <textarea class="form-control" rows="3" name="item_remark" placeholder="Enter ..."></textarea>
-                          </div>
-                          <div class="form-group">
-                                      <label>Status</label>
-                                      <select class="form-control" name="status">
-                                        <option value="Active">Active</option>
-                                        <option value="Obsolete">Obsolete</option>
-                                        <option value="Lost">Lost</option>
-                                        <option value="For Repair">For Repair</option>   
-                                      </select>
-                          </div>
-                          <div class="form-group">
-                            <label>Quantity</label>
-                            <select name="quantity_return" class="form-control">
-                              @for ($i = 1; $i <= $borrow->order_quantity; $i++)
-                                <option value="{{ $i }}" {{ $i == $borrow->order_quantity ? 'selected' : '' }}>
-                                  {{ $i }}
-                                </option>
-                              @endfor
-                            </select>
-                           
-                          </div>
-                          </div>
-                          <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
-                          </div>
-                          </form>
-                        </div>
-                    
-                      </div>
-                     
-                    </div>
-              
-                    
-                    @endforeach
-                  </tbody>
-              </table>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <a href="{{ route('borrowItem') }}" class="btn btn-primary" >
+                            <i class="fa fa-plus"> </i>
+                            Add to Borrow
+                        </a>
+                    </ol>
                 </div>
-                <!-- /.card-body -->
-              </div>
-            <!-- </form> -->
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
+            </div>
+        </div><!-- /.container-fluid -->
     </section>
 
 
+    <section class="content">
+        <div id="success-message"></div>
+        <div class="container-fluid">
+
+
+
+            <div class="row">
+                <div class="col-12 col-sm-12">
+                
+                   
+                    <div class="card-body">
+                  
+                            <div class="row">
+                                <div class="col-12">
+
+                                    <div class="card">
+                                    
+                                        <div class="card-body">
+                                            <table id="user-pending" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>                                         
+                                                        <th>Order ID</th>
+                                                        <th>Student Name</th>
+                                                        <th>Date Borrowed</th>
+                                                        <th>Option</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @foreach ($borrows as $borrow)
+
+                                          
+                                                    <tr>
+                                                        <td>{{ $borrow->id }}</td>
+                                                        <td>
+                                                            {{ $borrow->first_name }} {{ $borrow->last_name }}
+                                                        </td>
+                                                       
+                                                        <td> {{ \Carbon\Carbon::parse($borrow->date_submitted)->format('F d, Y') }}</td>
+                                                        <td>
+                                                            <a href="{{ route('view-borrow-item', $borrow->id) }}"
+                                                                class="btn btn-sm btn-primary" title="Disregard">
+                                                                view</a>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                
+                                                        
+                                                      
+
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    
+                                    </div>
+                                
+                                </div>
+                            
+                            </div>
+                          
+        
+                      
+                  
+                    <!-- /.card -->
+                  </div>
+                
+          
+              </div>
+
+
+
+            
+            {{-- <div class="row">
+                <div class="col-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><strong>Pending Items</strong></h3>
+                        </div>
+                      
+                        <div class="card-body">
+                            <table id="pending" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ORDERID</th>
+                                        <th>ID</th>
+                                        <th>Student Name</th>
+                                        <th>Date Submitted</th>
+                                        <th>Option</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach ($pendings as $pending)
+                                    @if ($pending->date_submitted)
+                                        <tr>
+                                            <td>{{ $pending->order_id }}</td>
+                                            <td>{{ $pending->user_id }}</td>
+                                            <td>
+                                                @foreach ($users as $user)
+                                                    @if ($user->id_number == $pending->user_id)
+                                                        {{ $user->first_name }} {{ $user->last_name }}
+                                                    @endif
+                                                @endforeach
+                                            </td>
+
+                                           
+                                                <td>{{ $pending->date_submitted }}</td>
+                                         
+                                            <td>
+                                                <a href="{{ route('view-order', $pending->order_id) }}"
+                                                    class="btn btn-sm btn-primary" title="Disregard">
+                                                    view</a>
+                                            </td>
+                                        </tr>
+                                        @endif
+
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                       
+                    </div>
+                 
+                </div>
+            
+            </div> --}}
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
 @endsection
 
+{{-- <div class="modal fade" id="addBorrow">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Borrow Item</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('addOrder') }}">
+                    @csrf
 
-    
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                <label>ID Number</label>
+                                <div id="user_id_container">
+                                    <input type="text" id="idNumber" name="idNumber" class="form-control"
+                                        placeholder="Enter ID Number here...." required>
+                                </div>
 
 
-      <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="profile" style="display: none;">
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" id="first_name" name="first_name" class="form-control" readOnly>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" readOnly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="search-serial-desc" style="display: none;">
+                        <div class="col-sm-12">
+
+                            <div class="form-group">
+                                <label>Search Item</label>
+                                <div id="search-item">
+                                    <input type="text" id="search_item" name="search_item" class="form-control"
+                                        placeholder="Search Item to Borrow - Serial Number or Item Description"
+                                        required>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row item-category" id="item-category" style="display: none;">
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                <label>Item Category</label>
+                                <input type="text" class="form-control" id="item_category" name="item_category"
+                                    required readOnly>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Serial Number</label>
+                                <input type="text" class="form-control" id="serial_number" name="serial_number"
+                                    readOnly>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row item-category" style="display: none;">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Brand</label>
+                                <input type="text" class="form-control" id="brand" name="brand" required
+                                    readOnly>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Model</label>
+                                <input type="text" class="form-control" id="model" name="model" required
+                                    readOnly>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row item-category" style="display: none;">
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                <label>Item Description</label>
+                                <input type="text" class="form-control" id="item_description"
+                                    name="item_description" readOnly>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Return Date</label>
+                                <input type="date" class="form-control" id="date_returned" name="date_returned">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row item-category" style="display: none;">
+                        <div class="col-sm-6" id="quantity-order">
+                            <div class="form-group">
+                                <label>Quantity</label>
+                                <input type="number" value="0" class="form-control" id="quantity"
+                                    name="quantity">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6" style="display: none;">
+                            <div class="form-group">
+                                <label>Item ID</label>
+                                <input type="text" class="form-control" id="item_id" name="item_id">
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+
+    </div>
+</div> --}}

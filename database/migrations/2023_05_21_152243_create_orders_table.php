@@ -21,6 +21,7 @@ class CreateOrdersTable extends Migration
             $table->date('approval_date')->nullable();
             $table->string('created_by')->nullable();
             $table->string('approved_by')->nullable();
+            $table->string('order_status')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id_number')->on('users');

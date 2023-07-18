@@ -17,7 +17,8 @@ class Order extends Model
         'date_returned',
         'created_by',
         'approval_date',
-        'approved_by'
+        'approved_by',
+        'order_status'
     ];
 
     public function orderItemTemp(): HasMany

@@ -38,7 +38,7 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 130px;">
+                    <div class="card-body table-responsive p-0" id="viewOrderUserShowTable" style="height: 130px; display:none;">
                       <table class="table table-head-fixed text-nowrap" id="orderUser">
                         <thead>
                           <tr>
@@ -72,13 +72,14 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 250px;">
+                    <div class="card-body table-responsive p-0" style="height: 400px;">
+                      
                         <form id="submitFormUser" method="POST">
                           @csrf
                           <table class="table table-head-fixed text-nowrap" id="submitUser">
                             <thead>
                               <tr>
-                                <th >ORDER ID</th>
+                                <th>ORDER ID</th>
                                 <th>Item ID</th>
                                 <th style="background-color:#28a745; color:aliceblue">Brand</th>
                                 <th style="background-color:#28a745; color:aliceblue">Model</th>
@@ -90,53 +91,94 @@
                             </thead>
                             <tbody>
                               @foreach ($orders as $item)
-                                @if ($item->category_name === 'Tools')
-                                  <tr>
-                                    <td ><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
-                                    <td ><input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}</td>
-                                    <td>{{ $item->brand }}</td>
-                                    <td>{{ $item->model }}</td>
-                                    <td>{{ $item->description }}</td>
-                                    <td><input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}</td>
-                                    <td>
-                                      <select name="quantity[]" class="form-control">
-                                        @for ($i = 1; $i <= $item->itemQuantity; $i++)
-                                          <option value="{{ $i }}" {{ $i == $item->order_quantity ? 'selected' : '' }}>
-                                            {{ $i }}
-                                          </option>
-                                        @endfor
-                                      </select>
-                                    </td>
-                                    <td> 
-                                      <a href="" class="btn btn-danger">Remove</a> 
-                                    </td>
-                                  </tr>
-                                @else
-                                  @for ($i = 1; $i <= $item->quantity; $i++)
-                                    <tr> 
-                                      <td ><input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}</td>
-                                      <td><input type="text" name="itemId[]" id="itemID_{{ $i }}"></td>
-                                      <td>{{ $item->brand }}</td>
-                                      <td>{{ $item->model }}</td>
-                                      <td>{{ $item->description }}</td>
-                                      <td>
-                                        <div id="user_serial_{{ $i }}">
-                                          <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control" required>
-                                        </div>
-                                      </td>
-                                      <td><input type="hidden" name="quantity[]" value="1">1</td>
-                                      <td> 
-                                        <a href="" class="btn btn-danger">Remove</a> 
-                                      </td>
-                                    </tr>
-                                  @endfor
-                                @endif
+                              @if ($item->category_name === 'Tools')
+                              <tr>
+                                <td>
+                                  <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                </td>
+                                <td>
+                                  <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
+                                </td>
+                                <td>{{ $item->brand }}</td>
+                                <td>{{ $item->model }}</td>
+                                <td>{{ $item->description }}</td>
+                                <td>
+                                  <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
+                                </td>
+                                <td>
+                                  <select name="quantity[]" class="form-control">
+                                    @for ($i = 1; $i <= $item->itemQuantity; $i++)
+                                    <option value="{{ $i }}" {{ $i == $item->temp_quantity ? 'selected' : '' }}>
+                                      {{ $i }}
+                                    </option>
+                                    @endfor
+                                  </select>
+                                </td>
+                                <td>
+                                  <a href="#" class="btn btn-danger">Remove</a>
+                                </td>
+                              </tr>
+                              @else
+                              @if (empty($item->temp_serial_number))
+                              @for ($i = 1; $i <= $item->temp_quantity; $i++)
+                              <tr>
+                                <td>
+                                  <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                </td>
+                                <td>
+                                  <input type="text" name="itemId[]" id="itemID_{{ $i }}">
+                                </td>
+                                <td>{{ $item->brand }}</td>
+                                <td>{{ $item->model }}</td>
+                                <td>{{ $item->description }}</td>
+                                <td>
+                                  <div id="user_serial_{{ $i }}">
+                                    <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control" required>
+                                  </div>
+                                </td>
+                                <td>
+                                  <input type="hidden" name="quantity[]" value="1">1
+                                </td>
+                                <td>
+                                  <a href="#" class="btn btn-danger">Remove</a>
+                                </td>
+                              </tr>
+                              @endfor
+                              @else
+                              <tr>
+                                <td>
+                                  <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                </td>
+                                <td>
+                                  <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
+                                </td>
+                                <td>{{ $item->brand }}</td>
+                                <td>{{ $item->model }}</td>
+                                <td>{{ $item->description }}</td>
+                                <td>
+                                  <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
+                                </td>
+                                <td>
+                                  <input type="hidden" name="quantity[]" value="1">1
+                                </td>
+                                <td>
+                                  <a href="#" class="btn btn-danger">Remove</a>
+                                </td>
+                              </tr>
+                              @endif
+                              @endif
                               @endforeach
                             </tbody>
                           </table>
+                          
                           <div class="row mb-2">
                             <div class="col-sm-6">
                               <input type="date" class="form-control" name="date_returned">
+                              <input type="text" id="student_id_added_user" name="student_id_added_user" value="@foreach($orders as $index => $item)
+                            @if($index === 0)
+                                {{$item->id_number}}
+                            @endif
+                        @endforeach" class="form-control" style="display:none;">
                             </div>
                             <div class="col-sm-6">
                               <button type="submit" class="btn btn-primary">Submit</button>
