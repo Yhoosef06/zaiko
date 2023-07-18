@@ -79,8 +79,8 @@
                           <table class="table table-head-fixed text-nowrap" id="submitUser">
                             <thead>
                               <tr>
-                                <th>ORDER ID</th>
-                                <th>Item ID</th>
+                                <th class="d-none">ORDER ID</th>
+                                <th class="d-none">Item ID</th>
                                 <th style="background-color:#28a745; color:aliceblue">Brand</th>
                                 <th style="background-color:#28a745; color:aliceblue">Model</th>
                                 <th style="background-color:#28a745; color:aliceblue">Description</th>
@@ -90,13 +90,14 @@
                               </tr>
                             </thead>
                             <tbody>
+                              {{-- @dd($orders); --}}
                               @foreach ($orders as $item)
                               @if ($item->category_name === 'Tools')
                               <tr>
-                                <td>
+                                <td  class="d-none">
                                   <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                 </td>
-                                <td>
+                                <td  class="d-none">
                                   <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
                                 </td>
                                 <td>{{ $item->brand }}</td>
@@ -122,10 +123,10 @@
                               @if (empty($item->temp_serial_number))
                               @for ($i = 1; $i <= $item->temp_quantity; $i++)
                               <tr>
-                                <td>
+                                <td  class="d-none">
                                   <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                 </td>
-                                <td>
+                                <td  class="d-none">
                                   <input type="text" name="itemId[]" id="itemID_{{ $i }}">
                                 </td>
                                 <td>{{ $item->brand }}</td>
@@ -146,10 +147,10 @@
                               @endfor
                               @else
                               <tr>
-                                <td>
+                                <td  class="d-none">
                                   <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                 </td>
-                                <td>
+                                <td  class="d-none">
                                   <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
                                 </td>
                                 <td>{{ $item->brand }}</td>
