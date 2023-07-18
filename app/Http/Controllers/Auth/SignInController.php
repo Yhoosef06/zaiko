@@ -14,15 +14,13 @@ class SignInController extends Controller
     }
 
     public function store(Request $request)
-    {   
+    {
         $input = $request->all();
-        $this->validate($request,[
+        $this->validate($request, [
             'id_number' => 'required',
             'password' => 'required'
         ]);
-        
-        
-        
+
         // $this->validate($request, [
         //     'id_number' => 'required',
         //     'password' => 'required'
@@ -40,28 +38,24 @@ class SignInController extends Controller
         // } else {
         //     dd('Student Account!');
         // }
-        
 
-        if (auth()->attempt(['id_number' => $input['id_number'], 'password' => $input['password']])){
-            if(auth()->user()->account_type == 'admin'){
+
+        if (auth()->attempt(['id_number' => $input['id_number'], 'password' => $input['password']])) {
+            if (auth()->user()->account_type == 'admin') {
                 return redirect()->route('admin.dashboard');
-            }else if(auth()->user()->account_type == 'reads'){
+            } else if (auth()->user()->account_type == 'reads') {
                 return redirect()->route('admin.dashboard');
-            }else if(auth()->user()->account_type == 'faculty'){
+            } else if (auth()->user()->account_type == 'faculty') {
                 return redirect()->route('admin.dashboard');
-            }else if(auth()->user()->account_type == 'student'){
-                if(auth()->user()->account_status == 'approved'){
+            } else if (auth()->user()->account_type == 'student') {
+                if (auth()->user()->account_status == 'approved') {
                     return redirect()->route('student.dashboard');
-                }else{
+                } else {
                     return redirect()->route('approval');
                 }
             }
         };
 
-        return back()->with('status', 'Invalid login details');
-
-
-        
+        return back()->with('status', 'Invalid Login Credentials');
     }
 }
-//as

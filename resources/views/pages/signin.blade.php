@@ -16,8 +16,12 @@
                 <form class="p-4 p-md-5 border rounded-3 bg-light" method="POST" action="{{ route('signin') }}">
 
                     @if (session('status'))
-                        <div class=" danger">
-                            <p>{{ session('status') }}</p>
+                        <div class="text-danger">
+                            <h5>{{ session('status') }}</h5>
+                        </div>
+                    @else
+                        <div>
+                            <p>{{ session('message') }}</p>
                         </div>
                     @endif
 

@@ -15,7 +15,7 @@
             <div class="col-md-10 mx-auto col-lg-5">
                     <div class="form-floating mb-3">
                         <h1 class="text-lg-start text-center">
-                            Please have the admin approve your account
+                            Please have the OIC approve your account.
                         </h1>
                        
                         

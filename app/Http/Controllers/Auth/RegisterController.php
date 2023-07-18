@@ -65,7 +65,7 @@ class RegisterController extends Controller
                 'security_question_id' => $request->question,
                 'answer' => $request->answer
             ]);
-            return redirect('/')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
+            return redirect('/')->with('message', 'Account successfully submitted! Please wait for approval from the officer-in-charge before you can login. Thank you.');
         } else {
             return redirect('register')->with('status', 'That ID number has already been registered');
         }
@@ -98,7 +98,7 @@ class RegisterController extends Controller
                 'answer' => $request->answer
             ]);
 
-            return redirect('/')->with('status', 'Please wait for approval from the officer-in-charge before you can login. Thank you.');
+            return redirect('/')->with('message', 'Account successfully submitted! Please wait for approval from the officer-in-charge before you can login. Thank you.');
         } else {
             return redirect('register-faculty')->with('status', 'That ID number has already been registered');
         }
