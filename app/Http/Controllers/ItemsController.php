@@ -122,7 +122,7 @@ class ItemsController extends Controller
                 'message' => 'Changes saved successfully',
             ]);
         } else {
-            Session::flash('success', 'Changes saved successfully.');
+            Session::flash('success', 'Changes for item # '.$item->id. ' saved successfully.');
             return redirect('list-of-items');
         }
     }
