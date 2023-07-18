@@ -22,11 +22,9 @@
                                         border-danger @enderror">
                                 <option value="option_select" disabled selected>Choose a room</option>
                                 @foreach ($rooms as $room)
-                                    @if (old('location') == $room->id)
-                                        <option value="{{ old('location') }}" selected>{{ $room->room_name }}</option>
-                                    @else
-                                        <option value="{{ $room->id }}">{{ $room->room_name }}</option>
-                                    @endif
+                                    <option value="{{ $room->id }}"
+                                        {{ old('location') == $room->id ? 'selected' : '' }}>{{ $room->room_name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('location')
@@ -50,13 +48,10 @@
                         border-danger @enderror">
                                 <option value="option_select" disabled selected>Select a category</option>
                                 @foreach ($itemCategories as $category)
-                                    @if (old('item_category'))
-                                        <option value="{{ old('item_category') }}" selected>{{ $category->category_name }}
-                                        </option>
-                                    @else
-                                        <option value="{{ $category->id }}">{{ $category->category_name }}
-                                        </option>
-                                    @endif
+                                    <option value="{{ $category->id }}"
+                                        {{ old('item_category') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->category_name }}
+                                    </option>
                                 @endforeach
                             </select>
 
@@ -352,7 +347,7 @@
                     dataType: 'json',
                     data: {
                         query: request
-                            .term 
+                            .term
                     },
                     success: function(data) {
                         var filteredData = $.grep(data, function(item) {
@@ -376,7 +371,7 @@
                     dataType: 'json',
                     data: {
                         query: request
-                            .term 
+                            .term
                     },
                     success: function(data) {
                         console.log(data);
@@ -425,7 +420,7 @@
         container.innerHTML = '';
 
         const quantity = parseInt(quantityField.value) || 0;
-        const errorMessage = container.dataset.errorMessage; 
+        const errorMessage = container.dataset.errorMessage;
         if (checkbox.checked) {
 
             const label = document.createElement('label');
@@ -556,7 +551,7 @@
                         .text(
                             category_name);
                     $('#item_category').append(newOption);
-                    
+
                     $('#item_category').val(category_name);
                 },
                 error: function(xhr) {
