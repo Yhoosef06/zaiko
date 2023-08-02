@@ -289,7 +289,7 @@ class BorrowController extends Controller
         }else{
            
             Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no']);
-            OrderItem::where('order_serial_number','=',$serial_number)->update([ 'status' => 'returned', 'remarks' =>  $remark, 'returned_to' => $lastName .', '. $firstName ]);
+            OrderItem::where('id','=',$orderItemReturn)->update([ 'status' => 'returned', 'remarks' =>  $item_remark, 'returned_to' => $lastName .', '. $firstName ]);
     
             Session::flash('success', 'Successfuly Return.');
             return redirect('borrowed');
