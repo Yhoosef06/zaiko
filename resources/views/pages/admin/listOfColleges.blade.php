@@ -6,13 +6,30 @@
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <i class="icon fas fa-exclamation-triangle"></i>{{ session('status') }}
         </div>
-    @endif  
+    @endif
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Colleges</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <a href="{{ route('borrowItem') }}" class="btn btn-primary" >
+                            <i class="fa fa-plus"> </i>
+                            Add a College
+                        </a>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
 
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-
 
                     <div class="card">
                         <div class="card-header">

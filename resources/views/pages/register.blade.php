@@ -104,28 +104,8 @@
                 {{ $message }}
             </div>
         @enderror
-
-        {{-- <label for="" class="sr-only">Upload Front of ID</label>
-        <input type="file" name="front_of_id" id="front_of_id"
-            class="form-control @error('front_of_id') border-danger @enderror" placeholder="Upload Front of ID">
-        @error('front_of_id')
-            <div class="text-danger">
-                {{ $message }}
-            </div>
-        @enderror
-
-        <label for="" class="sr-only">Upload Back of ID</label>
-        <input type="file" name="back_of_id" id="back_of_id"
-            class="form-control @error('back_of_id') border-danger @enderror" placeholder="Upload Back of ID">
-        @error('back_of_id')
-            <div class="text-danger">
-                {{ $message }}
-            </div>
-        @enderror --}}
-
         <hr>
         <a href="{{ route('signin.page') }}" class="btn btn-md btn-outline-success">Cancel</a>
         <button class="btn btn-md btn-success btn-block" type="submit">Submit</button>
-        <a href="{{ route('register-faculty') }}" class="btn btn-md btn-dark" >Register as a Faculty</a>
     </form>
 @endsection
