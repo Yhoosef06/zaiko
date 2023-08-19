@@ -3,14 +3,12 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="text-decoration-underline">Manage Users</h1>
-                </div>
+            <div class="text-right">
+                {{-- Adding distance from the top navigation bar --}}
+                <a href="http://" class="btn btn-success"> <i class="fa fa-plus"></i> Create an Account</a>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
-
 
     <section class="content">
         <div class="container-fluid">
@@ -88,19 +86,20 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                         <!-- /.card-body -->
                     </div>
                 </div><!-- /.container-fluid -->
+            </div>
+        </div>
     </section>
 
 
     <!-- Modal -->
     <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
         aria-labelledby="modal-item-details-label">
-        <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-dialog modal-m" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modal-item-details-label">User Info</h4>
@@ -108,7 +107,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body ml-2">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
@@ -136,7 +135,9 @@
                     '<p><strong>Last Name:</strong> ' + data.last_name + '</p>' +
                     '<p><strong>Account Type:</strong> ' + data.account_type + '</p>' +
                     '<p><strong>Account Status:</strong> ' + data.account_status + '</p>' +
-                    '<p><strong>Department:</strong> ' + data.departments.department_name + '</p>'
+                    '<p><strong>Role:</strong> ' + data.role + '</p>' +
+                    '<p><strong>Program/Department:</strong> ' + data.departments.department_name +
+                    '</p>'
                 );
                 // Update the "Edit" button link with the correct item ID
                 var editUrl = '{{ route('edit_user_info', ['id_number' => ':userId']) }}';

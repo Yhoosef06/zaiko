@@ -56,10 +56,9 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     {{-- display content --}}
     @yield('nav')
-
     <div class="wrapper">
-        <div class="content-wrapper">
-            @if (session('success'))
+        <div class="content-wrapper" style="background-color: #BECBC9;">
+            {{-- @if (session('success'))
                 <div class="alert alert-success alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <h5><i class="icon fas fa-check"></i> Success!</h5>
@@ -68,16 +67,11 @@
                 <!-- <div class="alert alert-success">
         {{ session('success') }}
     </div> -->
-            @endif
+            @endif --}}
             @yield('content-header')
             @yield('content')
         </div>
     </div>
-
-
-
-    @yield('footer')
-    @yield('script')
 </body>
 <!-- <script>
     @if (Session::has('success'))

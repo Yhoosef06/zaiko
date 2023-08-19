@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-dark navbar-light">
+<nav class="main-header navbar navbar-expand navbar-olive navbar-dark">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -55,18 +55,16 @@
                 <img src="dist/img/scs.png" class="img-circle" alt="User Image" width="25">
             </a>
         </li> --}}
-        <li class="nav-item">
-            {{-- <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Welcome</a> --}}
-            <span class="navbar-brand">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span>
+        <li class="nav-item text-bold">
+            <a class=" nav-link" href="#" tabindex="-1" aria-disabled="true">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</a>
         </li>
         <li class="nav-item">
             <form action="/logout" method="POST">
                 @csrf
-                <button class="btn btn-link text-white" href="{{ route('logout') }}" role="button">
+                <button class="btn nav-link" href="{{ route('logout') }}" role="button">
                     <strong>Logout</strong>
                 </button>
             </form>
-
         </li>
         <li class="nav-item">
         </li>

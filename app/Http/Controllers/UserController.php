@@ -97,7 +97,7 @@ class UserController extends Controller
                 'last_name' => $request->last_name,
                 'account_type' => $request->account_type,
                 'account_status' => $request->account_status,
-                'account_status' => $request->role,
+                'role' => $request->role,
                 'department_id' => $request->department_id,
                 'security_question_id' => $request->question,
                 'answer' => $request->answer,
