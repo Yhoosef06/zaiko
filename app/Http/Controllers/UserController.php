@@ -10,6 +10,7 @@ use App\Rules\MatchOldPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use App\Models\SecurityQuestion;
 
 class UserController extends Controller
 {
@@ -24,6 +25,7 @@ class UserController extends Controller
         if (Auth::user()->account_type == 'admin') {
             $users = User::all();
             $departments = Department::all();
+            
             return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
         } else {
             $user_dept_id = Auth::user()->department_id;
@@ -65,8 +67,10 @@ class UserController extends Controller
         $departments->each(function ($department) {
             $department->college_name = $department->college->college_name;
         });
+
+        $securityQuestions = SecurityQuestion::all();
         
-        return view('pages.admin.addUser')->with(compact('departments'));
+        return view('pages.admin.addUser')->with(compact('departments','securityQuestions'));
     }
 
     public function saveNewUser(Request $request)
@@ -93,7 +97,10 @@ class UserController extends Controller
                 'last_name' => $request->last_name,
                 'account_type' => $request->account_type,
                 'account_status' => $request->account_status,
+                'account_status' => $request->role,
                 'department_id' => $request->department_id,
+                'security_question_id' => $request->question,
+                'answer' => $request->answer,
                 'password' => Hash::make($request->password),
                 // 'front_of_id' => $request->file('front_of_id')->store(('ids')),
                 // 'back_of_id' => $request->file('back_of_id')->store(('ids')),
@@ -133,6 +140,7 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->account_type = $request->account_type;
         $user->account_status = $request->account_status;
+        $user->account_status = $request->role;
         $user->update();
 
         Session::flash('success', 'User ' . $id_number . ' has been updated.');

@@ -6,18 +6,21 @@
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
-    <div class="container m-2">
-        <div class="container col-lg-10 bg-light shadow-sm p-3">
-            <label for="adding new item">
-                <h2 class="text-decoration-underline">Adding New User</h2>
-            </label>
-            <form action="{{ route('save_new_user') }}" method="POST">
-                @csrf
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Adding New User</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form action="{{ route('save_new_user') }}" method="POST">
+            @csrf
+            <div class="card-body">
                 <div class="row">
                     <div class="col">
                         <label for="I.D. Number">I.D. Number:</label>
                         <input type="text" id="id_number" name="id_number" value="{{ old('id_number') }}"
-                            class="form-control col-sm-4 @error('id_number')
+                            class="form-control col-sm- @error('id_number')
                         border-danger
                         @enderror"
                             placeholder="I.D. Number">
@@ -51,34 +54,42 @@
 
                         <label for="account type">Account Type:</label>
                         <select id="account_type" name="account_type" class="form-control">
-                            <option value="student">Student</option>
-                            <option value="admin">Admin</option>
-                            <option value="faculty">Faculty</option>
-                            <option value="reads">Reads</option>
+                            <option value="Student">Student</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Faculty">Faculty</option>
+                            <option value="Reads">Reads</option>
                         </select>
 
                         <label for="account status">Account Status:</label>
                         <select id="account_status" name="account_status" class="form-control">
-                            <option value="approved">Approved</option>
-                            <option value="pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+
+                        <label for="account status">Role:</label>
+                        <select id="role" name="role" class="form-control">
+                            <option value="Borrower">Borrower</option>
+                            <option value="Manager">Manager</option>
                         </select>
                     </div>
 
                     <div class="col">
-                        <label for="Item name">College Department:</label>
+                        <label for="Item name">Program/Department:</label>
                         @if (isset($departments))
-                        <select id="department_id" name="department_id" class="form-control col-sm-8 @error('department_id') border-danger @enderror">
-                            <option value="" disabled selected>Select College Department</option>
-                            @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                                <optgroup label="{{ $collegeName }}">
-                                    @foreach ($departmentsGroup as $department)
-                                        <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
-                                            {{ $department->department_name }}
-                                        </option>
-                                    @endforeach
-                                </optgroup>
-                            @endforeach
-                        </select>
+                            <select id="department_id" name="department_id"
+                                class="form-control col-sm-8 @error('department_id') border-danger @enderror">
+                                <option value="" disabled selected>Select a Program/Department</option>
+                                @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                    <optgroup label="{{ $collegeName }}">
+                                        @foreach ($departmentsGroup as $department)
+                                            <option value="{{ $department->id }}"
+                                                {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                                                {{ $department->department_name }}
+                                            </option>
+                                        @endforeach
+                                    </optgroup>
+                                @endforeach
+                            </select>
                         @endif
 
                         @error('department_id')
@@ -107,13 +118,42 @@
                             </div>
                         @enderror
 
+                        <label for="Item name">Password Security Question:</label>
+                        <select name="question" id="question" class="form-control  @error('question') border-danger @enderror">
+                            <option value="">Select a security question</option>
+                            @foreach ($securityQuestions as $question)
+                                <option value="{{ $question->id }}"  
+                                    {{ old('question') == $question->id ? 'selected' : '' }}>{{ $question->question }}</option>
+                            @endforeach
+                        </select>
+                        @error('question')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                
+                        <label for="">Answer:</label>
+                        <input type="text" value="{{ old('answer') }}" name="answer" id="answer"
+                            class="form-control @error('answer') border-danger @enderror" placeholder="Your answer">
+                        @error('answer')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                         <hr>
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                         <Button type="submit" class="btn btn-success"
                             onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')">Save</Button>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+            <!-- /.card-body -->
+
+            {{-- <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div> --}}
+        </form>
     </div>
+    <!-- /.card -->
 @endsection
