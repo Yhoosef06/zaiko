@@ -32,6 +32,7 @@ class User extends Authenticatable
         'back_of_id',
         'account_type',
         'account_status',
+        'role',
         'department_id',
         'security_question_id',
         'answer'

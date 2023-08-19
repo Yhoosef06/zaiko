@@ -136,7 +136,7 @@
                     '<p><strong>Last Name:</strong> ' + data.last_name + '</p>' +
                     '<p><strong>Account Type:</strong> ' + data.account_type + '</p>' +
                     '<p><strong>Account Status:</strong> ' + data.account_status + '</p>' +
-                    '<p><strong>Department ID:</strong> ' + data.departments.department_name + '</p>'
+                    '<p><strong>Department:</strong> ' + data.departments.department_name + '</p>'
                 );
                 // Update the "Edit" button link with the correct item ID
                 var editUrl = '{{ route('edit_user_info', ['id_number' => ':userId']) }}';

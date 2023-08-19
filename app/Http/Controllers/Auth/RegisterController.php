@@ -12,7 +12,12 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    public function index()
+    public function selectRegistrationType()
+    {
+        return view('pages.selectRegistrationType');
+    }
+
+    public function studentRegistration()
     {
         $departments = Department::with('college')->get();
 
@@ -22,10 +27,10 @@ class RegisterController extends Controller
             $department->college_name = $department->college->college_name;
         });
 
-        return view('pages.register')->with(compact('departments', 'securityQuestions'));
+        return view('pages.registerStudent')->with(compact('departments', 'securityQuestions'));
     }
 
-    public function indexFaculty()
+    public function facultyRegistration()
     {
         $departments = Department::with('college')->get();
 
@@ -38,7 +43,7 @@ class RegisterController extends Controller
         return view('pages.registerFaculty')->with(compact('departments', 'securityQuestions'));
     }
 
-    public function store(Request $request)
+    public function storeStudent(Request $request)
     {
         // dd($request);
         $this->validate($request, [
@@ -67,7 +72,7 @@ class RegisterController extends Controller
             ]);
             return redirect('/')->with('message', 'Account successfully submitted! Please wait for approval from the officer-in-charge before you can login. Thank you.');
         } else {
-            return redirect('register')->with('status', 'That ID number has already been registered');
+            return redirect('student-registration')->with('status', 'That ID number has already been registered');
         }
     }
 
@@ -100,7 +105,7 @@ class RegisterController extends Controller
 
             return redirect('/')->with('message', 'Account successfully submitted! Please wait for approval from the officer-in-charge before you can login. Thank you.');
         } else {
-            return redirect('register-faculty')->with('status', 'That ID number has already been registered');
+            return redirect('faculty-registration')->with('status', 'That ID number has already been registered');
         }
     }
 }

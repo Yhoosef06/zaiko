@@ -6,7 +6,7 @@
             background-color: rgb(190, 203, 201);
         }
     </style>
-    <form class="form-signin" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
+    <form class="form-signin" action="{{ route('student_registration') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <H1 class="header">Zaiko.</H1>
         <H5>Register as a Student</H5>
@@ -43,10 +43,10 @@
             </div>
         @enderror
 
-        <label for="Item name">Degree Program:</label>
+        <label for="Item name">Program:</label>
         <select id="department_id" name="department_id"
             class="form-control col-sm-8 @error('department_id') border-danger @enderror">
-            <option value="" disabled selected>Select Degree Program</option>
+            <option value="" disabled selected>Select a Program</option>
             @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
                 <optgroup label="{{ $collegeName }}">
                     @foreach ($departmentsGroup as $department)

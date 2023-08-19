@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('account_type');
             $table->string('account_status');
+            $table->string('role');
             $table->unsignedBigInteger('security_question_id');
             $table->string('answer');
             $table->unsignedBigInteger('department_id');

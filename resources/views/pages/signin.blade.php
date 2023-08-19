@@ -56,7 +56,7 @@
                     </div>
                     <button class="w-100 btn btn-lg btn-success" type="submit">Sign In</button>
                     <hr>
-                    <a href="{{ route('register') }}" class="w-100 btn btn-lg btn-outline-success">Register</a>
+                    <a href="{{ route('select_registration_type') }}" class="w-100 btn btn-lg btn-outline-success">Register</a>
                 </form>
             </div>
         </div>

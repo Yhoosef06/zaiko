@@ -20,6 +20,8 @@ class CreateItemLogsTable extends Migration
             $table->integer('quantity');
             $table->string('mode');
             $table->date('date');
+            $table->string('room_from');
+            $table->string('room_to');
             $table->timestamps();
 
             $table->foreign('order_item_id')->references('id')->on('order_items');

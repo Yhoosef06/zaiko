@@ -36,13 +36,15 @@ Route::get('/qr-reader', function () {
     return view('qr-reader');
 });
 
+Route::get('/select-registration-type', [RegisterController::class, 'selectRegistrationType'])->name('select_registration_type');
+
 //for student
-Route::get('/register', [RegisterController::class, 'index'])->name('register');
-Route::post('/register', [RegisterController::class, 'store']);
+Route::get('/student-registration', [RegisterController::class, 'studentRegistration'])->name('student_registration');
+Route::post('/student-registration', [RegisterController::class, 'storeStudent']);
 
 //for faculty
-Route::get('/register-faculty', [RegisterController::class, 'indexFaculty'])->name('register-faculty');
-Route::post('/register-faculty', [RegisterController::class, 'storeFaculty']);
+Route::get('/faculty-registration', [RegisterController::class, 'facultyRegistration'])->name('faculty_registration');
+Route::post('/faculty-registration', [RegisterController::class, 'storeFaculty']);
 
 Route::get('/', [SignInController::class, 'index'])->name('signin.page');
 Route::post('/signin', [SignInController::class, 'store'])->name('signin');
@@ -205,16 +207,5 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             // Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
 
         });
-        // Route::get('/student-dashboard',[StudentController::class, 'index'])->name('student.dashboard');
     });
 });
-
-
-
-//unapproved
-// Route::middleware(['auth','account_status:for_approval'])->group(function(){
-//     Route::get('/approve', [PagesController::class,'approve'])->name('approval');
-// });
-
-// Route::get('/test',[PagesController::class,'test']);
-// });
