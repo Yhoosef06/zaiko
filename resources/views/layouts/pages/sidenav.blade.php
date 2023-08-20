@@ -341,7 +341,7 @@
                             <li class="nav-item">
                                 <a href="{{ route('add_user') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Add New Student</p>
+                                    <p>Add New User</p>
                                 </a>
                             </li>
                             <li class="nav-item">

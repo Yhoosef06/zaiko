@@ -56,10 +56,15 @@ Route::get('/security-question/{id_number}', [SecurityQuestionController::class,
 Route::get('/verify-security-question/{id_number}', [SecurityQuestionController::class, 'verifySecurityQuestion'])->name('verify_security_question');
 Route::post('/reset-password/{id_number}', [SecurityQuestionController::class, 'resetPassword'])->name('reset_password');
 
-// Route::group(['middleware' => ['auth']], function(){
-// Route::middleware(['user-role:admin'])->group(function(){
-//     Route::controller(PagesController::class)->group(function(){
-//         Route::get('/admin-dashboard','index')->name('admin.dashboard');
+//common
+Route::get('change-user-{id_number}-password', [UserController::class, 'changeUserPassword'])->name('change_user_password');
+Route::post('updating-user-{id_number}-password', [UserController::class, 'saveUserNewPassword'])->name('save_user_new_password');
+Route::get('profile-{id_number}', [UserController::class, 'viewProfile'])->name('view_profile');
+Route::get('edit-profile-{id_number}', [UserController::class, 'editProfile'])->name('edit_profile');
+Route::post('save-edited-profile-{id_number}', [UserController::class, 'saveEditedProfileInfo'])->name('save_edited_profile_info');
+Route::get('modify-security-question-{id_number}', [UserController::class, 'modifySecurityQuestion'])->name('modify_security_question');
+Route::post('save-modified-security-question-{id_number}', [UserController::class, 'saveModifiedSecurityQuestion'])->name('save_modified_security_question');
+
 //admin
 Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
@@ -92,8 +97,6 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('edit-user-{id_number}', [UserController::class, 'editUserInfo'])->name('edit_user_info');
     Route::put('updating-user-{id_number}', [UserController::class, 'saveEditedUserInfo'])->name('update_user_info');
     Route::post('deleting-user-{id_number}', [UserController::class, 'deleteUser'])->name('delete_user');
-    Route::get('change-user-{id_number}-password', [UserController::class, 'changeUserPassword'])->name('change_user_password');
-    Route::post('updating-user-{id_number}-password', [UserController::class, 'saveUserNewPassword'])->name('save_user_new_password');
 
     // FOR Colleges
     Route::get('colleges', [CollegeController::class, 'index'])->name('view_colleges');
@@ -201,7 +204,7 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             // Route::get('/test',[PagesController::class,'test'])->name('test');
 
             Route::post('/store-selected-category', 'App\Http\Controllers\CategoryController@storeSelectedCategory')->name('storeSelectedCategory');
-
+        
             // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
             // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
             // Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');

@@ -11,10 +11,23 @@
 
     <section class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
+            <div class="row justify-content-center">
+                <div class="col-10">
                     <div class="card">
                         <div class="card-header">
+
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
+                            @endif
+                            
                             <h3>Adding New User</h3>
                         </div>
                         <!-- /.card-header -->
@@ -60,22 +73,22 @@
 
                                         <label for="account type">Account Type:</label>
                                         <select id="account_type" name="account_type" class="form-control">
-                                            <option value="Student">student</option>
-                                            <option value="Admin">admin</option>
-                                            <option value="Faculty">faculty</option>
-                                            <option value="Reads">reads</option>
+                                            <option value="student">student</option>
+                                            <option value="admin">admin</option>
+                                            <option value="faculty">faculty</option>
+                                            <option value="reads">reads</option>
                                         </select>
 
                                         <label for="account status">Account Status:</label>
                                         <select id="account_status" name="account_status" class="form-control">
-                                            <option value="Approved">approved</option>
-                                            <option value="Pending">pending</option>
+                                            <option value="approved">approved</option>
+                                            <option value="pending">pending</option>
                                         </select>
 
                                         <label for="account status">Role:</label>
                                         <select id="role" name="role" class="form-control">
-                                            <option value="Borrower">borrower</option>
-                                            <option value="Manager">manager</option>
+                                            <option value="borrower">borrower</option>
+                                            <option value="manager">manager</option>
                                         </select>
                                     </div>
 
@@ -83,7 +96,7 @@
                                         <label for="Item name">Program/Department:</label>
                                         @if (isset($departments))
                                             <select id="department_id" name="department_id"
-                                                class="form-control col-sm-8 @error('department_id') border-danger @enderror">
+                                                class="form-control @error('department_id') border-danger @enderror">
                                                 <option value="" disabled selected>Select a Program/Department
                                                 </option>
                                                 @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
@@ -160,10 +173,6 @@
                                 </div>
                             </div>
                             <!-- /.card-body -->
-
-                            {{-- <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div> --}}
                         </form>
                     </div>
                 </div><!-- /.container-fluid -->

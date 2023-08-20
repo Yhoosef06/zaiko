@@ -1,104 +1,139 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    @if (session('status'))
-        <div class="container alert text-center text-success">
-            <h4>{{ session('status') }}</h4>
-        </div>
-    @endif
-
-    <div class="container col-lg-10 bg-light shadow-sm p-sm-2">
-        <label for="adding new item">
-            <h2>Edit User Info</h2>
-        </label>
-        <form action="{{ route('update_user_info', $user->id_number) }}" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="row">
-                <div class="col">
-                    <label for="I.D. Number">I.D. Number:</label>
-                    <input type="text" id="id_number" name="id_number" value="{{ $user->id_number }}" disabled
-                        class="form-control col-sm-4 @error('id_number')
-                            border-danger
-                            @enderror">
-                    <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br>
-                    @error('id_number')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-
-
-                    <label for="first name">First Name:</label>
-                    <input type="text" id="first_name" name="first_name"
-                        class="form-control col-sm-7 @error('first_name')
-                        border-danger @enderror"
-                        value="{{ $user->first_name }}" placeholder="Unit Number">
-                    @error('first_name')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-
-                    <label for="account type">Account Type:</label>
-                    <select id="account_type" name="account_type" class="form-control col-sm-7">
-                        @if ($user->account_type == 'student')
-                            <option value="student">Student</option>
-                            <option value="admin">Admin</option>
-                            <option value="reads">Reads</option>
-                            <option value="faculty">Faculty</option>
-                        @elseif ($user->account_type == 'admin')
-                            <option value="admin">Admin</option>
-                            <option value="student">Student</option>
-                            <option value="reads">Reads</option>
-                            <option value="faculty">Faculty</option>
-                        @elseif ($user->account_type == 'faculty')
-                            <option value="faculty">Faculty</option>
-                            <option value="reads">Reads</option>
-                            <option value="admin">Admin</option>
-                            <option value="student">Student</option>
-                        @else
-                            <option value="reads">Reads</option>
-                            <option value="admin">Admin</option>
-                            <option value="student">Student</option>
-                            <option value="faculty">Faculty</option>
-                        @endif
-                    </select>
-                </div>
-
-                <div class="col">
-                    <label for="last name">Last Name:</label>
-                    <input type="text" id="last_name" name="last_name"
-                        class="form-control col-sm-7 @error('last_name')
-                        border-danger @enderror"
-                        value="{{ $user->last_name }}" placeholder="Unit Number">
-                    @error('last_name')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-
-                    <label for="account status">Account Status:</label>
-                    <select id="account_status" name="account_status" class="form-control col-sm-7">
-                        @if ($user->account_status == 'pending')
-                            <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                        @else
-                            <option value="approved">Approved</option>
-                            <option value="pending">Pending</option>
-                        @endif
-                    </select>
-
-                    <a class="btn btn-dark" style="margin-top: 10px;"
-                        href="{{ route('change_user_password', $user->id_number) }}">Change Password</a>
-                    <hr>
-                    <a href="{{ route('view_users') }}" class="btn btn-outline-dark">Back</a>
-                    <Button type="submit" class="btn btn-success" onclick="return confirm('Do you wish to continue updating this user?')">Save Changes</Button>
-                </div>
-
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                {{-- Adding distance from the top navigation bar --}}
             </div>
-        </form>
-    </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-10">
+                    <div class="card">
+                        <div class="card-header">
+
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
+                            @endif
+
+                            <h3>Editing User's Information</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form action="{{ route('update_user_info', $user->id_number) }}" method="POST">
+                            @method('PUT')
+                            @csrf
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="I.D. Number">I.D. Number:</label>
+                                        <input type="text" id="id_number" name="id_number" value="{{ $user->id_number }}"
+                                            disabled class="form-control">
+                                        <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br>
+
+                                        <label for="first name">First Name:</label>
+                                        <input type="text" id="first_name" name="first_name"
+                                            class="form-control @error('first_name')
+                                            border-danger @enderror"
+                                            value="{{ $user->first_name }}" placeholder="Unit Number">
+
+                                        <label for="last name">Last Name:</label>
+                                        <input type="text" id="last_name" name="last_name"
+                                            class="form-control @error('last_name')
+                                                border-danger @enderror"
+                                            value="{{ $user->last_name }}">
+
+                                            <label>Program/Department:</label>
+                                            @if (isset($departments))
+                                                <select id="department_id" name="department_id"
+                                                    class="form-control @error('department_id') border-danger @enderror">
+                                                    <option value="{{$user->department_id}}" selected>{{$user->departments->department_name}}</option>
+                                                    @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                                        <optgroup label="{{ $collegeName }}">
+                                                            @foreach ($departmentsGroup as $department)
+                                                                <option value="{{ $department->id }}"
+                                                                    {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                                                                    {{ $department->department_name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </optgroup>
+                                                    @endforeach
+                                                </select>
+                                            @endif
+                                    </div>
+
+                                    <div class="col">
+
+                                        <label for="account type">Account Type:</label>
+                                        <select id="account_type" name="account_type" class="form-control">
+                                            @if ($user->account_type == 'student')
+                                                <option value="student">Student</option>
+                                                <option value="admin">Admin</option>
+                                                <option value="reads">Reads</option>
+                                                <option value="faculty">Faculty</option>
+                                            @elseif ($user->account_type == 'admin')
+                                                <option value="admin">Admin</option>
+                                                <option value="student">Student</option>
+                                                <option value="reads">Reads</option>
+                                                <option value="faculty">Faculty</option>
+                                            @elseif ($user->account_type == 'faculty')
+                                                <option value="faculty">Faculty</option>
+                                                <option value="reads">Reads</option>
+                                                <option value="admin">Admin</option>
+                                                <option value="student">Student</option>
+                                            @else
+                                                <option value="reads">Reads</option>
+                                                <option value="admin">Admin</option>
+                                                <option value="student">Student</option>
+                                                <option value="faculty">Faculty</option>
+                                            @endif
+                                        </select>
+
+                                        <label for="account status">Account Status:</label>
+                                        <select id="account_status" name="account_status" class="form-control">
+                                            @if ($user->account_status == 'pending')
+                                                <option value="pending">Pending</option>
+                                                <option value="approved">Approved</option>
+                                            @else
+                                                <option value="approved">Approved</option>
+                                                <option value="pending">Pending</option>
+                                            @endif
+                                        </select>
+
+                                        <label for="account status">Role:</label>
+                                        <select id="role" name="role" class="form-control">
+                                            <option value="borrower">borrower</option>
+                                            <option value="manager">manager</option>
+                                        </select>
+                                        <br>
+                                        <a href="{{ route('change_user_password', ['id_number' => $user->id_number]) }}" class="form-control btn btn-default">Change Password</a>
+                                        <hr>
+                                        <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
+                                        <Button type="submit" class="btn btn-success"
+                                            onclick="return confirm('Do you wish to continue?')">Save
+                                            Changes</Button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </div>
+        </div>
+    </section>
 @endsection
 
 <script>

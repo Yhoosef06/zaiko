@@ -4,8 +4,11 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="text-right">
+                <div class="col-sm-6">
+                    {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
+                </div>
                 {{-- Adding distance from the top navigation bar --}}
-                <a href="http://" class="btn btn-success"> <i class="fa fa-plus"></i> Create an Account</a>
+                <a href="{{ route('add_user') }}" class="btn btn-default"> <i class="fa fa-plus"></i> Create Account</a>
             </div>
         </div>
     </section>
@@ -17,7 +20,20 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><strong>List of All Users</strong></h3>
+
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
+                            @endif
+
+                            <h3>List of All Users</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

@@ -37,7 +37,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="listofitems" class="table table-bordered table-striped">
+                            <table id="listofcolleges" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>

@@ -19,9 +19,9 @@
                         <div class="text-danger">
                             <h5>{{ session('status') }}</h5>
                         </div>
-                    @else
+                    @elseif (session('message'))
                         <div>
-                            <p>{{ session('message') }}</p>
+                            <p><strong>{{ session('message') }}</strong></p>
                         </div>
                     @endif
 

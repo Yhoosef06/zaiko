@@ -11,7 +11,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="text-decoration-underline">Inventory</h1>
+                    {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
             </div>
         </div><!-- /.container-fluid -->
@@ -26,7 +26,7 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"> <strong>List of All Items</strong> </h3>
+                            <h3>List of All Items</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -111,7 +111,7 @@
     <!-- Modal -->
     <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
         aria-labelledby="modal-item-details-label">
-        <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-dialog modal-m" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modal-item-details-label">Item Details</h4>
@@ -218,7 +218,7 @@
                     '<p><strong>Aquisition Date:</strong> ' + acquisitionDateStr + '</p>' +
                     '<p><strong>Status:</strong> ' + data.status + '</p>' +
                     '<p><strong>Location:</strong> ' + data.room.room_name + '</p>' +
-                    '<p><strong>Invnetory Tag:</strong> ' + data.inventory_tag + '</p>'
+                    '<p><strong>Property Tag:</strong> ' + data.inventory_tag + '</p>'
                 );
                 $('#modal-item-details .modal-footer').html(
                     '<button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>' +
