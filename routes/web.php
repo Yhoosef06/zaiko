@@ -32,6 +32,8 @@ use App\Http\Controllers\SecurityQuestionController;
 |
 */
 
+Route::get('edit_college', [CollegeController::class, 'editCollege'])->name('modify_college');
+
 Route::get('/qr-reader', function () {
     return view('qr-reader');
 });
@@ -100,8 +102,12 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
 
     // FOR Colleges
     Route::get('colleges', [CollegeController::class, 'index'])->name('view_colleges');
+    Route::get('add-college', [CollegeController::class, 'addCollege'])->name('add_college');
+    Route::get('edit/college/{id}', [CollegeController::class, 'editCollege'])->name('edit_college');
+    Route::post('save-new-college', [CollegeController::class, 'saveNewCollege'])->name('save_new_college');
+    Route::post('save-edited-college/{id}', [CollegeController::class, 'saveEditedCollege'])->name('save_edited_college');
     Route::post('delete-college-{id}', [CollegeController::class, 'deleteCollege'])->name('delete_college');
-    
+
     //FOR Departments
     Route::get('departments', [DepartmentController::class, 'index'])->name('view_departments');
     Route::post('delete-department/{id}', [DepartmentController::class, 'deleteDepartment'])->name('delete_department');
@@ -115,7 +121,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
     Route::post('storing-new-category', [ItemCategoryController::class, 'storeNewCategory'])->name('store_new_category');
     Route::post('delete-category/{id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
-   
+
     //FOR BRAND
     Route::get('brands', [BrandController::class, 'index'])->name('view_brands');
     Route::post('storing-new-brand', [BrandController::class, 'storeNewBrand'])->name('store_new_brand');
@@ -145,7 +151,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::post('/submit-admin-order', [BorrowController::class, 'submitAdminOrder'])->name('submitAdminOrder');
     Route::post('/updateQuantity', [BorrowController::class, 'updateQuantity'])->name('updateQuantity');
 
-    
+
 
     // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
     Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
@@ -194,7 +200,7 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('remove.cart');
             Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
             Route::get('/history', [CartController::class, 'history'])->name('history');
-            Route::get('/pending-order', [CartController:: class, 'pending'])->name('pending-order');
+            Route::get('/pending-order', [CartController::class, 'pending'])->name('pending-order');
             Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
 
 
@@ -204,7 +210,7 @@ Route::middleware(['auth', 'user-role:student'])->group(function () {
             // Route::get('/test',[PagesController::class,'test'])->name('test');
 
             Route::post('/store-selected-category', 'App\Http\Controllers\CategoryController@storeSelectedCategory')->name('storeSelectedCategory');
-        
+
             // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
             // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
             // Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');

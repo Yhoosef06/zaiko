@@ -1,56 +1,52 @@
-@extends('layouts.pages.yields')
+<div class="container p-2">
+    <strong>I.D. Number:</strong> {{ $user->id_number }} <br>
+    <strong>First Name:</strong> {{ $user->first_name }} <br>
+    <strong>Last Name:</strong> {{ $user->last_name }} <br>
+    <strong>Program/Department:</strong> {{ $user->departments->department_name }} <br>
+    <strong>Account Type:</strong>
+    {{ $user->account_type === 'student' ? 'Student' : ($user->account_type === 'admin' ? 'Admin' : ($user->account_type === 'faculty' ? 'Faculty' : 'Reads')) }}
+    <br>
+    <strong>Status:</strong>
+    {{ $user->account_status === 'pending' ? 'Pending' : 'Approved' }}
+    <br>
+    <strong>Role:</strong>
+    {{ $user->role === 'borrower' ? 'Borrower' : 'Manager' }}
+    <br>
+    <hr>
+    <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
+        Close
+    </button>
+    <a href="#" data-toggle="modal" data-target="#modal-edit-user-info"
+        onclick="openEditUserModal('{{ $user->id_number }}')" class="btn btn-primary">Edit</a>
+</div>
 
-@section('content')
-    <div class="container shadow-lg">
-        <div class="container p-3">
-            <div class="row text-lg">
-                <div class="col">
-                    <strong>I.D. Number:</strong> {{ $user->id_number }} <br>
-                    <strong>First Name:</strong> {{ $user->first_name }} <br>
-                    <strong>Last Name:</strong> {{ $user->last_name }} <br>
-                    @if ($user->account_type == 'student')
-                        <strong>Account Type:</strong> {{ 'Student' }} <br>
-                    @elseif($user->account_type == 'admin')
-                        <strong>Account Type:</strong> {{ 'Admin' }} <br>
-                    @else
-                        <strong>Account Type:</strong> {{ 'Reads' }} <br>
-                    @endif
-
-                    @if ($user->account_status == 'pending')
-                        <strong>Account Status:</strong> {{ 'Pending' }} <br>
-                    @else
-                        <strong>Account Status:</strong> {{ 'Approved' }} <br>
-                    @endif
-                </div>
-
-                <div class="col">
-                    <strong>Front of ID:</strong><br>
-                    @if ($user->front_of_id === 'null')
-                        <div class="border border-1" style="height: 120px; width:100px">
-                            <p class="mt-5 text-sm text-center">
-                                No image.
-                            </p>
-                        </div>
-                    @else
-                        <img src="{{ asset('storage/ids/' . $user->id_number . 'frontID.jpg') }}"
-                            style="height:120px; width: 100px">
-                    @endif
-                    <br>
-                    <strong>Back of ID:</strong> <br>
-                    @if ($user->back_of_id === 'null')
-                        <div class="border border-1" style="height: 120px; width:100px">
-                            <p class="mt-5 text-sm text-center">
-                                No image.
-                            </p>
-                        </div>
-                    @else
-                        <img src="{{ asset('storage/ids/' . $user->id_number . 'backID.jpg') }}"
-                            style="height:120px; width: 100px">
-                    @endif
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="modal-edit-user-info" tabindex="-1" role="dialog"
+    aria-labelledby="modal-edit-user-info">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-edit-user-info">Edit User Information</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <hr>
-            <a href="{{ route('view_users') }}" class="btn btn-outline-dark">Back</a>
+            <div class="modal-body">
+            </div>
         </div>
     </div>
-@endsection
+</div>
+
+<script>
+    function openEditUserModal(userId) {
+        var modal = $('#modal-edit-user-info');
+        var url = "{{ route('edit_user_info', ['id_number' => ':userId']) }}".replace(':userId', userId);
+        // Clear previous content from the modal
+
+        modal.find('.modal-body').html('');
+
+        $.get(url, function(data) {
+            modal.find('.modal-body').html(data);
+        });
+    }
+</script>

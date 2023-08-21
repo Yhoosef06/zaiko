@@ -19,7 +19,7 @@
                     <a href="#" class="d-block">{{Auth::user()->first_name}}  {{Auth::user()->last_name}}</a>
                 @endauth --}}
         {{-- </div>
-        </div> --}} 
+        </div> --}}
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
@@ -49,8 +49,8 @@
                         <a href="{{ route('cart.list') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Cart <i class="bi bi-cart text-right"></i></p>
-                            @if($itemcount != 0)
-                            <span class="badge badge-danger right">{{ $itemcount }}</span>
+                            @if ($itemcount != 0)
+                                <span class="badge badge-danger right">{{ $itemcount }}</span>
                             @endif
                         </a>
                     </li>
@@ -66,7 +66,7 @@
                             <p>History <i class="bi bi-card-list"></i></p>
                         </a>
                     </li>
-                        {{-- <ul class="nav nav-treeview ml-4">
+                    {{-- <ul class="nav nav-treeview ml-4">
                             <li class="nav-item">
                                 <a href="{{ route('student.items') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -101,23 +101,29 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('add_item') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    Add New Item
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        Add New Item
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('view_items') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>View All Items</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>View All Items</p>
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('generate_report') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Generate Report</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Generate Report</p>
+                                    </div>
                                 </a>
                             </li>
                         </ul>
@@ -130,17 +136,21 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('add_user') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Add New User</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Add New User</p>
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('view_users') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>View All Users</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>View All Users</p>
+                                    </div>
                                 </a>
                             </li>
                         </ul>
@@ -153,24 +163,30 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('pending') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Pending</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Pending</p>
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('borrowed') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Borrowed Items</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Borrowed Items</p>
+                                    </div>
                                 </a>
                             </li>
 
                             <li class="nav-item">
                                 <a href="{{ route('returned') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Returned Items</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Returned Items</p>
+                                    </div>
                                 </a>
                             </li>
                         </ul>
@@ -184,40 +200,57 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
-                            
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{route('view_colleges')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Colleges</p>
+                                <a href="{{ route('view_colleges') }}" class="nav-link">
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Colleges</p>
+                                    </div>
                                 </a>
                             </li>
 
                             <li class="nav-item">
                                 <a href="{{ route('view_departments') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Departments</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Departments</p>
+                                    </div>
                                 </a>
                             </li>
 
                             <li class="nav-item">
                                 <a href="{{ route('view_rooms') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Rooms</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Rooms</p>
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('view_item_categories') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Item Categories</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Item Categories</p>
+                                    </div>
                                 </a>
                             </li>
-                            {{-- <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route('view_brands') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Brands</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Brands</p>
+                                    </div>
                                 </a>
-                            </li> --}}
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('view_brands') }}" class="nav-link">
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Models</p>
+                                    </div>
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
@@ -242,23 +275,29 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('add_item') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    Add New Item
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        Add New Item
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('view_items') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>View All Items</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>View All Items</p>
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('generate_report') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Generate Report</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Generate Report</p>
+                                    </div>
                                 </a>
                             </li>
                         </ul>
@@ -271,24 +310,29 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('pending') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Pending</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Pending</p>
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('borrowed') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Borrowed Items</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Borrowed Items</p>
+                                    </div>
                                 </a>
                             </li>
-
                             <li class="nav-item">
                                 <a href="{{ route('returned') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Returned Items</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Returned Items</p>
+                                    </div>
                                 </a>
                             </li>
                         </ul>
@@ -308,23 +352,29 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('add_item') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    Add New Item
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        Add New Item
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('view_items') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>View All Items</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>View All Items</p>
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('generate_report') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Generate Report</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Generate Report</p>
+                                    </div>
                                 </a>
                             </li>
                         </ul>
@@ -340,14 +390,18 @@
                         <ul class="nav nav-treeview ml-4">
                             <li class="nav-item">
                                 <a href="{{ route('add_user') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Add New User</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Add New Student</p>
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('view_users') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>View All Students</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>View All Students</p>
+                                    </div>
                                 </a>
                             </li>
                         </ul>
@@ -363,21 +417,27 @@
                         <ul class="nav nav-treeview ml-4">
                             <li class="nav-item">
                                 <a href="{{ route('pending') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Pending</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Pending</p>
+                                    </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('borrowed') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Borrowed Items</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Borrowed Items</p>
+                                    </div>
                                 </a>
                             </li>
 
                             <li class="nav-item">
                                 <a href="{{ route('returned') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Returned Items</p>
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Returned Items</p>
+                                    </div>
                                 </a>
                             </li>
                         </ul>

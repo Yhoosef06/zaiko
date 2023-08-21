@@ -8,7 +8,7 @@
                     {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
                 {{-- Adding distance from the top navigation bar --}}
-                <a href="{{ route('add_user') }}" class="btn btn-default"> <i class="fa fa-plus"></i> Create Account</a>
+                {{-- <a href="{{ route('add_user') }}" class="btn btn-default"> <i class="fa fa-plus"></i> Create Account</a> --}}
             </div>
         </div>
     </section>
@@ -33,7 +33,7 @@
                                 </div>
                             @endif
 
-                            <h3>List of All Users</h3>
+                            <h3>{{ Auth::user()->account_type == 'faculty' && Auth::user()->account_type == 'reads' ? 'Students' : 'Users' }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -84,8 +84,8 @@
                                             <td>{{ $user->departments->department_name }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-item-details"
-                                                    onclick="openItemModal('{{ $user->id_number }}')">
+                                                    data-target="#modal-user-info" data-toggle="tooltip" title='View'
+                                                    onclick="openViewUserModal('{{$user->id_number}}')">
                                                     <i class="fa fa-eye"></i>
                                                 </button>
 
@@ -113,12 +113,12 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
-        aria-labelledby="modal-item-details-label">
+    {{-- <div class="modal fade" id="modal-user-information" tabindex="-1" role="dialog"
+        aria-labelledby="modal-user-information">
         <div class="modal-dialog modal-m" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="modal-item-details-label">User Info</h4>
+                    <h4 class="modal-title" id="modal-user-information">User Information</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -127,8 +127,24 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    <a href="{{ route('edit_user_info', ['id_number' => $user->id_number]) }}"
+                    <a data-toggle="modal" data-target="#modal-edit-user-info" onclick="openEditUserModal()"
                         class="btn btn-primary">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+    <div class="modal fade" id="modal-user-info" tabindex="-1" role="dialog"
+        aria-labelledby="modal-user-info">
+        <div class="modal-dialog modal-m" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-user-info">{{  }}User Information</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
                 </div>
             </div>
         </div>
@@ -136,40 +152,51 @@
 @endsection
 
 <script>
-    function openItemModal(userId) {
-        // Send an AJAX request to fetch the item details
-        $.ajax({
-            url: 'view-user-' + userId,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                console.log(data);
-                // Populate the modal window with the item details
-                $('#modal-item-details .modal-body').html(
-                    '<p><strong>I.D. #:</strong> ' + data.id_number + '</p>' +
-                    '<p><strong>First Name:</strong> ' + data.first_name + '</p>' +
-                    '<p><strong>Last Name:</strong> ' + data.last_name + '</p>' +
-                    '<p><strong>Account Type:</strong> ' + data.account_type + '</p>' +
-                    '<p><strong>Account Status:</strong> ' + data.account_status + '</p>' +
-                    '<p><strong>Role:</strong> ' + data.role + '</p>' +
-                    '<p><strong>Program/Department:</strong> ' + data.departments.department_name +
-                    '</p>'
-                );
-                // Update the "Edit" button link with the correct item ID
-                var editUrl = '{{ route('edit_user_info', ['id_number' => ':userId']) }}';
-                editUrl = editUrl.replace(':userId', data.id_number);
-                $('#modal-item-details .modal-footer a').attr('href', editUrl);
-            },
-            error: function(xhr, status, error) {
-                // Display an error message if the AJAX request fails
-                $('#modal-item-details .modal-body').html(
-                    '<p>Failed to load item details.</p>' +
-                    '<p>Error: ' + error + '</p>'
-                );
-            }
-        });
+    // function openItemModal(userId) {
+    //     // Send an AJAX request to fetch the item details
+    //     $.ajax({
+    //         url: 'view-user-' + userId,
+    //         type: 'GET',
+    //         dataType: 'json',
+    //         success: function(data) {
+    //             console.log(data);
+    //             // Populate the modal window with the item details
+    //             $('#modal-user-information .modal-body').html(
+    //                 '<p><strong>I.D. #:</strong> ' + data.id_number + '</p>' +
+    //                 '<p><strong>First Name:</strong> ' + data.first_name + '</p>' +
+    //                 '<p><strong>Last Name:</strong> ' + data.last_name + '</p>' +
+    //                 '<p><strong>Account Type:</strong> ' + data.account_type + '</p>' +
+    //                 '<p><strong>Account Status:</strong> ' + data.account_status + '</p>' +
+    //                 '<p><strong>Role:</strong> ' + data.role + '</p>' +
+    //                 '<p><strong>Program/Department:</strong> ' + data.departments.department_name +
+    //                 '</p>'
+    //             );
+    //             // Update the "Edit" button link with the correct item ID
+    //             var editUrl = '{{ route('edit_user_info', ['id_number' => 'userId']) }}';
+    //             editUrl = editUrl.replace(':userId', data.id_number);
+    //             $('#modal-item-details .modal-footer a').attr('href', editUrl);
+    //         },
+    //         error: function(xhr, status, error) {
+    //             // Display an error message if the AJAX request fails
+    //             $('#modal-user-information .modal-body').html(
+    //                 '<p>Failed to load item details.</p>' +
+    //                 '<p>Error: ' + error + '</p>'
+    //             );
+    //         }
+    //     });
 
-        // Show the modal window
-        $('#modal-item-details').modal('hide');
+    //     // Show the modal window
+    //     $('#modal-item-details').modal('hide');
+    // }
+
+    function openViewUserModal(userId) {
+        var modal = $('#modal-user-info');
+        var url = "{{ route('view_user_info', ['id_number' => ':userId']) }}".replace(':userId', userId);
+        // Clear previous content from the modal
+        modal.find('.modal-body').html('');
+    
+        $.get(url, function(data) {
+            modal.find('.modal-body').html(data);
+        });
     }
 </script>

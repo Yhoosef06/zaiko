@@ -28,7 +28,7 @@
                                 </div>
                             @endif
                             
-                            <h3>Adding New User</h3>
+                            <h3>Adding New {{ Auth::user()->account_type == 'faculty'  ? 'Student' : 'User' }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->

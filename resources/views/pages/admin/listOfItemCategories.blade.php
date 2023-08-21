@@ -1,26 +1,25 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    {{-- <section class="content-header">
+    <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="text-right">
                 <div class="col-sm-6">
-                    <h1>Inventory</h1>
+                    {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
+                {{-- Adding distance from the top navigation bar --}}
+                {{-- <a href="{{ route('add_user') }}" class="btn btn-default"> <i class="fa fa-plus"></i> Create Account</a> --}}
             </div>
-        </div><!-- /.container-fluid -->
-    </section> --}}
-
+        </div>
+    </section>
 
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-
-
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"> <strong>List of All Categories</strong> </h3>
+                            <h3>Categories</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -44,7 +43,7 @@
                                                     onclick="openItemModal('{{ $item->id }}')">>
                                                     <i class="fa fa-eye"></i></a> --}}
                                                 {{-- {{ $item->id }} --}}
-{{-- 
+                                                {{-- 
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details"
                                                     onclick="openItemModal('{{ $category->id }}')">

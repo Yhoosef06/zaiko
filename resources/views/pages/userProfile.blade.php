@@ -87,7 +87,7 @@
                             <!-- /.card -->
                         </div>
                         <div>
-                            @if (Auth::user()->account_type == 'admin')
+                            @if (Auth::user()->account_type == 'admin' || Auth::user()->account_type == 'faculty')
                                 <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Back</a>
                             @else
                                 <a href="{{ route('student.dashboard') }}" class="btn btn-outline-dark">Back</a>

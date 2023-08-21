@@ -1,43 +1,45 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    @if (session('status'))
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <i class="icon fas fa-exclamation-triangle"></i>{{ session('status') }}
-        </div>
-    @endif
-
+    @php
+        use App\Http\Controllers\CollegeController;
+    @endphp
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="text-right">
                 <div class="col-sm-6">
-                    <h1>Colleges</h1>
+                    {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <a href="{{ route('borrowItem') }}" class="btn btn-primary" >
-                            <i class="fa fa-plus"> </i>
-                            Add a College
-                        </a>
-                    </ol>
-                </div>
+                {{-- Adding distance from the top navigation bar --}}
+                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addCollegeModal">
+                    <i class="fa fa-plus"></i> Add a College
+                </a>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"> <strong>List of All Colleges</strong> </h3>
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
+                            @endif
+                            <h3>Colleges</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="listofcolleges" class="table table-bordered table-striped">
+                            <table id="listofusers" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -46,23 +48,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     @foreach ($colleges as $college)
                                         <tr>
                                             <td>{{ $college->id }}</td>
                                             <td>{{ $college->college_name }}</td>
                                             <td>
-                                                {{-- <a href="{{ route('view_item_details', $item->id) }}"
-                                                    class="btn btn-sm btn-primary" class="btn btn-default"
-                                                    data-toggle="modal" data-target="#modal-sm"
-                                                    onclick="openItemModal('{{ $item->id }}')">>
-                                                    <i class="fa fa-eye"></i></a> --}}
-                                                {{-- {{ $item->id }} --}}
-
-                                                {{-- <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-item-details"
-                                                    onclick="openItemModal('{{ $college->id }}')">
-                                                    <i class="fa fa-eye"></i>
-                                                </button> --}}
+                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                    data-toggle="tooltip" title='Edit' data-target="#editCollegeModal"
+                                                    data-route="{{ route('edit_college', ['id' => $college->id]) }}"
+                                                    onclick="openEditCollegeModal({{ $college->id }}, $(this).data('route'))">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_college', $college->id) }}">
@@ -77,38 +74,71 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                         <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
+                </div><!-- /.container-fluid -->
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.container-fluid -->
     </section>
 
-    <!-- Modal -->
-    <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
-        aria-labelledby="modal-item-details-label">
-        <div class="modal-dialog modal-sm" role="document">
+    <div class="modal fade" id="addCollegeModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="modal-item-details-label">Item Details</h4>
+                    <h5 class="modal-title" id="addCollegeModalLabel">Adding a College</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    <a href="{{ route('edit_item_details', ['id' => $college->id]) }}" class="btn btn-primary">Edit</a>
+                    <!-- Content will be loaded here -->
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="editCollegeModal" tabindex="-1" role="dialog" aria-labelledby="editCollegeModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCollegeModalLabel">Edit College Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- This is where the content of the edit form will be loaded -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#addCollegeModal').on('show.bs.modal', function(event) {
+                var modal = $(this);
+
+                $.get("{{ route('add_college') }}", function(data) {
+                    modal.find('.modal-body').html(data);
+                });
+            });
+        });
+
+        function openEditCollegeModal(collegeId, route) {
+            var modal = $('#editCollegeModal');
+
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            // Send an AJAX request to fetch the edit view content
+            // for the specific college
+            $.get(route, {
+                college_id: collegeId
+            }, function(data) {
+                modal.find('.modal-body').html(data);
+            });
+        }
+    </script>
 @endsection

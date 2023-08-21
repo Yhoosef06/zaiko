@@ -27,9 +27,12 @@ class UserController extends Controller
             $departments = Department::all();
 
             return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
-        } else {
+        } else if(Auth::user()->account_type == 'faculty') {
             $user_dept_id = Auth::user()->department_id;
-            $users = User::where('department_id', $user_dept_id)->orderBy('id_number', 'DESC')->get();
+            $users = User::where('department_id', $user_dept_id)
+             ->where('account_type', 'student')
+             ->orderBy('id_number', 'DESC')
+             ->get();
             $departments = Department::all();
             return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
         }
@@ -49,7 +52,7 @@ class UserController extends Controller
     }
 
     public function viewUserInfo($id_number)
-    {
+    {   
         $user = User::find($id_number);
 
         $department = $user->departments->department_name;
@@ -57,7 +60,8 @@ class UserController extends Controller
         $user['department'] = $department;
 
         // dd($user);
-        return response()->json($user);
+        // return response()->json($user);
+        return view('pages.admin.viewUserInfo')->with(compact('user'));
     }
 
     public function addUser()

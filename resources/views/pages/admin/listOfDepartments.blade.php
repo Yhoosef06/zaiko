@@ -1,22 +1,36 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    @if (session('status'))
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <i class="icon fas fa-exclamation-triangle"></i>{{ session('status') }}
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="text-right">
+                <div class="col-sm-6">
+                    {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
+                </div>
+                {{-- Adding distance from the top navigation bar --}}
+                {{-- <a href="{{ route('add_user') }}" class="btn btn-default"> <i class="fa fa-plus"></i> Create Account</a> --}}
+            </div>
         </div>
-    @endif
+    </section>
 
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-
-
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"> <strong>List of All Colleges</strong> </h3>
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
+                            @endif
+                            <h3>Departments/Programs</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -74,25 +88,4 @@
         </div>
         <!-- /.container-fluid -->
     </section>
-
-    <!-- Modal -->
-    {{-- <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
-        aria-labelledby="modal-item-details-label">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modal-item-details-label">Item Details</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    <a href="{{ route('edit_item_details', ['id' => $college->id]) }}" class="btn btn-primary">Edit</a>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 @endsection

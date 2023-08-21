@@ -15,6 +15,58 @@ class CollegeController extends Controller
         return view('pages.admin.listOfColleges')->with(compact('colleges'));
     }
 
+    public function addCollege()
+    {
+        return view('pages.addCollege');
+    }
+
+    public function saveNewCollege(Request $request)
+    {
+        try {
+            $this->validate(
+                $request,
+                [
+                    'college_name' => 'required|unique:colleges,college_name',
+                ],
+            );
+
+            College::create([
+                'college_name' => $request->college_name,
+            ]);
+            return redirect()->route('view_colleges')->with('success', 'College added successfully!');
+        } catch (\Exception $e) {
+
+            return redirect()->route('view_colleges')->with('danger', 'An error occurred while adding the college.');
+        }
+    }
+
+    public function editCollege($id)
+    {
+        $college = College::find($id);
+        return view('pages.editCollege')->with(compact('college'));
+    }
+
+    public function saveEditedCollege(Request $request, $id)
+    {
+        try {
+            $college = College::find($id);
+
+            if (!$college) {
+                return redirect('colleges')->with('error', 'College not found.');
+            }
+
+            $college->update([
+                'college_name' => $request->college_name,
+                // Add other fields you want to update here
+            ]);
+
+            return redirect('colleges')->with('success', 'College edited successfully.');
+        } catch (\Exception $e) {
+            return redirect('colleges')->with('danger', 'An error occurred while editing the college.');
+        }
+    }
+
+
     public function deleteCollege($id)
     {
         try {
