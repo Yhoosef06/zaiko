@@ -8,5 +8,5 @@
         Close
     </button>
     <Button type="submit" class="btn btn-success"
-        onclick="return confirm('You are about to save changes to this college name. Do you wish to continue?')">Save Changes</Button>
+        onclick="return confirm('You are about to save changes. Do you wish to continue?')">Save Changes</Button>
 </form>

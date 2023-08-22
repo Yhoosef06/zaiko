@@ -21,12 +21,12 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modal-edit-user-info" tabindex="-1" role="dialog"
-    aria-labelledby="modal-edit-user-info">
+<div class="modal fade" id="modal-edit-user-info" tabindex="-1" role="dialog" aria-labelledby="modal-edit-user-info">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modal-edit-user-info">Edit User Information</h4>
+                <h4 class="modal-title" id="modal-edit-user-info">Edit
+                    {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }} Information</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -41,10 +41,10 @@
     function openEditUserModal(userId) {
         var modal = $('#modal-edit-user-info');
         var url = "{{ route('edit_user_info', ['id_number' => ':userId']) }}".replace(':userId', userId);
+        
         // Clear previous content from the modal
-
         modal.find('.modal-body').html('');
-
+     
         $.get(url, function(data) {
             modal.find('.modal-body').html(data);
         });

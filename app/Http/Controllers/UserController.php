@@ -6,6 +6,7 @@ use App\Models\College;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use App\Rules\MatchOldPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -27,12 +28,12 @@ class UserController extends Controller
             $departments = Department::all();
 
             return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
-        } else if(Auth::user()->account_type == 'faculty') {
+        } else if (Auth::user()->account_type == 'faculty') {
             $user_dept_id = Auth::user()->department_id;
             $users = User::where('department_id', $user_dept_id)
-             ->where('account_type', 'student')
-             ->orderBy('id_number', 'DESC')
-             ->get();
+                ->where('account_type', 'student')
+                ->orderBy('id_number', 'DESC')
+                ->get();
             $departments = Department::all();
             return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
         }
@@ -52,7 +53,7 @@ class UserController extends Controller
     }
 
     public function viewUserInfo($id_number)
-    {   
+    {
         $user = User::find($id_number);
 
         $department = $user->departments->department_name;
@@ -117,21 +118,30 @@ class UserController extends Controller
         }
     }
 
-    public function deleteUser(Request $request, $id_number)
+    public function deleteUser($id_number)
     {
-        $id = $request->id_number;
-        // echo $id;
-        // exit;
-        $user = User::find($id);
-        $user->delete();
-        Session::flash('success', 'Successfuly Removed User: ' . $id);
-        return redirect('list-of-users');
+        try {
+            $user = User::find($id_number);
+
+            $user->delete();
+
+            Session::flash('success', 'Account '. $id_number .' successfully removed.');
+            return redirect('list-of-users');
+        } catch (QueryException $e) {
+            // Check if the exception is due to a foreign key constraint violation
+            if ($e->getCode() === '23000') {
+                Session::flash('danger', 'Cannot remove college because it is referenced by other records.');
+            } else {
+                Session::flash('danger', 'An error occurred.');
+            }
+            return redirect('colleges');
+        }
     }
 
     public function editUserInfo($id_number)
     {
         $user = User::find($id_number);
-        
+
         $departments = Department::with('college')->get();
 
         $departments->each(function ($department) {
@@ -139,12 +149,11 @@ class UserController extends Controller
         });
 
 
-        return view('pages.admin.editUserInfo')->with(compact('user','departments'));
+        return view('pages.admin.editUserInfo')->with(compact('user', 'departments'));
     }
 
     public function saveEditedUserInfo(Request $request, $id_number)
     {
-
         $user = User::find($id_number);
         $user->id_number = $request->id_number;
         $user->first_name = $request->first_name;
@@ -162,7 +171,12 @@ class UserController extends Controller
     public function changeUserPassword($id_number)
     {
         $user = User::find($id_number);
-        return view('pages.admin.changeUserPassword')->with('user', $user);
+
+        if (Auth::user()->id_number == $id_number) {
+            return view('pages.admin.changeProfilePassword')->with('user', $user);
+        } else {
+            return view('pages.admin.changeUserPassword')->with('user', $user);
+        }
     }
 
     public function saveUserNewPassword(Request $request, $id_number)

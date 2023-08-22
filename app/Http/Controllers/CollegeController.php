@@ -74,14 +74,14 @@ class CollegeController extends Controller
 
             $college->delete();
 
-            Session::flash('success', 'Successfully Removed');
+            Session::flash('success', 'College name successfully removed');
             return redirect('colleges');
         } catch (QueryException $e) {
             // Check if the exception is due to a foreign key constraint violation
             if ($e->getCode() === '23000') {
-                Session::flash('status', 'Cannot remove college because it is referenced by other records.');
+                Session::flash('danger', 'Cannot remove college because it is referenced by other records.');
             } else {
-                Session::flash('status', 'An error occurred.');
+                Session::flash('danger', 'An error occurred.');
             }
             return redirect('colleges');
         }

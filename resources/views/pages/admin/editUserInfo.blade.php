@@ -85,20 +85,37 @@
                     <option value="manager">manager</option>
                 </select>
                 <br>
-                <a href="{{ route('change_user_password', ['id_number' => $user->id_number]) }}"
-                    class="form-control btn btn-default">Change Password</a>
+                <a href="#" data-toggle="modal" data-target="#modal-change-user-password"
+                    onclick="openEditUserPasswordModal('{{ $user->id_number }}')" class="form-control btn btn-default"
+                    target="_blank">Change Password</a>
                 <hr>
                 <button type="button" class="btn btn-dark" data-dismiss="modal">
                     Close
                 </button>
                 <Button type="submit" class="btn btn-success"
-                    onclick="return confirm('You have made changes this user. Do you wish to continue?')">Save
+                    onclick="return confirm('You are about to save changes. Do you wish to continue?')">Save
                     Changes</Button>
             </div>
         </div>
     </div>
     <!-- /.card-body -->
 </form>
+
+<div class="modal fade" id="modal-change-user-password" tabindex="-1" role="dialog"
+    aria-labelledby="modal-change-user-password">
+    <div class="modal-dialog modal-m" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-change-user-password">Change Password</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     function edit() {
@@ -107,5 +124,16 @@
         } else {
             document.getElementById("id_number").disabled = true;
         }
+    }
+
+    function openEditUserPasswordModal(userId) {
+        var modal = $('#modal-change-user-password');
+        var url = "{{ route('change_user_password', ['id_number' => ':userId']) }}".replace(':userId', userId);
+        // Clear previous content from the modal
+        modal.find('.modal-body').html('');
+
+        $.get(url, function(data) {
+            modal.find('.modal-body').html(data);
+        });
     }
 </script>

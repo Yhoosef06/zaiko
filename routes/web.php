@@ -110,16 +110,28 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
 
     //FOR Departments
     Route::get('departments', [DepartmentController::class, 'index'])->name('view_departments');
+    Route::get('add-department', [DepartmentController::class, 'addDepartment'])->name('add_department');
+    Route::post('save-new-department', [DepartmentController::class, 'saveNewDepartment'])->name('save_new_department');
+    Route::get('edit/department/{id}', [DepartmentController::class, 'editDepartment'])->name('edit_department');
+    Route::post('save-edited-department/{id}', [DepartmentController::class, 'saveEditedDepartment'])->name('save_edited_department');
     Route::post('delete-department/{id}', [DepartmentController::class, 'deleteDepartment'])->name('delete_department');
 
     // FOR ROOM
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
+    Route::get('add-room', [RoomController::class, 'addRoom'])->name('add_room');
+    Route::post('save-new-room', [RoomController::class, 'saveNewRoom'])->name('save_new_room');
     Route::post('storing-new-room', [RoomController::class, 'storeNewRoom'])->name('store_new_room');
+    Route::get('edit/room/{id}', [RoomController::class, 'editRoom'])->name('edit_room');
+    Route::post('save-edited-room/{id}', [RoomController::class, 'saveEditedRoom'])->name('save_edited_room');
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
 
     // FOR Item Category
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
+    Route::get('add-item-category', [ItemCategoryController::class, 'addItemCategory'])->name('add_item_category');
+    Route::get('edit/item-category/{id}', [ItemCategoryController::class, 'editItemCategory'])->name('edit_item_category');
+    Route::post('saving-new-category', [ItemCategoryController::class, 'saveNewCategory'])->name('save_new_category');
     Route::post('storing-new-category', [ItemCategoryController::class, 'storeNewCategory'])->name('store_new_category');
+    Route::post('save-edited-item-category/{id}', [ItemCategoryController::class, 'saveEditedItemCategory'])->name('save_edited_item_category');
     Route::post('delete-category/{id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
 
     //FOR BRAND

@@ -387,7 +387,7 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('add_user') }}" class="nav-link">
                                     <div class="ml-3">
@@ -414,7 +414,7 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview ml-4">
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('pending') }}" class="nav-link">
                                     <div class="ml-3">

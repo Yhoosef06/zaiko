@@ -8,7 +8,9 @@
                     {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
                 {{-- Adding distance from the top navigation bar --}}
-                {{-- <a href="{{ route('add_user') }}" class="btn btn-default"> <i class="fa fa-plus"></i> Create Account</a> --}}
+                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addItemCategoryModal">
+                    <i class="fa fa-plus"></i> Add a Item Category
+                </a>
             </div>
         </div>
     </section>
@@ -19,6 +21,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
+                            @endif
                             <h3>Categories</h3>
                         </div>
                         <!-- /.card-header -->
@@ -37,18 +50,12 @@
                                             <td>{{ $category->id }}</td>
                                             <td>{{ $category->category_name }}</td>
                                             <td>
-                                                {{-- <a href="{{ route('view_item_details', $item->id) }}"
-                                                    class="btn btn-sm btn-primary" class="btn btn-default"
-                                                    data-toggle="modal" data-target="#modal-sm"
-                                                    onclick="openItemModal('{{ $item->id }}')">>
-                                                    <i class="fa fa-eye"></i></a> --}}
-                                                {{-- {{ $item->id }} --}}
-                                                {{-- 
-                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-item-details"
-                                                    onclick="openItemModal('{{ $category->id }}')">
-                                                    <i class="fa fa-eye"></i>
-                                                </button> --}}
+                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                    data-toggle="tooltip" title='Edit'
+                                                    data-target="#editItemCategoryModal"
+                                                    onclick="openEditItemCategoryModal('{{ $category->id }}')">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_category', $category->id) }}">
@@ -76,4 +83,61 @@
         </div>
         <!-- /.container-fluid -->
     </section>
+
+    <div class="modal fade" id="addItemCategoryModal" tabindex="-1" aria-labelledby="addCollegeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCollegeModalLabel">Adding a Item Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editItemCategoryModal" tabindex="-1" aria-labelledby="addCollegeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCollegeModalLabel">Editing a Item Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#addItemCategoryModal').on('show.bs.modal', function(event) {
+                var modal = $(this);
+
+                $.get("{{ route('add_item_category') }}", function(data) {
+                    modal.find('.modal-body').html(data);
+                });
+            });
+        });
+
+        function openEditItemCategoryModal(categoryId) {
+            var modal = $('#editItemCategoryModal');
+            var url = "{{ route('edit_item_category', ['id' => ':categoryId']) }}".replace(':categoryId', categoryId);
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            $.get(url, function(data) {
+                modal.find('.modal-body').html(data);
+            });
+        }
+    </script>
 @endsection

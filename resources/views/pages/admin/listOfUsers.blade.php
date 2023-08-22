@@ -33,7 +33,7 @@
                                 </div>
                             @endif
 
-                            <h3>{{ Auth::user()->account_type == 'faculty' && Auth::user()->account_type == 'reads' ? 'Students' : 'Users' }}</h3>
+                            <h3>{{ Auth::user()->account_type == 'faculty' ? 'Students' : 'Users' }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -50,56 +50,57 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     @foreach ($users as $user)
-                                        <tr>
-                                            <td>{{ $user->id_number }}</td>
-                                            <td>{{ $user->first_name }} {{ $user->last_name }}</td>
-                                            @if ($user->account_type == 'student')
-                                                <td>{{ 'Student' }}</td>
-                                            @elseif ($user->account_type == 'admin')
-                                                <td>{{ 'Admin' }}</td>
-                                            @elseif($user->account_type == 'faculty')
-                                                <td>{{ 'Faculty' }}</td>
-                                            @else
-                                                <td>{{ 'READS' }}</td>
-                                            @endif
+                                        @if ($user->id_number != Auth::user()->id_number)
+                                            <tr>
+                                                <td>{{ $user->id_number }}</td>
+                                                <td>{{ $user->first_name }} {{ $user->last_name }}</td>
+                                                @if ($user->account_type == 'student')
+                                                    <td>{{ 'Student' }}</td>
+                                                @elseif ($user->account_type == 'admin')
+                                                    <td>{{ 'Admin' }}</td>
+                                                @elseif($user->account_type == 'faculty')
+                                                    <td>{{ 'Faculty' }}</td>
+                                                @else
+                                                    <td>{{ 'READS' }}</td>
+                                                @endif
 
-                                            @if ($user->account_type == 'student')
-                                                @if ($user->account_status == 'pending')
-                                                    <td><span class="bg-warning p-1 m-1"
-                                                            style="padding:10px">{{ 'Pending' }}</span>
-                                                    </td>
+                                                @if ($user->account_type == 'student')
+                                                    @if ($user->account_status == 'pending')
+                                                        <td><span class="bg-warning p-1 m-1"
+                                                                style="padding:10px">{{ 'Pending' }}</span>
+                                                        </td>
+                                                    @else
+                                                        <td><span class="bg-success p-1 m-1"
+                                                                style="padding:10px">{{ 'Approved' }}</span>
+                                                        </td>
+                                                    @endif
                                                 @else
                                                     <td><span class="bg-success p-1 m-1"
                                                             style="padding:10px">{{ 'Approved' }}</span>
                                                     </td>
                                                 @endif
-                                            @else
-                                                <td><span class="bg-success p-1 m-1"
-                                                        style="padding:10px">{{ 'Approved' }}</span>
+
+                                                <td>{{ $user->departments->department_name }}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                        data-target="#modal-user-info" data-toggle="tooltip" title='View'
+                                                        onclick="openViewUserModal('{{ $user->id_number }}')">
+                                                        <i class="fa fa-eye"></i>
+                                                    </button>
+
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_user', $user->id_number) }}">
+                                                        @csrf
+                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-danger show-alert-delete-item"
+                                                            data-toggle="tooltip" title='Delete'><i
+                                                                class="fa fa-trash"></i></button>
+                                                    </form>
                                                 </td>
-                                            @endif
-
-                                            <td>{{ $user->departments->department_name }}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-user-info" data-toggle="tooltip" title='View'
-                                                    onclick="openViewUserModal('{{$user->id_number}}')">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
-
-                                                <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_user', $user->id_number) }}">
-                                                    @csrf
-                                                    <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete'><i
-                                                            class="fa fa-trash"></i></button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -110,7 +111,6 @@
             </div>
         </div>
     </section>
-
 
     <!-- Modal -->
     {{-- <div class="modal fade" id="modal-user-information" tabindex="-1" role="dialog"
@@ -134,12 +134,12 @@
         </div>
     </div> --}}
 
-    <div class="modal fade" id="modal-user-info" tabindex="-1" role="dialog"
-        aria-labelledby="modal-user-info">
+    <div class="modal fade" id="modal-user-info" tabindex="-1" role="dialog" aria-labelledby="modal-user-info">
         <div class="modal-dialog modal-m" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="modal-user-info">{{  }}User Information</h4>
+                    <h4 class="modal-title" id="modal-user-info">
+                        {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }} Information</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -194,7 +194,7 @@
         var url = "{{ route('view_user_info', ['id_number' => ':userId']) }}".replace(':userId', userId);
         // Clear previous content from the modal
         modal.find('.modal-body').html('');
-    
+
         $.get(url, function(data) {
             modal.find('.modal-body').html(data);
         });

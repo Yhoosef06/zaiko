@@ -8,7 +8,9 @@
                     {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
                 {{-- Adding distance from the top navigation bar --}}
-                {{-- <a href="{{ route('add_user') }}" class="btn btn-default"> <i class="fa fa-plus"></i> Create Account</a> --}}
+                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addRoomModal">
+                    <i class="fa fa-plus"></i> Add a Room
+                </a>
             </div>
         </div>
     </section>
@@ -50,18 +52,12 @@
                                             <td>{{ $room->room_name }}</td>
                                             <td>{{ $room->department->department_name }}</td>
                                             <td>
-                                                {{-- <a href="{{ route('view_item_details', $item->id) }}"
-                                                    class="btn btn-sm btn-primary" class="btn btn-default"
-                                                    data-toggle="modal" data-target="#modal-sm"
-                                                    onclick="openItemModal('{{ $item->id }}')">>
-                                                    <i class="fa fa-eye"></i></a> --}}
-                                                {{-- {{ $item->id }} --}}
-
-                                                {{-- <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-item-details"
-                                                    onclick="openItemModal('{{ $room->id }}')">
-                                                    <i class="fa fa-eye"></i>
-                                                </button> --}}
+                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                    data-toggle="tooltip" title='Edit' data-target="#editRoomModal"
+                                                    data-route="{{ route('edit_room', ['id' => $room->id]) }}"
+                                                    onclick="openEditRoomModal({{ $room->id }}, $(this).data('route'))">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
 
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_room', $room->id) }}">
@@ -89,4 +85,62 @@
         </div>
         <!-- /.container-fluid -->
     </section>
+
+    <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRoomModalLabel">Adding a Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editRoomModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRoomModalLabel">Editing a Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#addRoomModal').on('show.bs.modal', function(event) {
+                var modal = $(this);
+
+                $.get("{{ route('add_room') }}", function(data) {
+                    modal.find('.modal-body').html(data);
+                });
+            });
+        });
+
+        function openEditRoomModal(roomId, route) {
+            var modal = $('#editRoomModal');
+
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            // Send an AJAX request to fetch the edit view content
+            // for the specific college
+            $.get(route, {
+                room_id: roomId
+            }, function(data) {
+                modal.find('.modal-body').html(data);
+            });
+        }
+    </script>
 @endsection
