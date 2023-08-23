@@ -83,14 +83,14 @@ class DepartmentController extends Controller
 
             $department->delete();
 
-            Session::flash('success', 'Successfully Removed');
+            Session::flash('success', 'Department/Program Successfully Removed');
             return redirect('departments');
         } catch (QueryException $e) {
             // Check if the exception is due to a foreign key constraint violation
             if ($e->getCode() === '23000') {
-                Session::flash('status', 'Cannot remove department because it is referenced by other records.');
+                Session::flash('danger', 'Cannot remove department because it is referenced by other records.');
             } else {
-                Session::flash('status', 'An error occurred.');
+                Session::flash('danger', 'An error occurred.');
             }
             return redirect('departments');
         }

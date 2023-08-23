@@ -8,8 +8,8 @@
                     {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
                 {{-- Adding distance from the top navigation bar --}}
-                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addBrandModal">
-                    <i class="fa fa-plus"></i> Add a Brand
+                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addModelModal">
+                    <i class="fa fa-plus"></i> Add a Model
                 </a>
             </div>
         </div>
@@ -40,25 +40,27 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Brand Name</th>
+                                        <th>Model Name</th>
+                                        <th>Brand</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($brands as $brand)
+                                    @foreach ($models as $model)
                                         <tr>
-                                            <td>{{ $brand->id }}</td>
-                                            <td>{{ $brand->brand_name }}</td>
+                                            <td>{{ $model->id }}</td>
+                                            <td>{{ $model->model_name }}</td>
+                                            <td>{{ $model->brand->brand_name}}</td>
                                             <td>
                                                 <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-toggle="tooltip" title='Edit' data-target="#editBrandModal"
-                                                    data-route="{{ route('edit_brand', ['id' => $brand->id]) }}"
-                                                    onclick="openEditBrandModal({{ $brand->id }}, $(this).data('route'))">
+                                                    data-toggle="tooltip" title='Edit' data-target="#editModelModal"
+                                                    data-route="{{ route('edit_model', ['id' => $model->id]) }}"
+                                                    onclick="openEditModelModal({{ $model->id }}, $(this).data('route'))">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
 
                                                 <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_brand', $brand->id) }}">
+                                                    action="{{ route('delete_model', $model->id) }}">
                                                     @csrf
                                                     <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                     <button type="submit"
@@ -84,11 +86,11 @@
         <!-- /.container-fluid -->
     </section>
 
-    <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModelModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addBrandModalLabel">Adding a Brand</h5>
+                    <h5 class="modal-title" id="addModelModalLabel">Adding a Model</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -100,11 +102,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editModelModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editBrandModalLabel">Editing a Brand</h5>
+                    <h5 class="modal-title" id="editModelModalLabel">Editing a Model</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -117,17 +119,17 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('#addBrandModal').on('show.bs.modal', function(event) {
+            $('#addModelModal').on('show.bs.modal', function(event) {
                 var modal = $(this);
 
-                $.get("{{ route('add_brand') }}", function(data) {
+                $.get("{{ route('add_model') }}", function(data) {
                     modal.find('.modal-body').html(data);
                 });
             });
         });
 
-        function openEditBrandModal(brandId, route) {
-            var modal = $('#editBrandModal');
+        function openEditModelModal(brandId, route) {
+            var modal = $('#editModelModal');
 
             // Clear previous content from the modal
             modal.find('.modal-body').html('');

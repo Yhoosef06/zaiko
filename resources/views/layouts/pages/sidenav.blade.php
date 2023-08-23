@@ -1,4 +1,10 @@
 <!-- Main Sidebar Container -->
+<style>
+    .sidebar,
+    .brand-link {
+        background-color: rgb(29, 44, 29);
+    }
+</style>
 <aside class="main-sidebar sidebar-dark-olive elevation-4">
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
@@ -244,7 +250,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('view_brands') }}" class="nav-link">
+                                <a href="{{ route('view_models') }}" class="nav-link">
                                     <div class="ml-3">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Models</p>
@@ -306,21 +312,21 @@
                         <a href="#" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
-                                Manage Borrowings
+                                Borrow Items
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ route('pending') }}" class="nav-link">
+                                <a href="#" class="nav-link">
                                     <div class="ml-3">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Pending</p>
+                                        <p>Browse Items</p>
                                     </div>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('borrowed') }}" class="nav-link">
+                                <a href="#" class="nav-link">
                                     <div class="ml-3">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Borrowed Items</p>
@@ -328,15 +334,52 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('returned') }}" class="nav-link">
+                                <a href="#" class="nav-link">
                                     <div class="ml-3">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Returned Items</p>
+                                        <p>History</p>
                                     </div>
                                 </a>
                             </li>
                         </ul>
                     </li>
+                    @if (Auth::user()->role == 'manager')
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>
+                                    Manage Borrowings
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('pending') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Pending</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('borrowed') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Borrowed Items</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('returned') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Returned Items</p>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
                 @elseif (Auth::user()->account_type == 'faculty')
                     <li class="nav-item">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
@@ -410,38 +453,74 @@
                         <a href="#" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
-                                Manage Borrowings
+                                Borrow Items
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ route('pending') }}" class="nav-link">
+                                <a href="#" class="nav-link">
                                     <div class="ml-3">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Pending</p>
+                                        <p>Browse Items</p>
                                     </div>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('borrowed') }}" class="nav-link">
+                                <a href="#" class="nav-link">
                                     <div class="ml-3">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Borrowed Items</p>
                                     </div>
                                 </a>
                             </li>
-
                             <li class="nav-item">
-                                <a href="{{ route('returned') }}" class="nav-link">
+                                <a href="#" class="nav-link">
                                     <div class="ml-3">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Returned Items</p>
+                                        <p>History</p>
                                     </div>
                                 </a>
                             </li>
                         </ul>
                     </li>
+                    @if (Auth::user()->role == 'manager')
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>
+                                    Manage Borrowings
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('pending') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Pending</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('borrowed') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Borrowed Items</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('returned') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Returned Items</p>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
                 @endif
             </ul>
         </nav>

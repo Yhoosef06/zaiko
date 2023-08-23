@@ -74,7 +74,7 @@ class CollegeController extends Controller
 
             $college->delete();
 
-            Session::flash('success', 'College name successfully removed');
+            Session::flash('success', 'College successfully removed');
             return redirect('colleges');
         } catch (QueryException $e) {
             // Check if the exception is due to a foreign key constraint violation

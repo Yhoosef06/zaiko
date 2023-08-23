@@ -12,6 +12,7 @@ use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\ModelsController;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ReferenceController;
@@ -136,7 +137,20 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
 
     //FOR BRAND
     Route::get('brands', [BrandController::class, 'index'])->name('view_brands');
+    Route::get('add-brand', [BrandController::class, 'addBrand'])->name('add_brand');
+    Route::post('save-new-brand', [BrandController::class, 'saveNewBrand'])->name('save_new_brand');
     Route::post('storing-new-brand', [BrandController::class, 'storeNewBrand'])->name('store_new_brand');
+    Route::get('edit/brand/{id}', [BrandController::class, 'editBrand'])->name('edit_brand');
+    Route::post('save-edited-brand/{id}', [BrandController::class, 'saveEditedBrand'])->name('save_edited_brand');
+    Route::post('delete-brand/{id}', [BrandController::class, 'deleteBrand'])->name('delete_brand');
+
+    //FOR MODELS
+    Route::get('models', [ModelsController::class, 'index'])->name('view_models');
+    Route::get('add-model', [ModelsController::class, 'addModel'])->name('add_model');
+    Route::post('save-new-model', [ModelsController::class, 'saveNewModel'])->name('save_new_model');
+    Route::get('edit/model/{id}', [ModelsController::class, 'editModel'])->name('edit_model');
+    Route::post('save-edited-model/{id}', [ModelsController::class, 'saveEditedModel'])->name('save_edited_model');
+    Route::post('delete-model/{id}', [ModelsController::class, 'deleteModel'])->name('delete_model');
 
     //FOR Manage Borrowings
     Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');

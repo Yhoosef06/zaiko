@@ -67,14 +67,25 @@ class UserController extends Controller
 
     public function addUser()
     {
-        $departments = Department::with('college')->get();
-
-        $departments->each(function ($department) {
-            $department->college_name = $department->college->college_name;
-        });
-
         $securityQuestions = SecurityQuestion::all();
 
+        if (Auth::user()->account_type != 'admin') {
+
+            $user_dept_id = Auth::user()->department_id;
+            $user_department = Department::find($user_dept_id);
+            $user_college_id = $user_department->college_id;
+
+            $departments = Department::with('college')->where('college_id', $user_college_id)->get();
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
+        } else {
+            $departments = Department::with('college')->get();
+
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
+        }
         return view('pages.admin.addUser')->with(compact('departments', 'securityQuestions'));
     }
 
@@ -125,7 +136,7 @@ class UserController extends Controller
 
             $user->delete();
 
-            Session::flash('success', 'Account '. $id_number .' successfully removed.');
+            Session::flash('success', 'Account ' . $id_number . ' successfully removed.');
             return redirect('list-of-users');
         } catch (QueryException $e) {
             // Check if the exception is due to a foreign key constraint violation

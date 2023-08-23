@@ -127,14 +127,14 @@ class RoomController extends Controller
             $room = Room::find($id);
             $room->delete();
 
-            Session::flash('success', 'Successfully Removed');
+            Session::flash('success', 'Room Successfully Removed');
             return redirect('rooms');
         } catch (QueryException $e) {
             // Check if the exception is due to a foreign key constraint violation
             if ($e->getCode() === '23000') {
-                Session::flash('status', 'Cannot remove room because it is referenced by other records.');
+                Session::flash('danger', 'Cannot remove room because it is referenced by other records.');
             } else {
-                Session::flash('status', 'An error occurred.');
+                Session::flash('danger', 'An error occurred.');
             }
             return redirect('rooms');
         }

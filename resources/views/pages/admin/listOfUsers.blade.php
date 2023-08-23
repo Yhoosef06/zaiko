@@ -65,22 +65,15 @@
                                                     <td>{{ 'READS' }}</td>
                                                 @endif
 
-                                                @if ($user->account_type == 'student')
-                                                    @if ($user->account_status == 'pending')
-                                                        <td><span class="bg-warning p-1 m-1"
-                                                                style="padding:10px">{{ 'Pending' }}</span>
-                                                        </td>
-                                                    @else
-                                                        <td><span class="bg-success p-1 m-1"
-                                                                style="padding:10px">{{ 'Approved' }}</span>
-                                                        </td>
-                                                    @endif
+                                                @if ($user->account_status == 'pending')
+                                                    <td><span class="bg-warning p-1 m-1"
+                                                            style="padding:10px">{{ 'Pending' }}</span>
+                                                    </td>
                                                 @else
                                                     <td><span class="bg-success p-1 m-1"
                                                             style="padding:10px">{{ 'Approved' }}</span>
                                                     </td>
                                                 @endif
-
                                                 <td>{{ $user->departments->department_name }}</td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary" data-toggle="modal"
