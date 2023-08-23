@@ -20,4 +20,8 @@ class Models extends Model
     {
         return $this->belongsTo(brand::class, 'brand_id');
     }
+
+    public function items(){
+        return $this->hasMany(Item::class, 'model_id' ,'id');
+    }
 }

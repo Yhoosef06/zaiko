@@ -25,6 +25,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'approved',
                 'account_type' => 'admin',
+                'role' => 'manager',
                 'department_id' => '1',
                 'security_question_id' => '1',
                 'answer' => 'default'
@@ -35,7 +36,8 @@ class UserSeeder extends Seeder
                 'last_name' => 'Magabilin',
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'approved',
-                'account_type' => 'reads',
+                'account_type' => 'faculty',
+                'role' => 'manager',
                 'department_id' => '7',
                 'security_question_id' => '1',
                 'answer' => 'default'
@@ -47,6 +49,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'pending',
                 'account_type' => 'student',
+                'role' => 'borrower',
                 'department_id' => '5',
                 'security_question_id' => '1',
                 'answer' => 'default'
@@ -58,6 +61,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'pending',
                 'account_type' => 'student',
+                'role' => 'borrower',
                 'department_id' => '5',
                 'security_question_id' => '1',
                 'answer' => 'default'
@@ -69,6 +73,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'pending',
                 'account_type' => 'student',
+                'role' => 'borrower',
                 'department_id' => '6',
                 'security_question_id' => '1',
                 'answer' => 'default'
@@ -80,6 +85,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'pending',
                 'account_type' => 'student',
+                'role' => 'borrower',
                 'department_id' => '6',
                 'security_question_id' => '1',
                 'answer' => 'default'
@@ -90,7 +96,8 @@ class UserSeeder extends Seeder
                 'last_name' => 'Alolor',
                 'password' => Hash::make('usjrscs-123'),
                 'account_status' => 'approved',
-                'account_type' => 'student',
+                'account_type' => 'faculty',
+                'role' => 'borrower',
                 'department_id' => '19',
                 'security_question_id' => '1',
                 'answer' => 'default'

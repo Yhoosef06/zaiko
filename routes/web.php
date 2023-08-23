@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QRController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\TermController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ItemsController;
@@ -125,7 +126,8 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('edit/room/{id}', [RoomController::class, 'editRoom'])->name('edit_room');
     Route::post('save-edited-room/{id}', [RoomController::class, 'saveEditedRoom'])->name('save_edited_room');
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
-
+    Route::get('/get-departments/{college_id}', [DepartmentController::class, 'getDepartments'])->name('get_departments');
+    
     // FOR Item Category
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
     Route::get('add-item-category', [ItemCategoryController::class, 'addItemCategory'])->name('add_item_category');
@@ -151,6 +153,12 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('edit/model/{id}', [ModelsController::class, 'editModel'])->name('edit_model');
     Route::post('save-edited-model/{id}', [ModelsController::class, 'saveEditedModel'])->name('save_edited_model');
     Route::post('delete-model/{id}', [ModelsController::class, 'deleteModel'])->name('delete_model');
+
+    //TERM
+    Route::get('terms', [TermController::class, 'index'])->name('view_terms');
+    Route::get('add-term', [TermController::class, 'addTerm'])->name('add_term');
+    Route::post('save-new-term', [TermController::class, 'saveNewTerm'])->name('save_new_term');
+    Route::post('delete-term/{id}', [TermController::class, 'deleteTerm'])->name('delete_term');
 
     //FOR Manage Borrowings
     Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');

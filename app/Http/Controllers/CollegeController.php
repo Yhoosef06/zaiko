@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\College;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
@@ -11,7 +12,8 @@ class CollegeController extends Controller
 {
     public function index()
     {
-        $colleges = College::all();
+        $colleges = College::withCount('departments')->get();
+
         return view('pages.admin.listOfColleges')->with(compact('colleges'));
     }
 

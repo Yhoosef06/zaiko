@@ -202,11 +202,19 @@
                         <a href="#" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
-                                Controls
+                                Settings
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{route('view_terms')}}" class="nav-link">
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Term</p>
+                                    </div>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('view_colleges') }}" class="nav-link">
                                     <div class="ml-3">
@@ -215,7 +223,6 @@
                                     </div>
                                 </a>
                             </li>
-
                             <li class="nav-item">
                                 <a href="{{ route('view_departments') }}" class="nav-link">
                                     <div class="ml-3">
@@ -275,41 +282,6 @@
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-circle"></i>
-                            <p>
-                                Inventory
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('add_item') }}" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        Add New Item
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('view_items') }}" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>View All Items</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('generate_report') }}" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Generate Report</p>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
                                 Borrow Items
@@ -344,6 +316,41 @@
                         </ul>
                     </li>
                     @if (Auth::user()->role == 'manager')
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-circle"></i>
+                                <p>
+                                    Inventory
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('add_item') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            Add New Item
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('view_items') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>View All Items</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('generate_report') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Generate Report</p>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
@@ -389,68 +396,6 @@
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-circle"></i>
-                            <p>
-                                Inventory
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('add_item') }}" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        Add New Item
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('view_items') }}" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>View All Items</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('generate_report') }}" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Generate Report</p>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-circle"></i>
-                            <p>
-                                Manage Students
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('add_user') }}" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Add New Student</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('view_users') }}" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>View All Students</p>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
                                 Borrow Items
@@ -485,6 +430,68 @@
                         </ul>
                     </li>
                     @if (Auth::user()->role == 'manager')
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-circle"></i>
+                                <p>
+                                    Manage Students
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('add_user') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Add New Student</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('view_users') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>View All Students</p>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-circle"></i>
+                                <p>
+                                    Inventory
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('add_item') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            Add New Item
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('view_items') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>View All Items</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('generate_report') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Generate Report</p>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>

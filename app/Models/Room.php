@@ -15,7 +15,8 @@ class Room extends Model
     protected $fillable = [
         'id',
         'room_name',
-        'department_id'
+        'department_id',
+        'college_id'
     ];
 
     public function department(): BelongsTo

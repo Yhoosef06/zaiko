@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
 use App\Models\Room;
+use App\Models\College;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Validator;
@@ -15,27 +16,24 @@ class RoomController extends Controller
 
     public function index()
     {
-        //admin
         if (Auth::user()->account_type == 'admin') {
-            $rooms = Room::with('department')->get();
-            $rooms->each(function ($room) {
-                $room->department_name = $room->department->department_name;
-            });
+            $rooms = Room::with('department')->withCount('items')->get();
             return view('pages.admin.listOfRooms')->with(compact('rooms'));
         } else {
             $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->with('department')->get();
-            $rooms->each(function ($room) {
-                $room->department_name = $room->department->department_name;
-            });
+            $rooms = Room::where('department_id', $user_dept_id)->with('department')->withCount('items')->get();
             return view('pages.admin.listOfRooms')->with(compact('rooms'));
         }
     }
 
     public function addRoom()
-    {   
-        $departments = Department::all();
-        return view('pages.admin.addRoom')->with(compact('departments'));
+    {
+        $colleges = College::all();
+        $departments = Department::with('college')->get();
+        $departments->each(function ($department) {
+            $department->college_name = $department->college->college_name;
+        });
+        return view('pages.admin.addRoom')->with(compact('departments', 'colleges'));
     }
 
     public function saveNewRoom(Request $request)
@@ -49,12 +47,14 @@ class RoomController extends Controller
             );
 
             Room::create([
+                'college_id' => $request->college_id,
                 'department_id' => $request->department_id,
                 'room_name' => $request->room_name,
             ]);
+
             return redirect()->route('view_rooms')->with('success', 'Room name added successfully!');
         } catch (\Exception $e) {
-
+            // dd($e);
             return redirect()->route('view_rooms')->with('danger', 'An error occurred while adding the room name.');
         }
     }

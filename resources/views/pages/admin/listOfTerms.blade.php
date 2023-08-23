@@ -8,8 +8,8 @@
                     {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
                 {{-- Adding distance from the top navigation bar --}}
-                <button href="#" class="btn btn-default" data-toggle="modal" data-target="#addModelModal">
-                    <i class="fa fa-plus"></i> Add a Model
+                <button href="#" class="btn btn-default" data-toggle="modal" data-target="#addTermModal">
+                    <i class="fa fa-plus"></i> Add a Term
                 </button>
             </div>
         </div>
@@ -40,35 +40,47 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Model Name</th>
-                                        <th>Brand</th>
+                                        <th>Semester</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>isCurrent</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($models as $model)
+                                    @foreach ($terms as $term)
                                         <tr>
-                                            <td>{{ $model->id }}</td>
-                                            <td>{{ $model->model_name }}</td>
-                                            <td>{{ $model->brand->brand_name }}</td>
+                                            <td>{{ $term->id }}</td>
+                                            <td>{{ $term->semester }}</td>
+                                            <td>{{ $term->start_date }}</td>
+                                            <td>{{ $term->end_date }}</td>
                                             <td>
-                                                <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-toggle="tooltip" title='Edit' data-target="#editModelModal"
-                                                    data-route="{{ route('edit_model', ['id' => $model->id]) }}"
-                                                    onclick="openEditModelModal({{ $model->id }}, $(this).data('route'))">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                                @if ($model->items_count == 0)
-                                                    <form class="form_delete_btn" method="POST"
-                                                        action="{{ route('delete_model', $model->id) }}">
-                                                        @csrf
-                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'><i
-                                                                class="fa fa-trash"></i></button>
-                                                    </form>
+                                                @if ($term->isCurrent == true)
+                                                    <input class="size-32" type="checkbox" name="isCurrent" id="isCurrent"
+                                                        selected>
+                                                @else
+                                                    <input class="size-32" type="checkbox" name="isCurrent" id="isCurrent"
+                                                        selected>
                                                 @endif
+                                            </td>
+                                            <td>
+                                                {{-- <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                    data-toggle="tooltip" title='Edit' data-target="#editBrandModal"
+                                                    data-route="{{ route('edit_brand', ['id' => $brand->id]) }}"
+                                                    onclick="openEditBrandModal({{ $brand->id }}, $(this).data('route'))">
+                                                    <i class="fa fa-edit"></i>
+                                                </button> --}}
+                                                {{-- @if ($brand->models_count == 0) --}}
+                                                <form class="form_delete_btn" method="POST"
+                                                    action="{{ route('delete_term', $term->id) }}">
+                                                    @csrf
+                                                    <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-danger show-alert-delete-item"
+                                                        data-toggle="tooltip" title='Delete'><i
+                                                            class="fa fa-trash"></i></button>
+                                                </form>
+                                                {{-- @endif --}}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -87,11 +99,11 @@
         <!-- /.container-fluid -->
     </section>
 
-    <div class="modal fade" id="addModelModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addTermModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addModelModalLabel">Adding a Model</h5>
+                    <h5 class="modal-title" id="addTermModalLabel">Adding a Term</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -103,11 +115,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editModelModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModelModalLabel">Editing a Model</h5>
+                    <h5 class="modal-title" id="editBrandModalLabel">Editing a Brand</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -120,28 +132,28 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('#addModelModal').on('show.bs.modal', function(event) {
+            $('#addTermModal').on('show.bs.modal', function(event) {
                 var modal = $(this);
 
-                $.get("{{ route('add_model') }}", function(data) {
+                $.get("{{ route('add_term') }}", function(data) {
                     modal.find('.modal-body').html(data);
                 });
             });
         });
 
-        function openEditModelModal(brandId, route) {
-            var modal = $('#editModelModal');
+        // function openEditBrandModal(brandId, route) {
+        //     var modal = $('#editBrandModal');
 
-            // Clear previous content from the modal
-            modal.find('.modal-body').html('');
+        //     // Clear previous content from the modal
+        //     modal.find('.modal-body').html('');
 
-            // Send an AJAX request to fetch the edit view content
-            // for the specific college
-            $.get(route, {
-                brand_id: brandId
-            }, function(data) {
-                modal.find('.modal-body').html(data);
-            });
-        }
+        //     // Send an AJAX request to fetch the edit view content
+        //     // for the specific college
+        //     $.get(route, {
+        //         brand_id: brandId
+        //     }, function(data) {
+        //         modal.find('.modal-body').html(data);
+        //     });
+        // }
     </script>
 @endsection

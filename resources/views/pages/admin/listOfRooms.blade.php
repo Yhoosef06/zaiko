@@ -8,9 +8,9 @@
                     {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
                 {{-- Adding distance from the top navigation bar --}}
-                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addRoomModal">
+                <button href="#" class="btn btn-default" data-toggle="modal" data-target="#addRoomModal">
                     <i class="fa fa-plus"></i> Add a Room
-                </a>
+                </button>
             </div>
         </div>
     </section>
@@ -52,22 +52,24 @@
                                             <td>{{ $room->room_name }}</td>
                                             <td>{{ $room->department->department_name }}</td>
                                             <td>
-                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-toggle="tooltip" title='Edit' data-target="#editRoomModal"
                                                     data-route="{{ route('edit_room', ['id' => $room->id]) }}"
                                                     onclick="openEditRoomModal({{ $room->id }}, $(this).data('route'))">
                                                     <i class="fa fa-edit"></i>
-                                                </a>
+                                                </button>
 
-                                                <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_room', $room->id) }}">
-                                                    @csrf
-                                                    <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete'><i
-                                                            class="fa fa-trash"></i></button>
-                                                </form>
+                                                @if ($room->items_count == 0)
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_room', $room->id) }}">
+                                                        @csrf
+                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-danger show-alert-delete-item"
+                                                            data-toggle="tooltip" title='Delete'><i
+                                                                class="fa fa-trash"></i></button>
+                                                    </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

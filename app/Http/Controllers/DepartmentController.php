@@ -12,11 +12,7 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::with('college')->get();
-
-        $departments->each(function ($department) {
-            $department->college_name = $department->college->college_name;
-        });
+        $departments = Department::withCount('users')->get();
 
         return view('pages.admin.listOfDepartments', compact('departments'));
     }
@@ -94,5 +90,12 @@ class DepartmentController extends Controller
             }
             return redirect('departments');
         }
+    }
+
+    public function getDepartments($college_id)
+    {
+        $departments = Department::where('college_id', $college_id)->get();
+        
+        return response()->json($departments);
     }
 }

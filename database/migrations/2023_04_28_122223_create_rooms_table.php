@@ -16,9 +16,11 @@ class CreateRoomsTable extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->string('room_name');
-            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('college_id');
+            $table->unsignedBigInteger('department_id')->nullable();
             $table->timestamps();
 
+            $table->foreign('college_id')->references('id')->on('colleges');
             $table->foreign('department_id')->references('id')->on('departments');
         });
     }

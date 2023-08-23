@@ -72,7 +72,7 @@ class ItemSeeder extends Seeder
                 'serial_number' => 'KB11000A1011', 
             ],
             [
-                'location' => '2',
+                'location' => '3',
                 'category_id' => '1',
                 'brand' => 'ASUS',
                 'Model' => 'Z690',
@@ -114,7 +114,7 @@ class ItemSeeder extends Seeder
                 'serial_number' => 'N/A', 
             ],
             [
-                'location' => '6',
+                'location' => '1',
                 'category_id' => '7',
                 'brand' => 'Philips',
                 'Model' => 'Screw 2022',
@@ -128,7 +128,7 @@ class ItemSeeder extends Seeder
                 'serial_number' => 'N/A', 
             ], 
             [
-                'location' => '6',
+                'location' => '4',
                 'category_id' => '7',
                 'brand' => 'Philips',
                 'Model' => 'Pliers 2021',

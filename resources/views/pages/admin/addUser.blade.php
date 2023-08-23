@@ -27,8 +27,8 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            
-                            <h3>Adding New {{ Auth::user()->account_type == 'faculty'  ? 'Student' : 'User' }}</h3>
+
+                            <h3>Adding New {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -71,28 +71,6 @@
                                             </div>
                                         @enderror
 
-                                        <label for="account type">Account Type:</label>
-                                        <select id="account_type" name="account_type" class="form-control">
-                                            <option value="student">student</option>
-                                            <option value="admin">admin</option>
-                                            <option value="faculty">faculty</option>
-                                            <option value="reads">reads</option>
-                                        </select>
-
-                                        <label for="account status">Account Status:</label>
-                                        <select id="account_status" name="account_status" class="form-control">
-                                            <option value="approved">approved</option>
-                                            <option value="pending">pending</option>
-                                        </select>
-
-                                        <label for="account status">Role:</label>
-                                        <select id="role" name="role" class="form-control">
-                                            <option value="borrower">borrower</option>
-                                            <option value="manager">manager</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col">
                                         <label for="Item name">Program/Department:</label>
                                         @if (isset($departments))
                                             <select id="department_id" name="department_id"
@@ -117,53 +95,28 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
+                                    </div>
 
-
-                                        <label for="">Password</label>
-                                        <input type="password" name="password" id="password"
-                                            class="form-control @error('password') border-danger @enderror"
-                                            placeholder="Password">
-                                        @error('password')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
-                                        <label for="">Confirm Password</label>
-                                        <input type="password" name="password_confirmation" id="password_confirmation"
-                                            class="form-control @error('password_confirmation') border-danger @enderror"
-                                            placeholder="Confirm Password">
-                                        @error('password_confirmation')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
-                                        <label for="Item name">Password Security Question:</label>
-                                        <select name="question" id="question"
-                                            class="form-control  @error('question') border-danger @enderror">
-                                            <option value="">Select a security question</option>
-                                            @foreach ($securityQuestions as $question)
-                                                <option value="{{ $question->id }}"
-                                                    {{ old('question') == $question->id ? 'selected' : '' }}>
-                                                    {{ $question->question }}</option>
-                                            @endforeach
+                                    <div class="col">
+                                        <label for="account type">Account Type:</label>
+                                        <select id="account_type" name="account_type" class="form-control">
+                                            <option value="student">student</option>
+                                            <option value="admin">admin</option>
+                                            <option value="faculty">faculty</option>
+                                            <option value="reads">reads</option>
                                         </select>
-                                        @error('question')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
 
-                                        <label for="">Answer:</label>
-                                        <input type="text" value="{{ old('answer') }}" name="answer" id="answer"
-                                            class="form-control @error('answer') border-danger @enderror"
-                                            placeholder="Your answer">
-                                        @error('answer')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
+                                        <label for="account status">Account Status:</label>
+                                        <select id="account_status" name="account_status" class="form-control">
+                                            <option value="approved">approved</option>
+                                            <option value="pending">pending</option>
+                                        </select>
+
+                                        <label for="account status">Role:</label>
+                                        <select id="role" name="role" class="form-control">
+                                            <option value="borrower">borrower</option>
+                                            <option value="manager">manager</option>
+                                        </select>
 
                                         <hr>
                                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>

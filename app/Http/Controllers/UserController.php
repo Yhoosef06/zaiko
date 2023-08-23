@@ -79,14 +79,16 @@ class UserController extends Controller
             $departments->each(function ($department) {
                 $department->college_name = $department->college->college_name;
             });
+
+            return view('pages.admin.addUser')->with(compact('departments', 'securityQuestions'));
         } else {
             $departments = Department::with('college')->get();
 
             $departments->each(function ($department) {
                 $department->college_name = $department->college->college_name;
             });
+            return view('pages.admin.addUser')->with(compact('departments', 'securityQuestions'));
         }
-        return view('pages.admin.addUser')->with(compact('departments', 'securityQuestions'));
     }
 
     public function saveNewUser(Request $request)
@@ -101,7 +103,6 @@ class UserController extends Controller
                 'account_type' => 'required',
                 'account_status' => 'required',
                 'department_id' => 'required',
-                'password' => 'required|confirmed|min:7',
             ]
         );
 
@@ -115,9 +116,7 @@ class UserController extends Controller
                 'account_status' => $request->account_status,
                 'role' => $request->role,
                 'department_id' => $request->department_id,
-                'security_question_id' => $request->question,
-                'answer' => $request->answer,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make('dafault'),
                 // 'front_of_id' => $request->file('front_of_id')->store(('ids')),
                 // 'back_of_id' => $request->file('back_of_id')->store(('ids')),
             ]);

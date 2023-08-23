@@ -8,9 +8,9 @@
                     {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
                 {{-- Adding distance from the top navigation bar --}}
-                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addBrandModal">
+                <button href="#" class="btn btn-default" data-toggle="modal" data-target="#addBrandModal">
                     <i class="fa fa-plus"></i> Add a Brand
-                </a>
+                </button>
             </div>
         </div>
     </section>
@@ -50,22 +50,23 @@
                                             <td>{{ $brand->id }}</td>
                                             <td>{{ $brand->brand_name }}</td>
                                             <td>
-                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-toggle="tooltip" title='Edit' data-target="#editBrandModal"
                                                     data-route="{{ route('edit_brand', ['id' => $brand->id]) }}"
                                                     onclick="openEditBrandModal({{ $brand->id }}, $(this).data('route'))">
                                                     <i class="fa fa-edit"></i>
-                                                </a>
-
-                                                <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_brand', $brand->id) }}">
-                                                    @csrf
-                                                    <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete'><i
-                                                            class="fa fa-trash"></i></button>
-                                                </form>
+                                                </button>
+                                                @if ($brand->models_count == 0)
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_brand', $brand->id) }}">
+                                                        @csrf
+                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-danger show-alert-delete-item"
+                                                            data-toggle="tooltip" title='Delete'><i
+                                                                class="fa fa-trash"></i></button>
+                                                    </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

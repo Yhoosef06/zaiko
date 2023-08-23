@@ -13,7 +13,7 @@ class ItemCategoryController extends Controller
 
     public function index()
     {
-        $categories = ItemCategory::all();
+        $categories = ItemCategory::withCount('items')->get();
         return view('pages.admin.listOfItemCategories')->with(compact('categories'));
     }
 

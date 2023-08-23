@@ -12,6 +12,7 @@ class ItemCategory extends Model
     public $fillable = [
         'category_name'
     ];
+    
     public function items(){
         return $this->hasMany(Item::class, 'category_id' ,'id');
     }

@@ -13,7 +13,7 @@ class BrandController extends Controller
 
     public function index()
     {
-        $brands = Brand::all();
+        $brands = Brand::withCount('models')->get();
         return view('pages.admin.listOfBrands')->with(compact('brands'));
     }
 

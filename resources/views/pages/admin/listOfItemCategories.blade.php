@@ -8,9 +8,9 @@
                     {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
                 {{-- Adding distance from the top navigation bar --}}
-                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addItemCategoryModal">
+                <button href="#" class="btn btn-default" data-toggle="modal" data-target="#addItemCategoryModal">
                     <i class="fa fa-plus"></i> Add a Item Category
-                </a>
+                </button>
             </div>
         </div>
     </section>
@@ -50,22 +50,24 @@
                                             <td>{{ $category->id }}</td>
                                             <td>{{ $category->category_name }}</td>
                                             <td>
-                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-toggle="tooltip" title='Edit'
                                                     data-target="#editItemCategoryModal"
                                                     onclick="openEditItemCategoryModal('{{ $category->id }}')">
                                                     <i class="fa fa-edit"></i>
-                                                </a>
+                                                </button>
+                                                @if ($category->items_count == 0)
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_category', $category->id) }}">
+                                                        @csrf
+                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-danger show-alert-delete-item"
+                                                            data-toggle="tooltip" title='Delete'><i
+                                                                class="fa fa-trash"></i></button>
+                                                    </form>
+                                                @endif
 
-                                                <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_category', $category->id) }}">
-                                                    @csrf
-                                                    <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete'><i
-                                                            class="fa fa-trash"></i></button>
-                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
