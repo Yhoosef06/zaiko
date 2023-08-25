@@ -29,9 +29,13 @@ class UserController extends Controller
 
             return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
         } else if (Auth::user()->account_type == 'faculty') {
-            $user_dept_id = Auth::user()->department_id;
-            $users = User::where('department_id', $user_dept_id)
-                ->where('account_type', 'student')
+            $userDeptId = Auth::user()->department_id;
+            $userCollegeId = Department::where('id', $userDeptId)->value('college_id');
+
+            $users = User::where('account_type', 'student')
+                ->whereHas('departments', function ($query) use ($userCollegeId) {
+                    $query->where('college_id', $userCollegeId);
+                })
                 ->orderBy('id_number', 'DESC')
                 ->get();
             $departments = Department::all();
