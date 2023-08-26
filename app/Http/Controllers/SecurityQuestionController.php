@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\SecurityQuestion;
+use GrahamCampbell\ResultType\Success;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class SecurityQuestionController extends Controller
@@ -61,7 +63,7 @@ class SecurityQuestionController extends Controller
     }
 
     public function resetPassword(Request $request, $id_number)
-    {   
+    {
         $request->validate([
             'new_password' => 'required|min:7',
             'password_confirmation' => ['same:new_password'],
@@ -70,5 +72,30 @@ class SecurityQuestionController extends Controller
         User::find($id_number)->update(['password' => Hash::make($request->new_password)]);
 
         return view('pages.auth.passwordResetSucessfully');
+    }
+
+    public function setupSecurityQuestion(Request $request, $id_number)
+    {
+        return view('pages.auth.setupSecurityQuestion');
+    }
+
+    public function storeSecurityQuestion(Request $request)
+    {   
+
+        $request->validate([
+            'question' => 'required|exists:security_questions,id',
+            'answer' => 'required|string',
+        ]);
+
+        User::find(Auth::user()->id_number)->update([
+            'security_question_id' => $request->question,
+            'answer' => $request->answer
+        ]);
+
+        if (Auth::user()->account_type == 'student') {
+            return redirect()->route('student.dashboard')->with('success', 'Security Settings Updated Successfully');;
+        } else {
+            return redirect()->route('admin.dashboard')->with('success', 'Security Settings Updated Successfully');
+        }
     }
 }

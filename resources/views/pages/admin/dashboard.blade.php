@@ -4,7 +4,17 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                {{-- Adding distance from the top navigation bar --}}
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <H4><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</H4>
+                    </div>
+                @elseif (session('danger'))
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</h4>
+                    </div>
+                @endif
             </div>
         </div>
     </section>
@@ -217,7 +227,7 @@
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
-    
+
                             <div class="info-box mb-3  bg-gradient-info">
                                 <span class="info-box-icon"><i class="fas fa-info"></i></span>
 
@@ -227,9 +237,43 @@
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
+                        </div>
                     </div>
                 </div>
-            </div>
         </section>
     @endif
+
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title danger" id="loginModalLabel">Welcome!</h5>
+                </div>
+                <div class="modal-body">
+                    <p class=" text-lg-center">
+                        Before you begin using Zaiko please <a
+                            href="{{ route('change_user_password', ['id_number' => Auth::user()->id_number]) }}">click this
+                            link</a> to setup your security
+                        settings. Thank you!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var accountType = "{{ auth()->user()->account_type }}";
+            var userQuestion = "{{ auth()->user()->security_question_id }}";
+
+            if (accountType !== 'admin') {
+                if ((accountType === 'faculty' || accountType === 'reader' || accountType === 'student') &&
+                    userQuestion === '' || null) {
+                    $('#loginModal').modal('show');
+                }
+            }
+        });
+    </script>
+
 @endsection

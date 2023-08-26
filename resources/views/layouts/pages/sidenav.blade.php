@@ -14,19 +14,7 @@
     </a>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        {{-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <img src="dist/img/scs.png" class="img-circle elevation-2" alt="User Image">
-            </div>
-            <div class="info"> --}}
-        {{-- @auth
-                    <a href="#" class="d-block">{{Auth::user()->first_name}}  {{Auth::user()->last_name}}</a>
-                @endauth --}}
-        {{-- </div>
-        </div> --}}
-
+    <div class="sidebar" style="height: calc(100vh - 100px); overflow: auto;">
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -38,12 +26,6 @@
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Dashboard</p>
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        {{-- <a href="./index3.html" class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
-                                    <p>Borrow Item</p>
-                                </a> --}}
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('student.items') }}" class="nav-link">
@@ -72,26 +54,6 @@
                             <p>History <i class="bi bi-card-list"></i></p>
                         </a>
                     </li>
-                    {{-- <ul class="nav nav-treeview ml-4">
-                            <li class="nav-item">
-                                <a href="{{ route('student.items') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Browse Items</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('cart.list') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>View Cart</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('borrow_list') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Checked Out Items</p>
-                                </a>
-                            </li>
-                        </ul> --}}
                 @elseif(Auth::user()->account_type == 'admin')
                     <li class="nav-item">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
@@ -208,7 +170,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{route('view_terms')}}" class="nav-link">
+                                <a href="{{ route('view_terms') }}" class="nav-link">
                                     <div class="ml-3">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Term</p>
@@ -266,13 +228,6 @@
                             </li>
                         </ul>
                     </li>
-
-                    {{-- <li class="nav-item">
-                            <a href="/qr-reader" class="nav-link">
-                                <i class="bi bi-qr-code-scan nav-icon"></i>
-                                <p>QR Code Scanner</p>
-                            </a>
-                        </li> --}}
                 @elseif (Auth::user()->account_type == 'reads')
                     <li class="nav-item">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
@@ -535,9 +490,9 @@
 </aside>
 
 <script src="plugins/jquery/jquery.min.js"></script>
-{{-- <!-- Bootstrap -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script> --}}
-{{-- <!-- AdminLTE -->
+<!-- Bootstrap -->
+{{-- <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE -->
 <script src="dist/js/adminlte.js"></script>  --}}
 
 <script>

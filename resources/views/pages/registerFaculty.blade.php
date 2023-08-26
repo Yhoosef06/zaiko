@@ -82,7 +82,7 @@
             </div>
         @enderror
         
-        <label for="Item name">Password Security Question:</label>
+        {{-- <label for="Item name">Password Security Question:</label>
         <select name="question" id="question" class="form-control  @error('question') border-danger @enderror">
             <option value="">Select a security question</option>
             @foreach ($securityQuestions as $question)
@@ -103,7 +103,7 @@
             <div class="text-danger">
                 {{ $message }}
             </div>
-        @enderror
+        @enderror --}}
 
         {{-- <label for="" class="sr-only">Upload Front of ID</label>
         <input type="file" name="front_of_id" id="front_of_id"

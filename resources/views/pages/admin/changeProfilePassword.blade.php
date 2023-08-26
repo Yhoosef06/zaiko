@@ -44,15 +44,20 @@
                                 @enderror
 
                                 <hr>
-                                @if ($user->id_number == Auth::user()->id_number)
-                                    <a href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}"
-                                        class="btn btn-outline-dark">Back</a>
+                                @if (Auth::user()->security_question_id != null)
+                                    @if ($user->id_number == Auth::user()->id_number)
+                                        <a href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}"
+                                            class="btn btn-outline-dark">Back</a>
+                                    @else
+                                        <a href="{{ route('view_users', ['id_number' => $user->id_number]) }}"
+                                            class="btn btn-outline-dark">Back</a>
+                                    @endif
+                                    <Button type="submit" class="btn btn-success"
+                                        onclick="return confirm('Do you wish to continue changing your password?')">Save Changes</Button>
                                 @else
-                                    <a href="{{ route('view_users', ['id_number' => $user->id_number]) }}"
-                                        class="btn btn-outline-dark">Back</a>
+                                    <Button type="submit" class="btn btn-success"
+                                        onclick="return confirm('Do you wish to continue?')">Save & continue</Button>
                                 @endif
-                                <Button type="submit" class="btn btn-success"
-                                    onclick="return confirm('Do you wish to continue changing your password?')">Save</Button>
                             </div>
                             <!-- /.card-body -->
                         </form>

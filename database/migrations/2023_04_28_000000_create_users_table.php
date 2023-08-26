@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('answer')->nullable();
             $table->unsignedBigInteger('department_id');
             $table->rememberToken();
+            $table->date('last_login_at')->nullable();
             $table->timestamps();
 
             $table->foreign('security_question_id')->references('id')->on('security_questions');

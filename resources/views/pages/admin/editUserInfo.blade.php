@@ -81,6 +81,7 @@
 
                 <label for="account status">Role:</label>
                 <select id="role" name="role" class="form-control">
+                    <option value="{{$user->role}}" selected>{{$user->role}}</option>
                     <option value="borrower">borrower</option>
                     <option value="manager">manager</option>
                 </select>

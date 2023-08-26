@@ -52,8 +52,8 @@ class RegisterController extends Controller
             'last_name' => 'required',
             'department_id' => 'required',
             'password' => 'required|confirmed|min:7',
-            'question' => 'required|exists:security_questions,id',
-            'answer' => 'required|string',
+            // 'question' => 'required|exists:security_questions,id',
+            // 'answer' => 'required|string',
         ]);
 
         $user = User::where('id_number', '=', $request->input('id_number'))->first();
@@ -67,8 +67,8 @@ class RegisterController extends Controller
                 'account_type' => 'student',
                 'account_status' => 'pending',
                 'department_id' => $request->department_id,
-                'security_question_id' => $request->question,
-                'answer' => $request->answer
+                // 'security_question_id' => $request->question,
+                // 'answer' => $request->answer
             ]);
             return redirect('/')->with('message', 'Account successfully submitted! Please wait for approval from the officer-in-charge before you can login. Thank you.');
         } else {
@@ -84,8 +84,8 @@ class RegisterController extends Controller
             'last_name' => 'required',
             'department_id' => 'required',
             'password' => 'required|confirmed|min:7',
-            'question' => 'required|exists:security_questions,id',
-            'answer' => 'required|string',
+            // 'question' => 'required|exists:security_questions,id',
+            // 'answer' => 'required|string',
         ]);
 
         $user = User::where('id_number', '=', $request->input('id_number'))->first();
@@ -99,8 +99,8 @@ class RegisterController extends Controller
                 'account_type' => 'faculty',
                 'account_status' => 'pending',
                 'department_id' => $request->department_id,
-                'security_question_id' => $request->question,
-                'answer' => $request->answer
+                // 'security_question_id' => $request->question,
+                // 'answer' => $request->answer
             ]);
 
             return redirect('/')->with('message', 'Account successfully submitted! Please wait for approval from the officer-in-charge before you can login. Thank you.');

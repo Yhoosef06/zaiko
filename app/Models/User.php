@@ -35,7 +35,8 @@ class User extends Authenticatable
         'role',
         'department_id',
         'security_question_id',
-        'answer'
+        'answer',
+        'last_login_at'
     ];
 
     /**

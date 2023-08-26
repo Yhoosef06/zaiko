@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\SecurityQuestion;
+use PhpParser\Node\Stmt\TryCatch;
+use Symfony\Component\Console\Question\Question;
 
 class UserController extends Controller
 {
@@ -120,7 +122,7 @@ class UserController extends Controller
                 'account_status' => $request->account_status,
                 'role' => $request->role,
                 'department_id' => $request->department_id,
-                'password' => Hash::make('dafault'),
+                'password' => Hash::make('default'),
                 // 'front_of_id' => $request->file('front_of_id')->store(('ids')),
                 // 'back_of_id' => $request->file('back_of_id')->store(('ids')),
             ]);
@@ -201,8 +203,14 @@ class UserController extends Controller
         ]);
 
         User::find($id_number)->update(['password' => Hash::make($request->new_password)]);
+
         if ($id_number == Auth::user()->id_number) {
-            return redirect('/')->with('message', 'Password changed successfully. Please login with new password.');
+            if (Auth::user()->security_question_id == null) {
+                $securityQuestions = SecurityQuestion::all();
+                return view('pages.auth.setupSecurityQuestion')->with('securityQuestions', $securityQuestions);;
+            } else {
+                return redirect('/')->with('message', 'Password changed successfully. Please login with new password.');
+            }
         } else {
             Session::flash('success', 'User ' . $id_number . ' password has been changed.');
             return redirect('list-of-users');
@@ -242,10 +250,14 @@ class UserController extends Controller
     public function modifySecurityQuestion($id_number)
     {
         $user = User::find($id_number);
-        $question_id = $user->security_question_id;
-        $questions = SecurityQuestion::find($question_id);
         $securityQuestions = SecurityQuestion::all();
+        if ($user->security_question_id == null) {
 
+            return view('pages.auth.setupSecurityQuestion')->with(compact('securityQuestions'));
+        } else {
+            $question_id = $user->security_question_id;
+            $questions = SecurityQuestion::find($question_id);
+        }
         return view('pages.modifySecurityQuestion')->with(compact('questions', 'securityQuestions'));
     }
 

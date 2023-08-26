@@ -82,7 +82,7 @@
             </div>
         @enderror
 
-        <label for="Item name">Password Security Question:</label>
+        {{-- <label for="Item name">Password Security Question:</label>
         <select name="question" id="question" class="form-control  @error('question') border-danger @enderror">
             <option value="">Select a security question</option>
             @foreach ($securityQuestions as $question)
@@ -103,7 +103,7 @@
             <div class="text-danger">
                 {{ $message }}
             </div>
-        @enderror
+        @enderror --}}
         <hr>
         <a href="{{ route('signin.page') }}" class="btn btn-md btn-outline-success">Cancel</a>
         <button class="btn btn-md btn-success btn-block" type="submit">Submit</button>
