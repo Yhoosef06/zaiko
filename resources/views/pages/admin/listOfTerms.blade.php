@@ -55,12 +55,10 @@
                                             <td>{{ $term->start_date }}</td>
                                             <td>{{ $term->end_date }}</td>
                                             <td>
-                                                @if ($term->isCurrent == true)
-                                                    <input class="size-32" type="checkbox" name="isCurrent" id="isCurrent"
-                                                        selected>
+                                                @if ($term->isCurrent == 0)
+                                                    <input class="size-32" type="checkbox" name="isCurrent" id="isCurrent">
                                                 @else
-                                                    <input class="size-32" type="checkbox" name="isCurrent" id="isCurrent"
-                                                        selected>
+                                                    <input class="size-32 active" type="checkbox" name="isCurrent" id="isCurrent">
                                                 @endif
                                             </td>
                                             <td>

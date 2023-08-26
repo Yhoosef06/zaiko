@@ -69,9 +69,31 @@
                                                     <td>
                                                         @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
                                                             <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                                data-target="#modal-item-details"
+                                                                data-target="#modal-item-details" data-toggle="tooltip"
+                                                                title='View'
                                                                 onclick="openItemModal('{{ $categoryItems->first()->id }}')">
                                                                 <i class="fa fa-eye"></i>
+                                                            </button>
+
+                                                            <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                                data-target="#modal-item-details" data-toggle="tooltip"
+                                                                title='Add Sub Item'
+                                                                onclick="openItemModal('{{ $categoryItems->first()->id }}')">
+                                                                <i class="fa fa-plus-square"></i>
+                                                            </button>
+
+                                                            <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                                data-target="#modal-item-details" data-toggle="tooltip"
+                                                                title='Transfer Item'
+                                                                onclick="openItemModal('{{ $categoryItems->first()->id }}')">
+                                                                <i class="fa fa-arrow-alt-circle-right"></i>
+                                                            </button>
+
+                                                            <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                                data-target="#modal-item-details" data-toggle="tooltip"
+                                                                title='Replace Item'
+                                                                onclick="openItemModal('{{ $categoryItems->first()->id }}')">
+                                                                <i class="fa fa-exchange-alt"></i>
                                                             </button>
 
                                                             <form class="form_delete_btn" method="POST"
