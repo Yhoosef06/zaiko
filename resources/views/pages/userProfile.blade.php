@@ -12,9 +12,8 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-6">
+                <div class="col-12">
                     <div class="card text-lg p-3">
-
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

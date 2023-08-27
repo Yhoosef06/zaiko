@@ -32,7 +32,8 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <h3>Models</h3>
+
+                            <h3>School Years</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -49,7 +50,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($terms as $term)
-                                        <tr data-term-id="{{$term->id}}">
+                                        <tr data-term-id="{{ $term->id }}">
                                             <td>{{ $term->id }}</td>
                                             <td>{{ $term->semester }}</td>
                                             <td>{{ $term->start_date }}</td>
@@ -58,7 +59,8 @@
                                                 @if ($term->isCurrent == 0)
                                                     <input class="size-32" type="checkbox" name="isCurrent" id="isCurrent">
                                                 @else
-                                                    <input class="size-32 active" type="checkbox" name="isCurrent" id="isCurrent">
+                                                    <input class="size-32 active" type="checkbox" name="isCurrent"
+                                                        id="isCurrent">
                                                 @endif
                                             </td>
                                             <td>
@@ -69,7 +71,8 @@
                                                     <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                     <button type="submit"
                                                         class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete' onclick="deleteButton({{$term->id}})"><i
+                                                        data-toggle="tooltip" title='Delete'
+                                                        onclick="deleteButton({{ $term->id }})"><i
                                                             class="fa fa-trash"></i></button>
                                                 </form>
                                                 {{-- @endif --}}
@@ -77,7 +80,6 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                         <!-- /.card-body -->
@@ -90,30 +92,30 @@
         </div>
         <!-- /.container-fluid -->
     </section>
+@endsection
 
-    <script>
-        $(document).ready(function() {
-            $('#addTermModal').on('show.bs.modal', function(event) {
-                var modal = $(this);
+<script>
+    $(document).ready(function() {
+        $('#addTermModal').on('show.bs.modal', function(event) {
+            var modal = $(this);
 
-                $.get("{{ route('add_term') }}", function(data) {
-                    modal.find('.modal-body').html(data);
-                });
+            $.get("{{ route('add_term') }}", function(data) {
+                modal.find('.modal-body').html(data);
             });
         });
+    });
 
-        function deleteButton(termId) {
-            // Remove previous highlighting
-            $('#listofterms tbody tr').css({
-                'box-shadow': 'none',
-                'background-color': 'transparent'
-            });
+    function deleteButton(termId) {
+        // Remove previous highlighting
+        $('#listofterms tbody tr').css({
+            'box-shadow': 'none',
+            'background-color': 'transparent'
+        });
 
-            // Add the highlighted class to the clicked row
-            $('#listofterms tbody tr[data-term-id="' + termId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
-            });
-        }
-    </script>
-@endsection
+        // Add the highlighted class to the clicked row
+        $('#listofterms tbody tr[data-term-id="' + termId + '"]').css({
+            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+            'background-color': '#A9F5F2' // Adjust the color as needed
+        });
+    }
+</script>
