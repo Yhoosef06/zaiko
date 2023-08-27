@@ -24,12 +24,15 @@ class TermController extends Controller
     public function saveNewTerm(Request $request)
     {
         try {
-            // $this->validate(
-            //     $request,
-            //     [
-            //         'brand_name' => 'required|unique:brands,brand_name',
-            //     ],
-            // );
+            $this->validate(
+                $request,
+                [
+                    'semester' => 'required',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
+                    'isCurrent' => 'required'
+                ],
+            );
 
             Term::create([
                 'semester' => $request->semester,

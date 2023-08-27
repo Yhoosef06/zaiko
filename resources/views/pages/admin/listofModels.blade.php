@@ -36,7 +36,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="listofitems" class="table table-bordered table-striped">
+                            <table id="listofmodels" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -47,7 +47,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($models as $model)
-                                        <tr>
+                                        <tr data-model-id="{{ $model->id }}">
                                             <td>{{ $model->id }}</td>
                                             <td>{{ $model->model_name }}</td>
                                             <td>{{ $model->brand->brand_name }}</td>
@@ -65,7 +65,7 @@
                                                         <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                         <button type="submit"
                                                             class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'><i
+                                                            data-toggle="tooltip" title='Delete' onclick="deleteButton({{$model->id}})"><i
                                                                 class="fa fa-trash"></i></button>
                                                     </form>
                                                 @endif
@@ -129,16 +129,42 @@
             });
         });
 
-        function openEditModelModal(brandId, route) {
+        function deleteButton(modelId) {
+            // Remove previous highlighting
+            $('#listofmodels tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofmodels tbody tr[data-model-id="' + modelId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+        }
+
+        function openEditModelModal(modelId, route) {
             var modal = $('#editModelModal');
 
             // Clear previous content from the modal
             modal.find('.modal-body').html('');
 
+            // Remove previous highlighting
+            $('#listofmodels tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofmodels tbody tr[data-model-id="' + modelId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+
             // Send an AJAX request to fetch the edit view content
             // for the specific college
             $.get(route, {
-                brand_id: brandId
+                model_id: modelId
             }, function(data) {
                 modal.find('.modal-body').html(data);
             });

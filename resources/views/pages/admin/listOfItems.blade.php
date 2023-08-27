@@ -46,7 +46,7 @@
                                     @foreach ($items as $brand => $brandItems)
                                         @foreach ($brandItems as $model => $modelItems)
                                             @foreach ($modelItems as $description => $categoryItems)
-                                                <tr>
+                                                <tr data-item-id="{{ $categoryItems->first()->id }}">
                                                     <td>{{ $categoryItems->first()->id }}</td>
                                                     <td>{{ $categoryItems->first()->brand }}</td>
                                                     <td>{{ $categoryItems->first()->model }}</td>
@@ -101,7 +101,8 @@
                                                                 @csrf
                                                                 <button type="submit"
                                                                     class="btn btn-sm btn-danger show-alert-delete-item"
-                                                                    data-toggle="tooltip" title='Delete'>
+                                                                    data-toggle="tooltip" title='Delete'
+                                                                    onclick="deleteButton({{ $item->id }})">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </form>
@@ -173,41 +174,34 @@
     </div>
 @endsection
 
-{{-- <script>
-    function editItemModal(itemId) {
-        $(document).ready(function() {
-            $('#modal-item-details').on('show.bs.modal', function() {
-                $('#modal-edit-item').modal('hide');
-            });
+<script>
+    function deleteButton(itemId) {
+        // Remove previous highlighting
+        $('#listofitems tbody tr').css({
+            'box-shadow': 'none',
+            'background-color': 'transparent'
         });
 
-        // close the current modal
-        $('#modal-item-details').modal('hide');
-
-        // open the new modal for editing the item
-        $.ajax({
-            url: 'edit-item-' + itemId,
-            type: 'GET',
-            success: function(data) {
-                // Populate the modal window with the edit form
-                $('#modal-edit-item .modal-body').html(data);
-
-                // Show the modal window for editing the item
-                $('#modal-edit-item').modal('show');
-            },
-            error: function(xhr, status, error) {
-                // Display an error message if the AJAX request fails
-                $('#modal-item-details .modal-body').html(
-                    '<p>Failed to load edit form.</p>' +
-                    '<p>Error: ' + error + '</p>'
-                );
-            }
+        // Add the highlighted class to the clicked row
+        $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
+            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+            'background-color': '#A9F5F2' // Adjust the color as needed
         });
     }
-</script> --}}
 
-<script>
     function openItemModal(itemId) {
+        // Remove previous highlighting
+        $('#listofitems tbody tr').css({
+            'box-shadow': 'none',
+            'background-color': 'transparent'
+        });
+
+        // Add the highlighted class to the clicked row
+        $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
+            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+            'background-color': '#A9F5F2' // Adjust the color as needed
+        });
+        
         $(document).ready(function() {
             $('#modal-item-details').on('show.bs.modal', function() {
                 $('#modal-edit-item').modal('hide');

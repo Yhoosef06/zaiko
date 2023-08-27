@@ -36,7 +36,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="listofitems" class="table table-bordered table-striped">
+                            <table id="listofterms" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -49,7 +49,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($terms as $term)
-                                        <tr>
+                                        <tr data-term-id="{{$term->id}}">
                                             <td>{{ $term->id }}</td>
                                             <td>{{ $term->semester }}</td>
                                             <td>{{ $term->start_date }}</td>
@@ -62,12 +62,6 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                {{-- <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-toggle="tooltip" title='Edit' data-target="#editBrandModal"
-                                                    data-route="{{ route('edit_brand', ['id' => $brand->id]) }}"
-                                                    onclick="openEditBrandModal({{ $brand->id }}, $(this).data('route'))">
-                                                    <i class="fa fa-edit"></i>
-                                                </button> --}}
                                                 {{-- @if ($brand->models_count == 0) --}}
                                                 <form class="form_delete_btn" method="POST"
                                                     action="{{ route('delete_term', $term->id) }}">
@@ -75,7 +69,7 @@
                                                     <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                     <button type="submit"
                                                         class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete'><i
+                                                        data-toggle="tooltip" title='Delete' onclick="deleteButton({{$term->id}})"><i
                                                             class="fa fa-trash"></i></button>
                                                 </form>
                                                 {{-- @endif --}}
@@ -97,37 +91,6 @@
         <!-- /.container-fluid -->
     </section>
 
-    <div class="modal fade" id="addTermModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addTermModalLabel">Adding a Term</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Content will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editBrandModalLabel">Editing a Brand</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Content will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
     <script>
         $(document).ready(function() {
             $('#addTermModal').on('show.bs.modal', function(event) {
@@ -139,19 +102,18 @@
             });
         });
 
-        // function openEditBrandModal(brandId, route) {
-        //     var modal = $('#editBrandModal');
+        function deleteButton(termId) {
+            // Remove previous highlighting
+            $('#listofterms tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
 
-        //     // Clear previous content from the modal
-        //     modal.find('.modal-body').html('');
-
-        //     // Send an AJAX request to fetch the edit view content
-        //     // for the specific college
-        //     $.get(route, {
-        //         brand_id: brandId
-        //     }, function(data) {
-        //         modal.find('.modal-body').html(data);
-        //     });
-        // }
+            // Add the highlighted class to the clicked row
+            $('#listofterms tbody tr[data-term-id="' + termId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+        }
     </script>
 @endsection

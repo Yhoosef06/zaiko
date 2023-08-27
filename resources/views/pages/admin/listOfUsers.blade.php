@@ -52,7 +52,7 @@
                                 <tbody>
                                     @foreach ($users as $user)
                                         @if ($user->id_number != Auth::user()->id_number)
-                                            <tr>
+                                            <tr data-user-id="{{ $user->id_number }}">
                                                 <td>{{ $user->id_number }}</td>
                                                 <td>{{ $user->first_name }} {{ $user->last_name }}</td>
                                                 @if ($user->account_type == 'student')
@@ -88,7 +88,8 @@
                                                         <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                         <button type="submit"
                                                             class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'><i
+                                                            data-toggle="tooltip" title='Delete'
+                                                            onclick="deleteButton({{ $user->id_number }})"><i
                                                                 class="fa fa-trash"></i></button>
                                                     </form>
                                                 </td>
@@ -145,48 +146,38 @@
 @endsection
 
 <script>
-    // function openItemModal(userId) {
-    //     // Send an AJAX request to fetch the item details
-    //     $.ajax({
-    //         url: 'view-user-' + userId,
-    //         type: 'GET',
-    //         dataType: 'json',
-    //         success: function(data) {
-    //             console.log(data);
-    //             // Populate the modal window with the item details
-    //             $('#modal-user-information .modal-body').html(
-    //                 '<p><strong>I.D. #:</strong> ' + data.id_number + '</p>' +
-    //                 '<p><strong>First Name:</strong> ' + data.first_name + '</p>' +
-    //                 '<p><strong>Last Name:</strong> ' + data.last_name + '</p>' +
-    //                 '<p><strong>Account Type:</strong> ' + data.account_type + '</p>' +
-    //                 '<p><strong>Account Status:</strong> ' + data.account_status + '</p>' +
-    //                 '<p><strong>Role:</strong> ' + data.role + '</p>' +
-    //                 '<p><strong>Program/Department:</strong> ' + data.departments.department_name +
-    //                 '</p>'
-    //             );
-    //             // Update the "Edit" button link with the correct item ID
-    //             var editUrl = '{{ route('edit_user_info', ['id_number' => 'userId']) }}';
-    //             editUrl = editUrl.replace(':userId', data.id_number);
-    //             $('#modal-item-details .modal-footer a').attr('href', editUrl);
-    //         },
-    //         error: function(xhr, status, error) {
-    //             // Display an error message if the AJAX request fails
-    //             $('#modal-user-information .modal-body').html(
-    //                 '<p>Failed to load item details.</p>' +
-    //                 '<p>Error: ' + error + '</p>'
-    //             );
-    //         }
-    //     });
+    function deleteButton(userId) {
+        // Remove previous highlighting
+        $('#listofusers tbody tr').css({
+            'box-shadow': 'none',
+            'background-color': 'transparent'
+        });
 
-    //     // Show the modal window
-    //     $('#modal-item-details').modal('hide');
-    // }
+        // Add the highlighted class to the clicked row
+        $('#listofusers tbody tr[data-user-id="' + userId + '"]').css({
+            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+            'background-color': '#A9F5F2' // Adjust the color as needed
+        });
+    }
 
     function openViewUserModal(userId) {
         var modal = $('#modal-user-info');
         var url = "{{ route('view_user_info', ['id_number' => ':userId']) }}".replace(':userId', userId);
         // Clear previous content from the modal
         modal.find('.modal-body').html('');
+
+        // Remove previous highlighting
+        $('#listofusers tbody tr').css({
+            'box-shadow': 'none',
+            'background-color': 'transparent'
+        });
+
+        // Add the highlighted class to the clicked row
+        $('#listofusers tbody tr[data-user-id="' + userId + '"]').css({
+            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+            'background-color': '#A9F5F2' // Adjust the color as needed
+        });
+
 
         $.get(url, function(data) {
             modal.find('.modal-body').html(data);

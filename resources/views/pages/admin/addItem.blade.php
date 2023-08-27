@@ -1,193 +1,224 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    @if (session('status'))
-        <div class="alert alert-danger alert-dismissible">
-            <i class="icon fas fa-exclamation-triangle"></i> {{ session('status') }}
-        </div>
-    @endif
-    <div class="container col-lg-10 bg-light shadow-lg p-3">
-        <label for="adding new item">
-            <h2 class="text-decoration-underline">Adding New Item</h2>
-        </label>
-        <form action="{{ route('save_new_item') }}" method="POST">
-            @csrf
-            <div class="row m-2">
-                <div class="col">
-                    <label for="location">Room/Location: </label>
-                    <div style="display:flex">
-                        <div class=" form-group">
-                            <select id="location" name="location"
-                                class="form-control @error('location')
-                                        border-danger @enderror">
-                                <option value="option_select" disabled selected>Choose a room</option>
-                                @foreach ($rooms as $room)
-                                    <option value="{{ $room->id }}"
-                                        {{ old('location') == $room->id ? 'selected' : '' }}>{{ $room->room_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('location')
-                                <div class="text-danger">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                    data-target="#modal-addRoom"></i></a>
-                        </div>
-                    </div>
-
-                    <label for="Item name">Item Category:</label>
-                    <div style="display:flex">
-                        <div class="form-group">
-                            <select id="item_category" name="item_category"
-                                class="form-control @error('item_category')
-                        border-danger @enderror">
-                                <option value="option_select" disabled selected>Select a category</option>
-                                @foreach ($itemCategories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ old('item_category') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->category_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('item_category')
-                                <div class="text-danger">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                    data-target="#modal-addCategory"></i></a>
-                        </div>
-                    </div>
-
-                    <label for="Brand">Brand:</label>
-                    <div style="display:flex">
-                        <div class="form-group">
-                            <input type="text" id="brand" name="brand" value="{{ old('brand') }}"
-                                class="form-control @error('brand')
-                    border-danger
-                    @enderror"
-                                placeholder="Leave blank if none.">
-                            @error('brand')
-                                <div class="text-danger">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        {{-- <div>
-                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                    data-target="#modal-addBrand"></i></a>
-                        </div> --}}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Model">Model:</label>
-                        <input type="text" id="model" name="model" value="{{ old('model') }}"
-                            class="form-control col-5 @error('model')
-                        border-danger
-                        @enderror"
-                            placeholder="Leave blank if none.">
-                        @error('model')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="aquisition date">Aquisition Date:</label>
-                        <input type="date" id="aquisition_date" name="aquisition_date" class="form-control col-sm-4"
-                            placeholder="Aquistion Date">
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="form-group">
-                        <label for="Item description">Item Description:</label>
-                        <input type="text" id="item_description" name="item_description"
-                            value="{{ old('item_description') }}"
-                            class="form-control @error('item_description')
-                        border-danger
-                        @enderror"
-                            placeholder="Item Description">
-                        @error('item_description')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                    </div>
-
-                    <div class="form-group">
-                        <label for="quantity">Quantity:</label>
-                        <input type="text" id="quantity" name="quantity"
-                            class="form-control col-sm-3 @error('quantity') border-danger @enderror"
-                            value="{{ old('quantity') }}" placeholder="Quantity" oninput="updateSerialNumberFields()">
-                        <input type="checkbox" id="checkbox" name="checkbox" value="1"
-                            onchange="this.value = this.checked ? '1' : '2'; updateSerialNumberFields(); console.log(this.value);"
-                            checked>
-                        <strong>Same serial numbers?</strong> <br>
-
-                        @error('quantity')
-                            <div class="text-danger">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="status">Status:</label>
-                        <select id="status" name="status" class="form-control col-sm-3">
-                            <option value="Active">Active</option>
-                            <option value="For Repair">For Repair</option>
-                            <option value="Obsolete">Obsolete</option>
-                            <option value="Lost">Lost</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="borrowed or not">Inventory Tag:</label>
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
-                            With
-                        </label>
-                        /
-                        <label for="" class="radio-inline">
-                            <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
-                            Without
-                        </label>
-                        <br>
-                    </div>
-
-                    <div class="form-group" id="serial_numbers_container"
-                        data-error-message="{{ $errors->first('serial_numbers') }}">
-                        @error('serial_numbers')
-                            <span class="text-danger">
-                                <p>{{ $message }}</p>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <hr>
-
-                    <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                    <Button type="submit" class="btn btn-success" data-toggle="modal"
-                        data-target="#modal-submitConfirmation"
-                        onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')">Save</Button>
-                </div>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                {{-- Adding distance from the top navigation bar --}}
             </div>
-        </form>
-    </div>
+        </div>
+    </section>
 
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-10">
+                    <div class="card">
+                        <div class="card-header">
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
+                            @endif
+
+                            <h3>Adding New Item</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form action="{{ route('save_new_user') }}" method="POST">
+                            @csrf
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="location">Room/Location: </label>
+                                        <div style="display:flex">
+                                            <div>
+                                                <select id="location" name="location"
+                                                    class="form-control @error('location')
+                                                            border-danger @enderror">
+                                                    <option value="option_select" disabled selected>Choose a room</option>
+                                                    @foreach ($rooms as $room)
+                                                        <option value="{{ $room->id }}"
+                                                            {{ old('location') == $room->id ? 'selected' : '' }}>
+                                                            {{ $room->room_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('location')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                                        data-toggle="modal" data-target="#modal-addRoom"></i></a>
+                                            </div>
+                                        </div>
+
+                                        <label for="Item name">Item Category:</label>
+                                        <div style="display:flex">
+                                            <div class="form-group">
+                                                <select id="item_category" name="item_category"
+                                                    class="form-control @error('item_category')
+                                            border-danger @enderror">
+                                                    <option value="option_select" disabled selected>Select a category
+                                                    </option>
+                                                    @foreach ($itemCategories as $category)
+                                                        <option value="{{ $category->id }}"
+                                                            {{ old('item_category') == $category->id ? 'selected' : '' }}>
+                                                            {{ $category->category_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                @error('item_category')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                                        data-toggle="modal" data-target="#modal-addCategory"></i></a>
+                                            </div>
+                                        </div>
+
+                                        <label for="Brand">Brand:</label>
+                                        <div style="display:flex">
+                                            <div class="form-group">
+                                                <input type="text" id="brand" name="brand"
+                                                    value="{{ old('brand') }}"
+                                                    class="form-control @error('brand')
+                                        border-danger
+                                        @enderror"
+                                                    placeholder="Leave blank if none.">
+                                                @error('brand')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+
+                                            <div>
+                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                                        data-toggle="modal" data-target="#modal-addBrand"></i></a>
+                                            </div>
+                                        </div>
+
+                                        <label for="Model">Model:</label>
+                                        <input type="text" id="model" name="model" value="{{ old('model') }}"
+                                            class="form-control @error('model')
+                                        border-danger
+                                        @enderror"
+                                            placeholder="Leave blank if none.">
+                                        @error('model')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                        <label for="Model">Part Number:</label>
+                                        <input type="text" id="part_number" name="part_number" value="{{ old('part_number') }}"
+                                            class="form-control  @error('model')
+                                        border-danger
+                                        @enderror"
+                                            placeholder="Leave blank if none.">
+                                        @error('part_number')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="aquisition date">Aquisition Date:</label>
+                                        <input type="date" id="aquisition_date" name="aquisition_date"
+                                            class="form-control" placeholder="Aquistion Date">
+
+                                        <label for="Item description">Item Description:</label>
+                                        <input type="text" id="item_description" name="item_description"
+                                            value="{{ old('item_description') }}"
+                                            class="form-control @error('item_description')
+                                        border-danger
+                                        @enderror"
+                                            placeholder="Item Description">
+                                        @error('item_description')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                        <label for="quantity">Quantity:</label>
+                                        <input type="text" id="quantity" name="quantity"
+                                            class="form-control @error('quantity') border-danger @enderror"
+                                            value="{{ old('quantity') }}" placeholder="Quantity"
+                                            oninput="updateSerialNumberFields()">
+                                        <input type="checkbox" id="checkbox" name="checkbox" value="1"
+                                            onchange="this.value = this.checked ? '1' : '2'; updateSerialNumberFields(); console.log(this.value);"
+                                            checked>
+                                        <strong>Same serial numbers?</strong> <br>
+
+                                        @error('quantity')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                        <label for="status">Status:</label>
+                                        <select id="status" name="status" class="form-control">
+                                            <option value="Active">Active</option>
+                                            <option value="For Repair">For Repair</option>
+                                            <option value="Obsolete">Obsolete</option>
+                                            <option value="Lost">Lost</option>
+                                        </select>
+
+                                        <label for="borrowed or not">Property Sticker:</label>
+                                        <label for="" class="radio-inline">
+                                            <input type="radio" id='inventory_tag' name="inventory_tag"
+                                                value="with">
+                                            With
+                                        </label>
+                                        /
+                                        <label for="" class="radio-inline">
+                                            <input type="radio" id='inventory_tag' name="inventory_tag"
+                                                value="without" checked>
+                                            Without
+                                        </label>
+
+                                        <div class="form-group" id="serial_numbers_container"
+                                            data-error-message="{{ $errors->first('serial_numbers') }}">
+                                            @error('serial_numbers')
+                                                <span class="text-danger">
+                                                    <p>{{ $message }}</p>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                        <div class="card-footer">
+                            <hr>
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
+                            <Button type="submit" class="btn btn-success" data-toggle="modal"
+                                data-target="#modal-submitConfirmation"
+                                onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')">Save</Button>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </div>
+        </div>
+    </section>
     {{-- FOR ADDING A ROOM --}}
 
     <div class="modal fade" id="modal-addRoom">

@@ -39,7 +39,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="listofusers" class="table table-bordered table-striped">
+                            <table id="listofcolleges" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -50,7 +50,7 @@
                                 <tbody>
 
                                     @foreach ($colleges as $college)
-                                        <tr>
+                                        <tr data-college-id="{{ $college->id }}">
                                             <td>{{ $college->id }}</td>
                                             <td>{{ $college->college_name }}</td>
                                             <td>
@@ -67,7 +67,7 @@
                                                         <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                         <button type="submit"
                                                             class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'><i
+                                                            data-toggle="tooltip" title='Delete' onclick="deleteButton({{$college->id}})"><i
                                                                 class="fa fa-trash"></i></button>
                                                     </form>
                                                 @endif
@@ -127,8 +127,34 @@
             });
         });
 
+        function deleteButton(collegeId) {
+            // Remove previous highlighting
+            $('#listofcolleges tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofcolleges tbody tr[data-college-id="' + collegeId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+        }
+
         function openEditCollegeModal(collegeId, route) {
             var modal = $('#editCollegeModal');
+
+            // Remove previous highlighting
+            $('#listofcolleges tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofcolleges tbody tr[data-college-id="' + collegeId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
 
             // Clear previous content from the modal
             modal.find('.modal-body').html('');
