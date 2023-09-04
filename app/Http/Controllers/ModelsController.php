@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Models;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 
@@ -40,10 +41,20 @@ class ModelsController extends Controller
                 'brand_id' => $request->brand_id,
                 'model_name' => $request->model_name,
             ]);
-            return redirect()->route('view_models')->with('success', 'Model name added successfully!');
-        } catch (\Exception $e) {
 
-            return redirect()->route('view_models')->with('danger', 'An error occurred while adding the model name.');
+            
+            if (Auth::user()->account_type == 'admin') {
+                return redirect()->route('view_models')->with('success', 'Model name added successfully!');
+            } else {
+                return redirect('adding-new-item')->with('success', 'Model name added successfully!');
+            }
+
+        } catch (\Exception $e) {
+            if (Auth::user()->account_type == 'admin') {
+                return redirect()->route('view_models')->with('danger', 'An error occurred while adding the model name.');
+            } else {
+                return redirect('adding-new-item')->with('danger', 'An error occurred while adding the model name.');
+            }
         }
     }
 
@@ -68,7 +79,7 @@ class ModelsController extends Controller
                 'model_name' => $request->model_name,
                 // Add other fields you want to update here
             ]);
-
+            
             return redirect('models')->with('success', 'Model edited successfully.');
         } catch (\Exception $e) {
             return redirect('models')->with('danger', 'An error occurred while editing the model.');
@@ -90,7 +101,7 @@ class ModelsController extends Controller
             } else {
                 Session::flash('danger', 'An error occurred.');
             }
-            return redirect('brands');
+            return redirect('models');
         }
     }
 }

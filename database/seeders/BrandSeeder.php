@@ -16,24 +16,31 @@ class BrandSeeder extends Seeder
     {
         $name = [
             [
+                'id' => 1,
                 'brand_name' => 'Samsung',
             ],
             [
-                'brand_name' => 'AOC',
-            ],
-            [
-                'brand_name' => 'Lenovo',
-            ],
-            [
+                'id' => 2,
                 'brand_name' => 'Asus',
             ],
             [
-                'brand_name' => 'MSI',
+                'id' => 3,
+                'brand_name' => 'Uratex',
             ],
             [
-                'brand_name' => 'Logitech',
+                'id' => 4,
+                'brand_name' => 'Oppo',
             ],
             [
+                'id' => 5,
+                'brand_name' => 'Philips',
+            ],
+            [
+                'id' => 6,
+                'brand_name' => 'Wacom',
+            ],
+            [
+                'id' => 7,
                 'brand_name' => 'Genius',
             ],
         ];

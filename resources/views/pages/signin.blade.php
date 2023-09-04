@@ -17,7 +17,7 @@
 
                     @if (session('status'))
                         <div class="text-danger">
-                            <h5>{{ session('status') }}</h5>
+                            <p>{{ session('status') }}</p>
                         </div>
                     @elseif (session('message'))
                         <div>

@@ -66,6 +66,7 @@ class RegisterController extends Controller
                 'password' => Hash::make($request->password),
                 'account_type' => 'student',
                 'account_status' => 'pending',
+                'role' => 'borrower',
                 'department_id' => $request->department_id,
                 // 'security_question_id' => $request->question,
                 // 'answer' => $request->answer
@@ -98,6 +99,7 @@ class RegisterController extends Controller
                 'password' => Hash::make($request->password),
                 'account_type' => 'faculty',
                 'account_status' => 'pending',
+                'role' => 'borrower',
                 'department_id' => $request->department_id,
                 // 'security_question_id' => $request->question,
                 // 'answer' => $request->answer

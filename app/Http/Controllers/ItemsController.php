@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Room;
+use App\Models\Brand;
 use App\Models\Order;
+use App\Models\Models;
+use App\Models\College;
 use App\Models\ItemLog;
 use App\Models\OrderItem;
 use App\Models\Reference;
@@ -12,6 +15,7 @@ use App\Models\Department;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use App\Models\OrderItemTemp;
+use App\Rules\ExistsInDatabase;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
@@ -27,13 +31,14 @@ class ItemsController extends Controller
     {
         //admin
         if (Auth::user()->account_type == 'admin') {
-            $items = Item::all()->groupBy(['brand', 'model', 'item_category']);
+            $items = Item::all();
             // dd($items);
             return view('pages.admin.listOfItems')->with(compact('items'));
         } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
-            $items = Item::whereIn('location', $rooms->pluck('id'))->get()->groupBy(['brand', 'model', 'item_category']);
+            // $items = Item::whereIn('location', $rooms->pluck('id'))->get()->groupBy(['brand', 'model', 'item_category']);
+            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
             return view('pages.admin.listOfItems')->with('items', $items);
         }
     }
@@ -43,13 +48,7 @@ class ItemsController extends Controller
         //admin
         if (Auth::user()->account_type == 'admin') {
             $item = Item::find($id);
-            $rooms = Room::all();
-            $room = $item->room->room_name;
-            $item['room'] = $room;
-            $model = $item->model;
-            $items = Item::where('model', '=', $model)->get();
-            $itemCategories = ItemCategory::all();
-            return view('pages.admin.viewItemDetails')->with(compact('items', 'rooms', 'itemCategories'));
+            return view('pages.admin.viewItemDetails')->with(compact('item'));
         } else {
             $item = Item::find($id);
             $user_dept_id = Auth::user()->department_id;
@@ -60,6 +59,29 @@ class ItemsController extends Controller
             $items = Item::where('model', '=', $model)->get();
             $itemCategories = ItemCategory::all();
             return view('pages.admin.viewItemDetails')->with(compact('items', 'rooms', 'itemCategories'));
+        }
+    }
+
+    public function addItem()
+    {
+        //admin
+        if (Auth::user()->account_type == 'admin') {
+            $rooms = Room::all();
+            $brands = Brand::all();
+            $itemCategories = ItemCategory::all();
+            $departments = Department::with('college')->get();
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
+            $colleges = College::with('departments')->orderBy('college_name')->get();
+            return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories', 'departments', 'colleges', 'brands'));
+        } else {
+            $user_dept_id = Auth::user()->department_id;
+            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $brands = Brand::all();
+            $models = Models::all();
+            $itemCategories = ItemCategory::all();
+            return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories', 'brands', 'models'));
         }
     }
 
@@ -122,23 +144,10 @@ class ItemsController extends Controller
                 'message' => 'Changes saved successfully',
             ]);
         } else {
-            Session::flash('success', 'Changes for item # '.$item->id. ' saved successfully.');
+            Session::flash('success', 'Changes for item # ' . $item->id . ' saved successfully.');
             return redirect('list-of-items');
         }
     }
-
-    // public function deleteItem($id)
-    // {
-    //     $item = Item::find($id);
-    //     if ($item->borrowed == 'yes') {
-    //         Session::flash('status', 'Warning: Unable to remove item that is currently being borrowed');
-    //         return redirect('list-of-items');
-    //     } else {
-    //         $item->delete();
-    //         Session::flash('success', 'Successfully Removed Item');
-    //         return redirect('list-of-items');
-    //     }
-    // }
 
     public function deleteItem($id)
     {
@@ -172,6 +181,8 @@ class ItemsController extends Controller
     {
         // dd($request->checkbox);
         $this->validate($request, [
+            'brand' => [new ExistsInDatabase('brands', 'brand_name')],
+            'model' => [new ExistsInDatabase('models', 'model_name')],
             'location' => 'required',
             'serial_numbers' => [
                 'required',
@@ -187,12 +198,11 @@ class ItemsController extends Controller
                 }),
             'item_category' => 'required',
             'item_description' => 'required',
-            'aquisition_date' => 'nullable',
+            'aquisition_date' => 'required',
             'inventory_tag' => 'required',
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);
-
         // $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
         // if ($item == 'N/A') {
         $isChecked = $request->has('checkbox') && $request->input('checkbox') === '1' ? 1 : 0;
@@ -204,13 +214,12 @@ class ItemsController extends Controller
                     'serial_number' => $serial_number,
                     'location' => $request->location,
                     'category_id' => $request->item_category,
-                    'brand' => $request->brand,
-                    'model' => $request->model,
+                    'brand_id' => $request->brand,
+                    'model_id' => $request->model,
                     'description' => $request->item_description,
                     'aquisition_date' => $request->aquisition_date,
                     'inventory_tag' => $request->inventory_tag,
-                    'quantity' => 1,
-                    'available_quantity' => $request->quantity,
+                    'quantity' => $request->quantity,
                     'status' => $request->status,
                     'borrowed' => 'no',
                     'same_serial_numbers' => $isChecked,
@@ -219,8 +228,9 @@ class ItemsController extends Controller
                 $itemLog = new ItemLog();
                 $itemLog->item_id = $item->id;
                 $itemLog->quantity = $item->quantity;
+                $itemLog->added_by = Auth::user()->id_number;
                 $itemLog->mode = 'added';
-                $itemLog->date = now(); 
+                $itemLog->date = now();
                 $itemLog->save();
             }
         } else {
@@ -229,13 +239,12 @@ class ItemsController extends Controller
                     'serial_number' => $serial_number,
                     'location' => $request->location,
                     'category_id' => $request->item_category,
-                    'brand' => $request->brand,
-                    'model' => $request->model,
+                    'brand_id' => $request->brand,
+                    'model_id' => $request->model,
                     'description' => $request->item_description,
                     'aquisition_date' => $request->aquisition_date,
                     'inventory_tag' => $request->inventory_tag,
                     'quantity' => $request->quantity,
-                    'available_quantity' => $request->quantity,
                     'status' => $request->status,
                     'borrowed' => 'no',
                     'same_serial_numbers' => $isChecked,
@@ -244,8 +253,9 @@ class ItemsController extends Controller
                 $itemLog = new ItemLog();
                 $itemLog->item_id = $item->id;
                 $itemLog->quantity = $item->quantity;
+                $itemLog->added_by = Auth::user()->id_number;
                 $itemLog->mode = 'added';
-                $itemLog->date = now(); 
+                $itemLog->date = now();
                 $itemLog->save();
             }
         }
@@ -441,7 +451,7 @@ class ItemsController extends Controller
 
     public function getBrand()
     {
-        $brands  = Item::distinct()->pluck('brand')->reject(function ($brand) {
+        $brands  = Brand::distinct()->pluck('brand_name')->reject(function ($brand) {
             return $brand === null;
         })->toArray();
 
@@ -450,19 +460,34 @@ class ItemsController extends Controller
 
     public function getModel()
     {
-        $models = Item::distinct()->pluck('model')->reject(function ($model) {
+        $models = Models::distinct()->pluck('model_name')->reject(function ($model) {
             return $model === null;
         })->toArray();
 
         return response()->json($models);
     }
 
-    public function getUnitNumber()
+    public function transferItem($id)
     {
-        // $unit_numbers = Item::distinct()->pluck('unit_number')->reject(function ($unit_number) {
-        //     return $unit_number === null;
-        // })->toArray();
+        $item = Item::find($id);
+        if (auth::user()->account_type == 'admin') {
+            $rooms = Room::all();
+        } else {
+            $dept_id = auth::user()->department_id;
+            $rooms = Room::where('department_id', $dept_id)->get();
+        }
+        return view('pages.admin.transferItem')->with(compact('item', 'rooms'));
+    }
 
-        // return response()->json($unit_numbers);
+    public function saveTransferItem(Request $request, $id)
+    {
+        $item = Item::find($id);
+
+        $item->update([
+            'location' => $request->location,
+         
+        ]);
+
+        return redirect()->route('view_items')->with('success', 'Item transferred successfully');
     }
 }

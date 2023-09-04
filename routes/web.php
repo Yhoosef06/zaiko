@@ -78,10 +78,11 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
     // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
-    Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
+    // Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
 
     // FOR ITEMS
+    Route::get('adding-new-item', [ItemsController::class, 'addItem'])->name('add_item');
     Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
     Route::get('view-item-details-{id}', [ItemsController::class, 'viewItemDetails'])->name('view_item_details');
     Route::get('list-of-items-filtered', [ItemsController::class, 'searchItem'])->name('filtered_view');
@@ -92,8 +93,8 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
     Route::get('/get-brand', [ItemsController::class, 'getBrand']);
     Route::get('/get-model', [ItemsController::class, 'getModel']);
-    Route::get('/get-unit-number', [ItemsController::class, 'getUnitNumber']);
-
+    Route::get('/transfer-item-{id}', [ItemsController::class, 'transferItem'])->name('transfer_item');
+    Route::post('/save-transfer-item-{id}', [ItemsController::class, 'saveTransferItem'])->name('save_transfer_item');
 
     // FOR USERS
     Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
@@ -125,7 +126,6 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
     Route::get('add-room', [RoomController::class, 'addRoom'])->name('add_room');
     Route::post('save-new-room', [RoomController::class, 'saveNewRoom'])->name('save_new_room');
-    Route::post('storing-new-room', [RoomController::class, 'storeNewRoom'])->name('store_new_room');
     Route::get('edit/room/{id}', [RoomController::class, 'editRoom'])->name('edit_room');
     Route::post('save-edited-room/{id}', [RoomController::class, 'saveEditedRoom'])->name('save_edited_room');
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
@@ -136,7 +136,6 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('add-item-category', [ItemCategoryController::class, 'addItemCategory'])->name('add_item_category');
     Route::get('edit/item-category/{id}', [ItemCategoryController::class, 'editItemCategory'])->name('edit_item_category');
     Route::post('saving-new-category', [ItemCategoryController::class, 'saveNewCategory'])->name('save_new_category');
-    Route::post('storing-new-category', [ItemCategoryController::class, 'storeNewCategory'])->name('store_new_category');
     Route::post('save-edited-item-category/{id}', [ItemCategoryController::class, 'saveEditedItemCategory'])->name('save_edited_item_category');
     Route::post('delete-category/{id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
 
@@ -144,7 +143,6 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('brands', [BrandController::class, 'index'])->name('view_brands');
     Route::get('add-brand', [BrandController::class, 'addBrand'])->name('add_brand');
     Route::post('save-new-brand', [BrandController::class, 'saveNewBrand'])->name('save_new_brand');
-    Route::post('storing-new-brand', [BrandController::class, 'storeNewBrand'])->name('store_new_brand');
     Route::get('edit/brand/{id}', [BrandController::class, 'editBrand'])->name('edit_brand');
     Route::post('save-edited-brand/{id}', [BrandController::class, 'saveEditedBrand'])->name('save_edited_brand');
     Route::post('delete-brand/{id}', [BrandController::class, 'deleteBrand'])->name('delete_brand');

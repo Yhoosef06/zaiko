@@ -56,6 +56,6 @@ class SignInController extends Controller
             }
         };
 
-        return back()->with('status', 'Invalid Login Credentials');
+        return back()->with('status', 'Invalid I.D. Number or Password');
     }
 }

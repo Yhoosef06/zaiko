@@ -56,13 +56,18 @@
             </a>
         </li> --}}
         <li class="nav-item text-bold">
-            <a class="btn nav-link border-right border-1 text-lg text-bold" href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}" tabindex="-1" aria-disabled="true">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</a>
+
+            <a class="btn nav-link border-right border-1 text-lg text-bold"
+                href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}" tabindex="-1"
+                aria-disabled="true">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</a>
+
         </li>
         <li class="nav-item">
             <form action="/logout" method="POST">
                 @csrf
-                <button class="btn nav-link border-left border-1 text-lg text-bold" href="{{ route('logout') }}" role="button">
-                   Logout
+                <button class="btn nav-link border-left border-1 text-lg text-bold" href="{{ route('logout') }}"
+                    role="button">
+                    Logout
                 </button>
             </form>
         </li>

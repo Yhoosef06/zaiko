@@ -46,8 +46,39 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($brands as $brand)
+                                        @if ($brand->created_at)
+                                            @if ($brand->created_at->format('Y-m-d H:i:s') == $dateTime->format('Y-m-d H:i:s'))
+                                                <tr style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); background-color:lightgreen">
+                                                    <td>{{ $brand->id }}</td>
+                                                    <td> {{ $brand->brand_name }}</td>
+                                                    <td>
+                                                        <button href="#" class="btn btn-sm btn-primary"
+                                                            data-toggle="modal" data-toggle="tooltip" title='Edit'
+                                                            data-target="#editBrandModal"
+                                                            data-route="{{ route('edit_brand', ['id' => $brand->id]) }}"
+                                                            onclick="openEditBrandModal({{ $brand->id }}, $(this).data('route'))">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+                                                        @if ($brand->models_count == 0)
+                                                            <form class="form_delete_btn" method="POST"
+                                                                action="{{ route('delete_brand', $brand->id) }}">
+                                                                @csrf
+                                                                <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                    data-toggle="tooltip" title='Delete'
+                                                                    onclick="deleteButton({{ $brand->id }})"><i
+                                                                        class="fa fa-trash"></i></button>
+                                                            </form>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                    @foreach ($brands as $brand)
                                         <tr data-brand-id="{{ $brand->id }}">
-                                            <td>{{ $brand->id }}</td>
+                                            <td>{{ $brand->id}}</td>
                                             <td>{{ $brand->brand_name }}</td>
                                             <td>
                                                 <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
@@ -63,7 +94,8 @@
                                                         <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                         <button type="submit"
                                                             class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete' onclick="deleteButton({{$brand->id}})"><i
+                                                            data-toggle="tooltip" title='Delete'
+                                                            onclick="deleteButton({{ $brand->id }})"><i
                                                                 class="fa fa-trash"></i></button>
                                                     </form>
                                                 @endif

@@ -84,10 +84,9 @@
                         <th scope="col">Model</th>
                         <th scope="col">Description</th>
                         <th scope="col">QTY</th>
-                        {{-- <th scope="col">UNIT #</th> --}}
                         <th scope="col">Acquisition Date</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Inventory Tag</th>
+                        <th scope="col">Property Sticker</th>
                     </tr>
                 </thead>
                 <tbody>

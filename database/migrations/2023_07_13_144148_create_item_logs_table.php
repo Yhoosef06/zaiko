@@ -17,13 +17,17 @@ class CreateItemLogsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('order_item_id')->nullable();
             $table->unsignedBigInteger('item_id')->nullable();
+            $table->integer('added_by');
+            $table->integer('modified_by')->nullable();
             $table->integer('quantity');
             $table->string('mode');
             $table->date('date');
-            $table->string('room_from');
-            $table->string('room_to');
+            $table->string('room_from')->nullable();
+            $table->string('room_to')->nullable();
             $table->timestamps();
 
+            $table->foreign('added_by')->references('id_number')->on('users');
+            $table->foreign('modified_by')->references('id_number')->on('users');
             $table->foreign('order_item_id')->references('id')->on('order_items');
             $table->foreign('item_id')->references('id')->on('items');
         });

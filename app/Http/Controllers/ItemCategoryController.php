@@ -47,27 +47,39 @@ class ItemCategoryController extends Controller
             return redirect('item-categories')->with('danger', 'An error occurred while editing the item category.');
         }
     }
-    
+
     public function saveNewCategory(Request $request)
     {
         $categories = ItemCategory::all();
         try {
             // Validate the input
             $request->validate([
-                'category_name' => 'required',
+                'category_name' => 'required|unique:item_categories,category_name',
             ]);
 
             $category = ItemCategory::where('category_name', '=', $request->input('category_name'))->first();
-            if ($category) {
-                return redirect()->route('view_item_categories')->with('danger', 'Item category already exist.');
-            }
+            // if ($category) {
+            //     if (Auth::user()->account_type == 'admin') {
+            //         return redirect()->route('view_item_categories')->with('danger', 'Item category already exist.');
+            //     } else {
+            //         return redirect('adding-new-item')->with('danger', 'Item category already exist.');
+            //     }
+            // }
 
             ItemCategory::create([
                 'category_name' => $request->category_name,
             ]);
-            return redirect()->route('view_item_categories')->with('success', 'New item category has been added.');
+            if (Auth::user()->account_type == 'admin') {
+                return redirect()->route('view_item_categories')->with('success', 'New item category has been added.');
+            } else {
+                return redirect('adding-new-item')->with('success', 'New item category has been added.');
+            }
         } catch (\Exception $e) {
-            return redirect()->route('view_item_categories')->with('danger', 'An error has occured while adding the new item category.');
+            if (Auth::user()->account_type == 'admin') {
+                return redirect()->route('view_item_categories')->with('danger', 'An error has occured while adding the new item category.');
+            } else {
+                return redirect('adding-new-item')->with('danger', 'An error has occured while adding the new item category.');
+            }
         }
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
@@ -13,8 +14,10 @@ class BrandController extends Controller
 
     public function index()
     {
+        $dateTime = Carbon::now();
+        // $currentDate = $dateTime->format('Y-m-d H:i');
         $brands = Brand::withCount('models')->get();
-        return view('pages.admin.listOfBrands')->with(compact('brands'));
+        return view('pages.admin.listOfBrands')->with(compact('brands', 'dateTime'));
     }
 
     public function addBrand()
@@ -35,29 +38,19 @@ class BrandController extends Controller
             Brand::create([
                 'brand_name' => $request->brand_name,
             ]);
-            return redirect()->route('view_brands')->with('success', 'Brand name added successfully!');
+            if (Auth::user()->account_type == 'admin') {
+                return redirect()->route('view_brands')->with('success', 'Brand name added successfully!');
+            } else {
+                return redirect('adding-new-item')->with('success', 'Brand name added successfully!');
+            }
+            
         } catch (\Exception $e) {
-
-            return redirect()->route('view_brands')->with('danger', 'An error occurred while adding the brand name.');
+            if (Auth::user()->account_type == 'admin') {
+                return redirect()->route('view_brands')->with('danger', 'An error occurred while adding the brand name.');
+            } else {
+                return redirect('adding-new-item')->with('danger', 'An error occurred while adding the brand name.');
+            }
         }
-    }
-
-    public function storeNewBrand(Request $request)
-    {
-        // Validate the input
-        $request->validate([
-            'brand' => 'required',
-        ]);
-
-        $brand = Brand::where('brand_name', '=', $request->input('brand'))->first();
-        if ($brand) {
-            return response()->json(['error' => $request->brand . ' brand has already been added.'], 422);
-        }
-
-        Brand::create([
-            'brand_name' => $request->brand,
-        ]);
-        return response()->json(['success' => $request->brand . ' brand successfully added.'], 200);
     }
 
     public function editBrand($id)

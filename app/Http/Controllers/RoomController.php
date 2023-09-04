@@ -52,45 +52,18 @@ class RoomController extends Controller
                 'room_name' => $request->room_name,
             ]);
 
-            return redirect()->route('view_rooms')->with('success', 'Room name added successfully!');
+            if (Auth::user()->account_type == 'admin') {
+                return redirect()->route('view_rooms')->with('success', 'Room name added successfully!');
+            } else {
+                return redirect('adding-new-item')->with('success', 'Room name added successfully!');
+            }
         } catch (\Exception $e) {
-            // dd($e);
-            return redirect()->route('view_rooms')->with('danger', 'An error occurred while adding the room name.');
+            if (Auth::user()->account_type == 'admin') {
+                return redirect()->route('view_rooms')->with('danger', 'An error occurred while adding the room name.');
+            } else {
+                return redirect('adding-new-item')->with('danger', 'An error occurred while adding the room name.');
+            }
         }
-    }
-
-    public function storeNewRoom(Request $request)
-    {
-        // Validate the input
-        $request->validate([
-            'room_name' => 'required|regex:/[A-Z]+/|min:3',
-            'department' => Auth::user()->account_type == 'admin' ? 'required|exists:departments,id' : '',
-
-        ]);
-
-        // Check if the room already exists
-        $room_input = Room::where('room_name', $request->input('room_name'))->first();
-
-        $departmentId = Auth::user()->account_type == 'admin' ? $request->input('department') : Auth::user()->department_id;
-
-        if ($room_input) {
-
-            return response()->json(['error' =>  $room_input . ' has already been added.'], 400);
-        }
-
-        $room = Room::create([
-            'room_name' => $request->input('room_name'),
-            'department_id' => $departmentId,
-        ]);
-
-        // Return a success message
-        return response()->json([
-            'success' => $room->room_name . ' successfully added.',
-            'errors' => [
-                'department' => ['The department field is required.'],
-                'room_name' => ['The room name field is required.']
-            ]
-        ], 200);
     }
 
     public function editRoom($id)

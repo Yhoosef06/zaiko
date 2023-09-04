@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use BaconQrCode\Common\Mode;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Item extends Model
 {
@@ -39,6 +41,16 @@ class Item extends Model
 
     public function category(){
         return $this->belongsTo(ItemCategory::class, 'category_id', 'id');
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
+    }
+
+    public function model(): BelongsTo
+    {
+        return $this->belongsTo(Models::class, 'model_id', 'id');
     }
 
     public function order_item_temp(): HasMany
