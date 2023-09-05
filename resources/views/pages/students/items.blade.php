@@ -1,6 +1,5 @@
 @extends('layouts.pages.yields')
 
-
 @section('content-header')
     <div class="content-header">
         <div class="container-fluid">
@@ -84,8 +83,8 @@
                     <div class="col-lg-2 col-6">
                         <div class="small-box bg-info bg-gradient">
                             <div class="inner">
-                                <h3>{{$item->brand}}</h3>
-                                <p>{{Str::limit($item->model, 30, '...')}}</p>
+                                <h3>{{$item->brand->brand_name}}</h3>
+                                <p>{{Str::limit($item->model->model_name, 30, '...')}}</p>
                             </div>
                             <div class="small-box-footer d-grid gap-2">
                                 <button type="button" class="btn btn-link text-dark" data-toggle="modal"
@@ -107,8 +106,8 @@
                                         <div class="modal-body text-dark">
                                             <div class="row text-lg">
                                                 <div class="col">
-                                                    <strong>Brand:</strong> {{ $item->brand }} <br>
-                                                    <strong>Model:</strong> {{ $item->model }} <br>
+                                                    <strong>Brand:</strong> {{ $item->brand->brand_name }} <br>
+                                                    <strong>Model:</strong> {{ $item->model->model_name }} <br>
                                                     @if($item->serial_number == null || $item->category->category_name = 'tools')
                                                         <strong>Available:</strong> {{$item->quantity}} <br>
                                                     @else
@@ -125,7 +124,7 @@
                                                 @csrf
                                                 <div class="form-group col-2">
                                                     <label for="quantity">Quantity:</label>
-                                                    @if($item->serial_number == null)
+                                                    @if($item->category_id == 5 || 6 || 7)
                                                         <select class="form-control" id="quantity" name="quantity">
                                                             @for($i = 1; $i <= $item->quantity; $i++)
                                                             <option value="{{$i}}">{{$i}}</option>
