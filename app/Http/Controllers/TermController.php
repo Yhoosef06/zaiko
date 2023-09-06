@@ -18,7 +18,7 @@ class TermController extends Controller
 
     public function addTerm()
     {
-        return view('pages.admin.addTerm');
+        return view('pages.admin.addBrand');
     }
 
     public function saveNewTerm(Request $request)

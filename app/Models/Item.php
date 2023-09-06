@@ -21,16 +21,17 @@ class Item extends Model
         'id',
         'location',
         'category_id',
-        'brand',
-        'model',
+        'brand_id',
+        'model_id',
         'description',
         'quantity',
-        'available_quantity',
         'aquisition_date',
         'status',
         'borrowed',
         'inventory_tag',
         'serial_number',
+        'parent_item',
+        'replaced_item',
         'same_serial_numbers'
     ];
 
@@ -38,6 +39,11 @@ class Item extends Model
     {
         return $this->HasOne(Room::class, 'id', 'location');
     }
+
+    // public function ItemLog(): HasOne
+    // {
+    //     return $this->HasOne(ItemLog::class, 'item_id', 'id');
+    // }
 
     public function category(){
         return $this->belongsTo(ItemCategory::class, 'category_id', 'id');
@@ -63,8 +69,5 @@ class Item extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function item_mode(): HasMany 
-    {
-        return $this->hasMany(ItemMode::class);
-    }
+    
 }

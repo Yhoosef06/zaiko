@@ -1,12 +1,12 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    @if (session('status'))
+    {{-- @if (session('status'))
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <i class="icon fas fa-exclamation-triangle"></i>{{ session('status') }}
         </div>
-    @endif
+    @endif --}}
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -60,8 +60,20 @@
                                     @foreach ($items as $item)
                                         <tr data-item-id="{{ $item->id }}">
                                             <td>{{ $item->id }}</td>
-                                            <td>{{ $item->brand->brand_name }}</td>
-                                            <td>{{ $item->model->model_name }}</td>
+                                            <td>
+                                                @if ($item->brand_id == null)
+                                                    N/A
+                                                @else
+                                                    {{ $item->brand->brand_name }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($item->model_id == null)
+                                                    N/A
+                                                @else
+                                                    {{ $item->model->model_name }}
+                                                @endif
+                                            </td>
                                             <td>{{ $item->category->category_name }}</td>
                                             <td>{{ Str::limit($item->description, 20, '...') }}
                                             <td>{{ $item->quantity }}</td>
@@ -87,9 +99,13 @@
                                                     <i class="fa fa-eye"></i>
                                                 </button>
 
+                                                {{-- <a href="{{ route('view_item_details', ['id' => $item->id]) }}">View</a> --}}
+
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-item-details" data-toggle="tooltip"
-                                                    title='Add Sub Item' onclick="openItemModal('{{ $item->id }}')">
+                                                    data-target="#modal-add-sub-item" data-toggle="tooltip"
+                                                    title='Add Sub Item'
+                                                    data-route="{{ route('add_sub_item', ['id' => $item->id]) }}"
+                                                    onclick="openAddSubItemModal({{ $item->id }}, $(this).data('route'))">
                                                     <i class="fa fa-plus-square"></i>
                                                 </button>
 
@@ -102,8 +118,10 @@
                                                 </button>
 
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-item-details" data-toggle="tooltip"
-                                                    title='Replace Item' onclick="openItemModal('{{ $item->id }}')">
+                                                    data-target="#modal-replace-item" data-toggle="tooltip"
+                                                    title='Replace Item' 
+                                                    data-route="{{ route('replace_item', ['id' => $item->id]) }}"
+                                                    onclick="openReplaceItemModal({{ $item->id }}, $(this).data('route'))">
                                                     <i class="fa fa-exchange-alt"></i>
                                                 </button>
 
@@ -161,11 +179,11 @@
         </div>
     </div>
 
-    {{-- <div class="modal fade" id="modal-edit-item" tabindex="-1" role="dialog" aria-labelledby="modal-edit-item-label">
+    <div class="modal fade" id="modal-add-sub-item" tabindex="-1" role="dialog" aria-labelledby="modal-add-sub-item">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="modal-edit-item-label">Edit Item Details</h4>
+                    <h4 class="modal-title" id="modal-add-sub-item">Adding Sub Item</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -173,15 +191,28 @@
                 <div class="modal-body">
                     <!-- Form fields for editing the item details -->
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-replace-item" tabindex="-1" role="dialog" aria-labelledby="modal-replace-item">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-replace-item">Replace Item</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form fields for editing the item details -->
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 
-    <div class="modal fade" id="modal-transfer-item" tabindex="-1" role="dialog" aria-labelledby="modal-edit-item-label">
+    <div class="modal fade" id="modal-transfer-item" tabindex="-1" role="dialog"
+        aria-labelledby="modal-edit-item-label">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -212,76 +243,6 @@
             'background-color': '#A9F5F2' // Adjust the color as needed
         });
     }
-
-    // function openItemModal(itemId) {
-    //     // Remove previous highlighting
-    //     $('#listofitems tbody tr').css({
-    //         'box-shadow': 'none',
-    //         'background-color': 'transparent'
-    //     });
-
-    //     // Add the highlighted class to the clicked row
-    //     $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-    //         'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-    //         'background-color': '#A9F5F2' // Adjust the color as needed
-    //     });
-
-    //     $(document).ready(function() {
-    //         $('#modal-item-details').on('show.bs.modal', function() {
-    //             $('#modal-edit-item').modal('hide');
-    //         });
-    //     });
-    //     // Send an AJAX request to fetch the item details
-    //     $.ajax({
-    //         url: 'get-item-' + itemId + '-details',
-    //         type: 'GET',
-    //         dataType: 'json',
-    //         success: function(data) {
-    //             console.log(data);
-    //             const acquisitionDate = new Date(data.aquisition_date);
-    //             const options = {
-    //                 year: 'numeric',
-    //                 month: 'long',
-    //                 day: 'numeric'
-    //             };
-    //             const acquisitionDateStr = acquisitionDate.toLocaleDateString('en-US', options);
-
-    //             // Populate the modal window with the item details
-    //             $('#modal-item-details .modal-body').html(
-    //                 '<p><strong>Item Number:</strong> ' + data.id + '</p>' +
-    //                 '<p><strong>Serial Number:</strong> ' + data.serial_number + '</p>' +
-    //                 '<p><strong>Brand:</strong> ' + data.brand + '</p>' +
-    //                 '<p><strong>Model:</strong> ' + data.model + '</p>' +
-    //                 '<p><strong>Category:</strong> ' + data.category.category_name + '</p>' +
-    //                 '<p><strong>Description:</strong> ' + data.description + '</p>' +
-    //                 '<p><strong>Quantity:</strong> ' + data.quantity + '</p>' +
-    //                 '<p><strong>Aquisition Date:</strong> ' + acquisitionDateStr + '</p>' +
-    //                 '<p><strong>Status:</strong> ' + data.status + '</p>' +
-    //                 '<p><strong>Location:</strong> ' + data.room.room_name + '</p>' +
-    //                 '<p><strong>Property Sticker:</strong> ' + data.inventory_tag + '</p>'
-    //             );
-    //             $('#modal-item-details .modal-footer').html(
-    //                 '<button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>' +
-    //                 '<a href="#" class="btn btn-primary" onclick="editItemModal(' + data.id +
-    //                 ');">Edit</a>'
-    //             );
-    //             // Update the "Edit" button link with the correct item ID
-    //             var editUrl = '{{ route('edit_item_details', ['id' => ':itemId']) }}';
-    //             editUrl = editUrl.replace(':itemId', data.id);
-    //             $('#modal-item-details .modal-footer a').attr('href', editUrl);
-    //         },
-    //         error: function(xhr, status, error) {
-    //             // Display an error message if the AJAX request fails
-    //             $('#modal-item-details .modal-body').html(
-    //                 '<p>Failed to load item details.</p>' +
-    //                 '<p>Error: ' + error + '</p>'
-    //             );
-    //         }
-    //     });
-
-    //     // Show the modal window
-    //     $('#modal-item-details').modal('hide');
-    // }
 
     function openItemModal(itemId) {
         var modal = $('#modal-item-details');
@@ -327,6 +288,60 @@
         });
 
         var modal = $('#modal-transfer-item');
+
+        // Clear previous content from the modal
+        modal.find('.modal-body').html('');
+
+        // Send an AJAX request to fetch the edit view content
+        // for the specific college
+        $.get(route, {
+            item_id: itemId
+        }, function(data) {
+            modal.find('.modal-body').html(data);
+        });
+    }
+
+    function openAddSubItemModal(itemId, route) {
+        // Remove previous highlighting
+        $('#listofitems tbody tr').css({
+            'box-shadow': 'none',
+            'background-color': 'transparent'
+        });
+
+        // Add the highlighted class to the clicked row
+        $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
+            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+            'background-color': '#A9F5F2' // Adjust the color as needed
+        });
+
+        var modal = $('#modal-add-sub-item');
+
+        // Clear previous content from the modal
+        modal.find('.modal-body').html('');
+
+        // Send an AJAX request to fetch the edit view content
+        // for the specific college
+        $.get(route, {
+            item_id: itemId
+        }, function(data) {
+            modal.find('.modal-body').html(data);
+        });
+    }
+
+    function openReplaceItemModal(itemId, route) {
+        // Remove previous highlighting
+        $('#listofitems tbody tr').css({
+            'box-shadow': 'none',
+            'background-color': 'transparent'
+        });
+
+        // Add the highlighted class to the clicked row
+        $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
+            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+            'background-color': '#A9F5F2' // Adjust the color as needed
+        });
+
+        var modal = $('#modal-replace-item');
 
         // Clear previous content from the modal
         modal.find('.modal-body').html('');

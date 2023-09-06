@@ -82,4 +82,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(SecurityQuestion::class);
     }
+
+    public function itemLogs(): HasMany
+    {
+        return $this->hasMany(ItemLog::class, 'added_by', 'id');
+    }
 }

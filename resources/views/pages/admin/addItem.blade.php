@@ -104,6 +104,9 @@
                                             <select id="model" name="model"
                                                 class="form-control @error('model') border-danger @enderror">
                                                 <option value="option_select" disabled selected>Select a model</option>
+                                                @foreach ($models as $model)
+                                                    <option value="{{ $model->id }}">{{ $model->model_name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 

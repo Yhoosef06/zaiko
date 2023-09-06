@@ -18,7 +18,6 @@
     <label for="">isCurrent:</label>
     <input class="size-32" type="checkbox" name="isCurrent" id="isCurrent">
 
-
     <hr>
     <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
         Close
@@ -26,3 +25,4 @@
     <Button type="submit" class="btn btn-success"
         onclick="return confirm('You are about to add a new brand name. Do you wish to continue?')">Save</Button>
 </form>
+

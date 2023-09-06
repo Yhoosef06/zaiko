@@ -48,7 +48,9 @@ class ItemsController extends Controller
         //admin
         if (Auth::user()->account_type == 'admin') {
             $item = Item::find($id);
-            return view('pages.admin.viewItemDetails')->with(compact('item'));
+            $itemLogs = ItemLog::where('item_id', '=', $id)->get();
+            // dd($itemLogs);
+            return view('pages.admin.viewItemDetails')->with(compact('item', 'itemLogs'));
         } else {
             $item = Item::find($id);
             $user_dept_id = Auth::user()->department_id;
@@ -68,13 +70,14 @@ class ItemsController extends Controller
         if (Auth::user()->account_type == 'admin') {
             $rooms = Room::all();
             $brands = Brand::all();
+            $models = Models::all();
             $itemCategories = ItemCategory::all();
             $departments = Department::with('college')->get();
             $departments->each(function ($department) {
                 $department->college_name = $department->college->college_name;
             });
             $colleges = College::with('departments')->orderBy('college_name')->get();
-            return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories', 'departments', 'colleges', 'brands'));
+            return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories', 'departments', 'colleges', 'brands', 'models'));
         } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
@@ -156,7 +159,7 @@ class ItemsController extends Controller
 
             // Check if the item is currently borrowed
             if ($item->borrowed == 'yes') {
-                Session::flash('status', 'Warning: Unable to remove item that is currently being borrowed.');
+                Session::flash('danger', 'Warning: Unable to remove item that is currently being borrowed.');
                 return  redirect('list-of-items');
             }
 
@@ -168,9 +171,9 @@ class ItemsController extends Controller
         } catch (QueryException $e) {
             // Check if the exception is due to a foreign key constraint violation
             if ($e->getCode() === '23000') {
-                Session::flash('status', 'Cannot delete item because it is referenced by other records.');
+                Session::flash('danger', 'Cannot delete item because it is referenced by other records.');
             } else {
-                Session::flash('status', 'An error occurred.');
+                Session::flash('danger', 'An error occurred.');
             }
 
             return redirect('list-of-items');
@@ -181,8 +184,8 @@ class ItemsController extends Controller
     {
         // dd($request->checkbox);
         $this->validate($request, [
-            'brand' => [new ExistsInDatabase('brands', 'brand_name')],
-            'model' => [new ExistsInDatabase('models', 'model_name')],
+            // 'brand' => [new ExistsInDatabase('brands', 'brand_name')],
+            // 'model' => [new ExistsInDatabase('models', 'model_name')],
             'location' => 'required',
             'serial_numbers' => [
                 'required',
@@ -222,7 +225,7 @@ class ItemsController extends Controller
                     'quantity' => $request->quantity,
                     'status' => $request->status,
                     'borrowed' => 'no',
-                    'same_serial_numbers' => $isChecked,
+                    // 'same_serial_numbers' => $isChecked,
                 ]);
                 // dd($item);
                 $itemLog = new ItemLog();
@@ -247,7 +250,7 @@ class ItemsController extends Controller
                     'quantity' => $request->quantity,
                     'status' => $request->status,
                     'borrowed' => 'no',
-                    'same_serial_numbers' => $isChecked,
+                    // 'same_serial_numbers' => $isChecked,
                 ]);
                 // dd($item);
                 $itemLog = new ItemLog();
@@ -485,9 +488,60 @@ class ItemsController extends Controller
 
         $item->update([
             'location' => $request->location,
-         
+
         ]);
 
         return redirect()->route('view_items')->with('success', 'Item transferred successfully');
     }
+
+    public function addSubItem($id)
+    {
+        $item = Item::find($id);
+        $brands = Brand::all();
+        $models = Models::all();
+        return view('pages.admin.addSubItem')->with(compact('item', 'brands', 'models'));
+    }
+
+    public function saveSubItem(Request $request, $id)
+    {
+
+
+        $item = Item::create([
+            'serial_number' => $request->serial_number,
+            'location' => $request->location,
+            'category_id' => $request->item_category,
+            'brand_id' => $request->brand,
+            'model_id' => $request->model,
+            'description' => $request->item_description,
+            'aquisition_date' => $request->aquisition_date,
+            'inventory_tag' => $request->inventory_tag,
+            'quantity' => $request->quantity,
+            'status' => $request->status,
+            'borrowed' => 'no',
+            'parent_item' => $id
+        ]);
+        
+        $itemLog = new ItemLog();
+        $itemLog->item_id = $item->id;
+        $itemLog->quantity = $item->quantity;
+        $itemLog->added_by = Auth::user()->id_number;
+        $itemLog->mode = 'added';
+        $itemLog->date = now();
+        $itemLog->save();
+
+        return redirect()->route('view_items')->with('success', 'Sub Item Added Successfully');
+    }
+
+    public function repalceItem($id)
+    {
+        $item = Item::find($id);
+        if (auth::user()->account_type == 'admin') {
+            $rooms = Room::all();
+        } else {
+            $dept_id = auth::user()->department_id;
+            $rooms = Room::where('department_id', $dept_id)->get();
+        }
+        return view('pages.admin.replaceItem')->with(compact('item', 'rooms'));
+    }
+
 }

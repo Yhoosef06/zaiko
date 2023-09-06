@@ -95,6 +95,9 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('/get-model', [ItemsController::class, 'getModel']);
     Route::get('/transfer-item-{id}', [ItemsController::class, 'transferItem'])->name('transfer_item');
     Route::post('/save-transfer-item-{id}', [ItemsController::class, 'saveTransferItem'])->name('save_transfer_item');
+    Route::get('/add-sub-item-{id}', [ItemsController::class, 'addSubItem'])->name('add_sub_item');
+    Route::post('/save-sub-item-{id}', [ItemsController::class, 'saveSubItem'])->name('save_sub_item');
+    Route::get('/replace-item-{id}', [ItemsController::class, 'replaceItem'])->name('replace_item');
 
     // FOR USERS
     Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
