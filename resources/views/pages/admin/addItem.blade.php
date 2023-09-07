@@ -31,7 +31,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{ route('save_new_item') }}" method="POST">
+                        <form action="{{ route('save_new_item') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
                                 <div class="row">
@@ -214,6 +214,19 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
+
+                                        {{-- <label for="Item image">Upload Image:</label>
+                                        <input type="file" id="item_image" name="item_image"
+                                            value="{{ old('item_image') }}"
+                                            class="form-control @error('item_image')
+                                        border-danger
+                                        @enderror"
+                                            placeholder="Enter an item description">
+                                        @error('item_image')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror --}}
 
                                         <label for="quantity">Quantity:</label>
                                         <input type="text" id="quantity" name="quantity"
