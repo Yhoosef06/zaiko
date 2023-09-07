@@ -5,6 +5,9 @@
                     <label for="">Item ID #:</label> {{ $item->id }}
                 </div>
                 <div>
+                    <label for="">Location:</label> {{ $item->room->room_name }}
+                </div>
+                <div>
                     <label for="">Category:</label> {{ $item->category->category_name }}
                 </div>
                 <div>
@@ -41,73 +44,54 @@
                     @endif
                 </div>
                 <div>
-                    <label for="">Aquisition Date:</label> {{ $item->aquisition_date }}
+                    <label for="">Quantity:</label> {{ $item->quantity }}
                 </div>
                 <div>
-                    <label for="">Quantity:</label> {{ $item->quantity }}
+                    <label for="">Aquisition Date:</label>
+                    {{ date('F j, Y', strtotime($item->aquisition_date)) }}
                 </div>
                 <div>
                     <label for="">Description:</label> {{ $item->description }}
                 </div>
-
             </div>
+
             <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        Logs
-                    </div>
-                    <div class=" card-body">
-                        <p>
-                            Added by:
-                        </p>
-                    </div>
+                <div class="container text-center">
+                    @if ($item->item_image == null)
+                        <img alt="" srcset="" width="200px" height="200px" style="border: 5px">
+                    @else
+                        <img src="{{ $item->item_image }}" alt="" srcset="" width="200px" height="100px">
+                    @endif
                 </div>
             </div>
-
-        </div>
-        <div class="container text-center">
-            @if ($item->item_image == null)
-                <img alt="" srcset="" width="200px" height="150px" style="border: 5px">
-            @else
-                <img src="{{ $item->item_image }}" alt="" srcset="" width="200px" height="100px">
-            @endif
+            <div class="card">
+                <div class="card-title">Logs:</div>
+                <div class="card-body" style="max-height:100px; overflow-y: auto;">
+                    @forelse ($itemLogs as $itemLog)
+                        Date & Time: {{ date('F j, Y H:i:s', strtotime($itemLog->created_at)) }}<br>
+                        Mode: {{ $itemLog->mode }} <br>
+                        @if ($itemLog->mode == 'transferred')
+                            Room From: {{ $itemLog->roomFrom->room_name }} <br>
+                            Room To: {{ $itemLog->roomTo->room_name }} <br>
+                        @endif
+                        @if ($itemLog->mode == 'replacement')
+                            Replaced Item: {{$item->replaced_item}} <br>
+                        @endif
+                        Encoded By: {{ $itemLog->user->first_name }} {{ $itemLog->user->last_name }}
+                        <br>
+                        <hr>
+                    @empty
+                        <div class="text-center">
+                            <p>No data.</p>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
         </div>
     </div>
-    {{-- <a href="#" data-toggle="modal" data-target="#modal-edit-user-info"
-        onclick="openEditUserModal('{{ $user->id_number }}')" class="btn btn-primary">Edit</a> --}}
     <hr>
     <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
         Close
     </button>
-
-
-    <!-- Modal -->
-    {{-- <div class="modal fade" id="modal-edit-user-info" tabindex="-1" role="dialog" aria-labelledby="modal-edit-user-info">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modal-edit-user-info">Edit
-                    {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }} Information</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-            </div>
-        </div>
-    </div>
-</div> --}}
-
-    {{-- <script>
-    function openEditUserModal(userId) {
-        var modal = $('#modal-edit-user-info');
-        var url = "{{ route('edit_user_info', ['id_number' => ':userId']) }}".replace(':userId', userId);
-
-        // Clear previous content from the modal
-        modal.find('.modal-body').html('');
-
-        $.get(url, function(data) {
-            modal.find('.modal-body').html(data);
-        });
-    }
-</script> --}}
+    <a href="#" data-toggle="modal" data-target="#modal-edit-user-info"
+        onclick="openEditUserModal('{{ $item->id }}')" class="btn btn-primary">Edit</a>

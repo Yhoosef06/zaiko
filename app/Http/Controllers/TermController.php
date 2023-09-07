@@ -12,13 +12,16 @@ class TermController extends Controller
     public function index()
     {
         $terms = Term::all();
+        // Fetch the current term from the database
+        $currentTerm = Term::where('isCurrent', true)->first();
 
-        return view('pages.admin.listOfTerms')->with(compact('terms'));
+        // Pass the current term ID to the Blade template
+        return view('pages.admin.listOfTerms', ['currentTermId' => $currentTerm ? $currentTerm->id : null])->with(compact('terms'));
     }
 
     public function addTerm()
     {
-        return view('pages.admin.addBrand');
+        return view('pages.admin.addTerm');
     }
 
     public function saveNewTerm(Request $request)
@@ -30,7 +33,6 @@ class TermController extends Controller
                     'semester' => 'required',
                     'start_date' => 'required',
                     'end_date' => 'required',
-                    'isCurrent' => 'required'
                 ],
             );
 
@@ -38,12 +40,11 @@ class TermController extends Controller
                 'semester' => $request->semester,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
-                'isCurrent' => $request->isCurrent
             ]);
             return redirect()->route('view_terms')->with('success', 'Term added successfully!');
         } catch (\Exception $e) {
-
-            return redirect()->route('view_termss')->with('danger', 'An error occurred while adding the term.');
+            // dd($e);
+            return redirect()->route('view_terms')->with('danger', 'An error occurred while adding the term.');
         }
     }
 
@@ -64,5 +65,19 @@ class TermController extends Controller
             }
             return redirect('terms');
         }
+    }
+
+    public function currentTerm(Request $request, $id)
+    {
+        $termId = $request->input('termId');
+
+        // Set all terms to 'isCurrent' = false except the selected one
+        Term::where('id', '<>', $termId)->update(['isCurrent' => false]);
+
+        // Set the selected term as the current term
+        Term::where('id', $termId)->update(['isCurrent' => true]);
+
+        // Return a response if needed
+        return response()->json(['message' => 'Term updated successfully']);
     }
 }

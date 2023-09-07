@@ -18,7 +18,7 @@ class CreateTermsTable extends Migration
             $table->string('semester');
             $table->date('start_date');
             $table->date('end_date');
-            $table->boolean('isCurrent');
+            $table->boolean('isCurrent')->nullable();
             $table->timestamps();
         });
     }

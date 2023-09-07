@@ -98,6 +98,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('/add-sub-item-{id}', [ItemsController::class, 'addSubItem'])->name('add_sub_item');
     Route::post('/save-sub-item-{id}', [ItemsController::class, 'saveSubItem'])->name('save_sub_item');
     Route::get('/replace-item-{id}', [ItemsController::class, 'replaceItem'])->name('replace_item');
+    Route::post('/save-replaced-item-{id}', [ItemsController::class, 'saveReplacedItem'])->name('save_replaced_item');
 
     // FOR USERS
     Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
@@ -163,6 +164,7 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('add-term', [TermController::class, 'addTerm'])->name('add_term');
     Route::post('save-new-term', [TermController::class, 'saveNewTerm'])->name('save_new_term');
     Route::post('delete-term/{id}', [TermController::class, 'deleteTerm'])->name('delete_term');
+    Route::post('current-term/{id}', [TermController::class, 'currentTerm'])->name('current_term');
 
     //FOR Manage Borrowings
     Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');

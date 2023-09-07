@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Models;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
@@ -13,12 +14,13 @@ class ModelsController extends Controller
 {
     public function index()
     {
+        $dateTime = Carbon::now();
         $models = Models::with('brand')->get();
 
         $models->each(function ($models) {
             $models->brand_name = $models->brand->brand_name;
         });
-        return view('pages.admin.listOfModels')->with(compact('models'));
+        return view('pages.admin.listOfModels')->with(compact('models', 'dateTime'));
     }
 
     public function addModel()

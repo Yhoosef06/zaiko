@@ -42,14 +42,14 @@ class ItemsController extends Controller
             return view('pages.admin.listOfItems')->with('items', $items);
         }
     }
-
+    // dd($itemLogs);
     public function viewItemDetails($id)
     {
         //admin
         if (Auth::user()->account_type == 'admin') {
             $item = Item::find($id);
             $itemLogs = ItemLog::where('item_id', '=', $id)->get();
-            // dd($itemLogs);
+           
             return view('pages.admin.viewItemDetails')->with(compact('item', 'itemLogs'));
         } else {
             $item = Item::find($id);
@@ -231,7 +231,7 @@ class ItemsController extends Controller
                 $itemLog = new ItemLog();
                 $itemLog->item_id = $item->id;
                 $itemLog->quantity = $item->quantity;
-                $itemLog->added_by = Auth::user()->id_number;
+                $itemLog->encoded_by = Auth::user()->id_number;
                 $itemLog->mode = 'added';
                 $itemLog->date = now();
                 $itemLog->save();
@@ -256,7 +256,7 @@ class ItemsController extends Controller
                 $itemLog = new ItemLog();
                 $itemLog->item_id = $item->id;
                 $itemLog->quantity = $item->quantity;
-                $itemLog->added_by = Auth::user()->id_number;
+                $itemLog->encoded_by = Auth::user()->id_number;
                 $itemLog->mode = 'added';
                 $itemLog->date = now();
                 $itemLog->save();
@@ -486,8 +486,18 @@ class ItemsController extends Controller
     {
         $item = Item::find($id);
 
+        $itemLog = new ItemLog();
+        $itemLog->item_id = $item->id;
+        $itemLog->quantity = $item->quantity;
+        $itemLog->encoded_by = Auth::user()->id_number;
+        $itemLog->mode = 'transferred';
+        $itemLog->room_from = $item->location;
+        $itemLog->room_to = $request->room_to;
+        $itemLog->date = now();
+        $itemLog->save();
+
         $item->update([
-            'location' => $request->location,
+            'location' => $request->room_to,
 
         ]);
 
@@ -512,6 +522,7 @@ class ItemsController extends Controller
             'category_id' => $request->item_category,
             'brand_id' => $request->brand,
             'model_id' => $request->model,
+            'part_number' => $request->part_number,
             'description' => $request->item_description,
             'aquisition_date' => $request->aquisition_date,
             'inventory_tag' => $request->inventory_tag,
@@ -524,7 +535,7 @@ class ItemsController extends Controller
         $itemLog = new ItemLog();
         $itemLog->item_id = $item->id;
         $itemLog->quantity = $item->quantity;
-        $itemLog->added_by = Auth::user()->id_number;
+        $itemLog->encoded_by = Auth::user()->id_number;
         $itemLog->mode = 'added';
         $itemLog->date = now();
         $itemLog->save();
@@ -532,16 +543,41 @@ class ItemsController extends Controller
         return redirect()->route('view_items')->with('success', 'Sub Item Added Successfully');
     }
 
-    public function repalceItem($id)
+    public function replaceItem($id)
     {
         $item = Item::find($id);
-        if (auth::user()->account_type == 'admin') {
-            $rooms = Room::all();
-        } else {
-            $dept_id = auth::user()->department_id;
-            $rooms = Room::where('department_id', $dept_id)->get();
-        }
-        return view('pages.admin.replaceItem')->with(compact('item', 'rooms'));
+        $brands = Brand::all();
+        $models = Models::all();
+        return view('pages.admin.replaceItem')->with(compact('item','models','brands'));
+    }
+
+    public function saveReplacedItem(Request $request, $id)
+    {
+        $item = Item::create([
+            'serial_number' => $request->serial_number,
+            'location' => $request->location,
+            'category_id' => $request->item_category,
+            'brand_id' => $request->brand,
+            'model_id' => $request->model,
+            'part_number' => $request->part_number,
+            'description' => $request->item_description,
+            'aquisition_date' => $request->aquisition_date,
+            'inventory_tag' => $request->inventory_tag,
+            'quantity' => $request->quantity,
+            'status' => $request->status,
+            'borrowed' => 'no',
+            'replaced_item' => $id
+        ]);
+        
+        $itemLog = new ItemLog();
+        $itemLog->item_id = $item->id;
+        $itemLog->quantity = $item->quantity;
+        $itemLog->encoded_by = Auth::user()->id_number;
+        $itemLog->mode = 'replacement';
+        $itemLog->date = now();
+        $itemLog->save();
+
+        return redirect()->route('view_items')->with('success', 'Item #' .$id. 'Replaced Successfully');
     }
 
 }

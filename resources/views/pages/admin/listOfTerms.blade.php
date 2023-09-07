@@ -44,7 +44,7 @@
                                         <th>Semester</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
-                                        <th>isCurrent</th>
+                                        <th>Current</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -56,26 +56,22 @@
                                             <td>{{ $term->start_date }}</td>
                                             <td>{{ $term->end_date }}</td>
                                             <td>
-                                                @if ($term->isCurrent == 0)
-                                                    <input class="size-32" type="checkbox" name="isCurrent" id="isCurrent">
-                                                @else
-                                                    <input class="size-32 active" type="checkbox" name="isCurrent"
-                                                        id="isCurrent">
-                                                @endif
+                                                <input class="size-32 checkbox-toggle" type="checkbox" name="currentTerm"
+                                                    id="currentTerm{{ $term->id }}" data-term-id="{{ $term->id }}"
+                                                    {{ $term->isCurrent || $term->id == $currentTermId ? 'checked' : '' }}>
                                             </td>
                                             <td>
-                                                {{-- @if ($brand->models_count == 0) --}}
-                                                <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_term', $term->id) }}">
-                                                    @csrf
-                                                    <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete'
-                                                        onclick="deleteButton({{ $term->id }})"><i
-                                                            class="fa fa-trash"></i></button>
-                                                </form>
-                                                {{-- @endif --}}
+                                                @if ($term->id != $currentTermId)
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_term', $term->id) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-danger show-alert-delete-item"
+                                                            data-toggle="tooltip" title='Delete'
+                                                            onclick="deleteButton({{ $term->id }})"><i
+                                                                class="fa fa-trash"></i></button>
+                                                    </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -94,45 +90,87 @@
     </section>
 
     <!-- Modal -->
-    <div class="modal fade" id="addTermModal" tabindex="-1" role="dialog" aria-labelledby="addTermModalLabel">
-        <div class="modal-dialog modal-m" role="document">
+    <div class="modal fade" id="addTermModal" tabindex="-1" aria-labelledby="addTermModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="addTermModal-label">Adding Term</h4>
+                    <h5 class="modal-title" id="addTermModalLabel">Adding a Term</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-
+                    <!-- Content will be loaded here -->
                 </div>
             </div>
         </div>
     </div>
-@endsection
 
-<script>
-    $(document).ready(function() {
-        $('#addTermModal').on('show.bs.modal', function(event) {
-            var modal = $(this);
+    <script>
+        $(document).ready(function() {
+            $('#addTermModal').on('show.bs.modal', function(event) {
+                var modal = $(this);
 
-            $.get("{{ route('add_term') }}", function(data) {
-                modal.find('.modal-body').html(data);
+                $.get("{{ route('add_term') }}", function(data) {
+                    modal.find('.modal-body').html(data);
+                });
             });
         });
-    });
 
-    function deleteButton(termId) {
-        // Remove previous highlighting
-        $('#listofterms tbody tr').css({
-            'box-shadow': 'none',
-            'background-color': 'transparent'
-        });
+        function deleteButton(termId) {
+            // Remove previous highlighting
+            $('#listofterms tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
 
-        // Add the highlighted class to the clicked row
-        $('#listofterms tbody tr[data-term-id="' + termId + '"]').css({
-            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-            'background-color': '#A9F5F2' // Adjust the color as needed
+            // Add the highlighted class to the clicked row
+            $('#listofterms tbody tr[data-term-id="' + termId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+        }
+
+        $(document).ready(function() {
+            // Add an event listener to the checkboxes
+            $('.checkbox-toggle').change(function() {
+                // Find the closest row
+                var row = $(this).closest('tr');
+
+                // Find the term ID of the clicked checkbox
+                var termId = row.find('.checkbox-toggle').data('term-id');
+
+                // Update the hidden field with the current term ID
+                $('#currentTermId').val(termId);
+
+                // Make an AJAX request to update the current term in the database
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('current_term', ['id' => 'currentTermId']) }}',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        termId: termId
+                    },
+                    success: function(data) {
+                        // Handle the success response if needed
+                        // Uncheck all checkboxes except the current one
+                        $('.checkbox-toggle').prop('checked', false);
+                        row.find('.checkbox-toggle').prop('checked', true);
+
+                        // Show the delete button for all rows where the checkbox is unchecked
+                        $('.btn-danger').show();
+                        // Hide the delete button for the current row where the checkbox is checked
+                        row.find('.btn-danger').hide();
+
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle the error if needed
+                    }
+                });
+            });
+
+            // ... Other existing JavaScript code ...
         });
-    }
-</script>
+    </script>
+@endsection

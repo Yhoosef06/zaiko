@@ -3,25 +3,6 @@
     <div class="card-body">
         <div class="row">
             <div class="col">
-                {{-- <label for="location">Room/Location: </label> --}}
-                {{-- <div style="display:flex">
-                    <select id="location" name="location"
-                        class="form-control @error('location')
-                                                            border-danger @enderror">
-                        <option value="option_select" disabled selected>Choose a room</option>
-                        @foreach ($rooms as $room)
-                            <option value="{{ $room->id }}" {{ old('location') == $room->id ? 'selected' : '' }}>
-                                {{ $room->room_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @if (Auth::user()->account_type != 'admin')
-                        <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                data-target="#addRoomModal" data-toggle="tooltip" title='Add a room'
-                                data-toggle="modal"></i></a>
-                    @endif
-                </div> --}}
-
                 <input type="text" class="form-control" name="location" id="location" value="{{$item->location}}" hidden>
 
                 @error('location')
@@ -29,27 +10,6 @@
                         {{ $message }}
                     </div>
                 @enderror
-                {{-- 
-                <label for="Item name">Item Category:</label> --}}
-                {{-- <div style="display:flex">
-                    <select id="item_category" name="item_category"
-                        class="form-control @error('item_category')
-                                            border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a category
-                        </option>
-                        @foreach ($itemCategories as $category)
-                            <option value="{{ $category->id }}"
-                                {{ old('item_category') == $category->id ? 'selected' : '' }}>
-                                {{ $category->category_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @if (Auth::user()->account_type != 'admin')
-                        <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                data-target="#addItemCategoryModal" data-toggle="tooltip"
-                                title='Add a category'></i></a>
-                    @endif
-                </div> --}}
 
                 <input type="text" class="form-control" name="item_category" id="item_category"
                     value="{{ $item->category_id }}" hidden>
@@ -59,26 +19,6 @@
                         {{ $message }}
                     </div>
                 @enderror
-                {{-- 
-                <label for="Brand">Brand:</label>
-                <div style="display:flex">
-                    <select id="brand" name="brand" class="form-control @error('brand') border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a brand</option>
-                        @foreach ($brands as $brand)
-                            <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <label for="Model">Model:</label>
-                <div style="display:flex">
-                    <select id="model" name="model" class="form-control @error('model') border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a model</option>
-                        @foreach ($models as $model)
-                            <option value="{{ $model->id }}">{{ $model->model_name }}</option>
-                        @endforeach
-                    </select>
-                </div> --}}
 
                 <label for="Brand">Brand:</label>
                 <div style="display:flex">

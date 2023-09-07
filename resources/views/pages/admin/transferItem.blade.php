@@ -41,7 +41,7 @@
                 <input type="text" class="form-control" name="room_from" id="room_from"
                     value="{{ $item->room->room_name }}" readonly>
                 <label for="">To:</label>
-                <select id="location" name="location"
+                <select id="room_to" name="room_to"
                     class="form-control @error('location')
                                                             border-danger @enderror">
                     <option value="option_select" disabled selected>Choose a room</option>

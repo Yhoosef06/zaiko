@@ -47,6 +47,39 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($models as $model)
+                                        @if ($model->created_at)
+                                            @if ($model->created_at->format('Y-m-d H:i:s') == $dateTime->format('Y-m-d H:i:s'))
+                                                <tr
+                                                    style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); background-color:lightgreen">
+                                                    <td>{{ $model->id }}</td>
+                                                    <td>{{ $model->model_name }}</td>
+                                                    <td>{{ $model->brand->brand_name }}</td>
+                                                    <td>
+                                                        <button href="#" class="btn btn-sm btn-primary"
+                                                            data-toggle="modal" data-toggle="tooltip" title='Edit'
+                                                            data-target="#editModelModal"
+                                                            data-route="{{ route('edit_model', ['id' => $model->id]) }}"
+                                                            onclick="openEditModelModal({{ $model->id }}, $(this).data('route'))">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+                                                        @if ($model->items_count == 0)
+                                                            <form class="form_delete_btn" method="POST"
+                                                                action="{{ route('delete_model', $model->id) }}">
+                                                                @csrf
+                                                                <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                    data-toggle="tooltip" title='Delete'
+                                                                    onclick="deleteButton({{ $model->id }})"><i
+                                                                        class="fa fa-trash"></i></button>
+                                                            </form>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                    @foreach ($models as $model)
                                         <tr data-model-id="{{ $model->id }}">
                                             <td>{{ $model->id }}</td>
                                             <td>{{ $model->model_name }}</td>
@@ -65,7 +98,8 @@
                                                         <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                         <button type="submit"
                                                             class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete' onclick="deleteButton({{$model->id}})"><i
+                                                            data-toggle="tooltip" title='Delete'
+                                                            onclick="deleteButton({{ $model->id }})"><i
                                                                 class="fa fa-trash"></i></button>
                                                     </form>
                                                 @endif

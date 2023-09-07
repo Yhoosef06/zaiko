@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
@@ -13,8 +14,10 @@ class ItemCategoryController extends Controller
 
     public function index()
     {
+        $dateTime = Carbon::now();
         $categories = ItemCategory::withCount('items')->get();
-        return view('pages.admin.listOfItemCategories')->with(compact('categories'));
+
+        return view('pages.admin.listOfItemCategories')->with(compact('categories', 'dateTime'));
     }
 
     public function addItemCategory()

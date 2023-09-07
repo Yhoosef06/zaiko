@@ -15,7 +15,6 @@ class BrandController extends Controller
     public function index()
     {
         $dateTime = Carbon::now();
-        // $currentDate = $dateTime->format('Y-m-d H:i');
         $brands = Brand::withCount('models')->get();
         return view('pages.admin.listOfBrands')->with(compact('brands', 'dateTime'));
     }
