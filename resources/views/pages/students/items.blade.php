@@ -108,8 +108,26 @@
                                                 <div class="col">
                                                     <strong>Brand:</strong> {{ $item->brand->brand_name }} <br>
                                                     <strong>Model:</strong> {{ $item->model->model_name }} <br>
-                                                    @if($item->serial_number == null || $item->category->category_name = 'tools')
-                                                        <strong>Available:</strong> {{$item->quantity}} <br>
+                                                    @if($item->serial_number == null || $item->category->category_id = 5 || 6 || 7)
+                                                    @php
+                                                        $missingQty = 0;
+                                                        $borrowedQty = 0;
+                                                        $totalDeduct = 0;
+                                                        foreach($borrowedList as $borrowed){                                                        
+                                                            if($borrowed->item_id == $item->id){
+                                                                $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                            }    
+                                                        }
+
+                                                        foreach ($missingList as $missing) {
+                                                            if($missing->item_id == $item->id){
+                                                                $missingQty = $missingQty + $missing->quantity;
+                                                            }
+                                                        }
+                                                        $totalDeduct = $missingQty + $borrowedQty;
+
+                                                        @endphp
+                                                        <strong>Available:</strong> {{$item->quantity-$totalDeduct}} <br>
                                                     @else
                                                         <strong>Available:</strong> {{$quantity}} <br>
                                                     @endif
