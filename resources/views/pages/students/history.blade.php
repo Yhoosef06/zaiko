@@ -64,8 +64,8 @@
                                                                 <div class="mb-5 border border-secondary">
                                                                     <div class="row text-lg mt-2 mb-2">
                                                                         <div class="col ml-4">
-                                                                            <strong>Brand:</strong> {{ $item->item->brand }} <br>
-                                                                            <strong>Model:</strong> {{ $item->item->model }} <br>
+                                                                            <strong>Brand:</strong> {{ $item->item->brand->brand_name }} <br>
+                                                                            <strong>Model:</strong> {{ $item->item->model->model_name }} <br>
                                                                             
                                                                         </div>
                                                                         <div class="col mr-4">
