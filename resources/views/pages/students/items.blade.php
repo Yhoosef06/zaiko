@@ -70,15 +70,17 @@
             <div class="tab-pane" id="category{{$category->id}}">
                 <div class="row">
                     @php 
-                    $catItem = $items->where('category_id',$category->id)->sortByDesc('id');
+                    $catItem = $items->where('category_id',$category->id)->where('borrowed', 'no')->sortByDesc('id');
                     $groupedItems = $catItem->groupBy(function ($item) {
                         return $item->brand . '_' . $item->model;
                     });
                     @endphp
+                    
                     @foreach($groupedItems as $groupedItem)
                     @php
                     $item = $groupedItem->first();
-                    $quantity = $groupedItem->count();
+                    $serialquantity = $groupedItem->count();
+                    // echo $quantity;
                     @endphp
                     <div class="col-lg-2 col-6">
                         <div class="small-box bg-info bg-gradient">
@@ -108,7 +110,9 @@
                                                 <div class="col">
                                                     <strong>Brand:</strong> {{ $item->brand->brand_name }} <br>
                                                     <strong>Model:</strong> {{ $item->model->model_name }} <br>
-                                                    @if($item->serial_number == null || $item->category->category_id = 5 || 6 || 7)
+                                                    @if($item->category_id != 5 && $item->category_id != 6 && $item->category_id != 7)
+                                                        <strong>Available:</strong>{{$serialquantity}} <br>
+                                                    @elseif($item->serial_number == null || $item->category_id = 5 || $item->category_id = 6 || $item->category_id = 7 )
                                                     @php
                                                         $missingQty = 0;
                                                         $borrowedQty = 0;
@@ -128,8 +132,6 @@
 
                                                         @endphp
                                                         <strong>Available:</strong> {{$item->quantity-$totalDeduct}} <br>
-                                                    @else
-                                                        <strong>Available:</strong> {{$quantity}} <br>
                                                     @endif
                                                 </div>
                                                 <div class="col">
@@ -142,36 +144,38 @@
                                                 @csrf
                                                 <div class="form-group col-2">
                                                     <label for="quantity">Quantity:</label>
-                                                    @if($item->category_id == 5 || 6 || 7)
-                                                       @php
-                                                        $missingQty = 0;
-                                                        $borrowedQty = 0;
-                                                        $totalDeduct = 0;
-                                                        foreach($borrowedList as $borrowed){                                                        
-                                                            if($borrowed->item_id == $item->id){
-                                                                $borrowedQty = $borrowedQty + $borrowed->order_quantity;
-                                                            }    
-                                                        }
+                                                    @if($item->category_id != 5 && $item->category_id != 6 && $item->category_id != 7)
+                                                    <select class="form-control" id="quantity" name="quantity">
+                                                        @for($i = 1; $i <= $serialquantity; $i++)
+                                                        <option value="{{$i}}">{{$i}}nisud</option>
+                                                        @endfor
+                                                    </select>
+                                                    @endif
+                                                    @if($item->category_id == 5 || $item->category_id == 6 || $item->category_id == 7)
+                                                    @php
+                                                    $missingQty = 0;
+                                                    $borrowedQty = 0;
+                                                    $totalDeduct = 0;
+                                                    foreach($borrowedList as $borrowed){                                                        
+                                                        if($borrowed->item_id == $item->id){
+                                                            $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                        }    
+                                                    }
 
-                                                        foreach ($missingList as $missing) {
-                                                            if($missing->item_id == $item->id){
-                                                                $missingQty = $missingQty + $missing->quantity;
-                                                            }
+                                                    foreach ($missingList as $missing) {
+                                                        if($missing->item_id == $item->id){
+                                                            $missingQty = $missingQty + $missing->quantity;
                                                         }
-                                                        $totalDeduct = $missingQty + $borrowedQty;
+                                                    }
+                                                    $totalDeduct = $missingQty + $borrowedQty;
 
-                                                        @endphp
-                                                        <select class="form-control" id="quantity" name="quantity">
-                                                            @for($i = 1; $i <= $item->quantity-$totalDeduct; $i++)
-                                                            <option value="{{$i}}">{{$i}}</option>
-                                                            @endfor
-                                                        </select>
-                                                    @else
-                                                        <select class="form-control" id="quantity" name="quantity">
-                                                            @for($i = 1; $i <= $quantity; $i++)
-                                                            <option value="{{$i}}">{{$i}}</option>
-                                                            @endfor
-                                                        </select>
+                                                    @endphp
+                                                    <select class="form-control" id="quantity" name="quantity">
+                                                        @for($i = 1; $i <= $item->quantity-$totalDeduct; $i++)
+                                                        <option value="{{$i}}">{{$i}}tools</option>
+                                                        @endfor
+                                                    </select>
+
                                                     @endif
                                                 </div>
                                                 <div class="modal-footer">
