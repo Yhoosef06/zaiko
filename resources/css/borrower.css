@@ -1,0 +1,5 @@
+.borrower-bg {
+    background-image: url('/images/usjr.jpg');
+    background-size: cover; /* Optional: Scale the background image to cover the entire element */
+    /* Add other background properties as needed */
+}
