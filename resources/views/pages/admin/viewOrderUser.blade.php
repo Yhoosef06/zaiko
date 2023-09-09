@@ -100,8 +100,8 @@
                                 <td  class="d-none">
                                   <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
                                 </td>
-                                <td>{{ $item->brand }}</td>
-                                <td>{{ $item->model }}</td>
+                                <td>{{ $item->brand_name }}</td>
+                                <td>{{ $item->model_name }}</td>
                                 <td>{{ $item->description }}</td>
                                 <td>
                                   <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
@@ -129,8 +129,8 @@
                                 <td  class="d-none">
                                   <input type="text" name="itemId[]" id="itemID_{{ $i }}">
                                 </td>
-                                <td>{{ $item->brand }}</td>
-                                <td>{{ $item->model }}</td>
+                                <td>{{ $item->brand_name }}</td>
+                                <td>{{ $item->model_name }}</td>
                                 <td>{{ $item->description }}</td>
                                 <td>
                                   <div id="user_serial_{{ $i }}">
@@ -153,8 +153,8 @@
                                 <td  class="d-none">
                                   <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
                                 </td>
-                                <td>{{ $item->brand }}</td>
-                                <td>{{ $item->model }}</td>
+                                <td>{{ $item->brand_name }}</td>
+                                <td>{{ $item->model_name }}</td>
                                 <td>{{ $item->description }}</td>
                                 <td>
                                   <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
