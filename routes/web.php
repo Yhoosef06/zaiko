@@ -218,15 +218,15 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
 
 
 //student
-Route::middleware(['auth', 'user-status:faculty|student', 'user-role:borrower'])->group(function () {
+Route::middleware(['auth', 'user-role:borrower'])->group(function () {
     //student
-    Route::middleware(['user-status:student'])->group(function () {
+    Route::middleware(['user-role:borrower'])->group(function () {
 
         Route::middleware(['account_status:pending'])->group(function () {
             Route::get('/approve', [PagesController::class, 'approve'])->name('approval');
         });
 
-        Route::middleware(['account_status:approved', 'user-role:borrower'])->group(function () {
+        Route::middleware(['account_status:approved'])->group(function () {
 
             Route::controller(StudentController::class)->group(function () {
                 Route::get('/student-dashboard', 'index')->name('student.dashboard');

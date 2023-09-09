@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Room;
 use App\Models\Department;
 use App\Models\College;
+use App\Models\ItemLog;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,7 @@ class StudentController extends Controller
 
         $categories = ItemCategory::all();
         $user_dept_id = Auth::user()->department_id;
+        $itemlogs = ItemLog::all();
         // $rooms = Room::where('department_id', $user_dept_id)->get();x    x   
         // $items = Item::all();
 
@@ -66,7 +68,7 @@ class StudentController extends Controller
         })->get();
 
         // dd($items);
-        return view('pages.students.items')->with(compact('items','categories'));
+        return view('pages.students.items')->with(compact('items','categories','itemlogs'));
     }
 
 
