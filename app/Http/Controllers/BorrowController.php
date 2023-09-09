@@ -342,15 +342,22 @@ class BorrowController extends Controller
     
     public function viewOrderUser($id)
     {
-        $orders = Order::select('orders.id as order_id','item_categories.category_name','items.id as item_id', 'items.available_quantity as itemQuantity', 'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','items.brand', 'items.model', 'items.description', 'order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
+        $orders = Order::select('orders.id as order_id','item_categories.category_name','items.id as item_id',  'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','items.brand', 'items.model', 'items.description', 'order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
             ->join('items', 'order_item_temps.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
             ->where('orders.user_id', $id)
             ->get();
+
+        echo '<pre>';
+        echo print_r($orders);
+        echo '</pre>';
+     
+        exit;
     
-        return view('pages.admin.viewOrderUser')->with(compact('orders'));
+    
+        // return view('pages.admin.viewOrderUser')->with(compact('orders'));
     }
 
     public function borrowItem(){
