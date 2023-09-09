@@ -1,6 +1,5 @@
 @extends('layouts.pages.yields')
 
-
 @section('content-header')
     <div class="content-header">
         <div class="container-fluid">
@@ -71,21 +70,23 @@
             <div class="tab-pane" id="category{{$category->id}}">
                 <div class="row">
                     @php 
-                    $catItem = $items->where('category_id',$category->id)->sortByDesc('id');
+                    $catItem = $items->where('category_id',$category->id)->where('borrowed', 'no')->sortByDesc('id');
                     $groupedItems = $catItem->groupBy(function ($item) {
                         return $item->brand . '_' . $item->model;
                     });
                     @endphp
+                    
                     @foreach($groupedItems as $groupedItem)
                     @php
                     $item = $groupedItem->first();
-                    $quantity = $groupedItem->count();
+                    $serialquantity = $groupedItem->count();
+                    // echo $quantity;
                     @endphp
                     <div class="col-lg-2 col-6">
                         <div class="small-box bg-info bg-gradient">
                             <div class="inner">
-                                <h3>{{$item->brand}}</h3>
-                                <p>{{Str::limit($item->model, 30, '...')}}</p>
+                                <h3>{{$item->brand->brand_name}}</h3>
+                                <p>{{Str::limit($item->model->model_name, 30, '...')}}</p>
                             </div>
                             <div class="small-box-footer d-grid gap-2">
                                 <button type="button" class="btn btn-link text-dark" data-toggle="modal"
@@ -107,12 +108,30 @@
                                         <div class="modal-body text-dark">
                                             <div class="row text-lg">
                                                 <div class="col">
-                                                    <strong>Brand:</strong> {{ $item->brand }} <br>
-                                                    <strong>Model:</strong> {{ $item->model }} <br>
-                                                    @if($item->serial_number == null || $item->category->category_name = 'tools')
-                                                        <strong>Available:</strong> {{$item->quantity}} <br>
-                                                    @else
-                                                        <strong>Available:</strong> {{$quantity}} <br>
+                                                    <strong>Brand:</strong> {{ $item->brand->brand_name }} <br>
+                                                    <strong>Model:</strong> {{ $item->model->model_name }} <br>
+                                                    @if($item->category_id != 5 && $item->category_id != 6 && $item->category_id != 7)
+                                                        <strong>Available:</strong>{{$serialquantity}} <br>
+                                                    @elseif($item->serial_number == null || $item->category_id = 5 || $item->category_id = 6 || $item->category_id = 7 )
+                                                    @php
+                                                        $missingQty = 0;
+                                                        $borrowedQty = 0;
+                                                        $totalDeduct = 0;
+                                                        foreach($borrowedList as $borrowed){                                                        
+                                                            if($borrowed->item_id == $item->id){
+                                                                $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                            }    
+                                                        }
+
+                                                        foreach ($missingList as $missing) {
+                                                            if($missing->item_id == $item->id){
+                                                                $missingQty = $missingQty + $missing->quantity;
+                                                            }
+                                                        }
+                                                        $totalDeduct = $missingQty + $borrowedQty;
+
+                                                        @endphp
+                                                        <strong>Available:</strong> {{$item->quantity-$totalDeduct}} <br>
                                                     @endif
                                                 </div>
                                                 <div class="col">
@@ -125,18 +144,38 @@
                                                 @csrf
                                                 <div class="form-group col-2">
                                                     <label for="quantity">Quantity:</label>
-                                                    @if($item->serial_number == null)
-                                                        <select class="form-control" id="quantity" name="quantity">
-                                                            @for($i = 1; $i <= $item->quantity; $i++)
-                                                            <option value="{{$i}}">{{$i}}</option>
-                                                            @endfor
-                                                        </select>
-                                                    @else
-                                                        <select class="form-control" id="quantity" name="quantity">
-                                                            @for($i = 1; $i <= $quantity; $i++)
-                                                            <option value="{{$i}}">{{$i}}</option>
-                                                            @endfor
-                                                        </select>
+                                                    @if($item->category_id != 5 && $item->category_id != 6 && $item->category_id != 7)
+                                                    <select class="form-control" id="quantity" name="quantity">
+                                                        @for($i = 1; $i <= $serialquantity; $i++)
+                                                        <option value="{{$i}}">{{$i}}nisud</option>
+                                                        @endfor
+                                                    </select>
+                                                    @endif
+                                                    @if($item->category_id == 5 || $item->category_id == 6 || $item->category_id == 7)
+                                                    @php
+                                                    $missingQty = 0;
+                                                    $borrowedQty = 0;
+                                                    $totalDeduct = 0;
+                                                    foreach($borrowedList as $borrowed){                                                        
+                                                        if($borrowed->item_id == $item->id){
+                                                            $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                        }    
+                                                    }
+
+                                                    foreach ($missingList as $missing) {
+                                                        if($missing->item_id == $item->id){
+                                                            $missingQty = $missingQty + $missing->quantity;
+                                                        }
+                                                    }
+                                                    $totalDeduct = $missingQty + $borrowedQty;
+
+                                                    @endphp
+                                                    <select class="form-control" id="quantity" name="quantity">
+                                                        @for($i = 1; $i <= $item->quantity-$totalDeduct; $i++)
+                                                        <option value="{{$i}}">{{$i}}tools</option>
+                                                        @endfor
+                                                    </select>
+
                                                     @endif
                                                 </div>
                                                 <div class="modal-footer">

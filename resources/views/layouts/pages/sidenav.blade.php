@@ -20,7 +20,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
        with font-awesome or any other icon font library -->
-                @if (Auth::user()->account_type == 'student')
+                @if (Auth::user()->role == 'borrower')
                     <li class="nav-item">
                         <a href="{{ route('student.dashboard') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
