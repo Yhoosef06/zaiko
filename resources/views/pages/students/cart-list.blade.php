@@ -13,10 +13,11 @@
 @endsection
 
 @section('content')
+<div class="cart-bg cart-height">
             <table id="cart" class="table">
               
                 <thead>
-                    <tr>
+                    <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
                         <th style="width:10%" class="text-wrap">Category</th>
                         <th style="width:10%" class="text-wrap">Brand</th>
                         <th style="width:10%" class="text-wrap">Model</th>
@@ -276,5 +277,5 @@
                     </div>
                 </div>
             </div>
-
+</div>
 @endsection

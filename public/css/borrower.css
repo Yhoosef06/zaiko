@@ -4,7 +4,6 @@
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-position: center left;
-    background-color: rgba(255, 255, 255, 0.5);
     
     /* Optional: Scale the background image to cover the entire element */
     /* Add other background properties as needed */
@@ -14,3 +13,19 @@
 .borrower-page-height{
     height: 95vh;
 }
+
+.cart-bg{
+    background-image: url('/images/usjr main.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-position: center left;
+}
+
+.cart-height{
+    height: 80vh;
+}
+
+.bg-green {
+    background-color: rgba(0, 150, 0, 0.7) !important;
+  }
