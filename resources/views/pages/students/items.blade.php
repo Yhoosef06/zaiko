@@ -147,7 +147,7 @@
                                                     @if($item->category_id != 5 && $item->category_id != 6 && $item->category_id != 7)
                                                     <select class="form-control" id="quantity" name="quantity">
                                                         @for($i = 1; $i <= $serialquantity; $i++)
-                                                        <option value="{{$i}}">{{$i}}nisud</option>
+                                                        <option value="{{$i}}">{{$i}}</option>
                                                         @endfor
                                                     </select>
                                                     @endif
@@ -172,7 +172,7 @@
                                                     @endphp
                                                     <select class="form-control" id="quantity" name="quantity">
                                                         @for($i = 1; $i <= $item->quantity-$totalDeduct; $i++)
-                                                        <option value="{{$i}}">{{$i}}tools</option>
+                                                        <option value="{{$i}}">{{$i}}</option>
                                                         @endfor
                                                     </select>
 
