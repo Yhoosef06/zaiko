@@ -202,6 +202,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    
     $("#idNumber").autocomplete({
         minLength: 2,
         source: function(request, response) {
@@ -711,690 +712,77 @@ $(document).ready(function() {
     };
 });
 
+$(document).ready(function () {
+    var uniqueSerials = {}; // Object to store unique serial numbers
 
-
-$(document).ready(function() {
-    $("#search_for_serial_1").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
-                },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_1",
-        open: function(event, ui) {
-            $("#user_serial_1 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_1').val(ui.item.serialNumber);
-                $('#itemID_1').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
+$(".serial-input").on("blur", function () {
+    var currentSerial = $(this).val();
+    
+    if (currentSerial in uniqueSerials) {
+        Swal.fire(
+            currentSerial,
+            'Serial Number is duplicated.',
+            'error'
+        );
+    } else {
+        uniqueSerials[currentSerial] = true; // Store the serial number
+    }
 });
-
-$(document).ready(function() {
-    $("#search_for_serial_2").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
+    
+        for (let i = 1; i <=  itemData.temp_quantity ; i++) {
+            $("#search_for_serial_" + i).autocomplete({
+                minLength: 2,
+                source: function (request, response) {
+                    $.ajax({
+                        url: "{{ route('searchForSerial') }}",
+                        dataType: "json",
+                        data: {
+                            query: request.term
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            response(data);
+                        }
+                    });
                 },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_2",
-        open: function(event, ui) {
-            $("#user_serial_2 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_2').val(ui.item.serialNumber);
-                $('#itemID_2').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-
-$(document).ready(function() {
-    $("#search_for_serial_3").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
+                appendTo: "#user_serial_" + i,
+                open: function (event, ui) {
+                    $("#user_serial_" + i + " .ui-autocomplete").css("top", "auto");
                 },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_3",
-        open: function(event, ui) {
-            $(".user_serial .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_3').val(ui.item.serialNumber);
-                $('#itemID_3').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-$(document).ready(function() {
-    $("#search_for_serial_4").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
+                // Custom rendering of autocomplete items
+                response: function (event, ui) {
+                    if (!ui.content.length) {
+                        var noResult = {
+                            value: "",
+                            brand: "No matching Serial Numbers and Description found",
+                            item_category: null,
+                            model: null,
+                            description: null
+                        };
+                        ui.content.push(noResult);
+                    }
                 },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
+                select: function (event, ui) {
+                    if (ui.item.value === "") {
+                        event.preventDefault();
+                    } else {
+                        event.preventDefault();
+                        $('#search_for_serial_' + i).val(ui.item.serialNumber);
+                        $('#itemID_' + i).val(ui.item.itemID);
+                    }
                 }
-            });
-        },
-        appendTo: "#user_serial_4",
-        open: function(event, ui) {
-            $("#user_serial_4 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_4').val(ui.item.serialNumber);
-                $('#itemID_4').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-$(document).ready(function() {
-    $("#search_for_serial_5").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
-                },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
+            }).autocomplete("instance")._renderItem = function (ul, item) {
+                if (item.value === "") {
+                    return $("<li>")
+                        .append("<div>" + item.brand + "</div>")
+                        .appendTo(ul);
+                } else {
+                    return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
                 }
-            });
-        },
-        appendTo: "#user_serial_5",
-        open: function(event, ui) {
-            $("#user_serial_5 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_5').val(ui.item.serialNumber);
-                $('#itemID_5').val(ui.item.itemID);
-
-
-            }
+            };
         }
+    });
 
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-$(document).ready(function() {
-    $("#search_for_serial_6").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
-                },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_6",
-        open: function(event, ui) {
-            $("#user_serial_6 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_6').val(ui.item.serialNumber);
-                $('#itemID_2').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-$(document).ready(function() {
-    $("#search_for_serial_7").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
-                },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_7",
-        open: function(event, ui) {
-            $("#user_serial_7 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_7').val(ui.item.serialNumber);
-                $('#itemID_7').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-$(document).ready(function() {
-    $("#search_for_serial_8").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
-                },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_8",
-        open: function(event, ui) {
-            $("#user_serial_8 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_8').val(ui.item.serialNumber);
-                $('#itemID_8').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-$(document).ready(function() {
-    $("#search_for_serial_9").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
-                },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_9",
-        open: function(event, ui) {
-            $("#user_serial_9 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_9').val(ui.item.serialNumber);
-                $('#itemID_9').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-$(document).ready(function() {
-    $("#search_for_serial_10").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
-                },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_10",
-        open: function(event, ui) {
-            $("#user_serial_10 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_10').val(ui.item.serialNumber);
-                $('#itemID_10').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-$(document).ready(function() {
-    $("#search_for_serial_11").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
-                },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_11",
-        open: function(event, ui) {
-            $("#user_serial_11 .ui-autocomplete").css("top", "auto");
-        },
-        // Custom rendering of autocomplete items
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_11').val(ui.item.serialNumber);
-                $('#itemID_11').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
-
-
-$(document).ready(function() {
-    $("#search_for_serial_12").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
-            $.ajax({
-                url: "{{ route('searchForSerial') }}",
-                dataType: "json",
-                data: {
-                    query: request.term
-                },
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        appendTo: "#user_serial_12",
-        open: function(event, ui) {
-            $("#user_serial_12 .ui-autocomplete").css("top", "auto");
-        },
-
-        response: function(event, ui) {
-            if (!ui.content.length) {
-                var noResult = {
-                    value: "",
-                    brand: "No matching Serial Numbers and Description found",
-                    item_category: null,
-                    model: null,
-                    description: null
-                };
-                ui.content.push(noResult);
-            }
-        },
-        select: function(event, ui) {
-            if (ui.item.value === "") {
-                event.preventDefault();
-            } else {
-                event.preventDefault();
-                $('#search_for_serial_12').val(ui.item.serialNumber);
-                $('#itemID_12').val(ui.item.itemID);
-
-
-            }
-        }
-
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        if (item.value === "") {
-            return $("<li>")
-                .append("<div>" + item.brand + "</div>")
-                .appendTo(ul);
-        } else {
-            return $("<li>").append("<div>" + item.value + "</div>").appendTo(ul);
-        }
-    };
-});
 
 
 
@@ -1664,7 +1052,7 @@ $(document).ready(function() {
                         url: url,
                         type: 'GET',
                         success: function(response) {
-
+                            console.log(response);
                             $('#viewOrderUserShowTable').show();
                             var tableRow = $('<tr>');
                             $('<td class="d-none">').text(userID).appendTo(
@@ -2000,7 +1388,7 @@ $(document).ready(function() {
                         } else if (response.error) {
                             Swal.fire(
                                 'Error',
-                                'Date Not Provided',
+                                'The serial number does not exist.',
                                 'error'
                             );
                         }
