@@ -12,36 +12,19 @@
                 </div>
                 <div>
                     <label for="">Brand:</label>
-                    @if ($item->brand_id)
-                        {{ $item->brand->brand_name }}
-                    @else
-                        N/A
-                    @endif
+                    {{ $item->brand_id ? $item->brand->brand_name : 'N/A' }}
                 </div>
                 <div>
                     <label for="">Model:</label>
-                    @if ($item->model_id)
-                        {{ $item->model->model_name }}
-                    @else
-                        N/A
-                    @endif
+                    {{ $item->model_id ? $item->model->model_name : 'N/A' }}
                 </div>
                 <div>
                     <label for="">Part Number:</label>
-                    @if ($item->part_number)
-                        {{ $item->part_number }}
-                    @else
-                        N/A
-                    @endif
-
+                    {{ $item->part_number ? $item->part_number : 'N/A' }}
                 </div>
                 <div>
                     <label for="">Serial Number:</label>
-                    @if ($item->serial_number)
-                        {{ $item->serial_number }}
-                    @else
-                        N/A
-                    @endif
+                    {{ $item->serial_number ? $item->serial_number : 'N/A' }}
                 </div>
                 <div>
                     <label for="">Quantity:</label> {{ $item->quantity }}
@@ -58,9 +41,13 @@
             <div class="col">
                 <div class="container text-center">
                     @if ($item->item_image == null)
-                        <img alt="" srcset="" width="200px" height="200px" style="border: 5px">
+                        <div
+                            style="border: 1px solid #000; width: 200px; height: 200px; display: flex; justify-content: center; align-items: center;">
+                            No Image
+                        </div>
                     @else
-                        <img src="{{ $item->item_image }}" alt="" srcset="" width="200px" height="100px">
+                        <img src="{{ asset('storage/' . $item->item_image) }}" alt="" srcset=""
+                            width="200px" height="200px">
                     @endif
                 </div>
             </div>
@@ -75,7 +62,7 @@
                             Room To: {{ $itemLog->roomTo->room_name }} <br>
                         @endif
                         @if ($itemLog->mode == 'replacement')
-                            Replaced Item: {{$item->replaced_item}} <br>
+                            Replaced Item: {{ $item->replaced_item }} <br>
                         @endif
                         Encoded By: {{ $itemLog->user->first_name }} {{ $itemLog->user->last_name }}
                         <br>

@@ -28,12 +28,26 @@ class RoomController extends Controller
 
     public function addRoom()
     {
-        $colleges = College::all();
-        $departments = Department::with('college')->get();
-        $departments->each(function ($department) {
-            $department->college_name = $department->college->college_name;
-        });
-        return view('pages.admin.addRoom')->with(compact('departments', 'colleges'));
+        if (Auth::user()->account_type == 'admin') {
+            $colleges = College::all();
+            $departments = Department::with('college')->get();
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
+            return view('pages.admin.addRoom')->with(compact('departments', 'colleges'));
+        } else {
+
+            $user_dept_id = Auth::user()->department_id;
+            $user_department = Department::find($user_dept_id);
+            $user_college_id = $user_department->college_id;
+            $colleges = College::where('id', $user_college_id)->get();
+            // dd($colleges);
+            $departments = Department::with('college')->get();
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
+            return view('pages.admin.addRoom')->with(compact('departments', 'colleges'));
+        }
     }
 
     public function saveNewRoom(Request $request)

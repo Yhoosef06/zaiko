@@ -70,12 +70,12 @@
                                     </div>
                                     <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-settings-tab">
-                                        <div>
+                                        <div class="container">
                                             <label for="">Password Setting:</label>
                                             <a href="{{ route('change_user_password', ['id_number' => Auth::user()->id_number]) }}"
                                                 class="text-decoration-underline">Change Password</a>
                                         </div>
-                                        <div>
+                                        <div class="container">
                                             <label for="">Password Reset Security Question:</label>
                                             <a href="{{ route('modify_security_question', ['id_number' => Auth::user()->id_number]) }}"
                                                 class="text-decoration-underline">Modify</a>

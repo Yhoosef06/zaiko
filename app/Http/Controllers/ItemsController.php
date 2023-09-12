@@ -12,6 +12,7 @@ use App\Models\ItemLog;
 use App\Models\OrderItem;
 use App\Models\Reference;
 use App\Models\Department;
+use Illuminate\Support\Str;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use App\Models\OrderItemTemp;
@@ -49,7 +50,7 @@ class ItemsController extends Controller
         if (Auth::user()->account_type == 'admin') {
             $item = Item::find($id);
             $itemLogs = ItemLog::where('item_id', '=', $id)->get();
-           
+
             return view('pages.admin.viewItemDetails')->with(compact('item', 'itemLogs'));
         } else {
             $item = Item::find($id);
@@ -141,6 +142,14 @@ class ItemsController extends Controller
         $item->inventory_tag = $request->inventory_tag;
         $item->save();
 
+        $itemLog = new ItemLog();
+        $itemLog->item_id = $item->id;
+        $itemLog->quantity = $item->quantity;
+        $itemLog->encoded_by = Auth::user()->id_number;
+        $itemLog->mode = 'edited item details';
+        $itemLog->date = now();
+        $itemLog->save();
+
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
@@ -179,26 +188,22 @@ class ItemsController extends Controller
             return redirect('list-of-items');
         }
     }
+    public function checkSerialNumber($serialNumber)
+    {
+        // Perform a database query to check if the serial number exists
+        $isUnique = Item::where('serial_number', $serialNumber)->doesntExist();
 
+        return response()->json(['isUnique' => $isUnique]);
+    }
     public function saveNewItem(Request $request)
     {
-        // dd($request->checkbox);
+        $serial_numbers = $request->serial_number;
+        $isChecked = $request->input('checkbox') === '1' ? 1 : 0;
+        $randomString = Str::random(10);
+
         $this->validate($request, [
-            // 'brand' => [new ExistsInDatabase('brands', 'brand_name')],
-            // 'model' => [new ExistsInDatabase('models', 'model_name')],
             'location' => 'required',
-            'serial_numbers' => [
-                'required',
-                'array',
-                'min:1',
-                Rule::unique('items', 'serial_number')->where(function ($query) use ($request) {
-                    return $query->where('location', $request->location);
-                }),
-            ],
-            'serial_numbers.*.serial_numbers' => Rule::unique('items', 'serial_number')
-                ->where(function ($query) use ($request) {
-                    $query->where('location', $request->location);
-                }),
+            'serial_number' => 'required|unique:items,serial_number',
             'item_category' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'required',
@@ -206,36 +211,36 @@ class ItemsController extends Controller
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);
-        // $item = Item::where('serial_number', '=', $request->input('serial_number'))->first();
-        // if ($item == 'N/A') {
-        $isChecked = $request->has('checkbox') && $request->input('checkbox') === '1' ? 1 : 0;
+
         // dd($isChecked);
-        $serial_numbers = $request->serial_numbers;
-        if (count($serial_numbers) > 1) {
-            foreach ($serial_numbers as $serial_number) {
-                $item = Item::create([
-                    'serial_number' => $serial_number,
-                    'location' => $request->location,
-                    'category_id' => $request->item_category,
-                    'brand_id' => $request->brand,
-                    'model_id' => $request->model,
-                    'description' => $request->item_description,
-                    'aquisition_date' => $request->aquisition_date,
-                    'inventory_tag' => $request->inventory_tag,
-                    'quantity' => $request->quantity,
-                    'status' => $request->status,
-                    'borrowed' => 'no',
-                    // 'same_serial_numbers' => $isChecked,
-                ]);
-                // dd($item);
-                $itemLog = new ItemLog();
-                $itemLog->item_id = $item->id;
-                $itemLog->quantity = $item->quantity;
-                $itemLog->encoded_by = Auth::user()->id_number;
-                $itemLog->mode = 'added';
-                $itemLog->date = now();
-                $itemLog->save();
-            }
+        if ($isChecked == 1) {
+            $item = Item::create([
+                'serial_number' => $isChecked ? ($request->serial_number ? $request->serial_number : 'N/A') : 'N/A',
+                'location' => $request->location,
+                'category_id' => $request->item_category,
+                'brand_id' => $request->brand,
+                'model_id' => $request->model,
+                'part_number' => $request->part_number ? $request->part_number : 'N/A',
+                'description' => $request->item_description,
+                'aquisition_date' => $request->aquisition_date,
+                'inventory_tag' => $request->inventory_tag,
+                'quantity' => $request->quantity,
+                'status' => $request->status,
+                'borrowed' => 'no',
+                'item_image' =>  $request->file('item_image')->storeAs(
+                    'Item Images',
+                    $randomString . '.' . $request->file('item_image')->getClientOriginalExtension(),
+                    'public',
+                ),
+            ]);
+            // dd($item);
+            $itemLog = new ItemLog();
+            $itemLog->item_id = $item->id;
+            $itemLog->quantity = $item->quantity;
+            $itemLog->encoded_by = Auth::user()->id_number;
+            $itemLog->mode = 'added';
+            $itemLog->date = now();
+            $itemLog->save();
         } else {
             foreach ($serial_numbers as $serial_number) {
                 $item = Item::create([
@@ -244,13 +249,13 @@ class ItemsController extends Controller
                     'category_id' => $request->item_category,
                     'brand_id' => $request->brand,
                     'model_id' => $request->model,
+                    'part_number' => $request->part_number,
                     'description' => $request->item_description,
                     'aquisition_date' => $request->aquisition_date,
                     'inventory_tag' => $request->inventory_tag,
-                    'quantity' => $request->quantity,
+                    'quantity' => 1,
                     'status' => $request->status,
                     'borrowed' => 'no',
-                    // 'same_serial_numbers' => $isChecked,
                 ]);
                 // dd($item);
                 $itemLog = new ItemLog();
@@ -470,6 +475,15 @@ class ItemsController extends Controller
         return response()->json($models);
     }
 
+    public function getPartNumber()
+    {
+        $part_number = Item::distinct()->pluck('part_number')->reject(function ($part_number) {
+            return $part_number === null;
+        })->toArray();
+
+        return response()->json($part_number);
+    }
+
     public function transferItem($id)
     {
         $item = Item::find($id);
@@ -531,7 +545,7 @@ class ItemsController extends Controller
             'borrowed' => 'no',
             'parent_item' => $id
         ]);
-        
+
         $itemLog = new ItemLog();
         $itemLog->item_id = $item->id;
         $itemLog->quantity = $item->quantity;
@@ -548,7 +562,7 @@ class ItemsController extends Controller
         $item = Item::find($id);
         $brands = Brand::all();
         $models = Models::all();
-        return view('pages.admin.replaceItem')->with(compact('item','models','brands'));
+        return view('pages.admin.replaceItem')->with(compact('item', 'models', 'brands'));
     }
 
     public function saveReplacedItem(Request $request, $id)
@@ -568,7 +582,7 @@ class ItemsController extends Controller
             'borrowed' => 'no',
             'replaced_item' => $id
         ]);
-        
+
         $itemLog = new ItemLog();
         $itemLog->item_id = $item->id;
         $itemLog->quantity = $item->quantity;
@@ -577,7 +591,6 @@ class ItemsController extends Controller
         $itemLog->date = now();
         $itemLog->save();
 
-        return redirect()->route('view_items')->with('success', 'Item #' .$id. 'Replaced Successfully');
+        return redirect()->route('view_items')->with('success', 'Item #' . $id . 'Replaced Successfully');
     }
-
 }

@@ -6,18 +6,21 @@
             background-color: rgb(190, 203, 201);
         }
     </style>
-    <form class="form-signin" action="#" method="GET" enctype="multipart/form-data">
-        @csrf
-        @if (session('message'))
-            <div class="alert alert-danger alert-dismissible">
-                <i class="icon fas fa-exclamation-triangle"></i> {{ session('message') }}
+    <div class="container">
+        <div class="container-fluid text-center">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Choose a account type</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ route('student_registration') }}" class="btn btn-lg btn-success">Student</a>
+                    <span>or</span>
+                    <a href="{{ route('faculty_registration') }}" class="btn btn-lg btn-success">Faculty</a>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ route('signin.page') }}" class="btn btn-md btn-dark">Go Back</a>
+                </div>
             </div>
-        @endif
-        <div class="text-center">
-            <h5>Register as a?</h5>
-            <a href="{{ route('student_registration') }}" class="btn btn-lg btn-success">Student</a> or <a href="{{ route('faculty_registration') }}" class="btn btn-lg btn-success">Faculty</a>
         </div>
-        <hr>
-        <a href="{{ route('signin.page') }}" class="btn btn-md btn-dark">Go Back</a>
-    </form>
+    </div>
 @endsection

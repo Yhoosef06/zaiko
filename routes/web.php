@@ -93,12 +93,15 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
     Route::get('/get-brand', [ItemsController::class, 'getBrand']);
     Route::get('/get-model', [ItemsController::class, 'getModel']);
+    Route::get('/get-part-number', [ItemsController::class, 'getPartNumber']);
     Route::get('/transfer-item-{id}', [ItemsController::class, 'transferItem'])->name('transfer_item');
     Route::post('/save-transfer-item-{id}', [ItemsController::class, 'saveTransferItem'])->name('save_transfer_item');
     Route::get('/add-sub-item-{id}', [ItemsController::class, 'addSubItem'])->name('add_sub_item');
     Route::post('/save-sub-item-{id}', [ItemsController::class, 'saveSubItem'])->name('save_sub_item');
     Route::get('/replace-item-{id}', [ItemsController::class, 'replaceItem'])->name('replace_item');
     Route::post('/save-replaced-item-{id}', [ItemsController::class, 'saveReplacedItem'])->name('save_replaced_item');
+    Route::get('/check-serial-number/{serial_number}', [ItemsController::class, 'checkSerialNumber'])->name('check_serial_number');
+
 
     // FOR USERS
     Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');

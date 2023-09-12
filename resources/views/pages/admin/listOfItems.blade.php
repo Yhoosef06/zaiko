@@ -1,12 +1,6 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    {{-- @if (session('status'))
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <i class="icon fas fa-exclamation-triangle"></i>{{ session('status') }}
-        </div>
-    @endif --}}
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -54,52 +48,25 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach ($items as $brand => $brandItems)
-                                        @foreach ($brandItems as $model => $modelItems)
-                                            @foreach ($modelItems as $description => $categoryItems) --}}
                                     @foreach ($items as $item)
                                         <tr data-item-id="{{ $item->id }}">
                                             <td>{{ $item->id }}</td>
                                             <td>
-                                                @if ($item->brand_id == null)
-                                                    N/A
-                                                @else
-                                                    {{ $item->brand->brand_name }}
-                                                @endif
+                                                {{ $item->brand_id ? $item->brand->brand_name : 'N/A' }}
                                             </td>
                                             <td>
-                                                @if ($item->model_id == null)
-                                                    N/A
-                                                @else
-                                                    {{ $item->model->model_name }}
-                                                @endif
+                                                {{ $item->model_id ? $item->model->model_name : 'N/A' }}
                                             </td>
                                             <td>{{ $item->category->category_name }}</td>
                                             <td>{{ Str::limit($item->description, 20, '...') }}
                                             <td>{{ $item->quantity }}</td>
                                             </td>
-                                            {{-- @php
-                                                $total = 0;
-                                            @endphp
-                                            @foreach ($categoryItems as $item)
-                                                @php
-                                                    $total += $item->quantity;
-                                                @endphp
-                                            @endforeach
-                                            @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1))
-                                                <td>{{ $categoryItems->first()->quantity }}</td>
-                                            @else
-                                                <td>{{ $total }}</td>
-                                            @endif --}}
                                             <td>
-                                                {{-- @if ($categoryItems->count() == 1 && ($brandItems->count() == 1 || $modelItems->count() == 1)) --}}
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details" data-toggle="tooltip" title='View'
                                                     onclick="openItemModal('{{ $item->id }}')">
                                                     <i class="fa fa-eye"></i>
                                                 </button>
-
-                                                {{-- <a href="{{ route('view_item_details', ['id' => $item->id]) }}">View</a> --}}
 
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-add-sub-item" data-toggle="tooltip"
@@ -119,34 +86,28 @@
 
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-replace-item" data-toggle="tooltip"
-                                                    title='Replace Item' 
+                                                    title='Replace Item'
                                                     data-route="{{ route('replace_item', ['id' => $item->id]) }}"
                                                     onclick="openReplaceItemModal({{ $item->id }}, $(this).data('route'))">
                                                     <i class="fa fa-exchange-alt"></i>
                                                 </button>
 
-                                                <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_item', $item->id) }}">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete'
-                                                        onclick="deleteButton({{ $item->id }})">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                                {{-- @else
-                                                                <a href="{{ route('view_item_details', ['id' => $categoryItems->first()->id]) }}"
-                                                                    class="btn btn-sm btn-primary"
-                                                                    onclick="openNewWindow(event, '{{ route('view_item_details', ['id' => $categoryItems->first()->id]) }}')">
-                                                                    <i class="fa fa-eye"></i>
-                                                            @endif --}}
+                                                @if ($item->borrowed == 'no')
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_item', $item->id) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-danger show-alert-delete-item"
+                                                            data-toggle="modal" data-target="#show-alert-delete-item"
+                                                            data-toggle="tooltip" title='Delete'
+                                                            onclick="deleteButton({{ $item->id }})">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
-                                    {{-- @endforeach
-                                        @endforeach
-                                    @endforeach --}}
                                 </tbody>
                             </table>
                         </div>
@@ -172,7 +133,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="max-height: 300px; overflow-y: auto;">
+                <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
 
                 </div>
             </div>

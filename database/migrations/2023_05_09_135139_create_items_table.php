@@ -24,7 +24,6 @@ class CreateItemsTable extends Migration
             $table->unsignedBigInteger('replaced_item')->nullable();
             $table->string('description');
             $table->integer('quantity');
-            // $table->integer('same_serial_numbers')->nullable();
             $table->string('serial_number')->nullable();
             $table->date('aquisition_date')->nullable();
             $table->string('status');

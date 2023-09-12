@@ -32,7 +32,8 @@ class Item extends Model
         'serial_number',
         'parent_item',
         'replaced_item',
-        'same_serial_numbers'
+        'part_number',
+        'item_image'
     ];
 
     public function room(): HasOne
@@ -45,7 +46,8 @@ class Item extends Model
     //     return $this->HasOne(ItemLog::class, 'item_id', 'id');
     // }
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(ItemCategory::class, 'category_id', 'id');
     }
 
@@ -64,10 +66,8 @@ class Item extends Model
         return $this->hasMany(OrderItemTemp::class);
     }
 
-    public function order_item(): HasMany 
+    public function order_item(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
-
-    
 }
