@@ -13,10 +13,11 @@
 @endsection
 
 @section('content')
+<div class="cart-bg cart-height">
             <table id="cart" class="table">
               
                 <thead>
-                    <tr>
+                    <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
                         <th style="width:10%" class="text-wrap">Category</th>
                         <th style="width:10%" class="text-wrap">Brand</th>
                         <th style="width:10%" class="text-wrap">Model</th>
@@ -33,8 +34,8 @@
                                 <tr>
                                 
                                     <td class="text-wrap">{{ $cart->item->category->category_name }}</td>
-                                    <td class="text-wrap">{{ $cart->item->brand }}</td>
-                                    <td class="text-wrap">{{ $cart->item->model }}</td>
+                                    <td class="text-wrap">{{ $cart->item->brand->brand_name }}</td>
+                                    <td class="text-wrap">{{ $cart->item->model->model_name }}</td>
                                     <td class="text-wrap">{{ $cart->item->description }}</td>
                                     {{-- <td class="text-wrap text-center">
                                         <i class="fa fa-minus" onclick="updateQuantity('{{ $cart->id }}', -1)"></i>
@@ -44,7 +45,7 @@
 
                                     <td class="text-center position-relative">
                                         @php 
-                                            $catItem = $items->where('category_id',$cart->item->category->id)->where('brand',$cart->item->brand)->where('model',$cart->item->model)->sortByDesc('id');
+                                            $catItem = $items->where('category_id',$cart->item->category->id)->where('brand',$cart->item->brand)->where('model',$cart->item->model)->where('borrowed','no')->sortByDesc('id');
                                             // @dd($cart->item->serial_number);
                                             // dd($catItem);
                                             // $groupedItems = $catItem->groupBy(function ($item) {
@@ -66,11 +67,36 @@
                                         </button> --}}
                                     <form action="{{ route('cart.update',$cart->id) }}" method="POST">
                                     @csrf
-                                        @if($cart->item->serial_number == null)
+                                        @if($cart->item->category_id == 5 || $cart->item->category_id == 6 || $cart->item->category_id == 7)
                                             <div class="row">
                                                 <div class="col md-6">
+                                                    @php
+                                                    $missingQty = 0;
+                                                    $borrowedQty = 0;
+                                                    $totalDeduct = 0;
+                                                    foreach($borrowedList as $borrowed){                                                        
+                                                        if($borrowed->item_id == $item->id){
+                                                            $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                        }    
+                                                    }
+
+                                                    foreach ($missingList as $missing) {
+                                                        if($missing->item_id == $item->id){
+                                                            $missingQty = $missingQty + $missing->quantity;
+                                                        }
+                                                    }
+                                                    $totalDeduct = $missingQty + $borrowedQty;
+
+                                                    @endphp
+                                                    {{-- <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
+                                                        @for($i = 1; $i <= $item->quantity-$totalDeduct; $i++)
+                                                        <option value="{{$i}}">{{$i}}</option>
+                                                        @endfor
+                                                    </select> --}}
+
+                                                    {{-- ___________________ --}}
                                                     <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
-                                                        @for($i = 1; $i <= $cart->item->quantity; $i++)
+                                                        @for($i = 1; $i <= $cart->item->quantity-$totalDeduct; $i++)
                                                         @if($i == $cart->quantity)
                                                             <option value="{{$i}}" selected>{{$i}}</option>
                                                         @else
@@ -85,6 +111,7 @@
                                             max="{{ count($catItem) }}"> --}}
                                             <div class="row">
                                                 <div class="col md-6">
+                                                
                                                     <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
                                                         @for($i = 1; $i <= count($catItem); $i++)
                                                         @if($i == $cart->quantity)
@@ -250,5 +277,5 @@
                     </div>
                 </div>
             </div>
-
+</div>
 @endsection

@@ -73,7 +73,7 @@ Route::get('modify-security-question-{id_number}', [UserController::class, 'modi
 Route::post('save-modified-security-question-{id_number}', [UserController::class, 'saveModifiedSecurityQuestion'])->name('save_modified_security_question');
 
 //admin
-Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () {
+Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
@@ -220,10 +220,15 @@ Route::middleware(['auth', 'user-role:admin|reads|faculty'])->group(function () 
     Route::get('/report-test', [ItemsController::class, 'reportTest']);
 });
 
+
+
+
+
+
 //student
-Route::middleware(['auth', 'user-role:student'])->group(function () {
+Route::middleware(['auth', 'user-role:borrower'])->group(function () {
     //student
-    Route::middleware(['user-role:student'])->group(function () {
+    Route::middleware(['user-role:borrower'])->group(function () {
 
         Route::middleware(['account_status:pending'])->group(function () {
             Route::get('/approve', [PagesController::class, 'approve'])->name('approval');

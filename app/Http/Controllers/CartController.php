@@ -7,6 +7,8 @@ use App\Models\Cart;
 use App\Models\Department;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\ItemLog;
 use App\Models\ItemCategory;
 use App\Models\OrderItemTemp;
 use Illuminate\Http\Request;
@@ -83,6 +85,8 @@ class CartController extends Controller
 
         $user = Auth::user(); 
         $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
+        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+        $missingList = ItemLog::where('mode', 'missing')->get();
 
         if($order != null){
             $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
@@ -111,7 +115,7 @@ class CartController extends Controller
 
         
 
-        return view('pages.students.cart-list')->with(compact('cartItems','items'));
+        return view('pages.students.cart-list')->with(compact('cartItems','items','borrowedList','missingList'));
 
     }
 
