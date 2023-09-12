@@ -59,15 +59,17 @@
                                                     <i class="fa fa-edit"></i>
                                                 </button>
                                                 @if ($department->users_count == 0)
-                                                <form class="form_delete_btn" method="POST"
-                                                action="{{ route('delete_department', $department->id) }}">
-                                                @csrf
-                                                <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-danger show-alert-delete-item"
-                                                    data-toggle="tooltip" title='Delete' onclick="deleteButton({{$department->id}})"><i
-                                                        class="fa fa-trash"></i></button>
-                                            </form>
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_department', $department->id) }}">
+                                                        @csrf
+                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-danger"
+                                                            data-toggle="tooltip" title='Delete'
+                                                            onclick="deleteButton({{ $department->id }})"><i
+                                                                class="fa fa-trash"
+                                                                onclick="return confirm('You are about to delete a department. Do you wish to continue?')"></i></button>
+                                                    </form>
                                                 @endif
                                             </td>
                                         </tr>
@@ -120,6 +122,11 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            $('#listofdepartments').DataTable();
+            $('#listofusers').DataTable();
+        });
+
         $(document).ready(function() {
             $('#addDepartmentModal').on('show.bs.modal', function(event) {
                 var modal = $(this);

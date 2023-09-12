@@ -23,6 +23,13 @@ class ModelsController extends Controller
         return view('pages.admin.listOfModels')->with(compact('models', 'dateTime'));
     }
 
+    public function getModels($brandId)
+    {
+        $models = Models::where('brand_id', $brandId)->get();
+
+        return response()->json($models);
+    }
+
     public function addModel()
     {   
         $brands = Brand::all();

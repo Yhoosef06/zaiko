@@ -16,6 +16,7 @@
         "postcss": "^8.1.14"
     },
     "dependencies": {
+        "bootstrap": "^5.3.1",
         "bootstrap-icons": "^1.10.3",
         "html5-qrcode": "^2.3.8"
     }

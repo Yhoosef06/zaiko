@@ -156,6 +156,7 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
 
     //FOR MODELS
     Route::get('models', [ModelsController::class, 'index'])->name('view_models');
+    Route::get('/get-models/{brandId}', [ModelsController::class, 'getModels'])->name('get_models');
     Route::get('add-model', [ModelsController::class, 'addModel'])->name('add_model');
     Route::post('save-new-model', [ModelsController::class, 'saveNewModel'])->name('save_new_model');
     Route::get('edit/model/{id}', [ModelsController::class, 'editModel'])->name('edit_model');

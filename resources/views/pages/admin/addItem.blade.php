@@ -88,7 +88,7 @@
                                             </div>
                                         @enderror
 
-                                        <label for="Brand">Brand:</label>
+                                        {{-- <label for="Brand">Brand:</label>
                                         <div style="display:flex">
                                             <select id="brand" name="brand"
                                                 class="form-control @error('brand') border-danger @enderror">
@@ -126,7 +126,9 @@
                                                         data-toggle="modal" data-target="#addModelModal"
                                                         data-toggle="tooltip" title='Add a model'></i></a>
                                             @endif
-                                        </div>
+                                        </div> --}}
+
+
 
                                         {{-- <input type="text" id="brand" name="brand" value="{{ old('brand') }}"
                                                 class="form-control @error('brand')
@@ -160,6 +162,41 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror --}}
+
+                                        <label for="Brand">Brand:</label>
+                                        <div style="display:flex">
+                                            <select id="brand" name="brand"
+                                                class="form-control @error('brand') border-danger @enderror">
+                                                <option value="option_select" disabled selected>Select a brand. (Skip if
+                                                    none)</option>
+                                                @foreach ($brands as $brand)
+                                                    <option value="{{ $brand->id }}"
+                                                        {{ old('brand') == $brand->id ? 'selected' : '' }}>
+                                                        {{ $brand->brand_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @if (Auth::user()->account_type != 'admin')
+                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                                        data-toggle="modal" data-target="#addBrandModal"
+                                                        data-toggle="tooltip" title='Add a brand'></i></a>
+                                            @endif
+                                        </div>
+
+                                        <label for="Model">Model:</label>
+                                        <div style="display:flex">
+                                            <select id="model" name="model"
+                                                class="form-control @error('model') border-danger @enderror">
+                                                <option value="option_select" disabled selected>Select a model. (Skip if
+                                                    none)</option>
+                                                <!-- Models options will be populated dynamically here -->
+                                            </select>
+                                            @if (Auth::user()->account_type != 'admin')
+                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                                        data-toggle="modal" data-target="#addModelModal"
+                                                        data-toggle="tooltip" title='Add a model'></i></a>
+                                            @endif
+                                        </div>
 
                                         <label for="Model">Part Number:</label>
                                         <input type="text" id="part_number" name="part_number"
@@ -398,6 +435,35 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
+    $(document).ready(function() {
+        // Listen for changes in the brand select dropdown
+        $('#brand').change(function() {
+            // Get the selected brand's ID
+            var selectedBrandId = $(this).val();
+
+            // Send an AJAX request to fetch models associated with the selected brand
+            $.ajax({
+                url: '/get-models/' + selectedBrandId, // Replace with the actual route
+                type: 'GET',
+                success: function(data) {
+                    // Clear existing model options
+                    $('#model').empty();
+
+                    // Add the default option
+                    $('#model').append(
+                        '<option value="option_select" disabled selected>Select a model. (Skip if none)</option>'
+                    );
+
+                    // Populate the model select dropdown with new options
+                    $.each(data, function(index, model) {
+                        $('#model').append('<option value="' + model.id + '">' +
+                            model.model_name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+
     $(document).ready(function() {
         $('#addModelModal').on('show.bs.modal', function(event) {
             var modal = $(this);
