@@ -69,7 +69,7 @@
                                                 </button>
 
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-add-sub-item" data-toggle="tooltip"
+                                                    data-target="#addSubItemModal" data-toggle="tooltip"
                                                     title='Add Sub Item'
                                                     data-route="{{ route('add_sub_item', ['id' => $item->id]) }}"
                                                     onclick="openAddSubItemModal({{ $item->id }}, $(this).data('route'))">
@@ -140,22 +140,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-add-sub-item" tabindex="-1" role="dialog" aria-labelledby="modal-add-sub-item">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modal-add-sub-item">Adding Sub Item</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form fields for editing the item details -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="modal-replace-item" tabindex="-1" role="dialog" aria-labelledby="modal-replace-item">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -188,6 +172,23 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="addSubItemModal" tabindex="-1" role="dialog" aria-labelledby="addSubItemModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addSubItemModalLabel">Adding Sub Item</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form fields for editing the item details -->
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 <script>
@@ -275,7 +276,7 @@
             'background-color': '#A9F5F2' // Adjust the color as needed
         });
 
-        var modal = $('#modal-add-sub-item');
+        var modal = $('#addSubItemModal');
 
         // Clear previous content from the modal
         modal.find('.modal-body').html('');
