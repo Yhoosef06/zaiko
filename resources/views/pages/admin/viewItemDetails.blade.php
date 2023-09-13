@@ -50,7 +50,7 @@
                         </div>
                     @else
                         <img src="{{ asset('storage/' . $item->item_image) }}" alt="" srcset=""
-                            width="200px" height="200px">
+                            width="250px" height="250px">
                     @endif
                 </div>
             </div>

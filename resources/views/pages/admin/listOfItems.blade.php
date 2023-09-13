@@ -125,7 +125,7 @@
     <!-- Modal -->
     <div class="modal fade" id="modal-item-details" tabindex="-1" role="dialog"
         aria-labelledby="modal-item-details-label">
-        <div class="modal-dialog modal-m" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modal-item-details-label">Item Details</h4>
@@ -133,7 +133,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                <div class="modal-body">
 
                 </div>
             </div>

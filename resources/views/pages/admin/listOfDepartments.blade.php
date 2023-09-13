@@ -64,11 +64,10 @@
                                                         @csrf
                                                         <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                         <button type="submit"
-                                                            class="btn btn-sm btn-danger"
+                                                            class="btn btn-sm btn-danger show-alert-delete-item"
                                                             data-toggle="tooltip" title='Delete'
                                                             onclick="deleteButton({{ $department->id }})"><i
-                                                                class="fa fa-trash"
-                                                                onclick="return confirm('You are about to delete a department. Do you wish to continue?')"></i></button>
+                                                                class="fa fa-trash"></i></button>
                                                     </form>
                                                 @endif
                                             </td>
