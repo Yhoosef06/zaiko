@@ -46,25 +46,10 @@
                                     <td class="text-center position-relative">
                                         @php 
                                             $catItem = $items->where('category_id',$cart->item->category->id)->where('brand',$cart->item->brand)->where('model',$cart->item->model)->where('borrowed','no')->sortByDesc('id');
-                                            // @dd($cart->item->serial_number);
-                                            // dd($catItem);
-                                            // $groupedItems = $catItem->groupBy(function ($item) {
-                                            //     return $item->brand . '_' . $item->model;
-                                            // });
-                                            // dd($catItem);
-                                            // dd($groupedItems);
-
-                                            // $quantity = 0;
-
-                                            // foreach($groupedItems as $key =>$collection ){
-                                            //     $quantity += count($collection);
-                                            // }
-                                            // dd($quantity);
+                                           
                                             
                                         @endphp
-                                        {{-- <button class="btn btn-default btn-sm minus-btn">
-                                            <i class="fa fa-minus"></i>
-                                        </button> --}}
+                                      
                                     <form action="{{ route('cart.update',$cart->id) }}" method="POST">
                                     @csrf
                                         @if($cart->item->category_id == 5 || $cart->item->category_id == 6 || $cart->item->category_id == 7)
@@ -75,13 +60,13 @@
                                                     $borrowedQty = 0;
                                                     $totalDeduct = 0;
                                                     foreach($borrowedList as $borrowed){                                                        
-                                                        if($borrowed->item_id == $item->id){
+                                                        if($borrowed->item_id == $cart->item->id){
                                                             $borrowedQty = $borrowedQty + $borrowed->order_quantity;
                                                         }    
                                                     }
 
                                                     foreach ($missingList as $missing) {
-                                                        if($missing->item_id == $item->id){
+                                                        if($missing->item_id == $cart->item->id){
                                                             $missingQty = $missingQty + $missing->quantity;
                                                         }
                                                     }

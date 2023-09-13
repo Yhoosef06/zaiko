@@ -39,7 +39,7 @@ class BorrowController extends Controller
         $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
         ->whereNotNull('orders.date_submitted')
         ->whereNull('orders.approved_by')
-        ->groupBy('orders.user_id')
+        ->groupBy('orders.id')
         ->get();
       
 
@@ -344,6 +344,15 @@ class BorrowController extends Controller
     
     public function viewOrderUser($id)
     {
+
+
+        // $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        // ->whereNotNull('orders.date_submitted')
+        // ->whereNull('orders.approved_by')
+        // ->groupBy('orders.id')
+        // ->first();
+        // dd($userPendings->id);
+
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
         $orders = Order::select('orders.id as order_id','item_categories.category_name','order_item_temps.quantity as orderQty','items.quantity as itemQty','items.id as item_id',  'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','brands.brand_name', 'models.model_name', 'items.description', 'order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
@@ -353,17 +362,13 @@ class BorrowController extends Controller
             ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->whereNull('orders.approved_by')
             ->where('orders.user_id', $id)
             ->get();
 
-        // echo '<pre>';
-        // echo print_r($orders);
-        // echo '</pre>';
-     
-        // exit;
-    
     
         return view('pages.admin.viewOrderUser')->with(compact('orders', 'borrowedList', 'missingList'));
+        // return view('pages.admin.viewOrderUser')->with(compact('orderItem', 'borrowedList', 'missingList'));        
     }
 
     public function borrowItem(){
