@@ -133,40 +133,14 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
 
-                </div>
-                {{-- 
-                <div class="card-footer">
-                    <hr>
-                    <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
-                        Close
-                    </button>
-                    <a href="#" data-toggle="modal" data-target="#modal-edit-item"
-                        onclick="openEditItemModal('{{ itemId }}')" class="btn btn-primary">Edit</a>
-                </div> --}}
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modal-edit-item" tabindex="-1" role="dialog" aria-labelledby="modal-edit-item">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modal-edit-item">Editing Item Details</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form fields for editing the item details -->
                 </div>
             </div>
         </div>
     </div>
 
-
-    <div class="modal fade" id="modal-add-sub-item" tabindex="-1" role="dialog" aria-labelledby="modal-edit-item">
+    <div class="modal fade" id="modal-add-sub-item" tabindex="-1" role="dialog" aria-labelledby="modal-add-sub-item">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -217,18 +191,6 @@
 @endsection
 
 <script>
-    function openEditItemModal(itemId) {
-        var modal = $('#modal-edit-item');
-        var url = "{{ route('edit_item_details', ['id' => ':itemId']) }}".replace(':itemId', itemId);
-
-        // Clear previous content from the modal
-        modal.find('.modal-body').html('');
-
-        $.get(url, function(data) {
-            modal.find('.modal-body').html(data);
-        });
-    }
-
     function deleteButton(itemId) {
         // Remove previous highlighting
         $('#listofitems tbody tr').css({
