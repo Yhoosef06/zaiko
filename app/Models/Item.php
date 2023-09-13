@@ -31,6 +31,7 @@ class Item extends Model
         'inventory_tag',
         'serial_number',
         'parent_item',
+        'duration',
         'replaced_item',
         'part_number',
         'item_image'

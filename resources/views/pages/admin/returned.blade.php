@@ -6,7 +6,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manage Borrowings</h1>
+            <h1>Returned</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -22,9 +22,7 @@
               @csrf
               <div class="card">
                 <div class="card-header row">
-                  <div class="col md-8">
-                    <h3 class="card-title"><strong>Returned Items</strong></h3>
-                  </div>
+                  
                   <div class="col md-4 text-right">
                     <Button type="submit" class="btn btn-success">Generate Report</Button>
                   </div>

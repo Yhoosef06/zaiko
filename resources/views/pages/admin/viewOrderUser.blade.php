@@ -100,16 +100,35 @@
                                 <td  class="d-none">
                                   <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
                                 </td>
-                                <td>{{ $item->brand }}</td>
-                                <td>{{ $item->model }}</td>
+                                <td>{{ $item->brand_name }}</td>
+                                <td>{{ $item->model_name }}</td>
                                 <td>{{ $item->description }}</td>
                                 <td>
                                   <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
                                 </td>
                                 <td>
+                                  @php
+                                  $borrowedQty = 0;
+                                  $missingQty = 0;
+                              
+                                  foreach ($borrowedList as $borrowed) {
+                                      if ($borrowed->item_id == $item->id) {
+                                          $borrowedQty += $borrowed->order_quantity;
+                                      }
+                                  }
+                              
+                                  foreach ($missingList as $missing) {
+                                      if ($missing->item_id == $item->id) {
+                                          $missingQty += $missing->quantity;
+                                      }
+                                  }
+                              
+                                  $totalDeduct = $missingQty + $borrowedQty;
+                              @endphp
+                              
                                   <select name="quantity[]" class="form-control">
-                                    @for ($i = 1; $i <= $item->itemQuantity; $i++)
-                                    <option value="{{ $i }}" {{ $i == $item->temp_quantity ? 'selected' : '' }}>
+                                    @for ($i = 1; $i <= $item->itemQty-$totalDeduct; $i++)
+                                    <option value="{{ $i }}" {{ $i == $item->orderQty ? 'selected' : '' }}>
                                       {{ $i }}
                                     </option>
                                     @endfor
@@ -129,12 +148,15 @@
                                 <td  class="d-none">
                                   <input type="text" name="itemId[]" id="itemID_{{ $i }}">
                                 </td>
-                                <td>{{ $item->brand }}</td>
-                                <td>{{ $item->model }}</td>
+                                <td>{{ $item->brand_name }}</td>
+                                <td>{{ $item->model_name }}</td>
                                 <td>{{ $item->description }}</td>
                                 <td>
+                                  <script>
+                                    var itemData = @json($item);
+                                </script>
                                   <div id="user_serial_{{ $i }}">
-                                    <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control" required>
+                                    <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control serial-input" required>
                                   </div>
                                 </td>
                                 <td>
@@ -153,8 +175,8 @@
                                 <td  class="d-none">
                                   <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
                                 </td>
-                                <td>{{ $item->brand }}</td>
-                                <td>{{ $item->model }}</td>
+                                <td>{{ $item->brand_name }}</td>
+                                <td>{{ $item->model_name }}</td>
                                 <td>{{ $item->description }}</td>
                                 <td>
                                   <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
@@ -174,15 +196,16 @@
                           
                           <div class="row mb-2">
                             <div class="col-sm-6">
-                              <input type="date" class="form-control" name="date_returned">
+                              {{-- <input type="date" class="form-control" name="date_returned"> --}}
                               <input type="text" id="student_id_added_user" name="student_id_added_user" value="@foreach($orders as $index => $item)
                             @if($index === 0)
                                 {{$item->id_number}}
                             @endif
                         @endforeach" class="form-control" style="display:none;">
+                        <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                             <div class="col-sm-6">
-                              <button type="submit" class="btn btn-primary">Submit</button>
+                              
                             </div>
                           </div>
                         </form>
