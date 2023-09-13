@@ -119,19 +119,33 @@ class ItemsController extends Controller
         $user = Auth::user();
         $isAdmin = $user->account_type == 'admin';
         $item = Item::find($id);
-
+        $brands = Brand::all();
+        $models = Models::all();
         $rooms = $isAdmin ? Room::all() : Room::where('department_id', $user->department_id)->get();
         $itemCategories = ItemCategory::all();
         $category = $item->category ? $item->category->category_name : null;
 
-        return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories', 'category'));
+        return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories', 'category', 'brands', 'models'));
     }
 
     public function saveEditedItemDetails(Request $request, $id)
     {
         $item = Item::find($id);
-        $item->brand = $request->brand;
-        $item->model = $request->model;
+        $randomString = Str::random(10);
+        $itemImage = $request->file('item_image');
+        $imagePath = null;
+        if ($itemImage == null) {
+            $imagePath = $item->item_image;
+        } else {
+            $imagePath = $itemImage->storeAs(
+                'Item Images',
+                $randomString . '.' . $itemImage->getClientOriginalExtension(),
+                'public'
+            );
+        }
+
+        $item->brand_id = $request->brand;
+        $item->model_id = $request->model;
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
         $item->category_id = $request->item_category;
@@ -139,7 +153,9 @@ class ItemsController extends Controller
         $item->aquisition_date = $request->aquisition_date;
         $item->quantity = $request->quantity;
         $item->status = $request->status;
+        $item->part_number  = $request->part_number;
         $item->inventory_tag = $request->inventory_tag;
+        $item->item_image = $imagePath;
         $item->save();
 
         $itemLog = new ItemLog();
@@ -195,15 +211,25 @@ class ItemsController extends Controller
 
         return response()->json(['isUnique' => $isUnique]);
     }
+
     public function saveNewItem(Request $request)
     {
         $serial_numbers = $request->serial_number;
         $isChecked = $request->input('checkbox') === '1' ? 1 : 0;
         $randomString = Str::random(10);
+        $itemImage = $request->file('item_image');
+        $imagePath = null;
+        if ($itemImage) {
+            $imagePath = $itemImage->storeAs(
+                'Item Images',
+                $randomString . '.' . $itemImage->getClientOriginalExtension(),
+                'public'
+            );
+        }
 
         $this->validate($request, [
             'location' => 'required',
-            'serial_number' => 'required|unique:items,serial_number',
+            'serial_number' => 'unique:items,serial_number',
             'item_category' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'required',
@@ -214,6 +240,7 @@ class ItemsController extends Controller
 
         // dd($isChecked);
         if ($isChecked == 1) {
+            
             $item = Item::create([
                 'serial_number' => $isChecked ? ($request->serial_number ? $request->serial_number : 'N/A') : 'N/A',
                 'location' => $request->location,
@@ -227,11 +254,7 @@ class ItemsController extends Controller
                 'quantity' => $request->quantity,
                 'status' => $request->status,
                 'borrowed' => 'no',
-                'item_image' =>  $request->file('item_image')->storeAs(
-                    'Item Images',
-                    $randomString . '.' . $request->file('item_image')->getClientOriginalExtension(),
-                    'public',
-                ),
+                'item_image' =>  $imagePath,
             ]);
             // dd($item);
             $itemLog = new ItemLog();
@@ -249,13 +272,14 @@ class ItemsController extends Controller
                     'category_id' => $request->item_category,
                     'brand_id' => $request->brand,
                     'model_id' => $request->model,
-                    'part_number' => $request->part_number,
+                    'part_number' => $request->part_number, 'part_number' => $request->part_number ? $request->part_number : 'N/A',
                     'description' => $request->item_description,
                     'aquisition_date' => $request->aquisition_date,
                     'inventory_tag' => $request->inventory_tag,
                     'quantity' => 1,
                     'status' => $request->status,
                     'borrowed' => 'no',
+                    'item_image' =>  $imagePath,
                 ]);
                 // dd($item);
                 $itemLog = new ItemLog();
@@ -528,8 +552,6 @@ class ItemsController extends Controller
 
     public function saveSubItem(Request $request, $id)
     {
-
-
         $item = Item::create([
             'serial_number' => $request->serial_number,
             'location' => $request->location,

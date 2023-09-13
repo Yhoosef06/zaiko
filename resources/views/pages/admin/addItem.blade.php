@@ -302,12 +302,9 @@
                                             </div>
                                         @enderror
 
-                                        <div id="serial_numbers_container" style="max-height: 200px; overflow-y: auto;">
-                                            @error('serial_number')
-                                                <span class="text-danger">
-                                                    <p>{{ $message }}</p>
-                                                </span>
-                                            @enderror
+                                        <div id="serial_numbers_container" style="max-height: 200px; overflow-y: auto;"
+                                            data-has-error="{{ $errors->has('serial_number') ? 'true' : 'false' }}">
+
                                         </div>
                                     </div>
                                 </div>
@@ -434,7 +431,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
         // Listen for changes in the brand select dropdown
         $('#brand').change(function() {
@@ -599,16 +596,23 @@
             input.type = 'text';
             input.name = `serial_number`;
             input.id = `serial_number_1`;
+            input.value = '{{ old('serial_number') }}';
             input.classList.add('form-control', 'col-10')
             input.placeholder = 'Enter a serial number. (Leave blank if none)';
 
             container.appendChild(label);
             container.appendChild(input);
 
-            const errorSpan = document.createElement('p');
-            errorSpan.classList.add('text-danger');
-            errorSpan.textContent = errorMessage;
-            container.appendChild(errorSpan);
+            if (hasError) {
+                input.classList.add('border', 'border-danger');
+                const errorSpan = document.createElement('span');
+                errorSpan.classList.add('text-danger');
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent =
+                    `@error('serial_number') {{ $message }} @enderror`;
+                errorSpan.appendChild(errorMessage);
+                container.appendChild(errorSpan);
+            }
         } else {
             for (let i = 1; i <= quantity; i++) {
                 const label = document.createElement('label');
@@ -632,67 +636,4 @@
             }
         }
     }
-
-    // async function updateSerialNumberFields() {
-    //     const quantityField = document.getElementById('quantity');
-    //     const container = document.getElementById('serial_numbers_container');
-    //     const checkbox = document.getElementById('checkbox');
-
-    //     container.innerHTML = '';
-
-    //     const quantity = parseInt(quantityField.value) || 0;
-    //     const errorMessage = container.dataset.errorMessage;
-    //     const hasError = container.dataset.hasError === 'true';
-
-    //     for (let i = 1; i <= quantity; i++) {
-    //         const label = document.createElement('label');
-    //         label.for = `serial_number_${i}`;
-    //         label.textContent = `Serial Number ${i}:`;
-
-    //         const input = document.createElement('input');
-    //         input.type = 'text';
-    //         input.name = `serial_number[]`;
-    //         input.id = `serial_number_${i}`;
-    //         input.classList.add('form-control', 'col-10');
-    //         input.placeholder = 'Enter a serial number.';
-
-    //         // Add an event listener to check the serial number when input changes
-    //         input.addEventListener('input', async () => {
-    //             const serialNumberValue = input.value.trim();
-    //             if (serialNumberValue !== '') {
-    //                 const isTaken = await checkSerialNumberAvailability(serialNumberValue);
-    //                 if (isTaken) {
-    //                     input.classList.add('border-danger');
-    //                     // Display error message under the input field
-    //                     const errorSpan = document.createElement('span');
-    //                     errorSpan.classList.add('text-danger');
-    //                     errorSpan.textContent = `Serial Number ${i} is already taken.`;
-    //                     container.appendChild(errorSpan);
-    //                 } else {
-    //                     input.classList.remove('border-danger');
-    //                     // Remove error message if it exists
-    //                     const errorSpan = container.querySelector(`span.text-danger`);
-    //                     if (errorSpan) {
-    //                         container.removeChild(errorSpan);
-    //                     }
-    //                 }
-    //             }
-    //         });
-
-    //         container.appendChild(label);
-    //         container.appendChild(input);
-    //     }
-    // }
-
-    // async function checkSerialNumberAvailability(serialNumber) {
-    //     // Make an AJAX request to check if the serial number is taken
-    //     try {
-    //         const response = await fetch(`/check-serial-number/${serialNumber}`);
-    //         const data = await response.json();
-    //         return data.isTaken;
-    //     } catch (error) {
-    //         console.error(error);
-    //         return false; // Assume not taken on error
-    //     }
-    // }
 </script>

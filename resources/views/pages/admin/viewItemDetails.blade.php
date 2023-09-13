@@ -1,5 +1,5 @@
     <div class="container">
-        <div class="row">
+        <div class="row" style="max-height: 300px; overflow-y: auto;">
             <div class="col">
                 <div>
                     <label for="">Item ID #:</label> {{ $item->id }}
@@ -28,6 +28,9 @@
                 </div>
                 <div>
                     <label for="">Quantity:</label> {{ $item->quantity }}
+                </div>
+                <div>
+                    <label for="status">Status:</label> {{ $item->status }}
                 </div>
                 <div>
                     <label for="">Aquisition Date:</label>
@@ -80,5 +83,35 @@
     <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
         Close
     </button>
-    <a href="#" data-toggle="modal" data-target="#modal-edit-user-info"
-        onclick="openEditUserModal('{{ $item->id }}')" class="btn btn-primary">Edit</a>
+    <button href="#" data-toggle="modal" data-target="#modal-edit-item"
+        onclick="openEditItemModal('{{ $item->id }}')" class="btn btn-primary">Edit</button>
+
+    <div class="modal fade" id="modal-edit-item" tabindex="-1" role="dialog" aria-labelledby="modal-edit-item">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-add-sub-item">Editing Item Details</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form fields for editing the item details -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openEditItemModal(itemId) {
+            var modal = $('#modal-edit-item');
+            var url = "{{ route('edit_item_details', ['id' => ':itemId']) }}".replace(':itemId', itemId);
+
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            $.get(url, function(data) {
+                modal.find('.modal-body').html(data);
+            });
+        }
+    </script>

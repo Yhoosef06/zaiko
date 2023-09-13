@@ -148,7 +148,7 @@ class ItemSeeder extends Seeder
                 'category_id' => '1',
                 'brand_id' => '2',
                 'model_id' => '1',
-                'description' => 'LED screen 15"',
+                'description' => 'Intel® Z690 LGA 1700 ATX motherboard with PCIe® 5.0,',
                 'quantity' => '1',
                 'aquisition_date' => now(),
                 'status' => 'active',

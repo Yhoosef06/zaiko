@@ -69,7 +69,6 @@ class BrandController extends Controller
 
             $brand->update([
                 'brand_name' => $request->brand_name,
-                // Add other fields you want to update here
             ]);
 
             return redirect('brands')->with('success', 'Brand edited successfully.');
