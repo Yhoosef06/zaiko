@@ -97,7 +97,7 @@
                               <div class="col-sm-6">
                                 <div class="form-group">
                                   <label>Brand: </label>
-                                 {{ $borrow->brand }}
+                                 {{ $borrow->brand_name }}
                                 </div>
                               </div>
                             </div>
@@ -106,7 +106,7 @@
                               <div class="col-sm-6">
                                 <div class="form-group">
                                   <label>Model: </label>
-                                  {{ $borrow->model }}
+                                  {{ $borrow->model_name }}
                                 </div>
                               </div>
                               <div class="col-sm-6">

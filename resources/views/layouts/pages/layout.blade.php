@@ -713,21 +713,21 @@ $(document).ready(function() {
 });
 
 $(document).ready(function () {
-    var uniqueSerials = {}; // Object to store unique serial numbers
+//     var uniqueSerials = {}; // Object to store unique serial numbers
 
-$(".serial-input").on("blur", function () {
-    var currentSerial = $(this).val();
+// $(".serial-input").on("blur", function () {
+//     var currentSerial = $(this).val();
     
-    if (currentSerial in uniqueSerials) {
-        Swal.fire(
-            currentSerial,
-            'Serial Number is duplicated.',
-            'error'
-        );
-    } else {
-        uniqueSerials[currentSerial] = true; // Store the serial number
-    }
-});
+//     if (currentSerial in uniqueSerials) {
+//         Swal.fire(
+//             currentSerial,
+//             'Serial Number is duplicated.',
+//             'error'
+//         );
+//     } else {
+//         uniqueSerials[currentSerial] = true; // Store the serial number
+//     }
+// });
     
         for (let i = 1; i <=  itemData.temp_quantity ; i++) {
             $("#search_for_serial_" + i).autocomplete({

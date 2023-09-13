@@ -38,6 +38,7 @@ class BorrowController extends Controller
 
         $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
         ->whereNotNull('orders.date_submitted')
+        ->whereNull('orders.approved_by')
         ->groupBy('orders.user_id')
         ->get();
       
@@ -323,7 +324,9 @@ class BorrowController extends Controller
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', 'item_categories.id')
-            ->select('orders.id as order_id', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->select('orders.id as order_id', 'users.*','brands.brand_name', 'models.model_name','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
             ->where('orders.id', $id)
             ->where('order_items.status', 'borrowed')
             ->get();
@@ -644,7 +647,7 @@ class BorrowController extends Controller
                                                     'order_quantity' => $quantity[$index],
                                                     'status' => 'borrowed',
                                                     'order_serial_number' => $serial_number[$index],
-                                                    'date_returned' => $date_return,
+                                                    'date_returned' => Carbon::today(),
                                                     'released_by' => $lastName . ' ' . $firstName
                                                 ]);
                                             }
@@ -659,7 +662,7 @@ class BorrowController extends Controller
                                             'order_quantity' => $quantity[$index],
                                             'status' => 'borrowed',
                                             'order_serial_number' => $serial_number[$index],
-                                            'date_returned' => $date_return,
+                                            'date_returned' => Carbon::today(),
                                             'released_by' => $lastName . ' ' . $firstName
                                         ]);
                                         Item::whereIn('id', $itemId)->update(['borrowed' => 'yes']);
@@ -681,10 +684,7 @@ class BorrowController extends Controller
                 }
             }
         }
-//  "echo '<pre>';
-//         echo print_r($serial_number);
-//         echo '</pre>';
-//         exit;
+
 
         
     }
