@@ -713,22 +713,6 @@ $(document).ready(function() {
 });
 
 $(document).ready(function () {
-//     var uniqueSerials = {}; // Object to store unique serial numbers
-
-// $(".serial-input").on("blur", function () {
-//     var currentSerial = $(this).val();
-    
-//     if (currentSerial in uniqueSerials) {
-//         Swal.fire(
-//             currentSerial,
-//             'Serial Number is duplicated.',
-//             'error'
-//         );
-//     } else {
-//         uniqueSerials[currentSerial] = true; // Store the serial number
-//     }
-// });
-    
         for (let i = 1; i <=  itemData.temp_quantity ; i++) {
             $("#search_for_serial_" + i).autocomplete({
                 minLength: 2,
@@ -1389,6 +1373,12 @@ $(document).ready(function() {
                             Swal.fire(
                                 'Error',
                                 'The serial number does not exist.',
+                                'error'
+                            );
+                        }else if (response.duplicate){
+                            Swal.fire(
+                                'Error',
+                                'The serial number is duplicated.',
                                 'error'
                             );
                         }

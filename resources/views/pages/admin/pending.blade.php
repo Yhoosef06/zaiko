@@ -41,10 +41,10 @@
                                             <table id="user-pending" class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <th class="d-none">UserID</th>
-                                                        <th>ID</th>
-                                                        <th>Student Name</th>
+                                                        {{-- <th class="d-none">UserID</th> --}}
+                                                        <th>Transaction ID</th>
                                                         <th>Date Submitted</th>
+                                                        <th>Student Name</th>
                                                         <th>Option</th>
                                                     </tr>
                                                 </thead>
@@ -54,27 +54,29 @@
 
                                                     @if ( $pending->created_by == 'admin')
                                                     <tr>
-                                                        <td>{{ $pending->user_id }}</td>
-                                                        <td>
-                                                            {{ $pending->first_name }} {{ $pending->last_name }}
-                                                        </td>
+                                                        <td>{{ $pending->id }}</td>
+                                                        
                                                        
                                                         <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
-                                                            <a href="{{ route('view-order-admin', $pending->user_id) }}"
+                                                            {{ $pending->first_name }} {{ $pending->last_name }}
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ route('view-order-admin', $pending->id) }}"
                                                                 class="btn btn-sm btn-primary" title="Disregard">
                                                                 view</a>
                                                         </td>
                                                     </tr>
                                                     @else
                                                     <tr>
-                                                        <td>{{ $pending->user_id }}</td>
+                                                        <td>{{ $pending->id }}</td>
+                                                        
+                                                        <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
                                                             {{ $pending->first_name }} {{ $pending->last_name }}
                                                         </td>
-                                                        <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
-                                                            <a href="{{ route('view-order-user', $pending->user_id) }}"
+                                                            <a href="{{ route('view-order-user', $pending->id) }}"
                                                                 class="btn btn-sm btn-primary" title="Disregard">
                                                                 view</a>
                                                         </td>

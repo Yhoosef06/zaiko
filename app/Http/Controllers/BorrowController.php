@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
+use App\Rule; 
 
 
 class BorrowController extends Controller
@@ -346,12 +348,7 @@ class BorrowController extends Controller
     {
 
 
-        // $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
-        // ->whereNotNull('orders.date_submitted')
-        // ->whereNull('orders.approved_by')
-        // ->groupBy('orders.id')
-        // ->first();
-        // dd($userPendings->id);
+   
 
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
@@ -363,7 +360,7 @@ class BorrowController extends Controller
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
             ->whereNull('orders.approved_by')
-            ->where('orders.user_id', $id)
+            ->where('orders.id', $id)
             ->get();
 
     
@@ -613,86 +610,84 @@ class BorrowController extends Controller
     public function submitUserBorrow(Request $request)
     {
         $orderId = $request->input('order_id');
-        // $date_return = $request->input('date_returned');
         $student_id_added_user = $request->input('student_id_added_user');
-        $serial_number = $request->input('user_serial_number');
+        $serialNumbers = $request->input('user_serial_number');
         $quantity = $request->input('quantity');
         $itemId = $request->input('itemId');
         $user = auth()->user();
-
-
-        foreach ($orderId as $index => $order) {
-            if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serial_number[$index])) {
-
-                $existingItem = Item::where('serial_number', $serial_number[$index])->first();
+        echo '<pre>';
+        echo print_r($itemId);
+        echo '</pre>';
+        exit;
+        
+        
+        // Initialize an empty array to store unique serial numbers
+        $uniqueSerialNumbers = [];
     
-                if (!$existingItem) {
-                    return response()->json(['error' => 'Serial number does not exist in the item table.']);
-                }else{
-                    if ($user) {
-                    $firstName = $user->first_name;
-                    $lastName = $user->last_name;
-            
-                                    Order::whereIn('id', $orderId)->update([
-                        
-                                        'approval_date' => Carbon::today(),
-                                        'approved_by' => $firstName . ' ' . $lastName
-                                    ]);
-                            foreach ($itemId as $index => $id) {
-                                $item = Item::join('item_categories', 'items.category_id', '=', 'item_categories.id')
-                                    ->where('items.id', $id)
-                                    ->first();
-                                    if ($item->category_name === 'Tools') {
-                                        foreach ($orderId as $index => $order) {
-                                            if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serial_number[$index])) {
-                                                OrderItem::create([
-                                                    'order_id' => $order,
-                                                    'user_id' => $student_id_added_user,
-                                                    'item_id' => $itemId[$index],
-                                                    'order_quantity' => $quantity[$index],
-                                                    'status' => 'borrowed',
-                                                    'order_serial_number' => $serial_number[$index],
-                                                    'date_returned' => Carbon::today(),
-                                                    'released_by' => $lastName . ' ' . $firstName
-                                                ]);
-                                            }
-                                        }
-                                    } else {
-                                foreach ($orderId as $index => $order) {
-                                    if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serial_number[$index])) {
-                                        OrderItem::create([
-                                            'order_id' => $order,
-                                            'user_id' => $student_id_added_user,
-                                            'item_id' => $itemId[$index],
-                                            'order_quantity' => $quantity[$index],
-                                            'status' => 'borrowed',
-                                            'order_serial_number' => $serial_number[$index],
-                                            'date_returned' => Carbon::today(),
-                                            'released_by' => $lastName . ' ' . $firstName
-                                        ]);
-                                        Item::whereIn('id', $itemId)->update(['borrowed' => 'yes']);
-                                    }
-                                }
-                            
-                                 
+        $validator = Validator::make($request->all(), [
+            'user_serial_number.*' => [
+                'required',
+                function ($attribute, $value, $fail) use (&$uniqueSerialNumbers, $itemId) {
+                    // Check if the value is 'N/A', and if it is, skip the uniqueness check
+                    if ($value !== 'N/A') {
+                        // Check if the serial number already exists in the uniqueSerialNumbers array
+                        if (in_array($value, $uniqueSerialNumbers)) {
+                            $fail("$attribute is not unique.");
+                        } else {
+                            // Add the serial number to the uniqueSerialNumbers array
+                            $uniqueSerialNumbers[] = $value;
+                            $existsInItems = Item::where('serial_number', $value)
+                            ->where('id', $itemId)
+                            ->exists();
+    
+                            if (!$existsInItems) {
+                                $fail("$attribute does not exist in the items table for the specified item.");
+                            }
+                        }
                     }
-                            
-                
-                        
-                        return response()->json(['success' => 'Successfully added borrowed item.']);
-                      
-                                        
-                      
-                    }
-           }
-        
-                }
-            }
+                },
+            ],
+            // Add more validation rules for other fields
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['duplicate' => $validator->errors()->all()]);
         }
-
-
         
-    }
+        // If validation passes, you can proceed with your logic here
+        // ...
+    
+        return response()->json(['success' => 'Serial numbers are valid.']);
+    // foreach ($orderId as $index => $order) {
+
+    //     if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serial_number[$index])) {
+        
+    //         $existingItem = Item::where('serial_number', $serial_number[$index])->first();
+            
+    //         if (!$existingItem) {
+    //             return response()->json(['error' => 'Serial number does not exist in the item table.']);
+               
+    //         }
+
+    //         // Check if the serial number is already used in this submission
+    //         if (in_array($serial_number[$index], $serialNumbers)) {
+    //             return response()->json(['error' => 'Duplicate serial number detected: ' . $serial_number[$index]]);
+                
+    //         }
+
+    //         // Add the serial number to the list of used serial numbers
+    //         $serialNumbers[] = $serial_number[$index];
+    //         echo '<pre>';
+    //     echo print_r($serial_number);
+    //     echo '</pre>';
+    //     exit;
+            
+    //     }
+    // }
+
+}
+
+   
     
     public function adminNewOrder(Request $request){
         $userId = $request->userId;
