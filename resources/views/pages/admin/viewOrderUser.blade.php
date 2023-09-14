@@ -148,9 +148,9 @@
                                 <td  class="d-none">
                                   <input type="text" name="itemId[]" id="itemID_{{ $i }}">
                                 </td>
-                                <td>{{ $item->brand_name }}</td>
+                                <td>{{ $item->brand_name }}{{ $item->temp_quantity }}</td>
                                 <td>{{ $item->model_name }}</td>
-                                <td>{{ $item->description }}</td>
+                                <td>{{ $item->description }} </td>
                                 <td>
                                   <script>
                                     var itemData = @json($item);

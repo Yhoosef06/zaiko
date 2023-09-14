@@ -346,10 +346,6 @@ class BorrowController extends Controller
     
     public function viewOrderUser($id)
     {
-
-
-   
-
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
         $orders = Order::select('orders.id as order_id','item_categories.category_name','order_item_temps.quantity as orderQty','items.quantity as itemQty','items.id as item_id',  'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','brands.brand_name', 'models.model_name', 'items.description', 'order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
@@ -363,9 +359,10 @@ class BorrowController extends Controller
             ->where('orders.id', $id)
             ->get();
 
+       
     
         return view('pages.admin.viewOrderUser')->with(compact('orders', 'borrowedList', 'missingList'));
-        // return view('pages.admin.viewOrderUser')->with(compact('orderItem', 'borrowedList', 'missingList'));        
+             
     }
 
     public function borrowItem(){
@@ -491,11 +488,7 @@ class BorrowController extends Controller
         $availableQuantity = $available->available_quantity;
 
         $availableQuantity -= $orderQuantity;
-        // echo '<pre>';
-        // echo print_r($orderQuantity);
-        // echo '</pre>';
-        // echo $availableQuantity;
-        // exit;
+        
     
         if ($dataOrder->isEmpty()) {
             $insertOrder = Order::create([
