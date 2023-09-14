@@ -103,7 +103,7 @@ class UserController extends Controller
         $this->validate(
             $request,
             [
-                'id_number' => 'required',
+                'id_number' => 'required|unique:users,id_number',
                 'first_name' => 'required',
                 'last_name' => 'required',
                 'account_type' => 'required',
