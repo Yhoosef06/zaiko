@@ -713,8 +713,8 @@ $(document).ready(function() {
 });
 
     $(document).ready(function () {
-           var tempQuantity = {{ $item->temp_quantity }};
-            for (let i = 1; i <=  tempQuantity ; i++) {
+        console.log(itemData.item_quantity);
+            for (let i = 1; i <= 10; i++) {
                 
                 $("#search_for_serial_" + i).autocomplete({
                     minLength: 2,

@@ -346,22 +346,30 @@ class BorrowController extends Controller
     
     public function viewOrderUser($id)
     {
-        $borrowedList= OrderItem::where('status', 'borrowed')->get();
-        $missingList = ItemLog::where('mode', 'missing')->get();
-        $orders = Order::select('orders.id as order_id','item_categories.category_name','order_item_temps.quantity as orderQty','items.quantity as itemQty','items.id as item_id',  'users.id_number', 'users.first_name', 'users.last_name','items.serial_number','brands.brand_name', 'models.model_name', 'items.description', 'order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
-            ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
-            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
-            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-            ->join('models', 'items.model_id', '=', 'models.id')
-            ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->whereNull('orders.approved_by')
-            ->where('orders.id', $id)
-            ->get();
+            $borrowedList = OrderItem::where('status', 'borrowed')->get();
+            $missingList = ItemLog::where('mode', 'missing')->get();
+            $countTempSerial = OrderItemTemp::join('items', 'order_item_temps.item_id', '=', 'items.id')
+                ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+                ->where('order_item_temps.order_id', $id)
+                ->where('order_item_temps.temp_serial_number', '')
+                ->where('item_categories.category_name', '!=', 'Tools')
+                ->distinct()
+                ->count();
 
-       
-    
-        return view('pages.admin.viewOrderUser')->with(compact('orders', 'borrowedList', 'missingList'));
+            $orders = Order::select('orders.id as order_id', 'item_categories.category_name', 'order_item_temps.quantity as orderQty', 'items.quantity as itemQty', 'items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name', 'items.serial_number', 'brands.brand_name', 'models.model_name', 'items.description', 'order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
+                ->join('users', 'orders.user_id', '=', 'users.id_number')
+                ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
+                ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+                ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+                ->join('models', 'items.model_id', '=', 'models.id')
+                ->join('brands', 'models.brand_id', '=', 'brands.id')
+                ->whereNull('orders.approved_by')
+                ->where('orders.id', $id)
+                ->get();
+
+              
+
+        return view('pages.admin.viewOrderUser')->with(compact('orders', 'borrowedList', 'missingList', 'countTempSerial'));
              
     }
 
@@ -608,10 +616,6 @@ class BorrowController extends Controller
         $quantity = $request->input('quantity');
         $itemId = $request->input('itemId');
         $user = auth()->user();
-        echo '<pre>';
-        echo print_r($itemId);
-        echo '</pre>';
-        exit;
         
         
         // Initialize an empty array to store unique serial numbers
@@ -629,13 +633,7 @@ class BorrowController extends Controller
                         } else {
                             // Add the serial number to the uniqueSerialNumbers array
                             $uniqueSerialNumbers[] = $value;
-                            $existsInItems = Item::where('serial_number', $value)
-                            ->where('id', $itemId)
-                            ->exists();
-    
-                            if (!$existsInItems) {
-                                $fail("$attribute does not exist in the items table for the specified item.");
-                            }
+                            
                         }
                     }
                 },

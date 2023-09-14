@@ -90,107 +90,116 @@
                               </tr>
                             </thead>
                             <tbody>
-                              {{-- @dd($orders); --}}
-                              @foreach ($orders as $item)
-                              @if ($item->category_name === 'Tools')
-                              <tr>
-                                <td  class="d-none">
-                                  <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
-                                </td>
-                                <td  class="d-none">
-                                  <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
-                                </td>
-                                <td>{{ $item->brand_name }}</td>
-                                <td>{{ $item->model_name }}</td>
-                                <td>{{ $item->description }}</td>
-                                <td>
-                                  <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
-                                </td>
-                                <td>
-                                  @php
-                                  $borrowedQty = 0;
-                                  $missingQty = 0;
-                              
-                                  foreach ($borrowedList as $borrowed) {
-                                      if ($borrowed->item_id == $item->id) {
-                                          $borrowedQty += $borrowed->order_quantity;
+                            
+
+                          @foreach ($orders as $item)
+                            @if (empty($item->temp_serial_number) && $item->category_name != 'Tools')
+                                  @for ($i = 1; $i <= $item->temp_quantity; $i++)
+                                      <tr>
+                                        <td  >
+                                          <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                        </td>
+                                        <td  >
+                                          <input type="text" name="itemId[]" id="itemID_{{ $i }}">
+                                        </td>
+                                        <td>{{ $item->brand_name }} </td>
+                                        <td>{{ $item->model_name }}</td>
+                                        <td>{{ $item->description }} </td>
+                                        <td>
+                                          <script>
+                                            var itemData = @json($item);
+                                        </script>
+                                          <div id="user_serial_{{ $i }}">
+                                            <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control serial-input" required>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <input type="hidden" name="quantity[]" value="1">1
+                                        </td>
+                                        <td>
+                                          <a href="#" class="btn btn-danger">Remove</a>
+                                        </td>
+                                      </tr>
+                                  @endfor
+                            @elseif ($item->category_name === 'Tools')
+                                  <tr>
+                                    <td  class="d-none">
+                                      <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                    </td>
+                                    <td  class="d-none">
+                                      <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
+                                    </td>
+                                    <td>{{ $item->brand_name }}</td>
+                                    <td>{{ $item->model_name }}</td>
+                                    <td>{{ $item->description }}</td>
+                                    <td>
+                                      <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
+                                    </td>
+                                    <td>
+                                      @php
+                                      $borrowedQty = 0;
+                                      $missingQty = 0;
+                                  
+                                      foreach ($borrowedList as $borrowed) {
+                                          if ($borrowed->item_id == $item->id) {
+                                              $borrowedQty += $borrowed->order_quantity;
+                                          }
                                       }
-                                  }
-                              
-                                  foreach ($missingList as $missing) {
-                                      if ($missing->item_id == $item->id) {
-                                          $missingQty += $missing->quantity;
+                                  
+                                      foreach ($missingList as $missing) {
+                                          if ($missing->item_id == $item->id) {
+                                              $missingQty += $missing->quantity;
+                                          }
                                       }
-                                  }
-                              
-                                  $totalDeduct = $missingQty + $borrowedQty;
-                              @endphp
-                              
-                                  <select name="quantity[]" class="form-control">
-                                    @for ($i = 1; $i <= $item->itemQty-$totalDeduct; $i++)
-                                    <option value="{{ $i }}" {{ $i == $item->orderQty ? 'selected' : '' }}>
-                                      {{ $i }}
-                                    </option>
-                                    @endfor
-                                  </select>
-                                </td>
-                                <td>
-                                  <a href="#" class="btn btn-danger">Remove</a>
-                                </td>
-                              </tr>
-                              @else
-                              @if (empty($item->temp_serial_number))
-                              @for ($i = 1; $i <= $item->temp_quantity; $i++)
-                              <tr>
-                                <td  class="d-none">
-                                  <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
-                                </td>
-                                <td  class="d-none">
-                                  <input type="text" name="itemId[]" id="itemID_{{ $i }}">
-                                </td>
-                                <td>{{ $item->brand_name }}{{ $item->temp_quantity }}</td>
-                                <td>{{ $item->model_name }}</td>
-                                <td>{{ $item->description }} </td>
-                                <td>
-                                  <script>
-                                    var itemData = @json($item);
-                                </script>
-                                  <div id="user_serial_{{ $i }}">
-                                    <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control serial-input" required>
-                                  </div>
-                                </td>
-                                <td>
-                                  <input type="hidden" name="quantity[]" value="1">1
-                                </td>
-                                <td>
-                                  <a href="#" class="btn btn-danger">Remove</a>
-                                </td>
-                              </tr>
-                              @endfor
-                              @else
-                              <tr>
-                                <td  class="d-none">
-                                  <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
-                                </td>
-                                <td  class="d-none">
-                                  <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
-                                </td>
-                                <td>{{ $item->brand_name }}</td>
-                                <td>{{ $item->model_name }}</td>
-                                <td>{{ $item->description }}</td>
-                                <td>
-                                  <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
-                                </td>
-                                <td>
-                                  <input type="hidden" name="quantity[]" value="1">1
-                                </td>
-                                <td>
-                                  <a href="#" class="btn btn-danger">Remove</a>
-                                </td>
-                              </tr>
-                              @endif
-                              @endif
-                              @endforeach
+                                  
+                                      $totalDeduct = $missingQty + $borrowedQty;
+                                    @endphp
+                                  
+                                      <select name="quantity[]" class="form-control">
+                                        @for ($i = 1; $i <= $item->itemQty-$totalDeduct; $i++)
+                                        <option value="{{ $i }}" {{ $i == $item->orderQty ? 'selected' : '' }}>
+                                          {{ $i }}
+                                        </option>
+                                        @endfor
+                                      </select>
+                                    </td>
+                                    <td>
+                                      <a href="#" class="btn btn-danger">Remove</a>
+                                    </td>
+                                  </tr>
+                            @else
+                                  <tr>
+                                    <td  class="d-none">
+                                      <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                    </td>
+                                    <td  class="d-none">
+                                      <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
+                                    </td>
+                                    <td>{{ $item->brand_name }}</td>
+                                    <td>{{ $item->model_name }}</td>
+                                    <td>{{ $item->description }}</td>
+                                    <td>
+                                      <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
+                                    </td>
+                                    <td>
+                                      <input type="hidden" name="quantity[]" value="1">1
+                                    </td>
+                                    <td>
+                                      <a href="#" class="btn btn-danger">Remove</a>
+                                    </td>
+                                  </tr>
+                            @endif
+                          @endforeach
+
+
+
+
+
+
+
+
+                            
+
                             </tbody>
                           </table>
                           
