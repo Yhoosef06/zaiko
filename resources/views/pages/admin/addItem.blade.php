@@ -88,81 +88,6 @@
                                             </div>
                                         @enderror
 
-                                        {{-- <label for="Brand">Brand:</label>
-                                        <div style="display:flex">
-                                            <select id="brand" name="brand"
-                                                class="form-control @error('brand') border-danger @enderror">
-                                                <option value="option_select" disabled selected>Select a brand. (Skip if
-                                                    none)</option>
-                                                @foreach ($brands as $brand)
-                                                    <option value="{{ $brand->id }}"
-                                                        {{ old('brand') == $brand->id ? 'selected' : '' }}>
-                                                        {{ $brand->brand_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @if (Auth::user()->account_type != 'admin')
-                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
-                                                        data-toggle="modal" data-target="#addBrandModal"
-                                                        data-toggle="tooltip" title='Add a brand'></i></a>
-                                            @endif
-                                        </div>
-
-                                        <label for="Model">Model:</label>
-                                        <div style="display:flex">
-                                            <select id="model" name="model"
-                                                class="form-control @error('model') border-danger @enderror">
-                                                <option value="option_select" disabled selected>Select a model. (Skip if
-                                                    none)</option>
-                                                @foreach ($models as $model)
-                                                    <option value="{{ $model->id }}"
-                                                        {{ old('model') == $model->id ? 'selected' : '' }}>
-                                                        {{ $model->model_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @if (Auth::user()->account_type != 'admin')
-                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
-                                                        data-toggle="modal" data-target="#addModelModal"
-                                                        data-toggle="tooltip" title='Add a model'></i></a>
-                                            @endif
-                                        </div> --}}
-
-
-
-                                        {{-- <input type="text" id="brand" name="brand" value="{{ old('brand') }}"
-                                                class="form-control @error('brand')
-                                        border-danger
-                                        @enderror" placeholder="Enter a brand name. (Leave blank if none)"> --}}
-                                        {{-- @if (Auth::user()->account_type != 'admin')
-                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
-                                                        data-toggle="modal" data-target="#addBrandModal"
-                                                        data-toggle="tooltip" title='Add a brand'></i></a>
-                                            @endif
-                                        </div>
-                                        @error('brand')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
-                                        {{-- <input type="text" id="model" name="model" value="{{ old('model') }}"
-                                                class="form-control @error('model')
-                                        border-danger
-                                        @enderror"
-                                                placeholder="Enter a model name. (Leave blank if none)"> --}}
-                                        {{-- @if (Auth::user()->account_type != 'admin')
-                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
-                                                        data-toggle="modal" data-target="#addModelModal"
-                                                        data-toggle="tooltip" title='Add a model'></i></a>
-                                            @endif
-                                        </div>
-                                        @error('model')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror --}}
-
                                         <label for="Brand">Brand:</label>
                                         <div style="display:flex">
                                             <select id="brand" name="brand"
@@ -256,55 +181,70 @@
                                             </div>
                                         @enderror
 
-                                        <label for="status">Status:</label>
-                                        <div style="display: flex">
-                                            <select id="status" name="status" class="form-control">
-                                                <option value="Active">Active</option>
-                                                <option value="For Repair">For Repair</option>
-                                                <option value="Obsolete">Obsolete</option>
-                                                <option value="Lost">Lost</option>
-                                            </select>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="status">Status:</label>
+                                            </div>
 
-                                            <div class="container">
+                                            <div class="col">
                                                 <label for="borrowed or not">Property Sticker:</label>
-                                                <label for="" class="radio-inline">
-                                                    <input type="radio" id='inventory_tag' name="inventory_tag"
-                                                        value="with">
-                                                    With
-                                                </label>
-                                                /
-                                                <label for="" class="radio-inline">
-                                                    <input type="radio" id='inventory_tag' name="inventory_tag"
-                                                        value="without" checked>
-                                                    Without
-                                                </label>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col">
+                                                <select id="status" name="status" class="form-control">
+                                                    <option value="Active">Active</option>
+                                                    <option value="For Repair">For Repair</option>
+                                                    <option value="Obsolete">Obsolete</option>
+                                                    <option value="Lost">Lost</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="container">
+                                                    <label for="" class="radio-inline">
+                                                        <input type="radio" id='inventory_tag' name="inventory_tag"
+                                                            value="with">
+                                                        With
+                                                    </label>
+                                                    /
+                                                    <label for="" class="radio-inline">
+                                                        <input type="radio" id='inventory_tag' name="inventory_tag"
+                                                            value="without" checked>
+                                                        Without
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <label for="quantity">Quantity:</label>
-                                        <div style="display: flex">
-                                            <input type="text" id="quantity" name="quantity"
-                                                class="form-control @error('quantity') border-danger @enderror"
-                                                value="{{ old('quantity') }}" placeholder="Enter a quantity"
-                                                oninput="updateSerialNumberFields()">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input type="text" id="quantity" name="quantity"
+                                                    class="form-control @error('quantity') border-danger @enderror"
+                                                    value="{{ old('quantity') }}" placeholder="Enter a quantity"
+                                                    oninput="updateSerialNumberFields()"> <br>
 
-                                            <div class="container">
-                                                <strong>Same serial numbers?</strong>
-                                                <input type="checkbox" id="checkbox" name="checkbox" value="1"
-                                                    onchange="this.value = this.checked ? '1' : '2'; updateSerialNumberFields(); console.log(this.value);"
-                                                    checked>
+                                                @error('quantity')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+
+                                                <div id="serial_numbers_container"
+                                                    style="max-height: 200px; overflow-y: auto;"
+                                                    data-has-error="{{ $errors->has('serial_number') ? 'true' : 'false' }}">
+
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        @error('quantity')
-                                            <div class="text-danger">
-                                                {{ $message }}
+                                            <div class="col">
+                                                <strong>With serial number/s?</strong>
+                                                <input type="checkbox" id="checkbox" name="checkbox"
+                                                    @if ($errors->has('serial_number'))  @endif
+                                                    onchange="updateSerialNumberFields();">
                                             </div>
-                                        @enderror
-
-                                        <div id="serial_numbers_container" style="max-height: 200px; overflow-y: auto;"
-                                            data-has-error="{{ $errors->has('serial_number') ? 'true' : 'false' }}">
-
                                         </div>
                                     </div>
                                 </div>
@@ -319,8 +259,9 @@
                             </div>
                         </form>
                     </div>
-                </div><!-- /.container-fluid -->
-            </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
         </div>
     </section>
     {{-- FOR ADDING A ROOM --}}
@@ -577,43 +518,21 @@
     });
 
     function updateSerialNumberFields() {
+        console.log('updateSerialNumberFields() called');
         const quantityField = document.getElementById('quantity');
         const container = document.getElementById('serial_numbers_container');
         const checkbox = document.getElementById('checkbox');
+        const oldSerialNumberValue = @json(old('serial_number'));
 
         container.innerHTML = '';
 
         const quantity = parseInt(quantityField.value) || 0;
         const errorMessage = container.dataset.errorMessage;
         const hasError = container.dataset.hasError === 'true';
-        if (checkbox.checked) {
 
-            const label = document.createElement('label');
-            label.for = `serial_number_1`;
-            label.textContent = `Serial Number:`;
+        const hasSerialNumberErrors = errorMessage && errorMessage.trim() !== '';
 
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = `serial_number`;
-            input.id = `serial_number_1`;
-            input.value = '{{ old('serial_number') }}';
-            input.classList.add('form-control', 'col-10')
-            input.placeholder = 'Enter a serial number. (Leave blank if none)';
-
-            container.appendChild(label);
-            container.appendChild(input);
-
-            if (hasError) {
-                input.classList.add('border', 'border-danger');
-                const errorSpan = document.createElement('span');
-                errorSpan.classList.add('text-danger');
-                const errorMessage = document.createElement('p');
-                errorMessage.textContent =
-                    `@error('serial_number') {{ $message }} @enderror`;
-                errorSpan.appendChild(errorMessage);
-                container.appendChild(errorSpan);
-            }
-        } else {
+        if (hasSerialNumberErrors || checkbox.checked) {
             for (let i = 1; i <= quantity; i++) {
                 const label = document.createElement('label');
                 label.for = `serial_number_${i}`;
@@ -623,16 +542,24 @@
                 input.type = 'text';
                 input.name = `serial_number[]`;
                 input.id = `serial_number_${i}`;
-                input.classList.add('form-control', 'col-10');
+                input.value = oldSerialNumberValue || '';
+                input.classList.add('form-control', 'col-10')
                 input.placeholder = 'Enter a serial number.';
 
                 container.appendChild(label);
                 container.appendChild(input);
 
-                const errorSpan = document.createElement('span');
-                errorSpan.classList.add('text-danger');
-                errorSpan.textContent = errorMessage;
-                container.appendChild(errorSpan);
+                if (hasError) {
+                    input.classList.add('border', 'border-danger');
+                    const errorSpan = document.createElement('span');
+                    errorSpan.classList.add('text-danger');
+                    const errorMessage = document.createElement('p');
+                    errorMessage.textContent =
+                        `@error('serial_number') {{ $message }} @enderror`;
+                    errorSpan.appendChild(errorMessage);
+                    container.appendChild(errorSpan);
+
+                }
             }
         }
     }
