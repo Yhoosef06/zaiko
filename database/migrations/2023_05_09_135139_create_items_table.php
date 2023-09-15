@@ -30,6 +30,7 @@ class CreateItemsTable extends Migration
             $table->string('inventory_tag');
             $table->string('borrowed');
             $table->string('duration');
+            $table->string('duration_type');
             $table->string('item_image')->nullable();
             $table->timestamps();
 

@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 use Database\Seeders\OrderItemTempSeeder;
+use Illuminate\Support\Facades\Validator;
 
 
 class ItemsController extends Controller
@@ -212,6 +213,7 @@ class ItemsController extends Controller
         return response()->json(['isUnique' => $isUnique]);
     }
 
+    
     public function saveNewItem(Request $request)
     {
         $serial_numbers = $request->serial_number;
@@ -219,6 +221,7 @@ class ItemsController extends Controller
         $randomString = Str::random(10);
         $itemImage = $request->file('item_image');
         $imagePath = null;
+    
         if ($itemImage) {
             $imagePath = $itemImage->storeAs(
                 'Item Images',
@@ -226,10 +229,9 @@ class ItemsController extends Controller
                 'public'
             );
         }
-
+    
         $this->validate($request, [
             'location' => 'required',
-            'serial_number' => 'unique:items,serial_number',
             'item_category' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'required',
@@ -237,9 +239,19 @@ class ItemsController extends Controller
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);
-
+    
         if ($serial_numbers !== null) {
             foreach ($serial_numbers as $serial_number) {
+
+                $validator = Validator::make(['serial_number' => $serial_number], [
+                    'serial_number' => 'unique:items,serial_number',
+                ]);
+        
+                if ($validator->fails()) {
+                    // Handle validation error for this serial number
+                    continue; // Skip this serial number and proceed with the next one
+                }
+
                 $item = Item::create([
                     'serial_number' => $serial_number ? $serial_number : 'N/A',
                     'location' => $request->location,
@@ -255,16 +267,9 @@ class ItemsController extends Controller
                     'borrowed' => 'no',
                     'item_image' =>  $imagePath,
                 ]);
+    
+                // Handle item creation and logging as needed
             }
-
-            // dd($item);
-            // $itemLog = new ItemLog();
-            // $itemLog->item_id = $item->id;
-            // $itemLog->quantity = $item->quantity;
-            // $itemLog->encoded_by = Auth::user()->id_number;
-            // $itemLog->mode = 'added';
-            // $itemLog->date = now();
-            // $itemLog->save();
         } else {
             $item = Item::create([
                 'serial_number' => 'N/A',
@@ -281,19 +286,97 @@ class ItemsController extends Controller
                 'borrowed' => 'no',
                 'item_image' =>  $imagePath,
             ]);
-
-            // $itemLog = new ItemLog();
-            // $itemLog->item_id = $item->id;
-            // $itemLog->quantity = $item->quantity;
-            // $itemLog->encoded_by = Auth::user()->id_number;
-            // $itemLog->mode = 'added';
-            // $itemLog->date = now();
-            // $itemLog->save();
+    
+            // Handle item creation and logging as needed
         }
-
+    
         Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
         return redirect('/adding-new-item');
     }
+
+    // public function saveNewItem(Request $request)
+    // {
+    //     $serial_numbers = $request->serial_number;
+    //     $quantity = $request->has('quantity_checkbox') ? 1 : $request->input('quantity');
+    //     $randomString = Str::random(10);
+    //     $itemImage = $request->file('item_image');
+    //     $imagePath = null;
+
+    //     if ($itemImage) {
+    //         $imagePath = $itemImage->storeAs(
+    //             'Item Images',
+    //             $randomString . '.' . $itemImage->getClientOriginalExtension(),
+    //             'public'
+    //         );
+    //     }
+
+    //     $this->validate($request, [
+    //         'location' => 'required',
+    //         'serial_number' => 'unique:items,serial_number',
+    //         'item_category' => 'required',
+    //         'item_description' => 'required',
+    //         'aquisition_date' => 'required',
+    //         'inventory_tag' => 'required',
+    //         'quantity' => 'required|numeric',
+    //         'status' => 'required',
+    //     ]);
+
+    //     if ($serial_numbers !== null) {
+    //         foreach ($serial_numbers as $serial_number) {
+    //             $item = Item::create([
+    //                 'serial_number' => $serial_number ? $serial_number : 'N/A',
+    //                 'location' => $request->location,
+    //                 'category_id' => $request->item_category,
+    //                 'brand_id' => $request->brand,
+    //                 'model_id' => $request->model,
+    //                 'part_number' => $request->part_number ? $request->part_number : 'N/A',
+    //                 'description' => $request->item_description,
+    //                 'aquisition_date' => $request->aquisition_date,
+    //                 'inventory_tag' => $request->inventory_tag,
+    //                 'quantity' => $quantity,
+    //                 'status' => $request->status,
+    //                 'borrowed' => 'no',
+    //                 'item_image' =>  $imagePath,
+    //             ]);
+    //         }
+
+    //         // dd($item);
+    //         // $itemLog = new ItemLog();
+    //         // $itemLog->item_id = $item->id;
+    //         // $itemLog->quantity = $item->quantity;
+    //         // $itemLog->encoded_by = Auth::user()->id_number;
+    //         // $itemLog->mode = 'added';
+    //         // $itemLog->date = now();
+    //         // $itemLog->save();
+    //     } else {
+    //         $item = Item::create([
+    //             'serial_number' => 'N/A',
+    //             'location' => $request->location,
+    //             'category_id' => $request->item_category,
+    //             'brand_id' => $request->brand,
+    //             'model_id' => $request->model,
+    //             'part_number' => $request->part_number ? $request->part_number : 'N/A',
+    //             'description' => $request->item_description,
+    //             'aquisition_date' => $request->aquisition_date,
+    //             'inventory_tag' => $request->inventory_tag,
+    //             'quantity' => $quantity,
+    //             'status' => $request->status,
+    //             'borrowed' => 'no',
+    //             'item_image' =>  $imagePath,
+    //         ]);
+
+    //         // $itemLog = new ItemLog();
+    //         // $itemLog->item_id = $item->id;
+    //         // $itemLog->quantity = $item->quantity;
+    //         // $itemLog->encoded_by = Auth::user()->id_number;
+    //         // $itemLog->mode = 'added';
+    //         // $itemLog->date = now();
+    //         // $itemLog->save();
+    //     }
+
+    //     Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
+    //     return redirect('/adding-new-item');
+    // }
 
     public function generateReportPage()
     {

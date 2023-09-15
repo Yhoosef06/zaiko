@@ -88,6 +88,19 @@
                                             </div>
                                         @enderror
 
+                                        <label for="Item description">Description:</label>
+                                        <input type="text" id="item_description" name="item_description"
+                                            value="{{ old('item_description') }}"
+                                            class="form-control @error('item_description')
+                                        border-danger
+                                        @enderror"
+                                            placeholder="Enter an item description">
+                                        @error('item_description')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
                                         <label for="Brand">Brand:</label>
                                         <div style="display:flex">
                                             <select id="brand" name="brand"
@@ -150,20 +163,6 @@
                                             </div>
                                         @enderror
 
-
-                                        <label for="Item description">Item Description:</label>
-                                        <input type="text" id="item_description" name="item_description"
-                                            value="{{ old('item_description') }}"
-                                            class="form-control @error('item_description')
-                                        border-danger
-                                        @enderror"
-                                            placeholder="Enter an item description">
-                                        @error('item_description')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
                                         <label for="Item image">Upload Image:</label>
                                         <div style="display: flex">
                                             <input type="file" id="item_image" name="item_image"
@@ -180,6 +179,26 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
+
+                                        <label for="duration">Set Borrowing Period:</label>
+                                        <div class="row">
+                                            <div class="col">
+                                                <select id="duration_type" name="duration_type" class="form-control">
+                                                    <option value="General" selected>General</option>
+                                                    <option value="Specific">Specific</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col">
+                                                <div style="display: flex">
+                                                    <input type="text" id="duration" name="duration" value="7"
+                                                        class="form-control" style="width: 45px;" readonly>
+                                                    <label for="" class="radio-inline pl-1">
+                                                        day/s
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <div class="row">
                                             <div class="col">
@@ -517,6 +536,21 @@
         });
     });
 
+    $(document).ready(function() {
+        // Use jQuery to attach the event listener
+        $("#duration_type").on("change", function() {
+            // Check the selected value
+            if ($(this).val() === "Specific") {
+                // If "Specific" is selected, make the input writable
+                $("#duration").prop("readonly", false).val(""); // Clear the value
+            } else {
+                // If "General" is selected, make the input readonly and set the default value to 7
+                $("#duration").prop("readonly", true).val("7");
+            }
+        });
+    });
+
+
     function updateSerialNumberFields() {
         console.log('updateSerialNumberFields() called');
         const quantityField = document.getElementById('quantity');
@@ -527,12 +561,9 @@
         container.innerHTML = '';
 
         const quantity = parseInt(quantityField.value) || 0;
-        const errorMessage = container.dataset.errorMessage;
-        const hasError = container.dataset.hasError === 'true';
+        const hasError = @json($errors->has('serial_number'));
 
-        const hasSerialNumberErrors = errorMessage && errorMessage.trim() !== '';
-
-        if (hasSerialNumberErrors || checkbox.checked) {
+        if (hasError || checkbox.checked) {
             for (let i = 1; i <= quantity; i++) {
                 const label = document.createElement('label');
                 label.for = `serial_number_${i}`;
@@ -543,7 +574,7 @@
                 input.name = `serial_number[]`;
                 input.id = `serial_number_${i}`;
                 input.value = oldSerialNumberValue || '';
-                input.classList.add('form-control', 'col-10')
+                input.classList.add('form-control', 'col-10');
                 input.placeholder = 'Enter a serial number.';
 
                 container.appendChild(label);
@@ -554,11 +585,9 @@
                     const errorSpan = document.createElement('span');
                     errorSpan.classList.add('text-danger');
                     const errorMessage = document.createElement('p');
-                    errorMessage.textContent =
-                        `@error('serial_number') {{ $message }} @enderror`;
+                    errorMessage.textContent = '{{ $errors->first('serial_number') }}';
                     errorSpan.appendChild(errorMessage);
                     container.appendChild(errorSpan);
-
                 }
             }
         }
