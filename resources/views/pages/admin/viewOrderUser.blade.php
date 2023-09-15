@@ -94,33 +94,37 @@
 
                           @foreach ($orders as $item)
                             @if (empty($item->temp_serial_number) && $item->category_name != 'Tools')
-                                  @for ($i = 1; $i <= $item->temp_quantity; $i++)
-                                      <tr>
-                                        <td  >
-                                          <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
-                                        </td>
-                                        <td  >
-                                          <input type="text" name="itemId[]" id="itemID_{{ $i }}">
-                                        </td>
-                                        <td>{{ $item->brand_name }} </td>
-                                        <td>{{ $item->model_name }}</td>
-                                        <td>{{ $item->description }} </td>
-                                        <td>
-                                          <script>
-                                            var itemData = @json($item);
-                                        </script>
-                                          <div id="user_serial_{{ $i }}">
-                                            <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control serial-input" required>
-                                          </div>
-                                        </td>
-                                        <td>
-                                          <input type="hidden" name="quantity[]" value="1">1
-                                        </td>
-                                        <td>
-                                          <a href="#" class="btn btn-danger">Remove</a>
-                                        </td>
-                                      </tr>
-                                  @endfor
+                           
+                                @for ($i = 1; $i <= $item->temp_quantity; $i++)
+                                        <tr>
+                                          <td class="d-none" >
+                                            <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                          </td>
+                                          <td  class="d-none">
+                                            <input type="text" name="itemId[]" id="itemID_{{ $i }}">
+                                          </td>
+                                          <td>{{ $item->brand_name }} </td>
+                                          <td>{{ $item->model_name }}</td>
+                                          <td>{{ $item->description }} </td>
+                                          <td>
+                                            <script>
+                                              var itemData = @json($item);
+                                          </script>
+                                            <div id="user_serial_{{ $i }}">
+                                              <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control serial-input" required>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <input type="hidden" name="quantity[]" value="1">1
+                                          </td>
+                                          <td>
+                                            <a href="#" class="btn btn-danger">Remove</a>
+                                          </td>
+                                        </tr>
+                                    @endfor
+                                
+                          
+                                  
                             @elseif ($item->category_name === 'Tools')
                                   <tr>
                                     <td  class="d-none">

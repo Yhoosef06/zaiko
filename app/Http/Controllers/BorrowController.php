@@ -616,67 +616,96 @@ class BorrowController extends Controller
         $quantity = $request->input('quantity');
         $itemId = $request->input('itemId');
         $user = auth()->user();
-        
-        
-        // Initialize an empty array to store unique serial numbers
         $uniqueSerialNumbers = [];
     
         $validator = Validator::make($request->all(), [
             'user_serial_number.*' => [
                 'required',
                 function ($attribute, $value, $fail) use (&$uniqueSerialNumbers, $itemId) {
-                    // Check if the value is 'N/A', and if it is, skip the uniqueness check
+                  
                     if ($value !== 'N/A') {
-                        // Check if the serial number already exists in the uniqueSerialNumbers array
+                        
                         if (in_array($value, $uniqueSerialNumbers)) {
                             $fail("$attribute is not unique.");
                         } else {
-                            // Add the serial number to the uniqueSerialNumbers array
+                           
                             $uniqueSerialNumbers[] = $value;
-                            
                         }
                     }
                 },
             ],
-            // Add more validation rules for other fields
+           
         ]);
     
         if ($validator->fails()) {
             return response()->json(['duplicate' => $validator->errors()->all()]);
         }
-        
-        // If validation passes, you can proceed with your logic here
-        // ...
     
-        return response()->json(['success' => 'Serial numbers are valid.']);
-    // foreach ($orderId as $index => $order) {
-
-    //     if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serial_number[$index])) {
         
-    //         $existingItem = Item::where('serial_number', $serial_number[$index])->first();
+        $existingItems = Item::whereIn('serial_number', $serialNumbers)->get();
+        
+    
+        foreach ($serialNumbers as $serialNumber) {
+            if (!$existingItems->contains('serial_number', $serialNumber)) {
+                return response()->json(['error' => "Serial number '$serialNumber' does not exist in the item table."]);
+            }
+        }
+
+        if ($user) {
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
+        
+            Order::whereIn('id', $orderId)->update([
+                'approval_date' => Carbon::today(),
+                'approved_by' => $firstName . ' ' . $lastName
+            ]);
+        
+            foreach ($itemId as $index => $id) {
+                $item = Item::join('item_categories', 'items.category_id', '=', 'item_categories.id')
+                    ->where('items.id', $id)
+                    ->first();
+                if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serialNumbers[$index])) {
+                    $order = $orderId[$index]; // Get the specific order ID
+                   
             
-    //         if (!$existingItem) {
-    //             return response()->json(['error' => 'Serial number does not exist in the item table.']);
-               
-    //         }
+                    if ($item->category_name === 'Tools') {
+                        OrderItem::create([
+                            'order_id' => $order,
+                            'user_id' => $student_id_added_user,
+                            'item_id' => $itemId[$index],
+                            'order_quantity' => $quantity[$index],
+                            'status' => 'borrowed',
+                            'order_serial_number' => $serialNumbers[$index],
+                            'date_returned' => Carbon::today(),
+                            'released_by' => $lastName . ' ' . $firstName
+                        ]);
+                    } else {
+                        OrderItem::create([
+                            'order_id' => $order,
+                            'user_id' => $student_id_added_user,
+                            'item_id' => $itemId[$index],
+                            'order_quantity' => $quantity[$index],
+                            'status' => 'borrowed',
+                            'order_serial_number' => $serialNumbers[$index],
+                            'date_returned' => Carbon::today(),
+                            'released_by' => $lastName . ' ' . $firstName
+                        ]);
+                        Item::whereIn('id', $itemId)->update(['borrowed' => 'yes']);
+                    }
+                }
+            }
+        }
+        
 
-    //         // Check if the serial number is already used in this submission
-    //         if (in_array($serial_number[$index], $serialNumbers)) {
-    //             return response()->json(['error' => 'Duplicate serial number detected: ' . $serial_number[$index]]);
-                
-    //         }
-
-    //         // Add the serial number to the list of used serial numbers
-    //         $serialNumbers[] = $serial_number[$index];
-    //         echo '<pre>';
-    //     echo print_r($serial_number);
-    //     echo '</pre>';
-    //     exit;
+        return response()->json(['success' => 'Serial numbers are valid.']);
             
-    //     }
-    // }
+    }
+        
+        
+       
 
-}
+    
+    
 
    
     
