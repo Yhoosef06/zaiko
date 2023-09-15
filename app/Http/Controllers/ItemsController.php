@@ -214,8 +214,7 @@ class ItemsController extends Controller
 
     public function saveNewItem(Request $request)
     {
-        $serial_numbers = $request->serial_number;
-        $isChecked = $request->input('checkbox') === '1' ? 1 : 0;
+        $serial_numbers = $request->input('serial_number');
         $randomString = Str::random(10);
         $itemImage = $request->file('item_image');
         $imagePath = null;
@@ -229,7 +228,7 @@ class ItemsController extends Controller
 
         $this->validate($request, [
             'location' => 'required',
-            'serial_number' => 'unique:items,serial_number',
+            'serial_number' => 'unique:items,serial_number|regex:/^[A-Za-z0-9]+$/',
             'item_category' => 'required',
             'item_description' => 'required',
             'aquisition_date' => 'required',
@@ -238,11 +237,9 @@ class ItemsController extends Controller
             'status' => 'required',
         ]);
 
-        // dd($isChecked);
-        if ($isChecked == 1) {
-            
+        foreach ($serial_numbers as $serial_number) {
             $item = Item::create([
-                'serial_number' => $isChecked ? ($request->serial_number ? $request->serial_number : 'N/A') : 'N/A',
+                'serial_number' => $serial_number ? $serial_number : 'N/A',
                 'location' => $request->location,
                 'category_id' => $request->item_category,
                 'brand_id' => $request->brand,
@@ -251,45 +248,19 @@ class ItemsController extends Controller
                 'description' => $request->item_description,
                 'aquisition_date' => $request->aquisition_date,
                 'inventory_tag' => $request->inventory_tag,
-                'quantity' => $request->quantity,
+                'quantity' => 1,
                 'status' => $request->status,
                 'borrowed' => 'no',
                 'item_image' =>  $imagePath,
             ]);
             // dd($item);
-            $itemLog = new ItemLog();
-            $itemLog->item_id = $item->id;
-            $itemLog->quantity = $item->quantity;
-            $itemLog->encoded_by = Auth::user()->id_number;
-            $itemLog->mode = 'added';
-            $itemLog->date = now();
-            $itemLog->save();
-        } else {
-            foreach ($serial_numbers as $serial_number) {
-                $item = Item::create([
-                    'serial_number' => $serial_number,
-                    'location' => $request->location,
-                    'category_id' => $request->item_category,
-                    'brand_id' => $request->brand,
-                    'model_id' => $request->model,
-                    'part_number' => $request->part_number, 'part_number' => $request->part_number ? $request->part_number : 'N/A',
-                    'description' => $request->item_description,
-                    'aquisition_date' => $request->aquisition_date,
-                    'inventory_tag' => $request->inventory_tag,
-                    'quantity' => 1,
-                    'status' => $request->status,
-                    'borrowed' => 'no',
-                    'item_image' =>  $imagePath,
-                ]);
-                // dd($item);
-                $itemLog = new ItemLog();
-                $itemLog->item_id = $item->id;
-                $itemLog->quantity = $item->quantity;
-                $itemLog->encoded_by = Auth::user()->id_number;
-                $itemLog->mode = 'added';
-                $itemLog->date = now();
-                $itemLog->save();
-            }
+            // $itemLog = new ItemLog();
+            // $itemLog->item_id = $item->id;
+            // $itemLog->quantity = $item->quantity;
+            // $itemLog->encoded_by = Auth::user()->id_number;
+            // $itemLog->mode = 'added';
+            // $itemLog->date = now();
+            // $itemLog->save();
         }
 
         Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
