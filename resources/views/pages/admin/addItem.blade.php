@@ -225,14 +225,14 @@
                                                 <input type="text" id="quantity" name="quantity"
                                                     class="form-control @error('quantity') border-danger @enderror"
                                                     value="{{ old('quantity') }}" placeholder="Enter a quantity"
-                                                    oninput="updateSerialNumberFields()"> <br>
+                                                    oninput="updateSerialNumberFields()">
 
                                                 @error('quantity')
                                                     <div class="text-danger">
                                                         {{ $message }}
                                                     </div>
                                                 @enderror
-
+                                                <br>
                                                 <div id="serial_numbers_container"
                                                     style="max-height: 200px; overflow-y: auto;"
                                                     data-has-error="{{ $errors->has('serial_number') ? 'true' : 'false' }}">
@@ -241,7 +241,7 @@
                                             </div>
                                             <div class="col">
                                                 <strong>With serial number/s?</strong>
-                                                <input type="checkbox" id="checkbox" name="checkbox"
+                                                <input type="checkbox" id="checkbox" name="checkbox" value="1"
                                                     @if ($errors->has('serial_number'))  @endif
                                                     onchange="updateSerialNumberFields();">
                                             </div>
