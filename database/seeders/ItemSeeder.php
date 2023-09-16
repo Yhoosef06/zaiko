@@ -109,7 +109,7 @@ class ItemSeeder extends Seeder
             
             [
                 'location' => '1',
-                'category_id' => '4',
+                'category_id' => '2',
                 'brand_id' => '3',
                 'model_id' => '10',
                 'description' => '15 inches O Led Screen',
@@ -120,7 +120,22 @@ class ItemSeeder extends Seeder
                 'duration' => '7',
                 'borrowed' => 'no',
                 'inventory_tag' => 'without',
-                'serial_number' => 'WCL16S0111334', 
+                'serial_number' => 'GG44VAC', 
+            ],
+            [
+                'location' => '1',
+                'category_id' => '4',
+                'brand_id' => '7',
+                'model_id' => '4',
+                'description' => '15 inches O Led Screen',
+                'quantity' => '1',
+                'aquisition_date' => now(),
+                'status' => 'active',
+                'duration_type' => 'General',
+                'duration' => '7',
+                'borrowed' => 'no',
+                'inventory_tag' => 'without',
+                'serial_number' => 'WC88Q123', 
             ],
             [
                 'location' => '2',
