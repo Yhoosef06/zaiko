@@ -86,9 +86,9 @@
                 @enderror
 
                 <label for="quantity">Quantity:</label>
-                <input type="text" id="quantity" name="quantity"
+                <input type="text" id="quantity" name="quantity" style="max-width: 50px"
                     class="form-control @error('quantity') border-danger @enderror"
-                    placeholder="Enter a quantity" required>
+                    placeholder="0" required>
 
                 @error('quantity')
                     <div class="text-danger">
