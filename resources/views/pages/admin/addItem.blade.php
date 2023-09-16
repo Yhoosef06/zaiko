@@ -120,6 +120,11 @@
                                                         data-toggle="tooltip" title='Add a brand'></i></a>
                                             @endif
                                         </div>
+                                        @error('brand')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
 
                                         <label for="Model">Model:</label>
                                         <div style="display:flex">
@@ -135,6 +140,11 @@
                                                         data-toggle="tooltip" title='Add a model'></i></a>
                                             @endif
                                         </div>
+                                        @error('model')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
 
                                         <label for="Model">Part Number:</label>
                                         <input type="text" id="part_number" name="part_number"
@@ -180,7 +190,7 @@
                                             </div>
                                         @enderror
 
-                                        <label for="duration">Set Borrowing Period:</label>
+                                        <label for="duration">Set Borrowing Period For This Item:</label>
                                         <div class="row">
                                             <div class="col">
                                                 <select id="duration_type" name="duration_type" class="form-control">
@@ -243,8 +253,9 @@
                                             <div class="col">
                                                 <input type="text" id="quantity" name="quantity"
                                                     class="form-control @error('quantity') border-danger @enderror"
-                                                    value="{{ old('quantity') }}" placeholder="Enter a quantity"
-                                                    oninput="updateSerialNumberFields()">
+                                                    value="{{ old('quantity') }}"
+                                                    @if (session('invalidSerialNumbers')) value="{{ old('quantity') }}" @endif
+                                                    placeholder="Enter a quantity" oninput="updateSerialNumberFields()">
 
                                                 @error('quantity')
                                                     <div class="text-danger">
@@ -252,6 +263,18 @@
                                                     </div>
                                                 @enderror
                                                 <br>
+
+                                                @if (session('invalidSerialNumbers'))
+                                                    @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                                        <input type="text" value="{{ $invalidSerialNumber }}"
+                                                            name="serial_number[]" id="serial_number"
+                                                            class="form-control border border-danger">
+                                                        <span class="text-danger">This serial number is taken already.
+                                                        </span>
+                                                    @endforeach
+                                                @endif
+                                                <br>
+
                                                 <div id="serial_numbers_container"
                                                     style="max-height: 200px; overflow-y: auto;"
                                                     data-has-error="{{ $errors->has('serial_number') ? 'true' : 'false' }}">
@@ -537,6 +560,36 @@
     });
 
     $(document).ready(function() {
+        // Reference to the model select dropdown
+        var modelSelect = $('#model');
+
+        // Listen for changes in the brand select dropdown
+        $('#brand').change(function() {
+            // Get the selected brand's ID
+            var selectedBrandId = $(this).val();
+
+            // Send an AJAX request to fetch models associated with the selected brand
+            $.ajax({
+                url: '/get-models/' + selectedBrandId, // Replace with the actual route
+                type: 'GET',
+                success: function(data) {
+                    // Clear existing model options
+                    modelSelect.empty();
+
+                    // Add the static "N/A" option
+                    modelSelect.append('<option value="1">Select a model. (Skip if none.)</option>');
+
+                    // Populate the model select dropdown with new options
+                    $.each(data, function(index, model) {
+                        modelSelect.append('<option value="' + model.id + '">' +
+                            model.model_name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
         // Use jQuery to attach the event listener
         $("#duration_type").on("change", function() {
             // Check the selected value
@@ -549,7 +602,6 @@
             }
         });
     });
-
 
     function updateSerialNumberFields() {
         console.log('updateSerialNumberFields() called');
