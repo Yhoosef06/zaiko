@@ -154,6 +154,8 @@ class ItemsController extends Controller
         $item->aquisition_date = $request->aquisition_date;
         $item->quantity = $request->quantity;
         $item->status = $request->status;
+        $item->duration = $request->duration;
+        $item->duration_type = $request->duration_type;
         $item->part_number  = $request->part_number;
         $item->inventory_tag = $request->inventory_tag;
         $item->item_image = $imagePath;
@@ -213,15 +215,16 @@ class ItemsController extends Controller
         return response()->json(['isUnique' => $isUnique]);
     }
 
-    
+
     public function saveNewItem(Request $request)
     {
+        $hasModel = $request->model;
         $serial_numbers = $request->serial_number;
         $quantity = $request->has('quantity_checkbox') ? 1 : $request->input('quantity');
         $randomString = Str::random(10);
         $itemImage = $request->file('item_image');
         $imagePath = null;
-    
+
         if ($itemImage) {
             $imagePath = $itemImage->storeAs(
                 'Item Images',
@@ -229,7 +232,7 @@ class ItemsController extends Controller
                 'public'
             );
         }
-    
+
         $this->validate($request, [
             'location' => 'required',
             'item_category' => 'required',
@@ -239,35 +242,41 @@ class ItemsController extends Controller
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);
-    
+
         if ($serial_numbers !== null) {
             foreach ($serial_numbers as $serial_number) {
 
                 $validator = Validator::make(['serial_number' => $serial_number], [
                     'serial_number' => 'unique:items,serial_number',
                 ]);
-        
+
                 if ($validator->fails()) {
-                    // Handle validation error for this serial number
+                    $invalidSerialNumbers[] = $serial_number;
                     continue; // Skip this serial number and proceed with the next one
+                }
+
+                if (!empty($invalidSerialNumbers)) {
+                    session()->put('invalidSerialNumbers', $invalidSerialNumbers);
                 }
 
                 $item = Item::create([
                     'serial_number' => $serial_number ? $serial_number : 'N/A',
                     'location' => $request->location,
                     'category_id' => $request->item_category,
-                    'brand_id' => $request->brand,
-                    'model_id' => $request->model,
+                    'brand_id' => $request->brand ? $request->brand : 1,
+                    'model_id' => $request->model ? $request->brand : 1,
                     'part_number' => $request->part_number ? $request->part_number : 'N/A',
                     'description' => $request->item_description,
                     'aquisition_date' => $request->aquisition_date,
                     'inventory_tag' => $request->inventory_tag,
                     'quantity' => $quantity,
                     'status' => $request->status,
+                    'duration_type' => $request->duration_type,
+                    'duration' => $request->duration,
                     'borrowed' => 'no',
                     'item_image' =>  $imagePath,
                 ]);
-    
+
                 // Handle item creation and logging as needed
             }
         } else {
@@ -275,21 +284,23 @@ class ItemsController extends Controller
                 'serial_number' => 'N/A',
                 'location' => $request->location,
                 'category_id' => $request->item_category,
-                'brand_id' => $request->brand,
-                'model_id' => $request->model,
+                'brand_id' => $request->brand ? $request->brand : 1,
+                'model_id' => $request->model ? $request->brand : 1,
                 'part_number' => $request->part_number ? $request->part_number : 'N/A',
                 'description' => $request->item_description,
                 'aquisition_date' => $request->aquisition_date,
                 'inventory_tag' => $request->inventory_tag,
                 'quantity' => $quantity,
                 'status' => $request->status,
+                'duration_type' => $request->duration_type,
+                'duration' => $request->duration,
                 'borrowed' => 'no',
                 'item_image' =>  $imagePath,
             ]);
-    
+
             // Handle item creation and logging as needed
         }
-    
+
         Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
         return redirect('/adding-new-item');
     }
@@ -634,20 +645,24 @@ class ItemsController extends Controller
 
     public function saveSubItem(Request $request, $id)
     {
+        $parentItem = Item::find($id);
+
         $item = Item::create([
             'serial_number' => $request->serial_number,
-            'location' => $request->location,
-            'category_id' => $request->item_category,
-            'brand_id' => $request->brand,
-            'model_id' => $request->model,
+            'location' => $parentItem->location,
+            'category_id' => $parentItem->category_id,
+            'brand_id' => $request->brand ? $request->brand : 1,
+            'model_id' => $request->model ? $request->brand : 1,
             'part_number' => $request->part_number,
-            'description' => $request->item_description,
+            'description' => $request->description,
             'aquisition_date' => $request->aquisition_date,
             'inventory_tag' => $request->inventory_tag,
             'quantity' => $request->quantity,
             'status' => $request->status,
             'borrowed' => 'no',
-            'parent_item' => $id
+            'parent_item' => $id,
+            'duration' => $parentItem->duration,
+            'duration_type' => $parentItem->duration_type
         ]);
 
         $itemLog = new ItemLog();
@@ -671,20 +686,24 @@ class ItemsController extends Controller
 
     public function saveReplacedItem(Request $request, $id)
     {
+        $replacedItem = Item::find($id);
+
         $item = Item::create([
             'serial_number' => $request->serial_number,
-            'location' => $request->location,
-            'category_id' => $request->item_category,
-            'brand_id' => $request->brand,
-            'model_id' => $request->model,
+            'location' => $replacedItem->location,
+            'category_id' => $replacedItem->category_id,
+            'brand_id' => $request->brand ? $request->brand : 1,
+            'model_id' => $request->model ? $request->brand : 1,
             'part_number' => $request->part_number,
-            'description' => $request->item_description,
+            'description' => $request->description,
             'aquisition_date' => $request->aquisition_date,
-            'inventory_tag' => $request->inventory_tag,
-            'quantity' => $request->quantity,
+            'inventory_tag' => $replacedItem->inventory_tag,
+            'quantity' => $replacedItem->quantity,
             'status' => $request->status,
             'borrowed' => 'no',
-            'replaced_item' => $id
+            'replaced_item' => $id,
+            'duration' => $replacedItem->duration,
+            'duration_type' => $replacedItem->duration_type
         ]);
 
         $itemLog = new ItemLog();
@@ -695,6 +714,6 @@ class ItemsController extends Controller
         $itemLog->date = now();
         $itemLog->save();
 
-        return redirect()->route('view_items')->with('success', 'Item #' . $id . 'Replaced Successfully');
+        return redirect()->route('view_items')->with('success', 'Item # ' . $id . ' Replaced Successfully');
     }
 }
