@@ -3,23 +3,6 @@
     <div class="card-body">
         <div class="row">
             <div class="col">
-                <input type="text" class="form-control" name="location" id="location" value="{{ $item->location }}"
-                    hidden>
-
-                @error('location')
-                    <div class="text-danger">
-                        {{ $message }}
-                    </div>
-                @enderror
-
-                <input type="text" class="form-control" name="item_category" id="item_category"
-                    value="{{ $item->category_id }}" hidden>
-
-                @error('item_category')
-                    <div class="text-danger">
-                        {{ $message }}
-                    </div>
-                @enderror
 
                 <label for="Brand">Brand:</label>
                 <div style="display:flex">
@@ -77,14 +60,14 @@
             </div>
 
             <div class="col">
-                <label for="Item description">Item Description:</label>
-                <input type="text" id="item_description" name="item_description"
-                    value="{{ old('item_description') }}"
-                    class="form-control @error('item_description')
+                <label for="Item description">Description:</label>
+                <input type="text" id="description" name="description"
+                    value="{{ old('description') }}"
+                    class="form-control @error('description')
                                         border-danger
                                         @enderror"
-                    placeholder="Enter an item description">
-                @error('item_description')
+                    placeholder="Enter an item description" required>
+                @error('description')
                     <div class="text-danger">
                         {{ $message }}
                     </div>
@@ -95,21 +78,17 @@
                     class="form-control  @error('aquisition_date')
                                             border-danger
                                             @enderror"
-                    placeholder="Aquistion Date">
+                    placeholder="Aquistion Date" required>
                 @error('aquisition_date')
                     <div class="text-danger">
                         {{ $message }}
                     </div>
                 @enderror
 
-                {{-- <label for="quantity">Quantity:</label> --}}
+                <label for="quantity">Quantity:</label>
                 <input type="text" id="quantity" name="quantity"
-                    class="form-control @error('quantity') border-danger @enderror" value="1"
-                    placeholder="Enter a quantity" oninput="updateSerialNumberFields()" hidden>
-                {{-- <input type="checkbox" id="checkbox" name="checkbox" value="1"
-                    onchange="this.value = this.checked ? '1' : '2'; updateSerialNumberFields(); console.log(this.value);"
-                    checked>
-                <strong>Same serial numbers?</strong> <br> --}}
+                    class="form-control @error('quantity') border-danger @enderror"
+                    placeholder="Enter a quantity" required>
 
                 @error('quantity')
                     <div class="text-danger">
@@ -135,15 +114,6 @@
                     <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked hidden>
                     {{-- Without --}}
                 </label>
-
-                <div class="form-group" id="serial_numbers_container"
-                    data-error-message="{{ $errors->first('serial_numbers') }}">
-                    @error('serial_numbers')
-                        <span class="text-danger">
-                            <p>{{ $message }}</p>
-                        </span>
-                    @enderror
-                </div>
             </div>
         </div>
     </div>
@@ -410,6 +380,9 @@
     }
 
     $(document).ready(function() {
+        // Reference to the model select dropdown
+        var modelSelect = $('#model');
+
         // Listen for changes in the brand select dropdown
         $('#brand').change(function() {
             // Get the selected brand's ID
@@ -421,11 +394,15 @@
                 type: 'GET',
                 success: function(data) {
                     // Clear existing model options
-                    $('#model').empty();
+                    modelSelect.empty();
+
+                    // Add the static "N/A" option
+                    modelSelect.append(
+                        '<option value="1" disabled selected>Select a model.</option>');
 
                     // Populate the model select dropdown with new options
                     $.each(data, function(index, model) {
-                        $('#model').append('<option value="' + model.id + '">' +
+                        modelSelect.append('<option value="' + model.id + '">' +
                             model.model_name + '</option>');
                     });
                 }
