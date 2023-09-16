@@ -60,6 +60,11 @@ class ModelSeeder extends Seeder
                 'brand_id' => 6,
                 'model_name' => 'Pliers 2021',
             ],
+            [
+                'id' => 10,
+                'brand_id' => 3,
+                'model_name' => 'VP249QGR',
+            ],
             
         ];
         DB::table('models')->insert($name);   
