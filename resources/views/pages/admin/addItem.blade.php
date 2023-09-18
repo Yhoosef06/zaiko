@@ -194,8 +194,8 @@
                                         <div class="row">
                                             <div class="col">
                                                 <select id="duration_type" name="duration_type" class="form-control">
-                                                    <option value="General" selected>General</option>
-                                                    <option value="Specific">Specific</option>
+                                                    <option value="General" selected>Default</option>
+                                                    <option value="Specific">Custom</option>
                                                 </select>
                                             </div>
 

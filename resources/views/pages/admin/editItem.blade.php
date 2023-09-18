@@ -177,8 +177,8 @@
                 <div class="row">
                     <div class="col">
                         <select id="duration_type" name="duration_type" class="form-control">
-                            <option value="General" @if ($item->duration_type === 'General') selected @endif>General</option>
-                            <option value="Specific" @if ($item->duration_type === 'Specific') selected @endif>Specific</option>
+                            <option value="General" @if ($item->duration_type === 'General') selected @endif>Default</option>
+                            <option value="Specific" @if ($item->duration_type === 'Specific') selected @endif>Custom</option>
                         </select>
                     </div>
 
