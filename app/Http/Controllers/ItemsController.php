@@ -102,21 +102,6 @@ class ItemsController extends Controller
 
     public function editItemPage($id)
     {
-        // if (Auth::user()->account_type == 'admin') {
-        //     $item = Item::find($id);
-        //     $rooms = Room::all();
-        //     $category = $item->category->category_name;
-        //     $item['category'] = $category;
-        //     $itemCategories = ItemCategory::all();
-        //     return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
-        // } else {
-        //     $item = Item::find($id);
-        //     $user_dept_id = Auth::user()->department_id;
-        //     $rooms = Room::where('department_id', $user_dept_id)->get();
-        //     $itemCategories = ItemCategory::all();
-        //     return view('pages.admin.editItem')->with(compact('item', 'rooms', 'itemCategories'));
-        // }
-
         $user = Auth::user();
         $isAdmin = $user->account_type == 'admin';
         $item = Item::find($id);
@@ -207,23 +192,15 @@ class ItemsController extends Controller
             return redirect('list-of-items');
         }
     }
-    public function checkSerialNumber($serialNumber)
-    {
-        // Perform a database query to check if the serial number exists
-        $isUnique = Item::where('serial_number', $serialNumber)->doesntExist();
-
-        return response()->json(['isUnique' => $isUnique]);
-    }
-
 
     public function saveNewItem(Request $request)
     {
-        $hasModel = $request->model;
         $serial_numbers = $request->serial_number;
         $quantity = $request->has('quantity_checkbox') ? 1 : $request->input('quantity');
         $randomString = Str::random(10);
         $itemImage = $request->file('item_image');
         $imagePath = null;
+        $invalidSerialNumbers = [];
 
         if ($itemImage) {
             $imagePath = $itemImage->storeAs(
@@ -239,17 +216,18 @@ class ItemsController extends Controller
             'item_description' => 'required',
             'aquisition_date' => 'required',
             'inventory_tag' => 'required',
-            'quantity' => 'required|numeric',
+            'quantity' => 'required|numeric|min:1',
             'status' => 'required',
         ]);
-
+       
         if ($serial_numbers !== null) {
+            // dd($serial_numbers);
             foreach ($serial_numbers as $serial_number) {
 
                 $validator = Validator::make(['serial_number' => $serial_number], [
                     'serial_number' => 'unique:items,serial_number',
                 ]);
-
+                
                 if ($validator->fails()) {
                     $invalidSerialNumbers[] = $serial_number;
                     continue; // Skip this serial number and proceed with the next one
@@ -258,7 +236,7 @@ class ItemsController extends Controller
                 if (!empty($invalidSerialNumbers)) {
                     session()->put('invalidSerialNumbers', $invalidSerialNumbers);
                 }
-
+         
                 $item = Item::create([
                     'serial_number' => $serial_number ? $serial_number : 'N/A',
                     'location' => $request->location,
@@ -276,8 +254,6 @@ class ItemsController extends Controller
                     'borrowed' => 'no',
                     'item_image' =>  $imagePath,
                 ]);
-
-                // Handle item creation and logging as needed
             }
         } else {
             $item = Item::create([
@@ -300,7 +276,7 @@ class ItemsController extends Controller
 
             // Handle item creation and logging as needed
         }
-
+      
         Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
         return redirect('/adding-new-item');
     }

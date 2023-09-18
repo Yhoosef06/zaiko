@@ -265,14 +265,16 @@
                                                 <br>
 
                                                 @if (session('invalidSerialNumbers'))
-                                                    @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
-                                                        <input type="text" value="{{ $invalidSerialNumber }}"
-                                                            name="serial_number[]" id="serial_number"
-                                                            class="form-control border border-danger">
-                                                        <span class="text-danger">This serial number is taken already.
-                                                        </span>
-                                                    @endforeach
+                                                    <div class="alert alert-danger">
+                                                        <strong>Invalid Serial Numbers:</strong>
+                                                        <ul>
+                                                            @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                                                <li>{{ $invalidSerialNumber }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
                                                 @endif
+
                                                 <br>
 
                                                 <div id="serial_numbers_container"
@@ -577,7 +579,8 @@
                     modelSelect.empty();
 
                     // Add the static "N/A" option
-                    modelSelect.append('<option value="1">Select a model. (Skip if none.)</option>');
+                    modelSelect.append(
+                        '<option value="1">Select a model. (Skip if none.)</option>');
 
                     // Populate the model select dropdown with new options
                     $.each(data, function(index, model) {
