@@ -40,7 +40,17 @@ class SignInController extends Controller
                     ]);
                 }
                 return redirect()->route('admin.dashboard');
-            } else if (auth()->user()->account_type == 'faculty' && auth()->user()->role == 'borrower') {
+            }  else if (auth()->user()->account_type == 'student' && auth()->user()->role == 'manager') {
+                $userId = auth()->user()->id_number;
+                $user = User::find($userId);
+                if ($user) {
+                    $user->update([
+                        'last_login_at' => now()
+                    ]);
+                }
+                return redirect()->route('admin.dashboard');
+            }
+            else if (auth()->user()->account_type == 'faculty' && auth()->user()->role == 'borrower') {
                 $userId = auth()->user()->id_number;
                 $user = User::find($userId);
                 if ($user) {
