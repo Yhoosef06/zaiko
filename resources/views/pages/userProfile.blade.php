@@ -12,7 +12,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-12">
+                <div class="col-12" style="max-width: 500px">
                     <div class="card text-lg p-3">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible">
@@ -76,9 +76,9 @@
                                                 class="text-decoration-underline">Change Password</a>
                                         </div>
                                         <div class="container">
-                                            <label for="">Password Reset Security Question:</label>
+                                            <label for="">Security Question:</label>
                                             <a href="{{ route('modify_security_question', ['id_number' => Auth::user()->id_number]) }}"
-                                                class="text-decoration-underline">Modify</a>
+                                                class="text-decoration-underline">Update</a>
                                         </div>
                                     </div>
                                 </div>

@@ -266,12 +266,12 @@ class ItemsController extends Controller
 
             if (!empty($invalidSerialNumbers) && empty($validSerialNumbers)) {
                 session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-                return redirect('/adding-new-item')->with('danger', 'Invalid Serial Numbers: ');
+                return redirect('/adding-new-item')->with('danger', 'Failed to add item(s) due to invalid serial numbers. Please check the following serial numbers: ');
             } elseif (!empty($invalidSerialNumbers) && !empty($validSerialNumbers)) {
                 session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-                return redirect('/adding-new-item')->with('warning', 'Item Successfully Added. However the following serial numbers are invalid: ');
+                return redirect('/adding-new-item')->with('warning', 'Item(s) added successfully, but some serial numbers are invalid. Please check the following serial numbers: ');
             } else {
-                Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
+                Session::flash('success', 'Item(s) added successfully. Do you want to add another one?');
                 return redirect('/adding-new-item');
             }
         } else {
@@ -302,7 +302,7 @@ class ItemsController extends Controller
             $itemLog->save();
         }
 
-        Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
+        Session::flash('success', 'Item(s) added successfully. Do you want to add another one?');
         return redirect('/adding-new-item');
     }
 

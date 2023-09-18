@@ -12,7 +12,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-6">
+                <div class="col-12" style="max-width: 500px">
                     <div class="card text-lg p-5">
                         <div class="card-header">
                             <h3>Editing Profile Information</h3>
