@@ -20,13 +20,29 @@
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
                                 </div>
-                            @elseif (session('danger'))
-                                <div class="alert alert-danger alert-dismissible">
+                            @elseif(session('invalidSerialNumbers') && session('danger'))
+                                <div class="alert alert-danger">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>
+                                        {{ session('danger') }}
+                                        @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                            {{ $invalidSerialNumber }},
+                                        @endforeach
+                                    </p>
                                 </div>
+                                {{ session()->forget('invalidSerialNumbers') }}
+                            @elseif (session('invalidSerialNumbers') && session('warning'))
+                                <div class="alert alert-warning">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>
+                                        {{ session('warning') }}
+                                        @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                            {{ $invalidSerialNumber }},
+                                        @endforeach
+                                    </p>
+                                </div>
+                                {{ session()->forget('invalidSerialNumbers') }}
                             @endif
-
                             <h3>Adding New Item</h3>
                         </div>
                         <!-- /.card-header -->
@@ -262,19 +278,6 @@
                                                         {{ $message }}
                                                     </div>
                                                 @enderror
-                                                <br>
-
-                                                @if (session('invalidSerialNumbers'))
-                                                    <div class="alert alert-danger">
-                                                        <strong>Invalid Serial Numbers:</strong>
-                                                        <ul>
-                                                            @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
-                                                                <li>{{ $invalidSerialNumber }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @endif
-
                                                 <br>
 
                                                 <div id="serial_numbers_container"

@@ -201,6 +201,7 @@ class ItemsController extends Controller
         $itemImage = $request->file('item_image');
         $imagePath = null;
         $invalidSerialNumbers = [];
+        $validSerialNumbers = [];
 
         if ($itemImage) {
             $imagePath = $itemImage->storeAs(
@@ -219,26 +220,25 @@ class ItemsController extends Controller
             'quantity' => 'required|numeric|min:1',
             'status' => 'required',
         ]);
-       
+
         if ($serial_numbers !== null) {
-            // dd($serial_numbers);
+
             foreach ($serial_numbers as $serial_number) {
 
                 $validator = Validator::make(['serial_number' => $serial_number], [
-                    'serial_number' => 'unique:items,serial_number',
+                    'serial_number' => ['unique:items,serial_number', 'regex:/^[a-zA-Z0-9]*$/'],
                 ]);
-                
+
                 if ($validator->fails()) {
                     $invalidSerialNumbers[] = $serial_number;
-                    continue; // Skip this serial number and proceed with the next one
+                } else {
+                    $validSerialNumbers[] = $serial_number;
                 }
+            }
 
-                if (!empty($invalidSerialNumbers)) {
-                    session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-                }
-         
+            foreach ($validSerialNumbers as $validSerialNumber) {
                 $item = Item::create([
-                    'serial_number' => $serial_number ? $serial_number : 'N/A',
+                    'serial_number' => $validSerialNumber ? $validSerialNumber : 'N/A',
                     'location' => $request->location,
                     'category_id' => $request->item_category,
                     'brand_id' => $request->brand ? $request->brand : 1,
@@ -254,6 +254,17 @@ class ItemsController extends Controller
                     'borrowed' => 'no',
                     'item_image' =>  $imagePath,
                 ]);
+            }
+
+            if (!empty($invalidSerialNumbers) && empty($validSerialNumbers)) {
+                session()->put('invalidSerialNumbers', $invalidSerialNumbers);
+                return redirect('/adding-new-item')->with('danger', 'Invalid Serial Numbers: ');
+            } elseif (!empty($invalidSerialNumbers) && !empty($validSerialNumbers)) {
+                session()->put('invalidSerialNumbers', $invalidSerialNumbers);
+                return redirect('/adding-new-item')->with('warning', 'Item Successfully Added. However the following serial numbers are invalid: ');
+            } else {
+                Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
+                return redirect('/adding-new-item');
             }
         } else {
             $item = Item::create([
@@ -276,7 +287,7 @@ class ItemsController extends Controller
 
             // Handle item creation and logging as needed
         }
-      
+
         Session::flash('success', 'New Item Successfully Added. Do you want to add another one?');
         return redirect('/adding-new-item');
     }
