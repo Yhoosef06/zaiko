@@ -3,84 +3,6 @@
     <div class="card-body">
         <div class="row">
             <div class="col">
-                {{-- <label for="location">Room/Location: </label> --}}
-                {{-- <div style="display:flex">
-                    <select id="location" name="location"
-                        class="form-control @error('location')
-                                                            border-danger @enderror">
-                        <option value="option_select" disabled selected>Choose a room</option>
-                        @foreach ($rooms as $room)
-                            <option value="{{ $room->id }}" {{ old('location') == $room->id ? 'selected' : '' }}>
-                                {{ $room->room_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @if (Auth::user()->account_type != 'admin')
-                        <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                data-target="#addRoomModal" data-toggle="tooltip" title='Add a room'
-                                data-toggle="modal"></i></a>
-                    @endif
-                </div> --}}
-
-                <input type="text" class="form-control" name="location" id="location" value="{{ $item->location }}"
-                    hidden>
-
-                @error('location')
-                    <div class="text-danger">
-                        {{ $message }}
-                    </div>
-                @enderror
-                {{-- 
-                <label for="Item name">Item Category:</label> --}}
-                {{-- <div style="display:flex">
-                    <select id="item_category" name="item_category"
-                        class="form-control @error('item_category')
-                                            border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a category
-                        </option>
-                        @foreach ($itemCategories as $category)
-                            <option value="{{ $category->id }}"
-                                {{ old('item_category') == $category->id ? 'selected' : '' }}>
-                                {{ $category->category_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @if (Auth::user()->account_type != 'admin')
-                        <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                data-target="#addItemCategoryModal" data-toggle="tooltip"
-                                title='Add a category'></i></a>
-                    @endif
-                </div> --}}
-
-                <input type="text" class="form-control" name="item_category" id="item_category"
-                    value="{{ $item->category_id }}" hidden>
-
-                @error('item_category')
-                    <div class="text-danger">
-                        {{ $message }}
-                    </div>
-                @enderror
-                {{-- 
-                <label for="Brand">Brand:</label>
-                <div style="display:flex">
-                    <select id="brand" name="brand" class="form-control @error('brand') border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a brand</option>
-                        @foreach ($brands as $brand)
-                            <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <label for="Model">Model:</label>
-                <div style="display:flex">
-                    <select id="model" name="model" class="form-control @error('model') border-danger @enderror">
-                        <option value="option_select" disabled selected>Select a model</option>
-                        @foreach ($models as $model)
-                            <option value="{{ $model->id }}">{{ $model->model_name }}</option>
-                        @endforeach
-                    </select>
-                </div> --}}
-
                 <label for="Brand">Brand:</label>
                 <div style="display:flex">
                     <select id="brand" name="brand" class="form-control @error('brand') border-danger @enderror">
@@ -137,14 +59,13 @@
             </div>
 
             <div class="col">
-                <label for="Item description">Item Description:</label>
-                <input type="text" id="item_description" name="item_description"
-                    value="{{ old('item_description') }}"
-                    class="form-control @error('item_description')
+                <label for="Item description">Description:</label>
+                <input type="text" id="description" name="description" value="{{ old('description') }}"
+                    class="form-control @error('description')
                                         border-danger
                                         @enderror"
-                    placeholder="Enter an item description">
-                @error('item_description')
+                    placeholder="Enter an item description" required>
+                @error('description')
                     <div class="text-danger">
                         {{ $message }}
                     </div>
@@ -155,23 +76,8 @@
                     class="form-control  @error('aquisition_date')
                                             border-danger
                                             @enderror"
-                    placeholder="Aquistion Date">
+                    placeholder="Aquistion Date" required>
                 @error('aquisition_date')
-                    <div class="text-danger">
-                        {{ $message }}
-                    </div>
-                @enderror
-
-                {{-- <label for="quantity">Quantity:</label> --}}
-                <input type="text" id="quantity" name="quantity"
-                    class="form-control @error('quantity') border-danger @enderror" value="1"
-                    placeholder="Enter a quantity" oninput="updateSerialNumberFields()" hidden>
-                {{-- <input type="checkbox" id="checkbox" name="checkbox" value="1"
-                    onchange="this.value = this.checked ? '1' : '2'; updateSerialNumberFields(); console.log(this.value);"
-                    checked>
-                <strong>Same serial numbers?</strong> <br> --}}
-
-                @error('quantity')
                     <div class="text-danger">
                         {{ $message }}
                     </div>
@@ -195,15 +101,6 @@
                     <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked hidden>
                     {{-- Without --}}
                 </label>
-
-                <div class="form-group" id="serial_numbers_container"
-                    data-error-message="{{ $errors->first('serial_numbers') }}">
-                    @error('serial_numbers')
-                        <span class="text-danger">
-                            <p>{{ $message }}</p>
-                        </span>
-                    @enderror
-                </div>
             </div>
         </div>
     </div>
@@ -416,59 +313,10 @@
         });
     });
 
-    function updateSerialNumberFields() {
-        const quantityField = document.getElementById('quantity');
-        const container = document.getElementById('serial_numbers_container');
-        const checkbox = document.getElementById('checkbox');
-
-        container.innerHTML = '';
-
-        const quantity = parseInt(quantityField.value) || 0;
-        const errorMessage = container.dataset.errorMessage;
-        if (checkbox.checked) {
-
-            const label = document.createElement('label');
-            label.for = `serial_number_1`;
-            label.textContent = `Serial Number:`;
-
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = `serial_numbers[]`;
-            input.id = `serial_number_1`;
-            input.classList.add('form-control', 'col-sm-5');
-            input.placeholder = 'Leave blank if none.';
-
-            container.appendChild(label);
-            container.appendChild(input);
-
-            const errorSpan = document.createElement('p');
-            errorSpan.classList.add('text-danger');
-            errorSpan.textContent = errorMessage;
-            container.appendChild(errorSpan);
-        } else {
-            for (let i = 1; i <= quantity; i++) {
-                const label = document.createElement('label');
-                label.for = `serial_number_${i}`;
-                label.textContent = `Serial Number ${i}:`;
-
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = `serial_numbers[]`;
-                input.id = `serial_number_${i}`;
-                input.classList.add('form-control', 'col-sm-5');
-                input.placeholder = 'Leave blank if none.';
-
-                container.appendChild(label);
-                container.appendChild(input);
-
-                const errorSpan = document.createElement('span');
-                errorSpan.classList.add('text-danger');
-                errorSpan.textContent = errorMessage;
-                container.appendChild(errorSpan);
-            }
-        }
-    }
     $(document).ready(function() {
+        // Reference to the model select dropdown
+        var modelSelect = $('#model');
+
         // Listen for changes in the brand select dropdown
         $('#brand').change(function() {
             // Get the selected brand's ID
@@ -480,11 +328,15 @@
                 type: 'GET',
                 success: function(data) {
                     // Clear existing model options
-                    $('#model').empty();
+                    modelSelect.empty();
+
+                    // Add the static "N/A" option
+                    modelSelect.append(
+                        '<option value="1" disabled selected>Select a model.</option>');
 
                     // Populate the model select dropdown with new options
                     $.each(data, function(index, model) {
-                        $('#model').append('<option value="' + model.id + '">' +
+                        modelSelect.append('<option value="' + model.id + '">' +
                             model.model_name + '</option>');
                     });
                 }

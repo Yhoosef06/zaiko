@@ -87,7 +87,7 @@
         onclick="openEditItemModal('{{ $item->id }}')" class="btn btn-primary">Edit</button>
 
     <div class="modal fade" id="modal-edit-item" tabindex="-1" role="dialog" aria-labelledby="modal-edit-item">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modal-add-sub-item">Editing Item Details</h4>

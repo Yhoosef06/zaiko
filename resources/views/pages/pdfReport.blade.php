@@ -79,7 +79,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Serial #</th>
+                        <th scope="col">Item #</th>
                         <th scope="col">Brand</th>
                         <th scope="col">Model</th>
                         <th scope="col">Description</th>
@@ -90,36 +90,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($items->groupBy('unit_number') as $item)
-                        @foreach ($item as $index => $unit)
-                            @if ($unit->location == $location)
-                                <tr>
-                                    <td>{{ $unit->serial_number }}</td>
-                                    <td>{{ $unit->brand }}</td>
-                                    <td>{{ $unit->model }}</td>
-                                    <td>{{ $unit->description }}</td>
-                                    <td>
-                                        @if ($unit->same_serial_numbers == false)
-                                            1
-                                        @else
-                                            {{ $unit->quantity }}
-                                        @endif
-                                    </td>
-                                    {{-- <td>{{ $unit->unit_number }}</td> --}}
-                                    @if ($unit->aquisition_date == null)
-                                        <td>{{ 'No Date Record.' }}</td>
-                                    @else
-                                        <td>{{ date('F j, Y', strtotime($unit->aquisition_date)) }}</td>
-                                    @endif
-                                    <td style="font-size: 12px"><b>{{ $unit->status }}</b></td>
-                                    <td>{{ $unit->inventory_tag }}</td>
-                                </tr>
-                            @endif
-                        @endforeach
+                    {{-- @foreach ($items->groupBy('unit_number') as $item) --}}
+                    @foreach ($items as $item)
+                        @if ($item->location == $location)
+                            <tr>
+                                <td>{{ $item->id }}</td>
+                                <td>{{ $item->brand->brand_name }}</td>
+                                <td>{{ $item->model->model_name }}</td>
+                                <td>{{ $item->description }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td>{{$item->aquisition_date}}</td>
+                                <td style="font-size: 12px"><b>{{ $item->status }}</b></td>
+                                <td>{{ $item->inventory_tag }}
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
+                    {{-- @endforeach --}}
                 </tbody>
             </table>
-            
+
             <div class="row">
                 <div class="column">
                     Prepared By: <br>

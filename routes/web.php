@@ -221,11 +221,6 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
     Route::get('/report-test', [ItemsController::class, 'reportTest']);
 });
 
-
-
-
-
-
 //student
 Route::middleware(['auth', 'user-role:borrower'])->group(function () {
     //student

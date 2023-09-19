@@ -20,13 +20,29 @@
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
                                 </div>
-                            @elseif (session('danger'))
-                                <div class="alert alert-danger alert-dismissible">
+                            @elseif(session('invalidSerialNumbers') && session('danger'))
+                                <div class="alert alert-danger">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>
+                                        {{ session('danger') }}
+                                        @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                            {{ $invalidSerialNumber }},
+                                        @endforeach
+                                    </p>
                                 </div>
+                                {{ session()->forget('invalidSerialNumbers') }}
+                            @elseif (session('invalidSerialNumbers') && session('warning'))
+                                <div class="alert alert-warning">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>
+                                        {{ session('warning') }}
+                                        @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                            {{ $invalidSerialNumber }},
+                                        @endforeach
+                                    </p>
+                                </div>
+                                {{ session()->forget('invalidSerialNumbers') }}
                             @endif
-
                             <h3>Adding New Item</h3>
                         </div>
                         <!-- /.card-header -->
@@ -88,6 +104,19 @@
                                             </div>
                                         @enderror
 
+                                        <label for="Item description">Description:</label>
+                                        <input type="text" id="item_description" name="item_description"
+                                            value="{{ old('item_description') }}"
+                                            class="form-control @error('item_description')
+                                        border-danger
+                                        @enderror"
+                                            placeholder="Enter an item description">
+                                        @error('item_description')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
                                         <label for="Brand">Brand:</label>
                                         <div style="display:flex">
                                             <select id="brand" name="brand"
@@ -107,6 +136,11 @@
                                                         data-toggle="tooltip" title='Add a brand'></i></a>
                                             @endif
                                         </div>
+                                        @error('brand')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
 
                                         <label for="Model">Model:</label>
                                         <div style="display:flex">
@@ -122,6 +156,11 @@
                                                         data-toggle="tooltip" title='Add a model'></i></a>
                                             @endif
                                         </div>
+                                        @error('model')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
 
                                         <label for="Model">Part Number:</label>
                                         <input type="text" id="part_number" name="part_number"
@@ -150,20 +189,6 @@
                                             </div>
                                         @enderror
 
-
-                                        <label for="Item description">Item Description:</label>
-                                        <input type="text" id="item_description" name="item_description"
-                                            value="{{ old('item_description') }}"
-                                            class="form-control @error('item_description')
-                                        border-danger
-                                        @enderror"
-                                            placeholder="Enter an item description">
-                                        @error('item_description')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
                                         <label for="Item image">Upload Image:</label>
                                         <div style="display: flex">
                                             <input type="file" id="item_image" name="item_image"
@@ -180,6 +205,26 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
+
+                                        <label for="duration">Set Borrowing Period For This Item:</label>
+                                        <div class="row">
+                                            <div class="col">
+                                                <select id="duration_type" name="duration_type" class="form-control">
+                                                    <option value="General" selected>Default</option>
+                                                    <option value="Specific">Custom</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col">
+                                                <div style="display: flex">
+                                                    <input type="text" id="duration" name="duration" value="7"
+                                                        class="form-control" style="width: 45px;" readonly>
+                                                    <label for="" class="radio-inline pl-1">
+                                                        day/s
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <div class="row">
                                             <div class="col">
@@ -224,14 +269,16 @@
                                             <div class="col">
                                                 <input type="text" id="quantity" name="quantity"
                                                     class="form-control @error('quantity') border-danger @enderror"
-                                                    value="{{ old('quantity') }}" placeholder="Enter a quantity"
-                                                    oninput="updateSerialNumberFields()"> <br>
+                                                    value="{{ old('quantity') }}"
+                                                    @if (session('invalidSerialNumbers')) value="{{ old('quantity') }}" @endif
+                                                    placeholder="Enter a quantity" oninput="updateSerialNumberFields()">
 
                                                 @error('quantity')
                                                     <div class="text-danger">
                                                         {{ $message }}
                                                     </div>
                                                 @enderror
+                                                <br>
 
                                                 <div id="serial_numbers_container"
                                                     style="max-height: 200px; overflow-y: auto;"
@@ -241,7 +288,7 @@
                                             </div>
                                             <div class="col">
                                                 <strong>With serial number/s?</strong>
-                                                <input type="checkbox" id="checkbox" name="checkbox"
+                                                <input type="checkbox" id="checkbox" name="checkbox" value="1"
                                                     @if ($errors->has('serial_number'))  @endif
                                                     onchange="updateSerialNumberFields();">
                                             </div>
@@ -517,6 +564,51 @@
         });
     });
 
+    $(document).ready(function() {
+        // Reference to the model select dropdown
+        var modelSelect = $('#model');
+
+        // Listen for changes in the brand select dropdown
+        $('#brand').change(function() {
+            // Get the selected brand's ID
+            var selectedBrandId = $(this).val();
+
+            // Send an AJAX request to fetch models associated with the selected brand
+            $.ajax({
+                url: '/get-models/' + selectedBrandId, // Replace with the actual route
+                type: 'GET',
+                success: function(data) {
+                    // Clear existing model options
+                    modelSelect.empty();
+
+                    // Add the static "N/A" option
+                    modelSelect.append(
+                        '<option value="1">Select a model. (Skip if none.)</option>');
+
+                    // Populate the model select dropdown with new options
+                    $.each(data, function(index, model) {
+                        modelSelect.append('<option value="' + model.id + '">' +
+                            model.model_name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        // Use jQuery to attach the event listener
+        $("#duration_type").on("change", function() {
+            // Check the selected value
+            if ($(this).val() === "Specific") {
+                // If "Specific" is selected, make the input writable
+                $("#duration").prop("readonly", false).val(""); // Clear the value
+            } else {
+                // If "General" is selected, make the input readonly and set the default value to 7
+                $("#duration").prop("readonly", true).val("7");
+            }
+        });
+    });
+
     function updateSerialNumberFields() {
         console.log('updateSerialNumberFields() called');
         const quantityField = document.getElementById('quantity');
@@ -527,12 +619,9 @@
         container.innerHTML = '';
 
         const quantity = parseInt(quantityField.value) || 0;
-        const errorMessage = container.dataset.errorMessage;
-        const hasError = container.dataset.hasError === 'true';
+        const hasError = @json($errors->has('serial_number'));
 
-        const hasSerialNumberErrors = errorMessage && errorMessage.trim() !== '';
-
-        if (hasSerialNumberErrors || checkbox.checked) {
+        if (hasError || checkbox.checked) {
             for (let i = 1; i <= quantity; i++) {
                 const label = document.createElement('label');
                 label.for = `serial_number_${i}`;
@@ -543,7 +632,7 @@
                 input.name = `serial_number[]`;
                 input.id = `serial_number_${i}`;
                 input.value = oldSerialNumberValue || '';
-                input.classList.add('form-control', 'col-10')
+                input.classList.add('form-control', 'col-10');
                 input.placeholder = 'Enter a serial number.';
 
                 container.appendChild(label);
@@ -554,11 +643,9 @@
                     const errorSpan = document.createElement('span');
                     errorSpan.classList.add('text-danger');
                     const errorMessage = document.createElement('p');
-                    errorMessage.textContent =
-                        `@error('serial_number') {{ $message }} @enderror`;
+                    errorMessage.textContent = '{{ $errors->first('serial_number') }}';
                     errorSpan.appendChild(errorMessage);
                     container.appendChild(errorSpan);
-
                 }
             }
         }

@@ -12,10 +12,10 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-5">
+                <div class="col-12" style="max-width: 500px">
                     <div class="card text-lg p-3">
                         <div class="card-title">
-                            <H3>Password Reset Security Question</H3>
+                            <H3>Updating Security Question</H3>
                         </div>
                         <form class="form-signin"
                             action="{{ route('save_modified_security_question', ['id_number' => Auth::user()->id_number]) }}"

@@ -32,6 +32,7 @@ class Item extends Model
         'serial_number',
         'parent_item',
         'duration',
+        'duration_type',
         'replaced_item',
         'part_number',
         'item_image'

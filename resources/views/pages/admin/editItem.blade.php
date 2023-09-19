@@ -54,6 +54,12 @@
                     </div>
                 @enderror
 
+                <label for="Item description">Description:</label>
+                <input type="text" id="description" name="description" value="{{ $item->description }}"
+                    class="form-control @error('item_description')
+                                        border-danger
+                                        @enderror">
+
                 <label for="Brand">Brand:</label>
                 <div style="display:flex">
                     <select id="brand" name="brand" class="form-control @error('brand') border-danger @enderror">
@@ -93,26 +99,19 @@
                     class="form-control  @error('part_number')
                                         border-danger
                                         @enderror">
-
-
-                <label for="Model">Serial Number:</label>
-                <input type="text" id="serial_number" name="serial_number" value="{{ $item->serial_number }}"
-                    class="form-control">
             </div>
 
             <div class="col">
+                <label for="Model">Serial Number:</label>
+                <input type="text" id="serial_number" name="serial_number" value="{{ $item->serial_number }}"
+                    class="form-control">
+
                 <label for="aquisition date">Aquisition Date:</label>
                 <input type="date" id="aquisition_date" name="aquisition_date"
                     class="form-control  @error('aquisition_date')
                                             border-danger
                                             @enderror"
                     value="{{ $item->aquisition_date }}" placeholder="Aquistion Date">
-
-                <label for="Item description">Item Description:</label>
-                <input type="text" id="description" name="description" value="{{ $item->description }}"
-                    class="form-control @error('item_description')
-                                        border-danger
-                                        @enderror">
 
                 <label for="Item image">Upload Image:</label>
                 <div style="display: flex">
@@ -125,34 +124,73 @@
                                             </button> --}}
                 </div>
 
-                <label for="status">Status:</label>
-                <div style="display: flex">
-                    <select id="status" name="status" class="form-control">
-                        <option value="Active" @if ($item->status === 'Active') selected @endif>Active</option>
-                        <option value="For Repair" @if ($item->status === 'For Repair') selected @endif>For Repair</option>
-                        <option value="Obsolete" @if ($item->status === 'Obsolete') selected @endif>Obsolete</option>
-                        <option value="Lost" @if ($item->status === 'Lost') selected @endif>Lost</option>
-                    </select>
-                </div>                
+                <div class="row">
+                    <div class="col">
+                        <label for="status">Status:</label>
+                    </div>
+
+                    <div class="col">
+                        <label for="borrowed or not">Property Sticker:</label>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <select id="status" name="status" class="form-control">
+                            <option value="Active" @if ($item->status === 'Active') selected @endif>Active
+                            </option>
+                            <option value="For Repair" @if ($item->status === 'For Repair') selected @endif>For
+                                Repair
+                            </option>
+                            <option value="Obsolete" @if ($item->status === 'Obsolete') selected @endif>Obsolete
+                            </option>
+                            <option value="Lost" @if ($item->status === 'Lost') selected @endif>Lost
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col">
+                        <div class="container">
+                            <label for="" class="radio-inline">
+                                <input type="radio" id='inventory_tag' name="inventory_tag" value="with">
+                                With
+                            </label>
+                            /
+                            <label for="" class="radio-inline">
+                                <input type="radio" id='inventory_tag' name="inventory_tag" value="without"
+                                    checked>
+                                Without
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <label for="quantity">Quantity:</label>
                 <div style="display: flex">
-                    <input type="text" id="quantity" name="quantity"
-                        class="form-control @error('quantity') border-danger @enderror" value="{{ $item->quantity }}"
-                        placeholder="Enter a quantity" oninput="updateSerialNumberFields()">
+                    <input type="text" id="quantity" name="quantity" style="max-width: 50px"
+                        class="form-control @error('quantity') border-danger @enderror"
+                        value="{{ $item->quantity }}" placeholder="Enter a quantity">
                 </div>
-                <br>
-                <div>
-                    <label for="inventory tag">Property Sticker:</label>
-                    <label for="inventory_tag_with" class="radio-inline">
-                        <input type="radio" id="inventory_tag_with" name="inventory_tag" value="with" {{ $item->inventory_tag === 'with' ? 'checked' : '' }}>
-                        With
-                    </label>
-                    /
-                    <label for="inventory_tag_without" class="radio-inline">
-                        <input type="radio" id="inventory_tag_without" name="inventory_tag" value="without" {{ $item->inventory_tag === 'without' ? 'checked' : '' }}>
-                        Without
-                    </label>
+
+                <label for="duration">Set Borrowing Period For This Item:</label>
+                <div class="row">
+                    <div class="col">
+                        <select id="duration_type" name="duration_type" class="form-control">
+                            <option value="General" @if ($item->duration_type === 'General') selected @endif>Default</option>
+                            <option value="Specific" @if ($item->duration_type === 'Specific') selected @endif>Custom</option>
+                        </select>
+                    </div>
+
+                    <div class="col">
+                        <div style="display: flex">
+                            <input type="text" id="duration" name="duration" value="{{$item->duration}}"
+                                class="form-control" style="width: 45px;" readonly>
+                            <label for="" class="radio-inline pl-1">
+                                day/s
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -339,6 +377,20 @@
             },
             minLength: 1,
             autoFocus: true,
+        });
+    });
+
+    $(document).ready(function() {
+        // Use jQuery to attach the event listener
+        $("#duration_type").on("change", function() {
+            // Check the selected value
+            if ($(this).val() === "Specific") {
+                // If "Specific" is selected, make the input writable
+                $("#duration").prop("readonly", false).val(""); // Clear the value
+            } else {
+                // If "General" is selected, make the input readonly and set the default value to 7
+                $("#duration").prop("readonly", true).val("7");
+            }
         });
     });
 

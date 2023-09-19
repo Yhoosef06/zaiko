@@ -6,7 +6,7 @@
             background-color: rgb(190, 203, 201);
         }
     </style>
-    <div class="container">
+    <div class="container" style="max-width: 500px">
         <div class="container-fluid text-center">
             <div class="card">
                 <div class="card-header">

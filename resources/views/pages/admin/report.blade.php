@@ -148,10 +148,10 @@
 
                                     </div>
                                     <div class="col">
-                                        <label for="positions">Position/Rank/Role:</label>
+                                        <label for="positions">Position/Role:</label>
 
                                         <div class="form-group">
-                                            <input placeholder="Enter a position/rank/role" type="text" id="role_1" name="role_1"
+                                            <input placeholder="Enter a position/role" type="text" id="role_1" name="role_1"
                                                 value="{{ old('role_1') }}"
                                                 class="form-control @error('role_1')
                                                 border-danger @enderror">
@@ -162,9 +162,9 @@
                                             @enderror
                                         </div>
 
-                                        <label for="">Position/Rank/Role:</label>
+                                        <label for="">Position/Role:</label>
                                         <div class="form-group">
-                                            <input placeholder="Enter a position/rank/role" type="text" id="role_2" name="role_2"
+                                            <input placeholder="Enter a position/role" type="text" id="role_2" name="role_2"
                                                 value="{{ old('role_2') }}"
                                                 class="form-control @error('role_2')
                                                 border-danger @enderror" placeholder="Enter a name">
@@ -177,7 +177,7 @@
 
                                         <label for="">Position/Role:</label>
                                         <div class="form-group">
-                                            <input placeholder="Enter a position/rank/role" type="text" id="role_3" name="role_3"
+                                            <input placeholder="Enter a position/role" type="text" id="role_3" name="role_3"
                                                 value="{{ old('role_3') }}"
                                                 class="form-control @error('role_3')
                                                 border-danger @enderror" placeholder="Enter a name">
@@ -190,7 +190,7 @@
 
                                         <label for="">Position/Role:</label>
                                         <div class="form-group">
-                                            <input placeholder="Enter a position/rank/role" type="text" id="role_4" name="role_4"
+                                            <input placeholder="Enter a position/role" type="text" id="role_4" name="role_4"
                                                 value="{{ old('role_4') }}"
                                                 class="form-control @error('role_4')
                                                 border-danger @enderror" placeholder="Enter a name">
