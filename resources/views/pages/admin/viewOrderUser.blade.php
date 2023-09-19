@@ -91,17 +91,24 @@
                             </thead>
                             <tbody>
                             
-
+                              @php
+                              $counter = 0;  
+                              @endphp
+                              
                           @foreach ($orders as $item)
+                             
                             @if (empty($item->temp_serial_number) && $item->category_name != 'Tools')
                            
                                 @for ($i = 1; $i <= $item->temp_quantity; $i++)
+                                @php
+                                $counter++;
+                                @endphp
                                         <tr>
                                           <td class="d-none" >
                                             <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                           </td>
                                           <td  class="d-none">
-                                            <input type="text" name="itemId[]" id="itemID_{{ $i }}">
+                                            <input type="text" name="itemId[]" id="itemID_{{ $counter }}">
                                           </td>
                                           <td>{{ $item->brand_name }} </td>
                                           <td>{{ $item->model_name }}</td>
@@ -110,8 +117,8 @@
                                             <script>
                                               var itemData = @json($item);
                                           </script>
-                                            <div id="user_serial_{{ $i }}">
-                                              <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $i }}" class="form-control serial-input" required>
+                                            <div id="user_serial_{{ $counter }}">
+                                              <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $counter }}" class="form-control serial-input" required>
                                             </div>
                                           </td>
                                           <td>
