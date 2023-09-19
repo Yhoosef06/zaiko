@@ -12,7 +12,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-12">
+                <div class="col-12" style="max-width: 1000px">
                     <div class="card">
                         <div class="card-header">
                             @if (session('success'))
@@ -385,270 +385,270 @@
             </div>
         </div>
     </div>
-@endsection
 
-<style>
-    .ui-autocomplete {
-        background-color: #ffffff;
-        border: 1px solid #d2d6de;
-        max-height: 200px;
-        max-width: 400px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        z-index: 9999;
-        padding: 0;
-        margin: 0;
-    }
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    .ui-menu-item {
-        display: block;
-        padding: 10px;
-        clear: both;
-        font-weight: normal;
-        line-height: 1.42857143;
-        color: #333333;
-        white-space: nowrap;
-    }
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Listen for changes in the brand select dropdown
+            $('#brand').change(function() {
+                // Get the selected brand's ID
+                var selectedBrandId = $(this).val();
 
-    .ui-menu-item:hover {
-        background-color: #f4f4f4;
-        color: #333333;
-        text-decoration: none;
-        cursor: pointer;
-    }
-</style>
+                // Send an AJAX request to fetch models associated with the selected brand
+                $.ajax({
+                    url: '/get-models/' + selectedBrandId, // Replace with the actual route
+                    type: 'GET',
+                    success: function(data) {
+                        // Clear existing model options
+                        $('#model').empty();
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                        // Add the default option
+                        $('#model').append(
+                            '<option value="option_select" disabled selected>Select a model. (Skip if none)</option>'
+                        );
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        // Listen for changes in the brand select dropdown
-        $('#brand').change(function() {
-            // Get the selected brand's ID
-            var selectedBrandId = $(this).val();
+                        // Populate the model select dropdown with new options
+                        $.each(data, function(index, model) {
+                            $('#model').append('<option value="' + model.id + '">' +
+                                model.model_name + '</option>');
+                        });
+                    }
+                });
+            });
+        });
 
-            // Send an AJAX request to fetch models associated with the selected brand
-            $.ajax({
-                url: '/get-models/' + selectedBrandId, // Replace with the actual route
-                type: 'GET',
-                success: function(data) {
-                    // Clear existing model options
-                    $('#model').empty();
+        $(document).ready(function() {
+            $('#addModelModal').on('show.bs.modal', function(event) {
+                var modal = $(this);
 
-                    // Add the default option
-                    $('#model').append(
-                        '<option value="option_select" disabled selected>Select a model. (Skip if none)</option>'
-                    );
+                $.get("{{ route('add_model') }}", function(data) {
+                    modal.find('.modal-body').html(data);
+                });
+            });
+        });
 
-                    // Populate the model select dropdown with new options
-                    $.each(data, function(index, model) {
-                        $('#model').append('<option value="' + model.id + '">' +
-                            model.model_name + '</option>');
+        $(document).ready(function() {
+            $('#addRoomModal').on('show.bs.modal', function(event) {
+                var modal = $(this);
+
+                $.get("{{ route('add_room') }}", function(data) {
+                    modal.find('.modal-body').html(data);
+                });
+            });
+        });
+
+
+        $(document).ready(function() {
+            $('#addItemCategoryModal').on('show.bs.modal', function(event) {
+                var modal = $(this);
+
+                $.get("{{ route('add_item_category') }}", function(data) {
+                    modal.find('.modal-body').html(data);
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            $('#addBrandModal').on('show.bs.modal', function(event) {
+                var modal = $(this);
+
+                $.get("{{ route('add_brand') }}", function(data) {
+                    modal.find('.modal-body').html(data);
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            $('#brand').autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: '{!! url('get-brand') !!}',
+                        dataType: 'json',
+                        data: {
+                            query: request
+                                .term
+                        },
+                        success: function(data) {
+                            var filteredData = $.grep(data, function(item) {
+                                return item.substr(0, request.term.length)
+                                    .toLowerCase() === request.term.toLowerCase();
+                            });
+                            response(filteredData);
+                        }
                     });
+                },
+                minLength: 1,
+                autoFocus: true,
+            });
+        });
+
+        $(document).ready(function() {
+            $('#model').autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: '{!! url('get-model') !!}',
+                        dataType: 'json',
+                        data: {
+                            query: request
+                                .term
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            var filteredData = $.grep(data, function(item) {
+                                return item.substr(0, request.term.length)
+                                    .toLowerCase() === request.term.toLowerCase();
+                            });
+                            response(filteredData);
+                        }
+                    });
+                },
+                minLength: 1,
+                autoFocus: true,
+            });
+        });
+
+        $(document).ready(function() {
+            $('#part_number').autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: '{!! url('get-part-number') !!}',
+                        dataType: 'json',
+                        data: {
+                            query: request
+                                .term
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            var filteredData = $.grep(data, function(item) {
+                                return item.substr(0, request.term.length)
+                                    .toLowerCase() === request.term.toLowerCase();
+                            });
+                            response(filteredData);
+                        }
+                    });
+                },
+                minLength: 1,
+                autoFocus: true,
+            });
+        });
+
+        $(document).ready(function() {
+            // Reference to the model select dropdown
+            var modelSelect = $('#model');
+
+            // Listen for changes in the brand select dropdown
+            $('#brand').change(function() {
+                // Get the selected brand's ID
+                var selectedBrandId = $(this).val();
+
+                // Send an AJAX request to fetch models associated with the selected brand
+                $.ajax({
+                    url: '/get-models/' + selectedBrandId, // Replace with the actual route
+                    type: 'GET',
+                    success: function(data) {
+                        // Clear existing model options
+                        modelSelect.empty();
+
+                        // Add the static "N/A" option
+                        modelSelect.append(
+                            '<option value="1">Select a model. (Skip if none.)</option>');
+
+                        // Populate the model select dropdown with new options
+                        $.each(data, function(index, model) {
+                            modelSelect.append('<option value="' + model.id + '">' +
+                                model.model_name + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            // Use jQuery to attach the event listener
+            $("#duration_type").on("change", function() {
+                // Check the selected value
+                if ($(this).val() === "Specific") {
+                    // If "Specific" is selected, make the input writable
+                    $("#duration").prop("readonly", false).val(""); // Clear the value
+                } else {
+                    // If "General" is selected, make the input readonly and set the default value to 7
+                    $("#duration").prop("readonly", true).val("7");
                 }
             });
         });
-    });
 
-    $(document).ready(function() {
-        $('#addModelModal').on('show.bs.modal', function(event) {
-            var modal = $(this);
+        function updateSerialNumberFields() {
+            console.log('updateSerialNumberFields() called');
+            const quantityField = document.getElementById('quantity');
+            const container = document.getElementById('serial_numbers_container');
+            const checkbox = document.getElementById('checkbox');
+            const oldSerialNumberValue = @json(old('serial_number'));
 
-            $.get("{{ route('add_model') }}", function(data) {
-                modal.find('.modal-body').html(data);
-            });
-        });
-    });
+            container.innerHTML = '';
 
-    $(document).ready(function() {
-        $('#addRoomModal').on('show.bs.modal', function(event) {
-            var modal = $(this);
+            const quantity = parseInt(quantityField.value) || 0;
+            const hasError = @json($errors->has('serial_number'));
 
-            $.get("{{ route('add_room') }}", function(data) {
-                modal.find('.modal-body').html(data);
-            });
-        });
-    });
+            if (hasError || checkbox.checked) {
+                for (let i = 1; i <= quantity; i++) {
+                    const label = document.createElement('label');
+                    label.for = `serial_number_${i}`;
+                    label.textContent = `Serial Number ${i}:`;
 
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = `serial_number[]`;
+                    input.id = `serial_number_${i}`;
+                    input.value = oldSerialNumberValue || '';
+                    input.classList.add('form-control', 'col-10');
+                    input.placeholder = 'Enter a serial number.';
 
-    $(document).ready(function() {
-        $('#addItemCategoryModal').on('show.bs.modal', function(event) {
-            var modal = $(this);
+                    container.appendChild(label);
+                    container.appendChild(input);
 
-            $.get("{{ route('add_item_category') }}", function(data) {
-                modal.find('.modal-body').html(data);
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $('#addBrandModal').on('show.bs.modal', function(event) {
-            var modal = $(this);
-
-            $.get("{{ route('add_brand') }}", function(data) {
-                modal.find('.modal-body').html(data);
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $('#brand').autocomplete({
-            source: function(request, response) {
-                $.ajax({
-                    url: '{!! url('get-brand') !!}',
-                    dataType: 'json',
-                    data: {
-                        query: request
-                            .term
-                    },
-                    success: function(data) {
-                        var filteredData = $.grep(data, function(item) {
-                            return item.substr(0, request.term.length)
-                                .toLowerCase() === request.term.toLowerCase();
-                        });
-                        response(filteredData);
+                    if (hasError) {
+                        input.classList.add('border', 'border-danger');
+                        const errorSpan = document.createElement('span');
+                        errorSpan.classList.add('text-danger');
+                        const errorMessage = document.createElement('p');
+                        errorMessage.textContent = '{{ $errors->first('serial_number') }}';
+                        errorSpan.appendChild(errorMessage);
+                        container.appendChild(errorSpan);
                     }
-                });
-            },
-            minLength: 1,
-            autoFocus: true,
-        });
-    });
-
-    $(document).ready(function() {
-        $('#model').autocomplete({
-            source: function(request, response) {
-                $.ajax({
-                    url: '{!! url('get-model') !!}',
-                    dataType: 'json',
-                    data: {
-                        query: request
-                            .term
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        var filteredData = $.grep(data, function(item) {
-                            return item.substr(0, request.term.length)
-                                .toLowerCase() === request.term.toLowerCase();
-                        });
-                        response(filteredData);
-                    }
-                });
-            },
-            minLength: 1,
-            autoFocus: true,
-        });
-    });
-
-    $(document).ready(function() {
-        $('#part_number').autocomplete({
-            source: function(request, response) {
-                $.ajax({
-                    url: '{!! url('get-part-number') !!}',
-                    dataType: 'json',
-                    data: {
-                        query: request
-                            .term
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        var filteredData = $.grep(data, function(item) {
-                            return item.substr(0, request.term.length)
-                                .toLowerCase() === request.term.toLowerCase();
-                        });
-                        response(filteredData);
-                    }
-                });
-            },
-            minLength: 1,
-            autoFocus: true,
-        });
-    });
-
-    $(document).ready(function() {
-        // Reference to the model select dropdown
-        var modelSelect = $('#model');
-
-        // Listen for changes in the brand select dropdown
-        $('#brand').change(function() {
-            // Get the selected brand's ID
-            var selectedBrandId = $(this).val();
-
-            // Send an AJAX request to fetch models associated with the selected brand
-            $.ajax({
-                url: '/get-models/' + selectedBrandId, // Replace with the actual route
-                type: 'GET',
-                success: function(data) {
-                    // Clear existing model options
-                    modelSelect.empty();
-
-                    // Add the static "N/A" option
-                    modelSelect.append(
-                        '<option value="1">Select a model. (Skip if none.)</option>');
-
-                    // Populate the model select dropdown with new options
-                    $.each(data, function(index, model) {
-                        modelSelect.append('<option value="' + model.id + '">' +
-                            model.model_name + '</option>');
-                    });
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        // Use jQuery to attach the event listener
-        $("#duration_type").on("change", function() {
-            // Check the selected value
-            if ($(this).val() === "Specific") {
-                // If "Specific" is selected, make the input writable
-                $("#duration").prop("readonly", false).val(""); // Clear the value
-            } else {
-                // If "General" is selected, make the input readonly and set the default value to 7
-                $("#duration").prop("readonly", true).val("7");
-            }
-        });
-    });
-
-    function updateSerialNumberFields() {
-        console.log('updateSerialNumberFields() called');
-        const quantityField = document.getElementById('quantity');
-        const container = document.getElementById('serial_numbers_container');
-        const checkbox = document.getElementById('checkbox');
-        const oldSerialNumberValue = @json(old('serial_number'));
-
-        container.innerHTML = '';
-
-        const quantity = parseInt(quantityField.value) || 0;
-        const hasError = @json($errors->has('serial_number'));
-
-        if (hasError || checkbox.checked) {
-            for (let i = 1; i <= quantity; i++) {
-                const label = document.createElement('label');
-                label.for = `serial_number_${i}`;
-                label.textContent = `Serial Number ${i}:`;
-
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = `serial_number[]`;
-                input.id = `serial_number_${i}`;
-                input.value = oldSerialNumberValue || '';
-                input.classList.add('form-control', 'col-10');
-                input.placeholder = 'Enter a serial number.';
-
-                container.appendChild(label);
-                container.appendChild(input);
-
-                if (hasError) {
-                    input.classList.add('border', 'border-danger');
-                    const errorSpan = document.createElement('span');
-                    errorSpan.classList.add('text-danger');
-                    const errorMessage = document.createElement('p');
-                    errorMessage.textContent = '{{ $errors->first('serial_number') }}';
-                    errorSpan.appendChild(errorMessage);
-                    container.appendChild(errorSpan);
                 }
             }
         }
-    }
-</script>
+    </script>
+
+    <style>
+        .ui-autocomplete {
+            background-color: #ffffff;
+            border: 1px solid #d2d6de;
+            max-height: 200px;
+            max-width: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 9999;
+            padding: 0;
+            margin: 0;
+        }
+
+        .ui-menu-item {
+            display: block;
+            padding: 10px;
+            clear: both;
+            font-weight: normal;
+            line-height: 1.42857143;
+            color: #333333;
+            white-space: nowrap;
+        }
+
+        .ui-menu-item:hover {
+            background-color: #f4f4f4;
+            color: #333333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+@endsection

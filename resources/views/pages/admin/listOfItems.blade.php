@@ -188,132 +188,131 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        function deleteButton(itemId) {
+            // Remove previous highlighting
+            $('#listofitems tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
 
+            // Add the highlighted class to the clicked row
+            $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+        }
+
+        function openItemModal(itemId) {
+            var modal = $('#modal-item-details');
+            var url = "{{ route('view_item_details', ['id' => ':itemId']) }}".replace(':itemId', itemId);
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            // Remove previous highlighting
+            $('#listofitems tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+
+
+            $.get(url, function(data) {
+                modal.find('.modal-body').html(data);
+            });
+        }
+
+
+        function openNewWindow(event, url) {
+            event.preventDefault(); // Prevent the default link behavior
+            window.open(url, '_blank'); // Open the URL in a new window or tab
+        }
+
+        function openTransferItemModal(itemId, route) {
+            // Remove previous highlighting
+            $('#listofitems tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+
+            var modal = $('#modal-transfer-item');
+
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            // Send an AJAX request to fetch the edit view content
+            // for the specific college
+            $.get(route, {
+                item_id: itemId
+            }, function(data) {
+                modal.find('.modal-body').html(data);
+            });
+        }
+
+        function openAddSubItemModal(itemId, route) {
+            // Remove previous highlighting
+            $('#listofitems tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+
+            var modal = $('#addSubItemModal');
+
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            // Send an AJAX request to fetch the edit view content
+            // for the specific college
+            $.get(route, {
+                item_id: itemId
+            }, function(data) {
+                modal.find('.modal-body').html(data);
+            });
+        }
+
+        function openReplaceItemModal(itemId, route) {
+            // Remove previous highlighting
+            $('#listofitems tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+
+            var modal = $('#modal-replace-item');
+
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            // Send an AJAX request to fetch the edit view content
+            // for the specific college
+            $.get(route, {
+                item_id: itemId
+            }, function(data) {
+                modal.find('.modal-body').html(data);
+            });
+        }
+    </script>
 @endsection
-
-<script>
-    function deleteButton(itemId) {
-        // Remove previous highlighting
-        $('#listofitems tbody tr').css({
-            'box-shadow': 'none',
-            'background-color': 'transparent'
-        });
-
-        // Add the highlighted class to the clicked row
-        $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-            'background-color': '#A9F5F2' // Adjust the color as needed
-        });
-    }
-
-    function openItemModal(itemId) {
-        var modal = $('#modal-item-details');
-        var url = "{{ route('view_item_details', ['id' => ':itemId']) }}".replace(':itemId', itemId);
-        // Clear previous content from the modal
-        modal.find('.modal-body').html('');
-
-        // Remove previous highlighting
-        $('#listofitems tbody tr').css({
-            'box-shadow': 'none',
-            'background-color': 'transparent'
-        });
-
-        // Add the highlighted class to the clicked row
-        $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-            'background-color': '#A9F5F2' // Adjust the color as needed
-        });
-
-
-        $.get(url, function(data) {
-            modal.find('.modal-body').html(data);
-        });
-    }
-
-
-    function openNewWindow(event, url) {
-        event.preventDefault(); // Prevent the default link behavior
-        window.open(url, '_blank'); // Open the URL in a new window or tab
-    }
-
-    function openTransferItemModal(itemId, route) {
-        // Remove previous highlighting
-        $('#listofitems tbody tr').css({
-            'box-shadow': 'none',
-            'background-color': 'transparent'
-        });
-
-        // Add the highlighted class to the clicked row
-        $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-            'background-color': '#A9F5F2' // Adjust the color as needed
-        });
-
-        var modal = $('#modal-transfer-item');
-
-        // Clear previous content from the modal
-        modal.find('.modal-body').html('');
-
-        // Send an AJAX request to fetch the edit view content
-        // for the specific college
-        $.get(route, {
-            item_id: itemId
-        }, function(data) {
-            modal.find('.modal-body').html(data);
-        });
-    }
-
-    function openAddSubItemModal(itemId, route) {
-        // Remove previous highlighting
-        $('#listofitems tbody tr').css({
-            'box-shadow': 'none',
-            'background-color': 'transparent'
-        });
-
-        // Add the highlighted class to the clicked row
-        $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-            'background-color': '#A9F5F2' // Adjust the color as needed
-        });
-
-        var modal = $('#addSubItemModal');
-
-        // Clear previous content from the modal
-        modal.find('.modal-body').html('');
-
-        // Send an AJAX request to fetch the edit view content
-        // for the specific college
-        $.get(route, {
-            item_id: itemId
-        }, function(data) {
-            modal.find('.modal-body').html(data);
-        });
-    }
-
-    function openReplaceItemModal(itemId, route) {
-        // Remove previous highlighting
-        $('#listofitems tbody tr').css({
-            'box-shadow': 'none',
-            'background-color': 'transparent'
-        });
-
-        // Add the highlighted class to the clicked row
-        $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-            'background-color': '#A9F5F2' // Adjust the color as needed
-        });
-
-        var modal = $('#modal-replace-item');
-
-        // Clear previous content from the modal
-        modal.find('.modal-body').html('');
-
-        // Send an AJAX request to fetch the edit view content
-        // for the specific college
-        $.get(route, {
-            item_id: itemId
-        }, function(data) {
-            modal.find('.modal-body').html(data);
-        });
-    }
-</script>

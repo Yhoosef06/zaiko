@@ -86,8 +86,8 @@
 
                                         <div class="form-group">
                                             <label for="verified_by">Verified By:</label>
-                                            <input placeholder="Enter a name" type="text" id="verified_by" name="verified_by"
-                                                value="{{ old('verified_by') }}" 
+                                            <input placeholder="Enter a name" type="text" id="verified_by"
+                                                name="verified_by" value="{{ old('verified_by') }}"
                                                 class="form-control @error('verified_by')
                                                 border-danger @enderror">
                                             @error('verified_by')
@@ -112,8 +112,8 @@
 
                                         <div class="form-group">
                                             <label for="it_specialist">Approved By:</label>
-                                            <input placeholder="Enter a name" type="text" id="approved_by" name="approved_by"
-                                                value="{{ old('approved_by') }}"
+                                            <input placeholder="Enter a name" type="text" id="approved_by"
+                                                name="approved_by" value="{{ old('approved_by') }}"
                                                 class="form-control @error('approved_by')
                                                 border-danger @enderror">
                                             @error('approved_by')
@@ -151,8 +151,8 @@
                                         <label for="positions">Position/Role:</label>
 
                                         <div class="form-group">
-                                            <input placeholder="Enter a position/role" type="text" id="role_1" name="role_1"
-                                                value="{{ old('role_1') }}"
+                                            <input placeholder="Enter a position/role" type="text" id="role_1"
+                                                name="role_1" value="{{ old('role_1') }}"
                                                 class="form-control @error('role_1')
                                                 border-danger @enderror">
                                             @error('role_1')
@@ -164,10 +164,11 @@
 
                                         <label for="">Position/Role:</label>
                                         <div class="form-group">
-                                            <input placeholder="Enter a position/role" type="text" id="role_2" name="role_2"
-                                                value="{{ old('role_2') }}"
+                                            <input placeholder="Enter a position/role" type="text" id="role_2"
+                                                name="role_2" value="{{ old('role_2') }}"
                                                 class="form-control @error('role_2')
-                                                border-danger @enderror" placeholder="Enter a name">
+                                                border-danger @enderror"
+                                                placeholder="Enter a name">
                                             @error('role_2')
                                                 <div class="text-danger">
                                                     {{ 'This field must not be blank.' }}
@@ -177,10 +178,11 @@
 
                                         <label for="">Position/Role:</label>
                                         <div class="form-group">
-                                            <input placeholder="Enter a position/role" type="text" id="role_3" name="role_3"
-                                                value="{{ old('role_3') }}"
+                                            <input placeholder="Enter a position/role" type="text" id="role_3"
+                                                name="role_3" value="{{ old('role_3') }}"
                                                 class="form-control @error('role_3')
-                                                border-danger @enderror" placeholder="Enter a name">
+                                                border-danger @enderror"
+                                                placeholder="Enter a name">
                                             @error('role_3')
                                                 <div class="text-danger">
                                                     {{ 'This field must not be blank.' }}
@@ -190,10 +192,11 @@
 
                                         <label for="">Position/Role:</label>
                                         <div class="form-group">
-                                            <input placeholder="Enter a position/role" type="text" id="role_4" name="role_4"
-                                                value="{{ old('role_4') }}"
+                                            <input placeholder="Enter a position/role" type="text" id="role_4"
+                                                name="role_4" value="{{ old('role_4') }}"
                                                 class="form-control @error('role_4')
-                                                border-danger @enderror" placeholder="Enter a name">
+                                                border-danger @enderror"
+                                                placeholder="Enter a name">
                                             @error('role_4')
                                                 <div class="text-danger">
                                                     {{ 'This field must not be blank.' }}
@@ -223,95 +226,95 @@
             <h4>{{ session('status') }}</h4>
         </div>
     @endif
-@endsection
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<script>
-    $(document).ready(function() {
-        $('#saveReferencesBtn').click(function(event) {
-            event.preventDefault();
+    <script>
+        $(document).ready(function() {
+            $('#saveReferencesBtn').click(function(event) {
+                event.preventDefault();
 
-            var formData = $('form').serialize();
+                var formData = $('form').serialize();
 
-            var button = $(this);
+                var button = $(this);
 
-            $.ajax({
-                url: '{{ route('store_references') }}',
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    button.after(
-                        '<span class="m-1"><i class="fa fa-check text-green"></i></span>'
-                    );
+                $.ajax({
+                    url: '{{ route('store_references') }}',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        button.after(
+                            '<span class="m-1"><i class="fa fa-check text-green"></i></span>'
+                        );
 
-                    button.attr('class', 'btn btn-outline-info').prop('disabled', true);;
-                },
-                error: function(xhr) {
-                    console.log('Error:', xhr);
-                    if (xhr.status === 422) {
-                        $('#location').addClass('border-danger');
-                        $('#prepared_by').addClass('border-danger');
-                        $('#noted_by').addClass('border-danger');
-                        $('#verified_by').addClass('border-danger');
-                        $('#approved_by').addClass('border-danger');
-                        $('#role_1').addClass('border-danger');
-                        $('#role_2').addClass('border-danger');
-                        $('#role_3').addClass('border-danger');
-                        $('#role_4').addClass('border-danger');
-                        alert('Make sure that there are no empty fields.');
+                        button.attr('class', 'btn btn-outline-info').prop('disabled', true);;
+                    },
+                    error: function(xhr) {
+                        console.log('Error:', xhr);
+                        if (xhr.status === 422) {
+                            $('#location').addClass('border-danger');
+                            $('#prepared_by').addClass('border-danger');
+                            $('#noted_by').addClass('border-danger');
+                            $('#verified_by').addClass('border-danger');
+                            $('#approved_by').addClass('border-danger');
+                            $('#role_1').addClass('border-danger');
+                            $('#role_2').addClass('border-danger');
+                            $('#role_3').addClass('border-danger');
+                            $('#role_4').addClass('border-danger');
+                            alert('Make sure that there are no empty fields.');
+                        }
                     }
-                }
+                });
             });
         });
-    });
 
-    $(document).ready(function() {
+        $(document).ready(function() {
 
-        function fetchAndPopulateData(location) {
-            $.ajax({
-                url: 'get-references',
-                type: 'GET',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    location: location
-                },
-                success: function(response) {
-                    console.log(response);
-                    if (response.length > 0) {
+            function fetchAndPopulateData(location) {
+                $.ajax({
+                    url: 'get-references',
+                    type: 'GET',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        location: location
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        if (response.length > 0) {
 
-                        response.sort(function(a, b) {
-                            return new Date(b.created_at) - new Date(a.created_at);
-                        });
+                            response.sort(function(a, b) {
+                                return new Date(b.created_at) - new Date(a.created_at);
+                            });
 
-                        var latestData = response[
-                            0];
+                            var latestData = response[
+                                0];
 
-                        $('#prepared_by').val(latestData.prepared_by);
-                        $('#verified_by').val(latestData.verified_by);
-                        $('#noted_by').val(latestData.noted_by);
-                        $('#approved_by').val(latestData.approved_by);
-                        $('#role_1').val(latestData.role_1);
-                        $('#role_2').val(latestData.role_2);
-                        $('#role_3').val(latestData.role_3);
-                        $('#role_4').val(latestData.role_4);
+                            $('#prepared_by').val(latestData.prepared_by);
+                            $('#verified_by').val(latestData.verified_by);
+                            $('#noted_by').val(latestData.noted_by);
+                            $('#approved_by').val(latestData.approved_by);
+                            $('#role_1').val(latestData.role_1);
+                            $('#role_2').val(latestData.role_2);
+                            $('#role_3').val(latestData.role_3);
+                            $('#role_4').val(latestData.role_4);
+                        }
+
+                        $('#saveReferencesBtn').attr('class', 'btn btn-info').prop('disabled', false);
+                        $('#saveReferencesBtn').next('span').remove();
+                    },
+                    error: function(xhr) {
+                        console.log('Error:', xhr);
                     }
-
-                    $('#saveReferencesBtn').attr('class', 'btn btn-info').prop('disabled', false);
-                    $('#saveReferencesBtn').next('span').remove();
-                },
-                error: function(xhr) {
-                    console.log('Error:', xhr);
-                }
-            });
-        }
-
-        $('#location').change(function() {
-            console.log('Change event triggered');
-            var selectedLocation = $(this).val();
-            if (selectedLocation) {
-                fetchAndPopulateData(selectedLocation);
+                });
             }
+
+            $('#location').change(function() {
+                console.log('Change event triggered');
+                var selectedLocation = $(this).val();
+                if (selectedLocation) {
+                    fetchAndPopulateData(selectedLocation);
+                }
+            });
         });
-    });
-</script>
+    </script>
+@endsection

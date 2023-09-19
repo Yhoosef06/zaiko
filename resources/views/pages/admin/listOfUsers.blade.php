@@ -141,44 +141,44 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function deleteButton(userId) {
+            // Remove previous highlighting
+            $('#listofusers tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofusers tbody tr[data-user-id="' + userId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+        }
+
+        function openViewUserModal(userId) {
+            var modal = $('#modal-user-info');
+            var url = "{{ route('view_user_info', ['id_number' => ':userId']) }}".replace(':userId', userId);
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            // Remove previous highlighting
+            $('#listofusers tbody tr').css({
+                'box-shadow': 'none',
+                'background-color': 'transparent'
+            });
+
+            // Add the highlighted class to the clicked row
+            $('#listofusers tbody tr[data-user-id="' + userId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
+                'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+
+
+            $.get(url, function(data) {
+                modal.find('.modal-body').html(data);
+            });
+        }
+    </script>
 @endsection
-
-<script>
-    function deleteButton(userId) {
-        // Remove previous highlighting
-        $('#listofusers tbody tr').css({
-            'box-shadow': 'none',
-            'background-color': 'transparent'
-        });
-
-        // Add the highlighted class to the clicked row
-        $('#listofusers tbody tr[data-user-id="' + userId + '"]').css({
-            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-            'background-color': '#A9F5F2' // Adjust the color as needed
-        });
-    }
-
-    function openViewUserModal(userId) {
-        var modal = $('#modal-user-info');
-        var url = "{{ route('view_user_info', ['id_number' => ':userId']) }}".replace(':userId', userId);
-        // Clear previous content from the modal
-        modal.find('.modal-body').html('');
-
-        // Remove previous highlighting
-        $('#listofusers tbody tr').css({
-            'box-shadow': 'none',
-            'background-color': 'transparent'
-        });
-
-        // Add the highlighted class to the clicked row
-        $('#listofusers tbody tr[data-user-id="' + userId + '"]').css({
-            'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-            'background-color': '#A9F5F2' // Adjust the color as needed
-        });
-
-
-        $.get(url, function(data) {
-            modal.find('.modal-body').html(data);
-        });
-    }
-</script>
