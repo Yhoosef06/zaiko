@@ -16,8 +16,13 @@ class PagesController extends Controller
 {
     public function index()
     {
-        //admin
-        return view('pages.admin.dashboard');
+        if (Auth::user()->account_type == 'admin') {
+            return view('pages.admin.adminDashboard');
+        } elseif (Auth::user()->role == 'manager') {
+            return view('pages.admin.managerDashboard');
+        } else {
+            # code...
+        }
     }
 
     public function approve()

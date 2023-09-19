@@ -104,19 +104,6 @@
                                             </div>
                                         @enderror
 
-                                        <label for="Item description">Description:</label>
-                                        <input type="text" id="item_description" name="item_description"
-                                            value="{{ old('item_description') }}"
-                                            class="form-control @error('item_description')
-                                        border-danger
-                                        @enderror"
-                                            placeholder="Enter an item description">
-                                        @error('item_description')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
                                         <label for="Brand">Brand:</label>
                                         <div style="display:flex">
                                             <select id="brand" name="brand"
@@ -170,6 +157,20 @@
                                         @enderror"
                                             placeholder="Enter a part number. (Leave blank if none)">
                                         @error('part_number')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+
+                                        <label for="Item description">Description:</label>
+                                        <input type="text" id="item_description" name="item_description"
+                                            value="{{ old('item_description') }}"
+                                            class="form-control @error('item_description')
+                                        border-danger
+                                        @enderror"
+                                            placeholder="Enter an item description">
+                                        @error('item_description')
                                             <div class="text-danger">
                                                 {{ $message }}
                                             </div>

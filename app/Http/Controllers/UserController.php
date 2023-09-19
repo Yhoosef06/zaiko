@@ -197,22 +197,40 @@ class UserController extends Controller
 
     public function saveUserNewPassword(Request $request, $id_number)
     {
-        $request->validate([
-            'new_password' => 'required|min:7',
-            'password_confirmation' => ['same:new_password'],
-        ]);
 
-        User::find($id_number)->update(['password' => Hash::make($request->new_password)]);
 
-        if ($id_number == Auth::user()->id_number) {
-            if (Auth::user()->security_question_id == null) {
-                $securityQuestions = SecurityQuestion::all();
-                return view('pages.auth.setupSecurityQuestion')->with('securityQuestions', $securityQuestions);;
+        try {
+            $request->validate([
+                'new_password' => 'required|min:7',
+                'password_confirmation' => ['same:new_password'],
+            ]);
+            User::find($id_number)->update(['password' => Hash::make($request->new_password)]);
+
+            if ($id_number == Auth::user()->id_number) {
+                if (Auth::user()->security_question_id == null) {
+                    $securityQuestions = SecurityQuestion::all();
+                    return view('pages.auth.setupSecurityQuestion')->with('securityQuestions', $securityQuestions);;
+                } else {
+                    return redirect('/')->with('message', 'Password changed successfully. Please login with new password.');
+                }
             } else {
-                return redirect('/')->with('message', 'Password changed successfully. Please login with new password.');
+                Session::flash('success', 'User ' . $id_number . ' password has been changed.');
+                return redirect('list-of-users');
             }
-        } else {
-            Session::flash('success', 'User ' . $id_number . ' password has been changed.');
+        } catch (\Throwable $th) {
+            
+            if ($id_number == Auth::user()->id_number) {
+                if (Auth::user()->security_question_id == null) {
+                    $securityQuestions = SecurityQuestion::all();
+                    return view('pages.auth.setupSecurityQuestion')->with('securityQuestions', $securityQuestions);;
+                } else {
+                    return redirect('/')->with('message', 'Password changed successfully. Please login with new password.');
+                }
+            } else {
+                Session::flash('success', 'User ' . $id_number . ' password has been changed.');
+                return redirect('list-of-users');
+            }
+            Session::flash('danger', 'User ' . $id_number . '. Password confirmation did not match.');
             return redirect('list-of-users');
         }
     }
