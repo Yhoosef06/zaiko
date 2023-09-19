@@ -45,12 +45,12 @@
                             <div class="row">
                                 <div class="col-12 col-sm-12 col-md-3">
                                     <div class="info-box">
-                                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-tag"></i></span>
+                                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-box"></i></span>
 
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Pending Registrants</span>
+                                            <span class="info-box-text">Inventory</span>
                                             <span class="info-box-number">
-                                                10
+                                                {{ $totalQuantity }}
                                             </span>
                                         </div>
                                         <!-- /.info-box-content -->
@@ -64,8 +64,8 @@
                                                 class="fas fa-exclamation-circle"></i></span>
 
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Unreturned Items</span>
-                                            <span class="info-box-number">41,410</span>
+                                            <span class="info-box-text">Missing</span>
+                                            <span class="info-box-number">{{$totalMissingItems}}</span>
                                         </div>
                                         <!-- /.info-box-content -->
                                     </div>
@@ -82,7 +82,7 @@
                                                 class="fas fa-arrow-alt-circle-right"></i></span>
 
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Items Circulating</span>
+                                            <span class="info-box-text">Items</span>
                                             <span class="info-box-number">760</span>
                                         </div>
                                         <!-- /.info-box-content -->
@@ -96,7 +96,7 @@
                                                 class="fas fa-users"></i></span>
 
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Total Users</span>
+                                            <span class="info-box-text">Pending Users</span>
                                             <span class="info-box-number">2,000</span>
                                         </div>
                                         <!-- /.info-box-content -->
@@ -121,7 +121,9 @@
 
                             <div class="info-box-content">
                                 <span class="info-box-text">Inventory</span>
-                                <span class="info-box-number">5,200</span>
+                                <span class="info-box-number">
+                                    {{ $totalQuantity }}
+                                </span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>

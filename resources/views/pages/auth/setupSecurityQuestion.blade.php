@@ -12,7 +12,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-4">
+                <div class="col-12" style="max-width: 500px">
                     <div class="card">
                         <div class="card-header">
                             <h3>Setup Security Question</h3>

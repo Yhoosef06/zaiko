@@ -125,7 +125,7 @@
                 </div>
                 <div class="modal-body">
                     <p class=" text-lg-center">
-                        Before you begin using Zaiko please <a
+                        Before you begin using this app please <a
                             href="{{ route('change_user_password', ['id_number' => Auth::user()->id_number]) }}">click this
                             link</a> to setup your security
                         settings. Thank you!

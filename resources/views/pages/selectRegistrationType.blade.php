@@ -18,7 +18,7 @@
                     <a href="{{ route('faculty_registration') }}" class="btn btn-lg btn-success">Faculty</a>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ route('signin.page') }}" class="btn btn-md btn-dark">Go Back</a>
+                    <a href="{{ route('signin.page') }}" class="btn btn-md btn-dark">Cancel</a>
                 </div>
             </div>
         </div>
