@@ -156,8 +156,8 @@
                                     <input type="hidden" name="item_id[]" value="{{ $item->item_id }}" id="borrow_item_id_{{ $index }}">
                                     {{ $item->item_id }}
                                   </td>
-                                  <td>{{ $item->brand }}</td>
-                                  <td>{{ $item->model }}</td>
+                                  <td>{{ $item->brand_name }}</td>
+                                  <td>{{ $item->model_name }}</td>
                                   <td>{{ $item->description }}</td>
                                   <td>{{ $item->serial_number }}</td>
                                   <td>
