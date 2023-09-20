@@ -23,7 +23,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-10">
+                <div class="col-12">
                     <div class="card">
                         <div class="card-header">
                             @if (session('success'))
@@ -114,7 +114,7 @@
         </div>
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-10">
+                <div class="col-12">
                     <div class="card p-5">
                         <div class="info-box mb-3 bg-warning">
                             <span class="info-box-icon"><i class="fas fa-box"></i></span>
