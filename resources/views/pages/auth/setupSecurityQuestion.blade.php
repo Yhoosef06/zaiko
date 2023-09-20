@@ -15,6 +15,12 @@
                 <div class="col-12" style="max-width: 500px">
                     <div class="card">
                         <div class="card-header">
+                            @if (session('password_updated'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('password_updated') }}</p>
+                                </div>
+                            @endif
                             <h3>Setup Security Question</h3>
                         </div>
                         <!-- /.card-header -->

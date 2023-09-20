@@ -235,7 +235,7 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
@@ -269,7 +269,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                     @if (Auth::user()->role == 'manager')
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -349,7 +349,7 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
@@ -383,7 +383,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                     @if (Auth::user()->role == 'manager')
                         <li class="nav-item">
                             <a href="#" class="nav-link">

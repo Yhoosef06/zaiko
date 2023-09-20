@@ -4,17 +4,6 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <H4><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</H4>
-                    </div>
-                @elseif (session('danger'))
-                    <div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <h4><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</h4>
-                    </div>
-                @endif
             </div>
         </div>
     </section>
@@ -115,7 +104,6 @@
         </div>
     </section>
 
-
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -125,10 +113,17 @@
                 </div>
                 <div class="modal-body">
                     <p class=" text-lg-center">
-                        Before you begin using this app please <a
-                            href="{{ route('change_user_password', ['id_number' => Auth::user()->id_number]) }}">click this
-                            link</a> to setup your security
-                        settings. Thank you!
+                        Before you begin please
+                        @if (Auth::user()->password_updated == false)
+                            <a href="{{ route('change_user_password', ['id_number' => Auth::user()->id_number]) }}">click
+                                this
+                                link</a>
+                        @else
+                            <a href="{{ route('setup_security_question', ['id_number' => Auth::user()->id_number]) }}">click
+                                this
+                                link</a>
+                        @endif
+                        to setup your security settings. Thank you!
                     </p>
                 </div>
             </div>
@@ -138,11 +133,9 @@
     <script>
         $(document).ready(function() {
             var accountType = "{{ auth()->user()->account_type }}";
-            var userQuestion = "{{ auth()->user()->security_question_id }}";
-
-            if (accountType !== 'admin') {
-                if ((accountType === 'faculty' || accountType === 'reader' || accountType === 'student') &&
-                    userQuestion === '' || null) {
+    
+            if (accountType != 'admin') {
+                if ("{{ auth()->user()->password_updated }}" == 0 || "{{ auth()->user()->security_question_id }}" == '' || "{{ auth()->user()->answer }}" == '') {
                     $('#loginModal').modal('show');
                 }
             }

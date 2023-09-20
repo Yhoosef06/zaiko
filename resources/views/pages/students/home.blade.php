@@ -118,9 +118,17 @@
                 </div>
                 <div class="modal-body">
                     <p class=" text-lg-center">
-                        Before you start using this app please <a
-                            href="{{ route('change_user_password', ['id_number' => Auth::user()->id_number]) }}">click this
-                            link</a> to update your security settings. Thank you!
+                        Before you begin please
+                        @if (Auth::user()->password_updated == false)
+                            <a href="{{ route('change_user_password', ['id_number' => Auth::user()->id_number]) }}">click
+                                this
+                                link</a>
+                        @else
+                            <a href="{{ route('setup_security_question', ['id_number' => Auth::user()->id_number]) }}">click
+                                this
+                                link</a>
+                        @endif
+                        to setup your security settings. Thank you!
                     </p>
                 </div>
             </div>
@@ -130,10 +138,9 @@
     <script>
         $(document).ready(function() {
             var accountType = "{{ auth()->user()->account_type }}";
-            var userQuestion = "{{ auth()->user()->security_question_id }}";
-
-            if (accountType !== 'admin') {
-                if (userQuestion === '' || null) {
+    
+            if (accountType != 'admin') {
+                if ("{{ auth()->user()->password_updated }}" == 0 || "{{ auth()->user()->security_question_id }}" == '' || "{{ auth()->user()->answer }}" == '') {
                     $('#loginModal').modal('show');
                 }
             }

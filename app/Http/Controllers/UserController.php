@@ -122,9 +122,8 @@ class UserController extends Controller
                 'account_status' => $request->account_status,
                 'role' => $request->role,
                 'department_id' => $request->department_id,
-                'password' => Hash::make('default'),
-                // 'front_of_id' => $request->file('front_of_id')->store(('ids')),
-                // 'back_of_id' => $request->file('back_of_id')->store(('ids')),
+                'password' => Hash::make($request->id_number),
+                'password_updated' => 0,
             ]);
             Session::flash('success', 'User Successfully Added. Do you want to add another user?');
             return redirect('add-new-user');
@@ -197,41 +196,43 @@ class UserController extends Controller
 
     public function saveUserNewPassword(Request $request, $id_number)
     {
+        if ($id_number == Auth::user()->id_number) {
 
-
-        try {
             $request->validate([
                 'new_password' => 'required|min:7',
                 'password_confirmation' => ['same:new_password'],
             ]);
             User::find($id_number)->update(['password' => Hash::make($request->new_password)]);
 
-            if ($id_number == Auth::user()->id_number) {
-                if (Auth::user()->security_question_id == null) {
-                    $securityQuestions = SecurityQuestion::all();
-                    return view('pages.auth.setupSecurityQuestion')->with('securityQuestions', $securityQuestions);;
-                } else {
-                    return redirect('/')->with('message', 'Password changed successfully. Please login with new password.');
-                }
+            $user = User::find($id_number);
+
+            if ($user->password_updated == false) {
+                User::find($id_number)->update(['password_updated' => true]);
+            }
+
+            if (Auth::user()->security_question_id == null || '') {
+                $securityQuestions = SecurityQuestion::all();
+                Session::flash('password_updated', 'Your password has been updated sucessfully.');
+                return view('pages.auth.setupSecurityQuestion')->with('securityQuestions', $securityQuestions);
             } else {
+                return redirect('/')->with('message', 'Password changed successfully. Please login with new password.');
+            }
+        } else {
+            try {
+                $request->validate([
+                    'new_password' => 'required|min:7',
+                    'password_confirmation' => ['same:new_password'],
+                ]);
+
+                User::find($id_number)->update(['password' => Hash::make($request->new_password)]);
+
                 Session::flash('success', 'User ' . $id_number . ' password has been changed.');
                 return redirect('list-of-users');
-            }
-        } catch (\Throwable $th) {
-            
-            if ($id_number == Auth::user()->id_number) {
-                if (Auth::user()->security_question_id == null) {
-                    $securityQuestions = SecurityQuestion::all();
-                    return view('pages.auth.setupSecurityQuestion')->with('securityQuestions', $securityQuestions);;
-                } else {
-                    return redirect('/')->with('message', 'Password changed successfully. Please login with new password.');
-                }
-            } else {
-                Session::flash('success', 'User ' . $id_number . ' password has been changed.');
+            } catch (\Throwable $th) {
+
+                Session::flash('danger', 'Password invalid or password confirmation did not match for user ' . $id_number . '.');
                 return redirect('list-of-users');
             }
-            Session::flash('danger', 'User ' . $id_number . '. Password confirmation did not match.');
-            return redirect('list-of-users');
         }
     }
 
@@ -287,6 +288,6 @@ class UserController extends Controller
             'answer' => $request->answer
         ]);
 
-        return redirect('profile-' . $id_number . '')->with('success', 'Security Question Modified Sucessfully.');
+        return redirect('profile-' . $id_number . '')->with('success', 'Security Question Updated Sucessfully.');
     }
 }

@@ -76,7 +76,8 @@ class SecurityQuestionController extends Controller
 
     public function setupSecurityQuestion(Request $request, $id_number)
     {
-        return view('pages.auth.setupSecurityQuestion');
+        $securityQuestions = SecurityQuestion::all();
+        return view('pages.auth.setupSecurityQuestion')->with(compact('securityQuestions'));
     }
 
     public function storeSecurityQuestion(Request $request)
@@ -92,10 +93,10 @@ class SecurityQuestionController extends Controller
             'answer' => $request->answer
         ]);
 
-        if (Auth::user()->account_type == 'student') {
+        if (Auth::user()->role == 'borrower') {
             return redirect()->route('student.dashboard')->with('success', 'Security Settings Updated Successfully');;
         } else {
-            return redirect()->route('admin.dashboard')->with('success', 'Security Settings Updated Successfully');
+            return redirect()->route('admin.managerDashboard')->with('success', 'Security Settings Updated Successfully');
         }
     }
 }

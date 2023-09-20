@@ -85,48 +85,6 @@
                             {{ $message }}
                         </div>
                     @enderror
-
-                    {{-- <label for="Item name">Password Security Question:</label>
-                    <select name="question" id="question" class="form-control  @error('question') border-danger @enderror">
-                        <option value="">Select a security question</option>
-                        @foreach ($securityQuestions as $question)
-                            <option value="{{ $question->id }}" 
-                                {{ old('question') == $question->id ? 'selected' : '' }}>{{ $question->question }}</option>
-                        @endforeach
-                    </select>
-                    @error('question')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-            
-                    <label for="" class="sr-only">Your Answer:</label>
-                    <input type="text" value="{{ old('answer') }}" class="form-control @error('answer') border-danger @enderror" placeholder="Your answer"
-                        name="answer" id="answer" placeholder="Your Answer">
-                    @error('answer')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror --}}
-
-                    {{-- <label for="" class="sr-only">Upload Front of ID</label>
-                    <input type="file" name="front_of_id" id="front_of_id"
-                        class="form-control @error('front_of_id') border-danger @enderror" placeholder="Upload Front of ID">
-                    @error('front_of_id')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-            
-                    <label for="" class="sr-only">Upload Back of ID</label>
-                    <input type="file" name="back_of_id" id="back_of_id"
-                        class="form-control @error('back_of_id') border-danger @enderror" placeholder="Upload Back of ID">
-                    @error('back_of_id')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror --}}
-
                     <hr>
                     <a href="{{ route('select_registration_type') }}" class="btn btn-md btn-outline-success">Back</a>
                     <button class="btn btn-md btn-success btn-block" type="submit">Submit</button>

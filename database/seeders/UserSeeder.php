@@ -28,7 +28,8 @@ class UserSeeder extends Seeder
                 'role' => 'manager',
                 'department_id' => '1',
                 'security_question_id' => '1',
-                'answer' => 'default'
+                'answer' => 'default',
+                'password_updated' => 1,
             ],
             [
                 'id_number' => 2016013001,
@@ -40,7 +41,8 @@ class UserSeeder extends Seeder
                 'role' => 'manager',
                 'department_id' => '7',
                 'security_question_id' => '1',
-                'answer' => 'default'
+                'answer' => 'default',
+                'password_updated' => 1,
             ],
             [
                 'id_number' => 2012321404,
@@ -52,7 +54,8 @@ class UserSeeder extends Seeder
                 'role' => 'borrower',
                 'department_id' => '5',
                 'security_question_id' => '1',
-                'answer' => 'default'
+                'answer' => 'default',
+                'password_updated' => 1,
             ],
             [
                 'id_number' => 2016331404,
@@ -64,7 +67,8 @@ class UserSeeder extends Seeder
                 'role' => 'borrower',
                 'department_id' => '5',
                 'security_question_id' => '1',
-                'answer' => 'default'
+                'answer' => 'default',
+                'password_updated' => 1,
             ],
             [
                 'id_number' => 2014571321,
@@ -76,7 +80,8 @@ class UserSeeder extends Seeder
                 'role' => 'borrower',
                 'department_id' => '6',
                 'security_question_id' => '1',
-                'answer' => 'default'
+                'answer' => 'default',
+                'password_updated' => 1,
             ],
             [
                 'id_number' => 2014175231,
@@ -88,7 +93,8 @@ class UserSeeder extends Seeder
                 'role' => 'borrower',
                 'department_id' => '6',
                 'security_question_id' => '1',
-                'answer' => 'default'
+                'answer' => 'default',
+                'password_updated' => 1,
             ],
             [
                 'id_number' => 1111,
@@ -100,7 +106,8 @@ class UserSeeder extends Seeder
                 'role' => 'borrower',
                 'department_id' => '19',
                 'security_question_id' => '1',
-                'answer' => 'default'
+                'answer' => 'default',
+                'password_updated' => 1,
             ]
         ];
         DB::table('users')->insert($user); 

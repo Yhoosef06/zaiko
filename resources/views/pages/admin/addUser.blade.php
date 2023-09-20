@@ -109,7 +109,7 @@
                                         <label for="account status">Account Status:</label>
                                         <select id="account_status" name="account_status" class="form-control">
                                             <option value="approved">approved</option>
-                                            <option value="pending">pending</option>
+                                            <option value="pending">ending</option>
                                         </select>
 
                                         <label for="account status">Role:</label>
