@@ -25,11 +25,11 @@
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
-                            @elseif(session('invalidSerialNumbers') && session('danger'))
+                            @elseif(session('invalidSerialNumbers') && session('error'))
                                 <div class="alert alert-danger">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <p><i class="icon fas fa-exclamation-triangle"></i>
-                                        {{ session('danger') }}
+                                        {{ session('error') }}
                                         @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
                                             {{ $invalidSerialNumber }},
                                         @endforeach
@@ -385,35 +385,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            // Listen for changes in the brand select dropdown
-            $('#brand').change(function() {
-                // Get the selected brand's ID
-                var selectedBrandId = $(this).val();
-
-                // Send an AJAX request to fetch models associated with the selected brand
-                $.ajax({
-                    url: '/get-models/' + selectedBrandId, // Replace with the actual route
-                    type: 'GET',
-                    success: function(data) {
-                        // Clear existing model options
-                        $('#model').empty();
-
-                        // Add the default option
-                        $('#model').append(
-                            '<option value="option_select" disabled selected>Select a model. (Skip if none)</option>'
-                        );
-
-                        // Populate the model select dropdown with new options
-                        $.each(data, function(index, model) {
-                            $('#model').append('<option value="' + model.id + '">' +
-                                model.model_name + '</option>');
-                        });
-                    }
-                });
-            });
-        });
-
         $(document).ready(function() {
             $('#addModelModal').on('show.bs.modal', function(event) {
                 var modal = $(this);

@@ -242,7 +242,7 @@ class ItemsController extends Controller
                     'location' => $request->location,
                     'category_id' => $request->item_category,
                     'brand_id' => $request->brand ? $request->brand : 1,
-                    'model_id' => $request->model ? $request->brand : 1,
+                    'model_id' => $request->model ? $request->model : 1,
                     'part_number' => $request->part_number ? $request->part_number : 'N/A',
                     'description' => $request->item_description,
                     'aquisition_date' => $request->aquisition_date,
@@ -266,7 +266,7 @@ class ItemsController extends Controller
 
             if (!empty($invalidSerialNumbers) && empty($validSerialNumbers)) {
                 session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-                return redirect('/adding-new-item')->with('danger', 'Failed to add item(s) due to invalid serial numbers. Please check the following serial numbers: ');
+                return redirect('/adding-new-item')->with('error', 'Failed to add item(s) due to invalid serial numbers. Please check the following serial numbers: ');
             } elseif (!empty($invalidSerialNumbers) && !empty($validSerialNumbers)) {
                 session()->put('invalidSerialNumbers', $invalidSerialNumbers);
                 return redirect('/adding-new-item')->with('warning', 'Item(s) added successfully, but some serial numbers are invalid. Please check the following serial numbers: ');
@@ -280,7 +280,7 @@ class ItemsController extends Controller
                 'location' => $request->location,
                 'category_id' => $request->item_category,
                 'brand_id' => $request->brand ? $request->brand : 1,
-                'model_id' => $request->model ? $request->brand : 1,
+                'model_id' => $request->model ? $request->model : 1,
                 'part_number' => $request->part_number ? $request->part_number : 'N/A',
                 'description' => $request->item_description,
                 'aquisition_date' => $request->aquisition_date,
