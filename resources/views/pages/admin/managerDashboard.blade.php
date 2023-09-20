@@ -81,8 +81,10 @@
                         </div>
                         <div class="container">
                             <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Notifications</h3>
+                                <div class="card-header bg-warning">
+                                    <h3 class="card-title">
+                                        <strong>Notifications</strong> 
+                                    </h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body p-0" style="max-height:100px; overflow-y: auto;">

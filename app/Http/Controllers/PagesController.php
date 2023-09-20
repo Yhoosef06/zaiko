@@ -9,6 +9,8 @@ use App\Models\College;
 use App\Models\Department;
 use App\Models\ItemCategory;
 use App\Models\ItemLog;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use function GuzzleHttp\Promise\all;
@@ -24,7 +26,9 @@ class PagesController extends Controller
             $totalUsers = $users->count();
             $totalMissingItems = ItemLog::where('mode', 'missing')
                 ->sum('quantity');
-            return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers'));
+            $borrowedItems = OrderItem::where('status', 'borrowed')
+                ->sum('order_quantity');
+            return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers','borrowedItems'));
         } elseif (Auth::user()->role == 'manager') {
             $manager_dept_id = Auth::user()->department_id;
             $room_dept_id = Room::where('department_id', $manager_dept_id);
@@ -41,7 +45,7 @@ class PagesController extends Controller
             $totalItems = $items->count();
             $totalPendingRegistrants = $pendingRegistrants->count();
             $totalApprovedUsers = $approvedUsers->count();
-            return view('pages.admin.managerDashboard')->with(compact('totalPendingRegistrants', 'totalApprovedUsers','totalItems'));
+            return view('pages.admin.managerDashboard')->with(compact('totalPendingRegistrants', 'totalApprovedUsers', 'totalItems'));
         }
     }
 

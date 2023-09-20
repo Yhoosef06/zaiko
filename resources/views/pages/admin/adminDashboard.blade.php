@@ -44,7 +44,7 @@
                             <div class="row">
                                 <div class="col-12 col-sm-12 col-md-3">
                                     <div class="info-box">
-                                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-box"></i></span>
+                                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-box"></i></span>
 
                                         <div class="info-box-content">
                                             <span class="info-box-text">Inventory</span>
@@ -59,7 +59,7 @@
                                 <!-- /.col -->
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="info-box mb-3">
-                                        <span class="info-box-icon bg-info elevation-1"><i
+                                        <span class="info-box-icon bg-warning elevation-1"><i
                                                 class="fas fa-exclamation-circle"></i></span>
 
                                         <div class="info-box-content">
@@ -77,7 +77,8 @@
 
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="info-box mb-3">
-                                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-tags"></i></span>
+                                        <span class="info-box-icon bg-warning elevation-1"><i
+                                                class="fas fa-tags"></i></span>
 
                                         <div class="info-box-content">
                                             <span class="info-box-text">Borrowed Items</span>
@@ -90,7 +91,8 @@
                                 <!-- /.col -->
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="info-box mb-3">
-                                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
+                                        <span class="info-box-icon bg-warning elevation-1"><i
+                                                class="fas fa-users"></i></span>
 
                                         <div class="info-box-content">
                                             <span class="info-box-text">Total Users</span>
@@ -101,28 +103,30 @@
                                     <!-- /.info-box -->
                                 </div>
                                 <!-- /.col -->
-                                
+
                                 <div class="container">
                                     <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Notifications</h3>
+                                        <div class="card-header bg-warning">
+                                            <h3 class="card-title">
+                                                <strong>Notifications</strong>
+                                            </h3>
                                         </div>
                                         <!-- /.card-header -->
-                                        <div class="card-body p-0" style="max-height:100px; overflow-y: auto;">
+                                        <div class="card-body p-0" style="max-height:200px; overflow-y: auto;">
                                             <ul class="products-list product-list-in-card pl-2 pr-2">
                                                 {{-- <li class="item">
-                                            <div class="product-img">
-                                                <img src="dist/img/default-150x150.png" alt="Product Image"
-                                                    class="img-size-50">
-                                            </div>
-                                            <div class="product-info">
-                                                <a href="javascript:void(0)" class="product-title">Samsung TV
-                                                    <span class="badge badge-warning float-right">$1800</span></a>
-                                                <span class="product-description">
-                                                    Samsung 32" 1080p 60Hz LED Smart HDTV.
-                                                </span>
-                                            </div>
-                                        </li> --}}
+                                                    <div class="product-img">
+                                                        <img src="dist/img/default-150x150.png" alt="Product Image"
+                                                            class="img-size-50">
+                                                    </div>
+                                                    <div class="product-info">
+                                                        <a href="javascript:void(0)" class="product-title">Samsung TV
+                                                            <span class="badge badge-warning float-right">$1800</span></a>
+                                                        <span class="product-description">
+                                                            Samsung 32" 1080p 60Hz LED Smart HDTV.
+                                                        </span>
+                                                    </div>
+                                                </li> --}}
                                                 <li class="item">
                                                     <div class="container">
                                                         <div class="text-center">
