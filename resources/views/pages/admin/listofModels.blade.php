@@ -107,7 +107,6 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                         <!-- /.card-body -->
