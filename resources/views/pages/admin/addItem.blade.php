@@ -275,7 +275,6 @@
                                                         {{ $message }}
                                                     </div>
                                                 @enderror
-                                                <br>
 
                                                 <div id="serial_numbers_container"
                                                     style="max-height: 200px; overflow-y: auto;"
