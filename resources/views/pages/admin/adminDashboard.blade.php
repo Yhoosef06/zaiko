@@ -19,7 +19,6 @@
         </div>
     </section>
 
-
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
@@ -41,7 +40,7 @@
                                 <h3>Welcome Admin!</h3>
                             </div>
                         </div>
-                        <div class="container">
+                        <div class="container pt-2">
                             <div class="row">
                                 <div class="col-12 col-sm-12 col-md-3">
                                     <div class="info-box">
@@ -50,7 +49,7 @@
                                         <div class="info-box-content">
                                             <span class="info-box-text">Inventory</span>
                                             <span class="info-box-number">
-                                                {{ $totalQuantity }}
+                                                {{ $totalItems }}
                                             </span>
                                         </div>
                                         <!-- /.info-box-content -->
@@ -60,12 +59,12 @@
                                 <!-- /.col -->
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="info-box mb-3">
-                                        <span class="info-box-icon bg-danger elevation-1"><i
+                                        <span class="info-box-icon bg-info elevation-1"><i
                                                 class="fas fa-exclamation-circle"></i></span>
 
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Missing</span>
-                                            <span class="info-box-number">{{$totalMissingItems}}</span>
+                                            <span class="info-box-text">Missing Items</span>
+                                            <span class="info-box-number">{{ $totalMissingItems }}</span>
                                         </div>
                                         <!-- /.info-box-content -->
                                     </div>
@@ -78,12 +77,11 @@
 
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="info-box mb-3">
-                                        <span class="info-box-icon bg-success elevation-1"><i
-                                                class="fas fa-arrow-alt-circle-right"></i></span>
+                                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-tags"></i></span>
 
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Items</span>
-                                            <span class="info-box-number">760</span>
+                                            <span class="info-box-text">Borrowed Items</span>
+                                            <span class="info-box-number">0</span>
                                         </div>
                                         <!-- /.info-box-content -->
                                     </div>
@@ -92,54 +90,55 @@
                                 <!-- /.col -->
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="info-box mb-3">
-                                        <span class="info-box-icon bg-warning elevation-1"><i
-                                                class="fas fa-users"></i></span>
+                                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
 
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Pending Users</span>
-                                            <span class="info-box-number">2,000</span>
+                                            <span class="info-box-text">Total Users</span>
+                                            <span class="info-box-number">{{ $totalUsers }}</span>
                                         </div>
                                         <!-- /.info-box-content -->
                                     </div>
                                     <!-- /.info-box -->
                                 </div>
                                 <!-- /.col -->
+                                
+                                <div class="container">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Notifications</h3>
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body p-0" style="max-height:100px; overflow-y: auto;">
+                                            <ul class="products-list product-list-in-card pl-2 pr-2">
+                                                {{-- <li class="item">
+                                            <div class="product-img">
+                                                <img src="dist/img/default-150x150.png" alt="Product Image"
+                                                    class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title">Samsung TV
+                                                    <span class="badge badge-warning float-right">$1800</span></a>
+                                                <span class="product-description">
+                                                    Samsung 32" 1080p 60Hz LED Smart HDTV.
+                                                </span>
+                                            </div>
+                                        </li> --}}
+                                                <li class="item">
+                                                    <div class="container">
+                                                        <div class="text-center">
+                                                            No Messeages.
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                    </div>
-                </div><!-- /.container-fluid -->
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-12">
-                    <div class="card p-5">
-                        <div class="info-box mb-3 bg-warning">
-                            <span class="info-box-icon"><i class="fas fa-box"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Inventory</span>
-                                <span class="info-box-number">
-                                    {{ $totalQuantity }}
-                                </span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-
-                        <div class="info-box mb-3  bg-gradient-info">
-                            <span class="info-box-icon"><i class="fas fa-info"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Data</span>
-                                <span class="info-box-number">114,381</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
+                        </div><!-- /.container-fluid -->
                     </div>
                 </div>
-            </div>
     </section>
 
 

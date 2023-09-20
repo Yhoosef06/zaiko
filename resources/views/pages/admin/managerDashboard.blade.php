@@ -41,58 +41,48 @@
                                                 {{ $totalPendingRegistrants }}
                                             </span>
                                         </div>
-                                        <!-- /.info-box-content -->
                                     </div>
-                                    <!-- /.info-box -->
                                 </div>
-                                <!-- /.col -->
-                                <div class="col-12 col-sm-12 col-md-3">
-                                    <div class="info-box mb-3">
-                                        <span class="info-box-icon bg-success elevation-1"><i
-                                                class="fas fa-users"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Total Users</span>
-                                            <span class="info-box-number">2,000</span>
-                                        </div>
-                                        <!-- /.info-box-content -->
-                                    </div>
-                                    <!-- /.info-box -->
-                                </div>
-                                <!-- /.col -->
 
+                         
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="info-box mb-3">
-                                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-box"></i></span>
-
+                                        <span class="info-box-icon bg-warning elevation-1"><i
+                                                class="fa fa-arrow-alt-circle-up"></i></span>
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Inventory</span>
-                                            <span class="info-box-number">41,410</span>
+                                            <span class="info-box-text">Borrowed Items </span>
+                                            <span class="info-box-number">0</span>
                                         </div>
-                                        <!-- /.info-box-content -->
                                     </div>
-                                    <!-- /.info-box -->
                                 </div>
-                                <!-- /.col -->
 
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <div class="info-box mb-3">
                                         <span class="info-box-icon bg-warning elevation-1"><i
-                                                class="fas fa-users"></i></span>
+                                                class="fas fa-tag"></i></span>
                                         <div class="info-box-content">
-                                            <span class="info-box-text">Total Users</span>
-                                            <span class="info-box-number">2,000</span>
+                                            <span class="info-box-text">Pending Borrow Items </span>
+                                            <span class="info-box-number">0</span>
                                         </div>
-                                        <!-- /.info-box-content -->
                                     </div>
-                                    <!-- /.info-box -->
                                 </div>
-                                <!-- /.col -->
+
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <div class="info-box mb-3">
+                                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-box"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Inventory</span>
+                                            <span class="info-box-number">{{$totalItems}}</span>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="container">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Recently Added Products</h3>
+                                    <h3 class="card-title">Notifications</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body p-0" style="max-height:100px; overflow-y: auto;">
@@ -160,7 +150,8 @@
             var accountType = "{{ auth()->user()->account_type }}";
 
             if (accountType != 'admin') {
-                if ("{{ auth()->user()->password_updated }}" == 0 || "{{ auth()->user()->security_question_id }}" ==
+                if ("{{ auth()->user()->password_updated }}" == 0 ||
+                    "{{ auth()->user()->security_question_id }}" ==
                     '' || "{{ auth()->user()->answer }}" == '') {
                     $('#loginModal').modal('show');
                 }

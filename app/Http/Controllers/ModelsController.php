@@ -31,7 +31,7 @@ class ModelsController extends Controller
     }
 
     public function addModel()
-    {   
+    {
         $brands = Brand::all();
         return view('pages.admin.addModel')->with(compact('brands'));
     }
@@ -51,24 +51,15 @@ class ModelsController extends Controller
                 'model_name' => $request->model_name,
             ]);
 
-            
-            if (Auth::user()->account_type == 'admin') {
-                return redirect()->route('view_models')->with('success', 'Model name added successfully!');
-            } else {
-                return redirect('adding-new-item')->with('success', 'Model name added successfully!');
-            }
-
+            return back()->with('success', 'Model name added successfully!');
         } catch (\Exception $e) {
-            if (Auth::user()->account_type == 'admin') {
-                return redirect()->route('view_models')->with('danger', 'An error occurred while adding the model name.');
-            } else {
-                return redirect('adding-new-item')->with('danger', 'An error occurred while adding the model name.');
-            }
+
+            return back()->with('danger', 'An error occurred while adding the model name.');
         }
     }
 
     public function editModel($id)
-    {   
+    {
         $brands = Brand::all();
         $model = Models::find($id);
         return view('pages.admin.editModel')->with(compact('model', 'brands'));
@@ -77,7 +68,7 @@ class ModelsController extends Controller
     public function saveEditedModel(Request $request, $id)
     {
         try {
-            $model= Models::find($id);
+            $model = Models::find($id);
 
             if (!$model) {
                 return redirect('models')->with('error', 'Model not found.');
@@ -88,7 +79,7 @@ class ModelsController extends Controller
                 'model_name' => $request->model_name,
                 // Add other fields you want to update here
             ]);
-            
+
             return redirect('models')->with('success', 'Model edited successfully.');
         } catch (\Exception $e) {
             return redirect('models')->with('danger', 'An error occurred while editing the model.');

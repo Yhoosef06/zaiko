@@ -66,17 +66,9 @@ class RoomController extends Controller
                 'room_name' => $request->room_name,
             ]);
 
-            if (Auth::user()->account_type == 'admin') {
-                return redirect()->route('view_rooms')->with('success', 'Room name added successfully!');
-            } else {
-                return redirect('adding-new-item')->with('success', 'Room name added successfully!');
-            }
+            return back()->with('success', 'Room name added successfully!');
         } catch (\Exception $e) {
-            if (Auth::user()->account_type == 'admin') {
-                return redirect()->route('view_rooms')->with('danger', 'An error occurred while adding the room name.');
-            } else {
-                return redirect('adding-new-item')->with('danger', 'An error occurred while adding the room name.');
-            }
+            return back()->with('danger', 'An error occurred while adding the room name.');
         }
     }
 

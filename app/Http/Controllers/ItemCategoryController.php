@@ -60,29 +60,13 @@ class ItemCategoryController extends Controller
                 'category_name' => 'required|unique:item_categories,category_name',
             ]);
 
-            $category = ItemCategory::where('category_name', '=', $request->input('category_name'))->first();
-            // if ($category) {
-            //     if (Auth::user()->account_type == 'admin') {
-            //         return redirect()->route('view_item_categories')->with('danger', 'Item category already exist.');
-            //     } else {
-            //         return redirect('adding-new-item')->with('danger', 'Item category already exist.');
-            //     }
-            // }
-
             ItemCategory::create([
                 'category_name' => $request->category_name,
             ]);
-            if (Auth::user()->account_type == 'admin') {
-                return redirect()->route('view_item_categories')->with('success', 'New item category has been added.');
-            } else {
-                return redirect('adding-new-item')->with('success', 'New item category has been added.');
-            }
+
+            return back()->with('success', 'New item category has been added.');
         } catch (\Exception $e) {
-            if (Auth::user()->account_type == 'admin') {
-                return redirect()->route('view_item_categories')->with('danger', 'An error has occured while adding the new item category.');
-            } else {
-                return redirect('adding-new-item')->with('danger', 'An error has occured while adding the new item category.');
-            }
+            return back()->with('danger', 'An error has occured while adding the new item category.');
         }
     }
 

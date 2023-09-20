@@ -20,6 +20,11 @@
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
                                 </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
                             @elseif(session('invalidSerialNumbers') && session('danger'))
                                 <div class="alert alert-danger">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -65,12 +70,9 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @if (Auth::user()->account_type != 'admin')
-                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
-                                                        data-toggle="modal" data-target="#addRoomModal"
-                                                        data-toggle="tooltip" title='Add a room' data-toggle="modal"
-                                                        {{-- data-target="#modal-addRoom" --}}></i></a>
-                                            @endif
+                                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                                    data-toggle="modal" data-target="#addRoomModal" data-toggle="tooltip"
+                                                    title='Add a room' data-toggle="modal"></i></a>
                                         </div>
                                         @error('location')
                                             <div class="text-danger">
@@ -92,11 +94,9 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @if (Auth::user()->account_type != 'admin')
-                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
-                                                        data-toggle="modal" data-target="#addItemCategoryModal"
-                                                        data-toggle="tooltip" title='Add a category'></i></a>
-                                            @endif
+                                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                                    data-toggle="modal" data-target="#addItemCategoryModal"
+                                                    data-toggle="tooltip" title='Add a category'></i></a>
                                         </div>
                                         @error('item_category')
                                             <div class="text-danger">
@@ -117,11 +117,9 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @if (Auth::user()->account_type != 'admin')
-                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
-                                                        data-toggle="modal" data-target="#addBrandModal"
-                                                        data-toggle="tooltip" title='Add a brand'></i></a>
-                                            @endif
+                                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                                    data-toggle="modal" data-target="#addBrandModal" data-toggle="tooltip"
+                                                    title='Add a brand'></i></a>
                                         </div>
                                         @error('brand')
                                             <div class="text-danger">
@@ -137,11 +135,9 @@
                                                     none)</option>
                                                 <!-- Models options will be populated dynamically here -->
                                             </select>
-                                            @if (Auth::user()->account_type != 'admin')
-                                                <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
-                                                        data-toggle="modal" data-target="#addModelModal"
-                                                        data-toggle="tooltip" title='Add a model'></i></a>
-                                            @endif
+                                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                                    data-toggle="modal" data-target="#addModelModal" data-toggle="tooltip"
+                                                    title='Add a model'></i></a>
                                         </div>
                                         @error('model')
                                             <div class="text-danger">

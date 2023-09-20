@@ -37,18 +37,10 @@ class BrandController extends Controller
             Brand::create([
                 'brand_name' => $request->brand_name,
             ]);
-            if (Auth::user()->account_type == 'admin') {
-                return redirect()->route('view_brands')->with('success', 'Brand name added successfully!');
-            } else {
-                return redirect('adding-new-item')->with('success', 'Brand name added successfully!');
-            }
-            
+
+            return back()->with('success', 'Brand name added successfully!');
         } catch (\Exception $e) {
-            if (Auth::user()->account_type == 'admin') {
-                return redirect()->route('view_brands')->with('danger', 'An error occurred while adding the brand name.');
-            } else {
-                return redirect('adding-new-item')->with('danger', 'An error occurred while adding the brand name.');
-            }
+            return back()->with('danger', 'An error occurred while adding the brand name.');
         }
     }
 

@@ -19,18 +19,29 @@ class PagesController extends Controller
     public function index()
     {
         if (Auth::user()->account_type == 'admin') {
-            $totalQuantity = Item::sum('quantity');
+            $totalItems = Item::sum('quantity');
             $users = User::all();
-            $missingItems = ItemLog::where('mode', 'missing')->get();
-            $totalMissingItems = $missingItems->count();
-            return view('pages.admin.adminDashboard')->with(compact('totalQuantity', 'totalMissingItems'));
+            $totalUsers = $users->count();
+            $totalMissingItems = ItemLog::where('mode', 'missing')
+                ->sum('quantity');
+            return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers'));
         } elseif (Auth::user()->role == 'manager') {
             $manager_dept_id = Auth::user()->department_id;
+            $room_dept_id = Room::where('department_id', $manager_dept_id);
             $pendingRegistrants = User::where('account_status', 'pending')
                 ->where('department_id', $manager_dept_id)
                 ->get();
+            $approvedUsers = User::where('account_status', 'approved')
+                ->where('department_id', $manager_dept_id)
+                ->get();
+            $items = Item::whereHas('room', function ($query) use ($manager_dept_id) {
+                $query->where('department_id', $manager_dept_id);
+            })->get();
+
+            $totalItems = $items->count();
             $totalPendingRegistrants = $pendingRegistrants->count();
-            return view('pages.admin.managerDashboard')->with(compact('totalPendingRegistrants'));
+            $totalApprovedUsers = $approvedUsers->count();
+            return view('pages.admin.managerDashboard')->with(compact('totalPendingRegistrants', 'totalApprovedUsers','totalItems'));
         }
     }
 

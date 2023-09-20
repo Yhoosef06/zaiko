@@ -12,7 +12,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-10">
+                <div class="col-12" style="max-width: 1000px">
                     <div class="card">
                         <div class="card-header">
                             @if (session('success'))
@@ -122,30 +122,6 @@
                                                 </div>
                                             @enderror
                                         </div>
-
-                                        {{-- <label for="Purpose">Purpose:</label>
-                                            <input type="text" id="purpose" name="purpose"
-                                                class="form-control @error('purpose')
-                                            border-danger
-                                            @enderror"
-                                                placeholder="Leave blank if none.">
-                                            @error('purpose')
-                                                <div class="text-danger">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror --}}
-
-                                        {{-- <label for="department">Department / Office:</label>
-                                            <input placeholder="Name of Department/Office" type="text" id="department" name="department"
-                                                class="form-control @error('department')
-                                            border-danger @enderror">
-                                            @error('department')
-                                                <div class="text-danger">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror --}}
-
-
                                     </div>
                                     <div class="col">
                                         <label for="positions">Position/Role:</label>
