@@ -32,12 +32,11 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-
                             <h3>School Years</h3>
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body">
-                            <table id="listofterms" class="table table-bordered table-striped">
+                        <div class=" card-body">
+                            <table id="listofterms" class="table table-bordered table-hover dataTable dtr-inline collapsed">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -169,8 +168,6 @@
                     }
                 });
             });
-
-            // ... Other existing JavaScript code ...
         });
     </script>
 @endsection

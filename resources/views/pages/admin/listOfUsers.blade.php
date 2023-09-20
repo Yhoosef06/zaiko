@@ -7,8 +7,6 @@
                 <div class="col-sm-6">
                     {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
                 </div>
-                {{-- Adding distance from the top navigation bar --}}
-                {{-- <a href="{{ route('add_user') }}" class="btn btn-default"> <i class="fa fa-plus"></i> Create Account</a> --}}
             </div>
         </div>
     </section>
@@ -103,28 +101,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Modal -->
-    {{-- <div class="modal fade" id="modal-user-information" tabindex="-1" role="dialog"
-        aria-labelledby="modal-user-information">
-        <div class="modal-dialog modal-m" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modal-user-information">User Information</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body ml-2">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
-                    <a data-toggle="modal" data-target="#modal-edit-user-info" onclick="openEditUserModal()"
-                        class="btn btn-primary">Edit</a>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     <div class="modal fade" id="modal-user-info" tabindex="-1" role="dialog" aria-labelledby="modal-user-info">
         <div class="modal-dialog modal-m" role="document">

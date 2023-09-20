@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Term;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
@@ -17,6 +18,7 @@ class TermController extends Controller
 
         // Pass the current term ID to the Blade template
         return view('pages.admin.listOfTerms', ['currentTermId' => $currentTerm ? $currentTerm->id : null])->with(compact('terms'));
+    
     }
 
     public function addTerm()
