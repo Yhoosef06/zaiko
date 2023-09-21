@@ -537,7 +537,9 @@ class BorrowController extends Controller
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', 'item_categories.id')
-            ->select('orders.id as order_id', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->select('orders.id as order_id','brands.*', 'models.*', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
             ->where('users.id_number', $id)
             ->where('order_items.status', 'pending')
             ->get();
