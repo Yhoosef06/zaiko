@@ -1,22 +1,21 @@
 @extends('layouts.pages.yields')
 
-@section('content-header')
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Items in Cart</h1>
+
+@section('content')
+<div class="borrower-bg borrower-page-height">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">History</h1>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
-
-@section('content')
             <table id="cart" class="table">
               
                 <thead>
-                    <tr>
+                    <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
                         <th style="width:10%" class="text-wrap">Order ID</th>
                         <th style="width:10%" class="text-wrap">Date Submitted</th>
                         <th style="width:10%" class="text-wrap">Date Returned</th>
@@ -28,7 +27,7 @@
                    
                         @foreach($orderHistory as $order)
                             
-                                <tr>
+                                <tr style="background-color: rgba(255, 255, 255, 0.8);">
                                 
                                     <td class="text-wrap">{{ $order->id }}</td>
                                     <td class="text-wrap">{{ date('F j, Y',strToTime($order->date_submitted)) }}</td>
@@ -156,5 +155,5 @@
                     </div>
                 </div>
             </div>
-
+        </div>
 @endsection
