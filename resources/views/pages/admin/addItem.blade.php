@@ -566,7 +566,7 @@
                     input.type = 'text';
                     input.name = `serial_number[]`;
                     input.id = `serial_number_${i}`;
-                    input.value = oldSerialNumberValue || '';
+                    // input.value = oldSerialNumberValue || '';
                     input.classList.add('form-control', 'col-10');
                     input.placeholder = 'Enter a serial number.';
 
@@ -578,7 +578,7 @@
                         const errorSpan = document.createElement('span');
                         errorSpan.classList.add('text-danger');
                         const errorMessage = document.createElement('p');
-                        errorMessage.textContent = '{{ $errors->first('serial_number') }}';
+                        // errorMessage.textContent = '{{ $errors->first('serial_number') }}';
                         errorSpan.appendChild(errorMessage);
                         container.appendChild(errorSpan);
                     }
