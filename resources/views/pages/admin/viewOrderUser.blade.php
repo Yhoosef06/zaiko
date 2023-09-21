@@ -81,6 +81,7 @@
                               <tr>
                                 <th class="d-none">ORDER ID</th>
                                 <th class="d-none">Item ID</th>
+                                <th class="d-none">Duration</th>
                                 <th style="background-color:#28a745; color:aliceblue">Brand</th>
                                 <th style="background-color:#28a745; color:aliceblue">Model</th>
                                 <th style="background-color:#28a745; color:aliceblue">Description</th>
@@ -104,11 +105,14 @@
                                 $counter++;
                                 @endphp
                                         <tr>
-                                          <td class="d-none" >
-                                            <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                          <td class="d-none">
+                                            <input type="text" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                           </td>
-                                          <td  class="d-none">
+                                          <td class="d-none">
                                             <input type="text" name="itemId[]" id="itemID_{{ $counter }}">
+                                          </td>
+                                          <td class="d-none">
+                                            <input type="text" name="duration[]" id="duration_{{ $counter }}">
                                           </td>
                                           <td>{{ $item->brand_name }} </td>
                                           <td>{{ $item->model_name }}</td>
@@ -134,11 +138,14 @@
                                   
                             @elseif ($item->category_name === 'Tools')
                                   <tr>
-                                    <td  class="d-none">
-                                      <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                    <td class="d-none">
+                                      <input type="text" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                     </td>
-                                    <td  class="d-none">
-                                      <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
+                                    <td class="d-none">
+                                      <input type="text" name="itemId[]" value="{{ $item->item_id}}">
+                                    </td>
+                                    <td class="d-none">
+                                      <input type="text" name="duration[]" id="duration_{{ $counter }}">
                                     </td>
                                     <td>{{ $item->brand_name }}</td>
                                     <td>{{ $item->model_name }}</td>
@@ -180,11 +187,14 @@
                                   </tr>
                             @else
                                   <tr>
-                                    <td  class="d-none">
-                                      <input type="hidden" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                    <td class="d-none" >
+                                      <input type="text" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                     </td>
-                                    <td  class="d-none">
-                                      <input type="hidden" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
+                                    <td class="d-none">
+                                      <input type="text" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
+                                    </td>
+                                    <td class="d-none">
+                                      <input type="text" name="duration[]" value="{{ $item->duration}}">{{ $item->duration}}
                                     </td>
                                     <td>{{ $item->brand_name }}</td>
                                     <td>{{ $item->model_name }}</td>
@@ -216,23 +226,22 @@
                           
                           
                     </div>
-                    <div class="row mb-2">
-                      <div class="col-sm-6">
-                        {{-- <input type="date" class="form-control" name="date_returned"> --}}
-                        <input type="text" id="student_id_added_user" name="student_id_added_user" value="@foreach($orders as $index => $item)
-                      @if($index === 0)
-                          {{$item->id_number}}
-                      @endif
-                  @endforeach" class="form-control" style="display:none;">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                      </div>
-                      <div class="col-sm-6">
-                        
-                      </div>
-                    </div>
-                  </form>
+                    
                     <!-- /.card-body -->
                   </div>
+                  <div class="row mb-2">
+                    <div class="col-sm-6">
+                      {{-- <input type="date" class="form-control" name="date_returned"> --}}
+                      <input type="text" id="student_id_added_user" name="student_id_added_user" value="@foreach($orders as $index => $item)
+                    @if($index === 0)
+                        {{$item->id_number}}
+                    @endif
+                @endforeach" class="form-control" style="display:none;">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                   
+                  </div>
+                </form>
                   <!-- /.card -->
                 </div>
               </div>

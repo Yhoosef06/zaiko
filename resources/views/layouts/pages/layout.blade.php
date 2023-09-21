@@ -336,7 +336,7 @@ $(document).ready(function() {
                             var tableRow = $('<tr>');
                             $('<td class="d-none">').text(userID).appendTo(
                             tableRow);
-                            $('<td class="d-none">').text(response.id).appendTo(
+                            $('<td class="d-none" ').text(response.id).appendTo(
                                 tableRow);
                             $('<td>').text(response.brand).appendTo(tableRow);
                             $('<td>').text(response.model).appendTo(tableRow);
@@ -344,8 +344,8 @@ $(document).ready(function() {
                             $('<td>').text(response.serial_number).appendTo(
                                 tableRow);
                             var quantityInput = $('<input>').attr('type', 'number')
-                                .attr('max', response.available_quantity).val(
-                                    response.available_quantity);
+                                .attr('max', response.quantity).val(
+                                    response.quantity);
                             $('<td>').append(quantityInput).appendTo(tableRow);
                             var buttonCell = $('<td>');
                             var addButton = $('<button class="btn btn-success">')
@@ -755,6 +755,7 @@ $(document).ready(function() {
                             event.preventDefault();
                             $('#search_for_serial_' + i).val(ui.item.serialNumber);
                             $('#itemID_' + i).val(ui.item.itemID);
+                            $('#duration_' + i).val(ui.item.duration);
                             console.log(itemData.temp_quantity);
                         }
                     }
@@ -815,6 +816,7 @@ $(document).ready(function() {
                 event.preventDefault();
                 if (!ui.item.serialNumber || ui.item.serialNumber === 'N/A') {
                     var userID = $("#student_id_added_admin").val();
+                    var orderIdAdmin = $("#order-id").val().trim();
                     var itemId = ui.item.id;
 
 
@@ -910,7 +912,7 @@ $(document).ready(function() {
 
                                         window.location.href =
                                             '/view-order-admin/' +
-                                            userId.trim();
+                                            orderIdAdmin;
 
 
 
@@ -939,6 +941,7 @@ $(document).ready(function() {
 
                 } else {
                     var userID = $("#student_id_added_admin").val();
+                    var orderID = $("#order-id").val().trim();
                     var itemId = ui.item.id;
                     var serialNumber = ui.item.serialNumber;
 
@@ -963,8 +966,7 @@ $(document).ready(function() {
                                 showConfirmButton: false,
                                 timer: 1500
                             });
-                            window.location.href = '/view-order-admin/' + userID
-                                .trim();
+                            window.location.href = '/view-order-admin/' + orderID;
                         },
                         error: function(xhr) {
                             // Handle the error
@@ -1319,7 +1321,10 @@ $(document).ready(function() {
                 $.ajax({
                     url: "{{ route('submitAdminBorrow') }}",
                     type: "POST",
-                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                     data: formData,
                     success: function(response) {
                         if (response.success) {
                             Swal.fire(
@@ -1345,6 +1350,99 @@ $(document).ready(function() {
         })
     });
 });
+
+
+$(document).ready(function() {
+    $(".remove-borrow").click(function(e) {
+        var orderId = $(this).data("id");
+        var userID = $("#userIdNumber").val().trim();
+        var url = '/remove-borrow/' + orderId;
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: {
+                        orderId: orderId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire(
+                                'Success',
+                                'Successfully Removed',
+                                'success'
+                            );
+                            // Redirect to another page after success
+                            window.location.href = '/borrow-item/' + userID;
+                        } 
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response, if needed
+                        console.log(xhr.responseText);
+                    }
+                });
+            }
+        });
+    });
+});
+
+$(document).ready(function() {
+    $(".order-admin-remove").click(function(e) {
+        var orderId = $(this).data("id");
+        var currentOrderId = $("#order-id").val().trim();
+        var url = '/order-admin-remove/' + orderId;
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: {
+                        orderId: orderId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire(
+                                'Success',
+                                'Successfully Removed',
+                                'success'
+                            );
+                            // Redirect to another page after success
+                            window.location.href = '/view-order-admin/' + currentOrderId;
+                        } 
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response, if needed
+                        console.log(xhr.responseText);
+                    }
+                });
+            }
+        });
+    });
+});
+
+
 
 $(document).ready(function() {
     $('#submitFormUser').submit(function(event) {
