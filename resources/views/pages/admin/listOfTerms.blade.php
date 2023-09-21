@@ -52,8 +52,8 @@
                                         <tr data-term-id="{{ $term->id }}">
                                             <td>{{ $term->id }}</td>
                                             <td>{{ $term->semester }}</td>
-                                            <td>{{ $term->start_date }}</td>
-                                            <td>{{ $term->end_date }}</td>
+                                            <td>{{ date('F j, Y', strtotime($term->start_date)) }}</td>
+                                            <td>{{ date('F j, Y', strtotime($term->end_date)) }}</td>
                                             <td>
                                                 <input class="size-32 checkbox-toggle" type="checkbox" name="currentTerm"
                                                     id="currentTerm{{ $term->id }}" data-term-id="{{ $term->id }}"
