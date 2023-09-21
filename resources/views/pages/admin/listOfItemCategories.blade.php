@@ -35,7 +35,6 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <h3>Categories</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
