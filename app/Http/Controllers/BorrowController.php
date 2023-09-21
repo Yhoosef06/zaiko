@@ -34,6 +34,20 @@ class BorrowController extends Controller
         // exit;
         return view('pages.admin.borrowed')->with(compact('borrows'));
     }
+    public function overdue()
+    {   
+        $borrows = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        ->whereNotNull('orders.approval_date')
+        ->whereNotNull('orders.approved_by')
+        ->groupBy('orders.user_id')
+        ->get();
+
+        // echo '<pre>';
+        // echo print_r($borrows);
+        // echo '</pre>';
+        // exit;
+        return view('pages.admin.overdue')->with(compact('borrows'));
+    }
 
     public function pending()
     {
@@ -64,33 +78,28 @@ class BorrowController extends Controller
   
 
     public function removeBorrow($id)
-    {
-        $row = OrderItem::find($id);
-
-        echo '<pre>';
-        echo print_r($row);
-        echo '</pre>';
-        exit;
+{
+    $item = OrderItem::join('items', 'order_items.item_id', '=', 'items.id')
+                ->find($id);
+    $row = OrderItem::find($id);
     
-        // if (empty($serial_number) || $serial_number == 'N/A') {
-        //     Item::where('description', $description)->update(['borrowed' => 'no']);
-        //     OrderItem::where('id', '=', $order_item_id)->delete();
-        //     Session::flash('success', 'Successfully removed the borrowed item.');
-        //     return redirect('pending');
-        // }
 
-        // // Continue with the removal logic if the serial number is valid
-        // $affectedRows = OrderItem::where('id', '=', $order_item_id)->delete();
-        // $affectedRows1 = Item::where('serial_number', '=', $serial_number)->update(['borrowed' => 'no']);
-        // Session::flash('success', 'Successfully removed the borrowed item.');
-        // return redirect('view-order');
+    if (!$row) {
+        return response()->json(['success' => false, 'message' => 'Record not found'], 404);
     }
+
+    $item_id = $item->item_id;
+    Item::where('id', $item_id)->update(['borrowed' => 'no']);
+    $row->delete();
+
+    return response()->json(['success' => true]);
+}
 
     public function searchUser(Request $request)
     {
         $query = $request->input('query');
     
-        $users = User::where('account_status', 'approved')->where('id_number', 'LIKE', $query . '%')->take(10)->get();
+        $users = User::where('account_status', 'approved')->where('role', 'borrower')->where('id_number', 'LIKE', $query . '%')->take(10)->get();
 
         $response = $users->map(function ($user) {
             return [
@@ -378,8 +387,11 @@ class BorrowController extends Controller
     }
 
     public function addItem($id){
-        $item = Item::find($id);
-
+        $item = Item::select('items.*', 'brands.brand_name as brand', 'models.model_name as model')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->find($id);
+       
         return response()->json($item);
     }
 
@@ -491,11 +503,7 @@ class BorrowController extends Controller
             ->whereNotNull('date_submitted')
             ->whereNull('date_returned')
             ->get();
-        $available = Item::find($itemId);
-
-        $availableQuantity = $available->available_quantity;
-
-        $availableQuantity -= $orderQuantity;
+    
         
     
         if ($dataOrder->isEmpty()) {
@@ -507,7 +515,6 @@ class BorrowController extends Controller
     
             if ($insertOrder) {
                 $orderId = $insertOrder->id;
-                Item::where('id', $itemId)->update(['available_quantity' => $availableQuantity]);
                 OrderItem::create([
                     'order_id' => $orderId,
                     'user_id' => $userId,
@@ -519,7 +526,6 @@ class BorrowController extends Controller
             }
         } else {
             $orderId = $dataOrder->first()->id;
-            Item::where('id', $itemId)->update(['available_quantity' => $availableQuantity]);
             OrderItem::create([
                 'order_id' => $orderId,
                 'user_id' => $userId,
@@ -539,7 +545,7 @@ class BorrowController extends Controller
             ->join('item_categories', 'items.category_id', 'item_categories.id')
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->select('orders.id as order_id','brands.*', 'models.*', 'users.*','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
+            ->select('orders.id as order_id','brands.*', 'models.*', 'users.*','order_items.order_quantity as order_quantity','order_items.id as order_item_id', 'order_items.user_id as user_id', 'items.*','item_categories.*')
             ->where('users.id_number', $id)
             ->where('order_items.status', 'pending')
             ->get();

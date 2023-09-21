@@ -125,8 +125,8 @@
                                     <input type="hidden" name="item_id[]" value="{{ $item->item_id }}" id="borrow_item_id_{{ $index }}">
                                     {{ $item->item_id }}
                                   </td>
-                                  <td>{{ $item->brand }}</td>
-                                  <td>{{ $item->model }}</td>
+                                  <td>{{ $item->brand_name }}</td>
+                                  <td>{{ $item->model_name }}</td>
                                   <td>{{ $item->description }}</td>
                                   <td>{{ $item->serial_number }}</td>
                                   <td id="quantity_{{ $index }}">
@@ -139,7 +139,7 @@
                                     </select>
                                   </td>
                                   <td>
-                                    <a href="" class="btn btn-danger">Remove</a> 
+                                    <a href="#" data-id="{{ $item->order_item_id }}" class="btn btn-danger remove-borrow">Remove</a>
                                   </td>
                                 </tr>
                               @else
@@ -165,7 +165,7 @@
                                     {{ $item->order_quantity }}
                                   </td>
                                   <td>
-                                    <a href="{{ route('remove-borrow', ['id' => $item->order_item_id]) }}" class="btn btn-danger">Remove</a> 
+                                    <a href="#" data-id="{{ $item->order_item_id }}" class="btn btn-danger remove-borrow">Remove</a>
                                   </td>
                                 </tr>
                               @endif

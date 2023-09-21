@@ -336,7 +336,7 @@ $(document).ready(function() {
                             var tableRow = $('<tr>');
                             $('<td class="d-none">').text(userID).appendTo(
                             tableRow);
-                            $('<td class="d-none">').text(response.id).appendTo(
+                            $('<td class="d-none" ').text(response.id).appendTo(
                                 tableRow);
                             $('<td>').text(response.brand).appendTo(tableRow);
                             $('<td>').text(response.model).appendTo(tableRow);
@@ -344,8 +344,8 @@ $(document).ready(function() {
                             $('<td>').text(response.serial_number).appendTo(
                                 tableRow);
                             var quantityInput = $('<input>').attr('type', 'number')
-                                .attr('max', response.available_quantity).val(
-                                    response.available_quantity);
+                                .attr('max', response.quantity).val(
+                                    response.quantity);
                             $('<td>').append(quantityInput).appendTo(tableRow);
                             var buttonCell = $('<td>');
                             var addButton = $('<button class="btn btn-success">')
@@ -1319,7 +1319,10 @@ $(document).ready(function() {
                 $.ajax({
                     url: "{{ route('submitAdminBorrow') }}",
                     type: "POST",
-                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                     data: formData,
                     success: function(response) {
                         if (response.success) {
                             Swal.fire(
@@ -1345,6 +1348,53 @@ $(document).ready(function() {
         })
     });
 });
+
+
+$(document).ready(function() {
+    $(".remove-borrow").click(function(e) {
+        var orderId = $(this).data("id");
+        var userID = $("#userIdNumber").val().trim();
+        var url = '/remove-borrow/' + orderId;
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: {
+                        orderId: orderId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire(
+                                'Success',
+                                'Successfully Removed',
+                                'success'
+                            );
+                            // Redirect to another page after success
+                            window.location.href = '/borrow-item/' + userID;
+                        } 
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response, if needed
+                        console.log(xhr.responseText);
+                    }
+                });
+            }
+        });
+    });
+});
+
 
 $(document).ready(function() {
     $('#submitFormUser').submit(function(event) {

@@ -153,6 +153,15 @@
                             </li>
 
                             <li class="nav-item">
+                                <a href="{{ route('overdue') }}" class="nav-link">
+                                    <div class="ml-3">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Overdue</p>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a href="{{ route('returned') }}" class="nav-link">
                                     <div class="ml-3">
                                         <i class="far fa-circle nav-icon"></i>

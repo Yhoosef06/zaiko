@@ -172,6 +172,7 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
 
     //FOR Manage Borrowings
     Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');
+    Route::get('overdue', [BorrowController::class, 'overdue'])->name('overdue');
     Route::get('pending', [BorrowController::class, 'pending'])->name('pending');
     Route::get('returned', [BorrowController::class, 'returned'])->name('returned');
 
