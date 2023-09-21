@@ -1,20 +1,18 @@
 @extends('layouts.pages.yields')
 
-@section('content-header')
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Borrowing</h1>
-                </div>
+
+<link rel="stylesheet" href="{{ asset('plugins/preloader.css') }}">
+@section('content')
+<div class="borrower-bg borrower-page-height">
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Borrowing</h1>
             </div>
         </div>
     </div>
-    
-@endsection
-<link rel="stylesheet" href="{{ asset('plugins/preloader.css') }}">
-@section('content')
-
+</div>
 <div id="preloader" class="d-flex align-items-center justify-content-center">
     <div class="spinner-grow text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -195,6 +193,7 @@
             @endforeach
         </div>
     </div>
+</div>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

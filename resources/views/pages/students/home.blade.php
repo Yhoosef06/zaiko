@@ -16,9 +16,7 @@
                             <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                         </div>
                     @endif
-                    <div class="col-sm-6">
-                        <h1 class="m-0">Dashboard</h1>
-                    </div><!-- /.col -->
+                    
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </div>
@@ -27,84 +25,128 @@
         <!-- Main content -->
         <section class="content ">
             <div class="container-fluid">
-                <div>
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="card" style="background-color: rgba(255, 255, 255, 0.75);">
+                            <div class="card-header">
+                                @if (session('success'))
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                    </div>
+                                @elseif (session('danger'))
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                    </div>
+                                @endif
+                                <div class="card-title">
+                                    <h3>Hello {{Auth::user()->first_name}}!</h3>
+                                </div>
+                            </div>
+                            <div class="container pt-2">
+                                <div class="row">
+                                    {{-- <div class="col-12 col-sm-12 col-md-4">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-warning elevation-1"><i
+                                                    class="bi bi-cart"></i></span>
 
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Items in Cart</span>
+                                                <span class="info-box-number">
+                                                 
+                                                </span>
+                                            </div>
+                                            <!-- /.info-box-content -->
+                                        </div>
+                                        <!-- /.info-box -->
+                                    </div> --}}
+                                    <!-- /.col -->
+                                    {{-- <div class="col-12 col-sm-6 col-md-4">
+                                        <div class="info-box mb-3">
+                                            <span class="info-box-icon bg-warning elevation-1"><i
+                                                    class="fas fa-exclamation-circle"></i></span>
 
-                    <!-- Small boxes (Stat box) -->
-                    <div class="row">
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Missing Items</span>
+                                               
+                                            </div>
+                                            <!-- /.info-box-content -->
+                                        </div>
+                                        <!-- /.info-box -->
+                                    </div> --}}
+                                    <!-- /.col -->
 
-                        <!-- ./col -->
-                        {{-- <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>53<sup style="font-size: 20px">%</sup></h3>
+                                    {{-- <!-- fix for small devices only -->
+                                    <div class="clearfix hidden-md-up"></div> --}}
 
-                            <p>Bounce Rate</p>
+                                    {{-- <div class="col-12 col-sm-6 col-md-4">
+                                        <div class="info-box mb-3">
+                                            <span class="info-box-icon bg-warning elevation-1"><i
+                                                    class="fas fa-tags"></i></span>
+
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Borrowing History</span>
+                                                <span class="info-box-number">0</span>
+                                            </div>
+                                            <!-- /.info-box-content -->
+                                        </div>
+                                        <!-- /.info-box -->
+                                    </div> --}}
+                                    <div class="container">
+                                        <div class="card">
+                                            
+                                            <!-- /.card-header -->
+                                            <div class="card-body p-0" style="max-height:50%; overflow-y: auto;">
+                                                <ul class="products-list product-list-in-card pl-2 pr-2">
+                                                    <li class="item">
+                                                        <div class="container">
+                                                            <div class="text-center">
+                                                                <h3><strong>Here, youll have easy access to all the tools and information you need to manage your borrowing activites effortlessly.</strong></h3> 
+                                                                <h5>From checking the status of your pending requests to exploring the items you currently borrowed.</h5>
+                                                                <h5>Our user-friendly dashboard is designed to streamline your borrowing experience.</h5>
+                                                                <h5>Stay updated on due dates, review your borrowing history, and initiate new requests with just few clicks.</h5>
+                                                                <h4><b>We're here to make borrowing items a breeze, so you can focus on what matters to you.</b></h4>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="item">
+                                                        <div class="container">
+                                                            <div class="text-center">
+                                                                <a href="{{ route('student.items') }}" class="btn btn-success">Start Borrowing</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+                                        {{-- <div class="card">
+                                            <div class="card-header bg-warning">
+                                                <h3 class="card-title">
+                                                    <strong>Notifications</strong>
+                                                </h3>
+                                            </div>
+                                            <!-- /.card-header -->
+                                            <div class="card-body p-0" style="max-height:200px; overflow-y: auto;">
+                                                <ul class="products-list product-list-in-card pl-2 pr-2">
+                                                    <li class="item">
+                                                        <div class="container">
+                                                            <div class="text-center">
+                                                                No Messeages.
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div> --}}
+                                    </div>
+                                </div>
+                            </div><!-- /.container-fluid -->
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>2</h3>
-
-                            <p>Notifications</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>2</h3>
-
-                            <p>Notifications</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>2</h3>
-
-                            <p>Notifications</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div> --}}
-                        <!-- ./col -->
-                    </div>
-
-                    <!-- /.row -->
-                    <!-- Main row -->
-                    <div class="row">
-                        <!-- Left col -->
-                        <section class="col-lg-7 connectedSortable">
-
-
-                        </section>
-
-                    </div>
-                </div>
             </div>
 
         </section>

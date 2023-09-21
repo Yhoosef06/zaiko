@@ -31,7 +31,7 @@
                    
                         @foreach($cartItems as $cart)
                             
-                                <tr>
+                                <tr style="background-color: rgba(255, 255, 255, 0.8);">
                                 
                                     <td class="text-wrap">{{ $cart->item->category->category_name }}</td>
                                     <td class="text-wrap">{{ $cart->item->brand->brand_name }}</td>
