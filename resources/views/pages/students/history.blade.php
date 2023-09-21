@@ -63,21 +63,26 @@
                                                                 $items = $order->orderItemTemp;
                                                                 // dd($items);
                                                             @endphp
-                                                            @foreach($items as $item)
-                                                                <div class="mb-5 border border-secondary">
-                                                                    <div class="row text-lg mt-2 mb-2">
-                                                                        <div class="col ml-4">
-                                                                            <strong>Brand:</strong> {{ $item->item->brand->brand_name }} <br>
-                                                                            <strong>Model:</strong> {{ $item->item->model->model_name }} <br>
-                                                                            
-                                                                        </div>
-                                                                        <div class="col mr-4">
-                                                                            <strong>Description:</strong> {{ $item->item->description }} <br>
-                                                                            <strong>Quantity:</strong> {{$item->quantity}} <br>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>  
-                                                            @endforeach
+                                                            <table class="table table-bordered table-striped">
+                                                                <thead>
+                                                                    <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
+                                                                        <th style="width:10%" class="text-wrap">Brand</th>
+                                                                        <th style="width:10%" class="text-wrap">Model</th>
+                                                                        <th style="width:10%" class="text-wrap">Description</th>
+                                                                        <th style="width:10%" class="text-wrap text-center">Quantity</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach($items as $item)
+                                                                        <tr style="background-color: rgba(255, 255, 255, 0.8);">
+                                                                            <td class="text-wrap">{{ $item->item->brand->brand_name }}</td>
+                                                                            <td class="text-wrap">{{ $item->item->model->model_name }}</td>
+                                                                            <td class="text-wrap">{{ $item->item->description }}</td>
+                                                                            <td class="text-wrap">{{ $item->quantity }}</td>
+                                                                        </tr>                
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
                                                         </div>
                                                     </div> 
                                                 </div>
