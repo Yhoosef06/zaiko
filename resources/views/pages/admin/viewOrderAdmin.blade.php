@@ -76,13 +76,19 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
+                    <input type="text" id="student_id_added_admin" name="student_id_added_admin" value="@foreach($order as $index => $item)
+                    @if($index === 0)
+                        {{$item->user_id}}
+                    @endif
+                 @endforeach" class="form-control" style="display:none;">
+                 <input type="text" id="order-id" name="order-id" value="@foreach($order as $index => $item)
+                    @if($index === 0)
+                        {{$item->order_id}}
+                    @endif
+                 @endforeach" class="form-control" style="display:none;">
+                    <form id="submitForm" method="POST" >
                     <div class="card-body table-responsive p-0" style="height: 400px;">
-                      <input type="text" id="student_id_added_admin" name="student_id_added_admin" value="@foreach($order as $index => $item)
-                      @if($index === 0)
-                          {{$item->user_id}}
-                      @endif
-                   @endforeach" class="form-control" style="display:none;">
-                      <form id="submitForm" method="POST" >
+                     
                         @csrf
                         <table class="table table-head-fixed text-nowrap" id="submitAdmin">
                           <thead>
@@ -128,7 +134,7 @@
                                     </select>
                                   </td>
                                   <td>
-                                    <a href="" class="btn btn-danger">Remove</a> 
+                                    <a href="#" data-id="{{ $item->order_item_id }}" class="btn btn-danger order-admin-remove">Remove</a> 
                                   </td>
                                 </tr>
                               @else
@@ -154,25 +160,25 @@
                                     {{ $item->order_quantity }}
                                   </td>
                                   <td>
-                                    <a href="{{ route('remove-borrow', ['id' => $item->order_item_id]) }}" class="btn btn-danger">Remove</a> 
+                                    <a href="#" data-id="{{ $item->order_item_id }}" class="btn btn-danger order-admin-remove">Remove</a>
                                   </td>
                                 </tr>
                               @endif
                             @endforeach
                           </tbody>
                         </table>
-                        <div class="row mb-2">
-                          <div class="col-sm-6">
-                        <input type="date" class="form-control" name="date_returned">
-                      </div>
-                      <div class="col-sm-6">
-                        <button type="submit" id="button-submit-admin" class="btn btn-primary">Submit</button>
-                      </div>
-                      </div>
-                    </form>
+                        
                     </div>
+                    
                     <!-- /.card-body -->
                   </div>
+                  <div class="row mb-2">
+                      
+                    <div class="col-sm-6">
+                      <button type="submit" id="button-submit-admin" class="btn btn-primary">Submit</button>
+                    </div>
+                    </div>
+                  </form>
                   <!-- /.card -->
                 </div>
               </div>

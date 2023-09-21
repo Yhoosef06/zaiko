@@ -55,8 +55,10 @@
                       <td>{{ $borrow->brand }}</td>
                       <td>{{ $borrow->order_quantity }}</td>
                       <td>
-                        <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showBorrow{{$borrow->order_item_id}}"><i class="fa fa-eye"></i></button>
-                        <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#returnBorrow{{$borrow->order_item_id}}"><i class="fa fa-check"></i></button>
+                        {{-- <a href="#" class="btn btn-danger">Remove</a> --}}
+                        <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showBorrow{{$borrow->order_item_id}}">View</button>
+                        <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#returnBorrow{{$borrow->order_item_id}}">Return</button>
+                        <button type="button" class="btn btn-danger" id="btn-lost" >Lost</button>
                       </td>
                     </tr>
 

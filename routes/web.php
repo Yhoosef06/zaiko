@@ -179,6 +179,7 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
     // Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
     // Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
     Route::get('remove-borrow/{id}', [BorrowController::class, 'removeBorrow'])->name('remove-borrow');
+    Route::get('order-admin-remove/{id}', [BorrowController::class, 'orderAdminRemove'])->name('order-admin-remove');
     Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
     Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
     Route::get('/searchItemAdmin', [BorrowController::class, 'searchItemAdmin'])->name('searchItemAdmin');

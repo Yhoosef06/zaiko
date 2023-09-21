@@ -49,18 +49,18 @@
                                                 </thead>
                                                 <tbody>
 
-                                                    @foreach ($borrows as $borrow)
+                                                    @foreach ($overdueItems as $overdueItem)
 
                                           
                                                     <tr>
-                                                        <td>{{ $borrow->id }}</td>
+                                                        <td>{{ $overdueItem->id }}</td>
                                                         <td>
-                                                            {{ $borrow->first_name }} {{ $borrow->last_name }}
+                                                            {{ $overdueItem->first_name }} {{ $overdueItem->last_name }}
                                                         </td>
                                                        
-                                                        <td> {{ \Carbon\Carbon::parse($borrow->date_submitted)->format('F d, Y') }}</td>
+                                                        <td> {{ \Carbon\Carbon::parse($overdueItem->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
-                                                            <a href="{{ route('view-borrow-item', $borrow->id) }}"
+                                                            <a href="{{ route('view-borrow-item', $overdueItem->id) }}"
                                                                 class="btn btn-sm btn-primary" title="Disregard">
                                                                 view</a>
                                                         </td>
