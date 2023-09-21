@@ -55,12 +55,14 @@
                                                 </div>
                                                 <div class="modal-body text-dark">
                                                     <div class="container">
+                                                      
                                                         <div class="container-fluid px-5 text-justify">
                                                             <div class="border border-success rounded px-5 py-5">
                                                                 @php
                                                                     $items = $order->orderItemTemp;
                                                                     // dd($items);
-                                                                @endphp
+                                                                @endphp    
+                                                                
                                                                 @foreach($items as $item)
                                                                     <div class="mb-5 border border-secondary">
                                                                         <div class="row text-lg mt-2 mb-2">

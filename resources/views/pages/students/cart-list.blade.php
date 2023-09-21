@@ -287,7 +287,7 @@
                         <button type="button" class="btn btn-outline-dark" id="addToCartButton" disabled>
                             <a href="{{ route('order.cart') }}"
                                 onclick="return confirm('Are you sure you want to borrow items in cart?')"><i
-                                    class="fa fa-arrow-right"></i> Borrow Items</a>
+                                    class="fa fa-arrow-right"></i> Proceed</a>
                         </button>
                         {{-- <button type="submit" class="btn btn-outline-dark" id="addToCartButton" disabled>
                                 <i class="fa fa-arrow-right"></i> Borrow Items</a>

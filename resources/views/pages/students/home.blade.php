@@ -4,7 +4,7 @@
     <div class="borrower-bg borrower-page-height">
         <div class="content-header">
             <div class="container-fluid">
-                <div class="row mb-2">
+                {{-- <div class="row mb-2">
                     @if (session('success'))
                         <div class="alert alert-success alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -17,7 +17,7 @@
                         </div>
                     @endif
                     
-                </div><!-- /.row -->
+                </div><!-- /.row --> --}}
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content-header -->
