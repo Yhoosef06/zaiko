@@ -1,13 +1,15 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                {{-- Adding distance from the top navigation bar --}}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="text-decoration-underline">Adding New Item</h1>
             </div>
         </div>
-    </section>
+    </div><!-- /.container-fluid -->
+</section>
 
     <section class="content">
         <div class="container-fluid">
@@ -48,7 +50,6 @@
                                 </div>
                                 {{ session()->forget('invalidSerialNumbers') }}
                             @endif
-                            <h3>Adding New Item</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->

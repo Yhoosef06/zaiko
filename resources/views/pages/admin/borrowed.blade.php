@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <a href="{{ route('borrowItem') }}" class="btn btn-primary" >
+                        <a href="{{ route('borrowItem') }}" class="btn btn-default" >
                             <i class="fa fa-plus"> </i>
                             Add to Borrow
                         </a>

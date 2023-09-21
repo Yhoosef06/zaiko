@@ -24,7 +24,7 @@
                 <div class="card-header row">
                   
                   <div class="col md-4 text-right">
-                    <Button type="submit" class="btn btn-success">Generate Report</Button>
+                    <Button type="submit" class="btn btn-warning">Generate Report</Button>
                   </div>
                 </div>
                 <!-- /.card-header -->

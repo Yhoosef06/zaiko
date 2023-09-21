@@ -4,9 +4,11 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                {{-- Adding distance from the top navigation bar --}}
+                <div class="col-sm-6">
+                    <h1 class="text-decoration-underline">Adding New {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }}</h1>
+                </div>
             </div>
-        </div>
+        </div><!-- /.container-fluid -->
     </section>
 
     <section class="content">
@@ -27,8 +29,6 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-
-                            <h3>Adding New {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->

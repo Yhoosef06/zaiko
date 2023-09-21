@@ -1,15 +1,15 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
-                </div>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="text-decoration-underline">List of All Items</h1>
             </div>
-        </div><!-- /.container-fluid -->
-    </section>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
 
     <section class="content">
         <div class="container-fluid">
@@ -28,7 +28,6 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <h3>List of All Items</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

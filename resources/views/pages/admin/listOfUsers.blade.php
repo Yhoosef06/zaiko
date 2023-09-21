@@ -3,12 +3,12 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
-            <div class="text-right">
+            <div class="row mb-2">
                 <div class="col-sm-6">
-                    {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
+                    <h1 class="text-decoration-underline">{{ Auth::user()->account_type == 'faculty' ? 'Students' : 'Users' }}</h1>
                 </div>
             </div>
-        </div>
+        </div><!-- /.container-fluid -->
     </section>
 
     <section class="content">
@@ -28,8 +28,6 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-
-                            <h3>{{ Auth::user()->account_type == 'faculty' ? 'Students' : 'Users' }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

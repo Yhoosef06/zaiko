@@ -3,16 +3,19 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
-            <div class="text-right">
+            <div class="row mb-2">
                 <div class="col-sm-6">
-                    {{-- <h1 class="text-decoration-underline">Inventory</h1> --}}
+                    <h1 class="text-decoration-underline">Departments</h1>
                 </div>
-                {{-- Adding distance from the top navigation bar --}}
-                <button href="#" class="btn btn-default" data-toggle="modal" data-target="#addDepartmentModal">
-                    <i class="fa fa-plus"></i> Add a Department/Program
-                </button>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <button href="#" class="btn btn-default" data-toggle="modal" data-target="#addDepartmentModal">
+                            <i class="fa fa-plus"></i> Add a Department/Program
+                        </button>
+                    </ol>
+                </div>
             </div>
-        </div>
+        </div><!-- /.container-fluid -->
     </section>
 
     <section class="content">
