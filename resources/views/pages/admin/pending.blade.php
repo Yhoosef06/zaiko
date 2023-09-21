@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <a href="{{ route('borrowItem') }}" class="btn btn-primary" >
+                        <a href="{{ route('borrowItem') }}" class="btn btn-primary">
                             <i class="fa fa-plus"> </i>
                             Add to Borrow
                         </a>
@@ -23,93 +23,69 @@
     <section class="content">
         <div id="success-message"></div>
         <div class="container-fluid">
-
-
-
             <div class="row">
                 <div class="col-12 col-sm-12">
-                
-                   
                     <div class="card-body">
-                  
-                            <div class="row">
-                                <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <table id="user-pending" class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    {{-- <th class="d-none">UserID</th> --}}
+                                                    <th>Transaction ID</th>
+                                                    <th>Date Submitted</th>
+                                                    <th>Student Name</th>
+                                                    <th>Option</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
 
-                                    <div class="card">
-                                    
-                                        <div class="card-body">
-                                            <table id="user-pending" class="table table-bordered table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        {{-- <th class="d-none">UserID</th> --}}
-                                                        <th>Transaction ID</th>
-                                                        <th>Date Submitted</th>
-                                                        <th>Student Name</th>
-                                                        <th>Option</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                                                @foreach ($userPendings as $pending)
+                                                    @if ($pending->created_by == 'admin')
+                                                        <tr>
+                                                            <td>{{ $pending->id }}</td>
 
-                                                    @foreach ($userPendings as $pending)
 
-                                                    @if ( $pending->created_by == 'admin')
-                                                    <tr>
-                                                        <td>{{ $pending->id }}</td>
-                                                        
-                                                       
-                                                        <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}</td>
-                                                        <td>
-                                                            {{ $pending->first_name }} {{ $pending->last_name }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ route('view-order-admin', $pending->id) }}"
-                                                                class="btn btn-sm btn-primary" title="Disregard">
-                                                                view</a>
-                                                        </td>
-                                                    </tr>
+                                                            <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $pending->first_name }} {{ $pending->last_name }}
+                                                            </td>
+                                                            <td>
+                                                                <a href="{{ route('view-order-admin', $pending->id) }}"
+                                                                    class="btn btn-sm btn-primary" title="Disregard">
+                                                                    view</a>
+                                                            </td>
+                                                        </tr>
                                                     @else
-                                                    <tr>
-                                                        <td>{{ $pending->id }}</td>
-                                                        
-                                                        <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}</td>
-                                                        <td>
-                                                            {{ $pending->first_name }} {{ $pending->last_name }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ route('view-order-user', $pending->id) }}"
-                                                                class="btn btn-sm btn-primary" title="Disregard">
-                                                                view</a>
-                                                        </td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>{{ $pending->id }}</td>
+
+                                                            <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $pending->first_name }} {{ $pending->last_name }}
+                                                            </td>
+                                                            <td>
+                                                                <a href="{{ route('view-order-user', $pending->id) }}"
+                                                                    class="btn btn-sm btn-primary" title="Disregard">
+                                                                    view</a>
+                                                            </td>
+                                                        </tr>
                                                     @endif
-                                                
-                                                        
-                                                      
-
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
-                                
                                 </div>
-                            
                             </div>
-                          
-        
-                      
-                  
-                    <!-- /.card -->
-                  </div>
-                
-          
-              </div>
-
-
-
-            
-            {{-- <div class="row">
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+                {{-- <div class="row">
                 <div class="col-12">
 
                     <div class="card">
@@ -164,9 +140,9 @@
                 </div>
             
             </div> --}}
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
     </section>
 @endsection
 

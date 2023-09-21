@@ -7,11 +7,10 @@
 </style>
 <aside class="main-sidebar sidebar-dark-olive elevation-4">
     <!-- Brand Logo -->
-    <a @if (Auth::user()->role == 'borrower')
-        href="{{ route('student.dashboard') }}"
+    <a @if (Auth::user()->role == 'borrower') href="{{ route('student.dashboard') }}"
     @else
-    href="{{ route('admin.dashboard') }}"
-    @endif class="brand-link">
+    href="{{ route('admin.dashboard') }}" @endif
+        class="brand-link">
         <span class="brand-text text-center font-weight-light">
             <H1>Zaiko.</H1>
         </span>
@@ -393,33 +392,6 @@
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-circle"></i>
                                 <p>
-                                    Manage Students
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('add_user') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Add New Student</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('view_users') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>View All Students</p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-circle"></i>
-                                <p>
                                     Inventory
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
@@ -446,6 +418,33 @@
                                         <div class="ml-3">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Generate Report</p>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>   
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-circle"></i>
+                                <p>
+                                    Manage Students
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('add_user') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Add New Student</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('view_users') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>View All Students</p>
                                         </div>
                                     </a>
                                 </li>
