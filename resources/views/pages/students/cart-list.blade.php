@@ -15,6 +15,7 @@
                     </div>
                 </div>
             </div>
+<div class="container">
             <div class="card" style="background-color: rgba(255, 255, 255, 0.8);">
                 <div class="card-body">
                     <table id="cart" class="table table-bordered table-striped">
@@ -306,4 +307,5 @@
             </div>
         </div>
     </div>
+</div>
 @endsection
