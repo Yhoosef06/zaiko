@@ -1,195 +1,189 @@
 @extends('layouts.pages.yields')
 
 @section('content-header')
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Items in Cart</h1>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 @endsection
 
 @section('content')
-    <div class="cart-bg cart-height">
-        <table id="cart" class="table">
-            <thead>
-                <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
-                    <th style="width:10%" class="text-wrap">Category</th>
-                    <th style="width:10%" class="text-wrap">Brand</th>
-                    <th style="width:10%" class="text-wrap">Model</th>
-                    <th style="width:25%" class="text-wrap">Description</th>
-                    <th style="width:20%" class="text-wrap text-center">Quantity</th>
-                    <th style="width:10%" class="text-wrap text-center">Actions</th>
-                </tr>
-            </thead>
-            @if ($cartItems != null)
-                <tbody>
-
-                    @foreach ($cartItems as $cart)
-                        <tr style="background-color: rgba(255, 255, 255, 0.8);">
-
-                            <td class="text-wrap">{{ $cart->item->category->category_name }}</td>
-                            <td class="text-wrap">{{ $cart->item->brand->brand_name }}</td>
-                            <td class="text-wrap">{{ $cart->item->model->model_name }}</td>
-                            <td class="text-wrap">{{ $cart->item->description }}</td>
-                            {{-- <td class="text-wrap text-center">
-                                        <i class="fa fa-minus" onclick="updateQuantity('{{ $cart->id }}', -1)"></i>
-                                        <input type="text" name="" id="" value="{{ $cart->quantity }}">
-                                        <i class="fa fa-plus" onclick="updateQuantity('{{ $cart->id }}', 1)"></i>
-                                    </td> --}}
-
-                            <td class="text-center position-relative">
-                                @php
-                                    $catItem = $items
-                                        ->where('category_id', $cart->item->category->id)
-                                        ->where('brand', $cart->item->brand)
-                                        ->where('model', $cart->item->model)
-                                        ->where('borrowed', 'no')
-                                        ->sortByDesc('id');
+<div class="borrower-bg borrower-page-height">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Items in Cart</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="background-color: rgba(255, 255, 255, 0.8);">
+                <div class="card-body">
+                    <table id="cart" class="table table-bordered table-striped">
+                    
+                        <thead>
+                            <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
+                                <th style="width:10%" class="text-wrap">Category</th>
+                                <th style="width:10%" class="text-wrap">Brand</th>
+                                <th style="width:15%" class="text-wrap">Model</th>
+                                <th style="width:35%" class="text-wrap">Description</th>
+                                <th style="width:20%" class="text-wrap text-center">Quantity</th>
+                                <th style="width:10%" class="text-wrap text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        @if($cartItems != null)
+                        <tbody>
+                        
+                                @foreach($cartItems as $cart)
                                     
-                                @endphp
+                                        <tr style="background-color: rgba(255, 255, 255, 0.8);">
+                                        
+                                            <td class="text-wrap">{{ $cart->item->category->category_name }}</td>
+                                            <td class="text-wrap">{{ $cart->item->brand->brand_name }}</td>
+                                            <td class="text-wrap">{{ $cart->item->model->model_name }}</td>
+                                            <td class="text-wrap">{{ $cart->item->description }}</td>
+                                            {{-- <td class="text-wrap text-center">
+                                                <i class="fa fa-minus" onclick="updateQuantity('{{ $cart->id }}', -1)"></i>
+                                                <input type="text" name="" id="" value="{{ $cart->quantity }}">
+                                                <i class="fa fa-plus" onclick="updateQuantity('{{ $cart->id }}', 1)"></i>
+                                            </td> --}}
 
-                                <form action="{{ route('cart.update', $cart->id) }}" method="POST">
-                                    @csrf
-                                    @if ($cart->item->category_id == 5 || $cart->item->category_id == 6 || $cart->item->category_id == 7)
-                                        <div class="row">
-                                            <div class="col md-6">
-                                                @php
-                                                    $missingQty = 0;
-                                                    $borrowedQty = 0;
-                                                    $totalDeduct = 0;
-                                                    foreach ($borrowedList as $borrowed) {
-                                                        if ($borrowed->item_id == $cart->item->id) {
-                                                            $borrowedQty = $borrowedQty + $borrowed->order_quantity;
-                                                        }
-                                                    }
-                                                    
-                                                    foreach ($missingList as $missing) {
-                                                        if ($missing->item_id == $cart->item->id) {
-                                                            $missingQty = $missingQty + $missing->quantity;
-                                                        }
-                                                    }
-                                                    $totalDeduct = $missingQty + $borrowedQty;
+                                            <td class="text-center position-relative">
+                                                @php 
+                                                    $catItem = $items->where('category_id',$cart->item->category->id)->where('brand',$cart->item->brand)->where('model',$cart->item->model)->where('borrowed','no')->sortByDesc('id');
+                                                
                                                     
                                                 @endphp
-                                                {{-- <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
-                                                        @for ($i = 1; $i <= $item->quantity - $totalDeduct; $i++)
-                                                        <option value="{{$i}}">{{$i}}</option>
-                                                        @endfor
-                                                    </select> --}}
+                                            
+                                            <form action="{{ route('cart.update',$cart->id) }}" method="POST">
+                                            @csrf
+                                                @if($cart->item->category_id == 5 || $cart->item->category_id == 6 || $cart->item->category_id == 7)
+                                                    <div class="row">
+                                                        <div class="col md-6">
+                                                            @php
+                                                            $missingQty = 0;
+                                                            $borrowedQty = 0;
+                                                            $totalDeduct = 0;
+                                                            foreach($borrowedList as $borrowed){                                                        
+                                                                if($borrowed->item_id == $cart->item->id){
+                                                                    $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                                }    
+                                                            }
 
-                                                {{-- ___________________ --}}
-                                                <select class="form-control" id="quantity" name="quantity"
-                                                    onchange="this.form.submit()">
-                                                    @for ($i = 1; $i <= $cart->item->quantity - $totalDeduct; $i++)
-                                                        @if ($i == $cart->quantity)
-                                                            <option value="{{ $i }}" selected>{{ $i }}
-                                                            </option>
-                                                        @else
-                                                            <option value="{{ $i }}">{{ $i }}</option>
-                                                        @endif
-                                                    @endfor
-                                                </select>
-                                            </div>
-                                        </div>
-                                    @else
-                                        {{-- <input id="quantity-input" type="number" value="{{ $cart->quantity }}" min="0"
-                                            max="{{ count($catItem) }}"> --}}
-                                        <div class="row">
-                                            <div class="col md-6">
+                                                            foreach ($missingList as $missing) {
+                                                                if($missing->item_id == $cart->item->id){
+                                                                    $missingQty = $missingQty + $missing->quantity;
+                                                                }
+                                                            }
+                                                            $totalDeduct = $missingQty + $borrowedQty;
 
-                                                <select class="form-control" id="quantity" name="quantity"
-                                                    onchange="this.form.submit()">
-                                                    @for ($i = 1; $i <= count($catItem); $i++)
-                                                        @if ($i == $cart->quantity)
-                                                            <option value="{{ $i }}" selected>
-                                                                {{ $i }}</option>
-                                                        @else
-                                                            <option value="{{ $i }}">{{ $i }}
-                                                            </option>
-                                                        @endif
-                                                    @endfor
-                                                </select>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </form>
-                                {{-- <button class="btn btn-default btn-sm plus-btn">
-                                            <i class="fa fa-plus"></i>
-                                        </button> --}}
-                                {{--                                         
-                                        <script>
-                                            $(document).ready(function() {
-                                              $('#quantity').change(function() {
-                                                var selectedQuantity = $(this).val(); // Get the selected value
-                                                
-                                                // Send AJAX request to update the value in the database
-                                                $.ajax({
-                                                  url: '{{ route("cart.update") }}',
-                                                  method: 'POST',
-                                                  data: {
-                                                    quantity: selectedQuantity
-                                                  },
-                                                  headers: {
-                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                  },
-                                                  success: function(response) {
-                                                    // Handle the success response if needed
-                                                  },
-                                                  error: function(xhr, status, error) {
-                                                    // Handle the error if needed
-                                                  }
-                                                });
-                                              });
-                                            });
-                                            </script>
-                                             --}}
+                                                            @endphp
+                                                            {{-- <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
+                                                                @for($i = 1; $i <= $item->quantity-$totalDeduct; $i++)
+                                                                <option value="{{$i}}">{{$i}}</option>
+                                                                @endfor
+                                                            </select> --}}
 
-                            </td>
-                            {{-- <button class="btn btn-danger btn-sm" id="cart_remove"><i class="bi bi-x-circle"></i> Remove</button> --}}
-                            <td class="text-center">
-                                <a class="border-0 text-danger text-decoration-underline"
-                                    onclick="return confirm('Are you sure you want to remove item?')"
-                                    href="{{ route('remove.cart', $cart->id) }}">Delete</a>
-                            </td>
-                        </tr>
-                    @endforeach
+                                                            {{-- ___________________ --}}
+                                                            <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
+                                                                @for($i = 1; $i <= $cart->item->quantity-$totalDeduct; $i++)
+                                                                @if($i == $cart->quantity)
+                                                                    <option value="{{$i}}" selected>{{$i}}</option>
+                                                                @else
+                                                                    <option value="{{$i}}">{{$i}}</option>
+                                                                @endif
+                                                                @endfor
+                                                            </select>
+                                                        </div>
+                                                    </div>      
+                                                @else
+                                                    {{-- <input id="quantity-input" type="number" value="{{ $cart->quantity }}" min="0"
+                                                    max="{{ count($catItem) }}"> --}}
+                                                    <div class="row">
+                                                        <div class="col md-6">
+                                                        
+                                                            <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
+                                                                @for($i = 1; $i <= count($catItem); $i++)
+                                                                @if($i == $cart->quantity)
+                                                                    <option value="{{$i}}" selected>{{$i}}</option>
+                                                                @else
+                                                                    <option value="{{$i}}">{{$i}}</option>
+                                                                @endif
+                                                                @endfor
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </form>
+                                                {{-- <button class="btn btn-default btn-sm plus-btn">
+                                                    <i class="fa fa-plus"></i>
+                                                </button> --}}
+        {{--                                         
+                                                <script>
+                                                    $(document).ready(function() {
+                                                    $('#quantity').change(function() {
+                                                        var selectedQuantity = $(this).val(); // Get the selected value
+                                                        
+                                                        // Send AJAX request to update the value in the database
+                                                        $.ajax({
+                                                        url: '{{ route("cart.update") }}',
+                                                        method: 'POST',
+                                                        data: {
+                                                            quantity: selectedQuantity
+                                                        },
+                                                        headers: {
+                                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                        },
+                                                        success: function(response) {
+                                                            // Handle the success response if needed
+                                                        },
+                                                        error: function(xhr, status, error) {
+                                                            // Handle the error if needed
+                                                        }
+                                                        });
+                                                    });
+                                                    });
+                                                    </script>
+                                                    --}}
+                                                    
+                                            </td>
+                                                {{-- <button class="btn btn-danger btn-sm" id="cart_remove"><i class="bi bi-x-circle"></i> Remove</button> --}}
+                                            <td class="text-center">
+                                                <a class="border-0 text-danger text-decoration-underline" onclick="return confirm('Are you sure you want to remove item?')" href="{{ route('remove.cart', $cart->id)}}">Delete</a>
+                                            </td>
+                                        </tr>
 
 
-                </tbody>
-            @endif
-            <tfoot>
+                                @endforeach
+                        
 
-                @if ($cartItems != null)
-                    <tr>
-                        <td colspan="10" class="text-right">
-                            <a href="{{ route('student.items') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i>
-                                Continue Browsing Items</a>
-                            <a href="{{ route('order.cart') }}" class="btn btn-success" data-toggle="modal"
-                                data-target="#itemModal"><i class="fa fa-arrow-right"></i> Borrow Items</a>
-                        </td>
-                    </tr>
-                @else
-                    <tr>
-                        <td colspan="12" class="text-center">
-                            <a href="{{ route('student.items') }}" class="btn btn-danger"><i class="bi bi-cart-x"></i> No
-                                items in cart</a>
-
-                        </td>
-                    </tr>
-                @endif
-            </tfoot>
-
-        </table>
-        <!-- Modal -->
-        <div class="modal fade bd-example-modal-xl" id="itemModal" tabindex="-1" role="dialog"
-            aria-labelledby="itemModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-dark">
+                        </tbody>       
+                        @endif
+                        <tfoot>
+            
+                            @if($cartItems != null)
+                            <tr>
+                                <td colspan="10" class="text-right">
+                                    <a href="{{ route('student.items') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Continue Browsing Items</a>
+                                    <a href="{{ route('order.cart') }}" class="btn btn-success" data-toggle="modal" data-target="#itemModal"><i class="fa fa-arrow-right"></i> Borrow Items</a>
+                                </td>
+                            </tr>
+                            @else
+                            <tr>
+                                <td colspan="12" class="text-center">
+                                    <a href="{{ route('student.items') }}" class="btn btn-danger"><i class="bi bi-cart-x"></i> No items in cart</a>
+                                    
+                                </td>
+                            </tr>
+                            @endif
+                        </tfoot>
+                        
+                    </table>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade bd-example-modal-xl" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-dark">
                         <h5 class="modal-title" id="itemModalLabel"><b>Borrowing Agreement</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>

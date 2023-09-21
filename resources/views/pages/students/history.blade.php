@@ -12,7 +12,10 @@
                 </div>
             </div>
         </div>
-            <table id="cart" class="table">
+        <div class="card" style="background-color: rgba(255, 255, 255, 0.8);">
+            <div class="card-body">
+                <table id="cart" class="table table-bordered table-striped">
+            
               
                 <thead>
                     <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
@@ -119,7 +122,9 @@
                     @endif
                 </tfoot>
                 
-            </table>
+                </table>
+            </div>
+        </div>
             <!-- Modal -->
             <div class="modal fade bd-example-modal-xl" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl" role="document">
