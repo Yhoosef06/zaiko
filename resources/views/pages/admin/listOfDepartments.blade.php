@@ -38,7 +38,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="listofdepartments" class="table table-bordered table-striped">
+                            <table id="listofusers" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -124,11 +124,6 @@
 
     <script>
         $(document).ready(function() {
-            $('#listofdepartments').DataTable();
-            $('#listofusers').DataTable();
-        });
-
-        $(document).ready(function() {
             $('#addDepartmentModal').on('show.bs.modal', function(event) {
                 var modal = $(this);
 
@@ -140,13 +135,13 @@
 
         function deleteButton(departmentId) {
             // Remove previous highlighting
-            $('#listofdepartments tbody tr').css({
+            $('#listofusers tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
             // Add the highlighted class to the clicked row
-            $('#listofdepartments tbody tr[data-department-id="' + departmentId + '"]').css({
+            $('#listofusers tbody tr[data-department-id="' + departmentId + '"]').css({
                 'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
                 'background-color': '#A9F5F2' // Adjust the color as needed
             });
@@ -156,13 +151,13 @@
             var modal = $('#editDepartmentModal');
 
             // Remove previous highlighting
-            $('#listofdepartments tbody tr').css({
+            $('#listofusers tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
             // Add the highlighted class to the clicked row
-            $('#listofdepartments tbody tr[data-department-id="' + departmentId + '"]').css({
+            $('#listofusers tbody tr[data-department-id="' + departmentId + '"]').css({
                 'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
                 'background-color': '#A9F5F2' // Adjust the color as needed
             });

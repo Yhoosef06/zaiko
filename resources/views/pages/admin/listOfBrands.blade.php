@@ -38,7 +38,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="listofbrands" class="table table-bordered table-striped">
+                            <table id="listofusers" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -162,13 +162,13 @@
 
         function deleteButton(brandId) {
             // Remove previous highlighting
-            $('#listofbrands tbody tr').css({
+            $('#listofusers tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
             // Add the highlighted class to the clicked row
-            $('#listofbrands tbody tr[data-brand-id="' + brandId + '"]').css({
+            $('#listofusers tbody tr[data-brand-id="' + brandId + '"]').css({
                 'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
                 'background-color': '#A9F5F2' // Adjust the color as needed
             });
@@ -178,13 +178,13 @@
             var modal = $('#editBrandModal');
 
             // Remove previous highlighting
-            $('#listofbrands tbody tr').css({
+            $('#listofusers tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
             // Add the highlighted class to the clicked row
-            $('#listofbrands tbody tr[data-brand-id="' + brandId + '"]').css({
+            $('#listofusers tbody tr[data-brand-id="' + brandId + '"]').css({
                 'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
                 'background-color': '#A9F5F2' // Adjust the color as needed
             });
