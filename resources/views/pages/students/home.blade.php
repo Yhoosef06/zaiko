@@ -43,7 +43,7 @@
                                     </div>
                                 @endif
                                 <div class="card-title">
-                                    <h3>Hello {{Auth::user()->first_name}}!</h3>
+                                    <h3>Hello {{Auth::user()->first_name}} {{Auth::user()->last_name}}!</h3>
                                 </div>
                             </div>
                             <div class="container pt-2">
@@ -97,14 +97,13 @@
                                     </div> --}}
                                     <div class="container">
                                         <div class="card">
-                                            
                                             <!-- /.card-header -->
                                             <div class="card-body p-0" style="max-height:50%; overflow-y: auto;">
                                                 <ul class="products-list product-list-in-card pl-2 pr-2">
                                                     <li class="item">
                                                         <div class="container">
                                                             <div class="text-center">
-                                                                <h3><strong>Here, youll have easy access to all the tools and information you need to manage your borrowing activites effortlessly.</strong></h3> 
+                                                                <h3><strong>Here, you'll have easy access to all the tools and information you need to manage your borrowing activites effortlessly.</strong></h3> 
                                                                 <h5>From checking the status of your pending requests to exploring the items you currently borrowed.</h5>
                                                                 <h5>Our user-friendly dashboard is designed to streamline your borrowing experience.</h5>
                                                                 <h5>Stay updated on due dates, review your borrowing history, and initiate new requests with just few clicks.</h5>
@@ -115,7 +114,7 @@
                                                     <li class="item">
                                                         <div class="container">
                                                             <div class="text-center">
-                                                                <a href="{{ route('student.items') }}" class="btn btn-success">Start Borrowing</a>
+                                                                <a href="{{ route('student.items') }}" class="btn btn-lg btn-warning">Start Borrowing</a>
                                                             </div>
                                                         </div>
                                                     </li>
