@@ -7,7 +7,11 @@
 </style>
 <aside class="main-sidebar sidebar-dark-olive elevation-4">
     <!-- Brand Logo -->
-    <a href="#" class="brand-link">
+    <a @if (Auth::user()->role == 'borrower')
+        href="{{ route('student.dashboard') }}"
+    @else
+    href="{{ route('admin.dashboard') }}"
+    @endif class="brand-link">
         <span class="brand-text text-center font-weight-light">
             <H1>Zaiko.</H1>
         </span>
