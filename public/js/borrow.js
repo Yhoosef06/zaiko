@@ -1,13 +1,7 @@
 
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-
-
-
-
     $(function() {
-
-
         $("#borrowed").DataTable({
             "responsive": true,
             "lengthChange": false,
@@ -44,8 +38,6 @@
             "autoWidth": false
 
         });
-
-
     });
 
 

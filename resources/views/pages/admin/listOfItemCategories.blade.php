@@ -38,7 +38,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="listofusers" class="table table-bordered table-striped">
+                            <table id="listofcategories" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -166,13 +166,13 @@
 
         function deleteButton(categoryId) {
             // Remove previous highlighting
-            $('#llistofusers tbody tr').css({
+            $('#listofcategories tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
             // Add the highlighted class to the clicked row
-            $('#listofusers tbody tr[data-category-id="' + categoryId + '"]').css({
+            $('#listofcategories tbody tr[data-category-id="' + categoryId + '"]').css({
                 'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
                 'background-color': '#A9F5F2' // Adjust the color as needed
             });
@@ -183,13 +183,13 @@
             var url = "{{ route('edit_item_category', ['id' => ':categoryId']) }}".replace(':categoryId', categoryId);
 
             // Remove previous highlighting
-            $('#listofusers tbody tr').css({
+            $('#listofcategories tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
             // Add the highlighted class to the clicked row
-            $('#listofusers tbody tr[data-category-id="' + categoryId + '"]').css({
+            $('#listofcategories tbody tr[data-category-id="' + categoryId + '"]').css({
                 'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
                 'background-color': '#A9F5F2' // Adjust the color as needed
             });
