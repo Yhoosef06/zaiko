@@ -1188,8 +1188,6 @@ $(document).ready(function() {
                             console.log(xhr.responseText);
                         }
                     });
-
-
                 }
                 // event.preventDefault();
                 // var orderID = $("#orderID").val();
@@ -1302,7 +1300,6 @@ $(document).ready(function() {
         }
     };
 });
-
 
 $(document).ready(function() {
     $('#submitForm').submit(function(event) {
