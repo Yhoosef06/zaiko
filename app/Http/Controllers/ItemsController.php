@@ -47,23 +47,10 @@ class ItemsController extends Controller
     // dd($itemLogs);
     public function viewItemDetails($id)
     {
-        //admin
-        if (Auth::user()->account_type == 'admin') {
-            $item = Item::find($id);
-            $itemLogs = ItemLog::where('item_id', '=', $id)->get();
+        $item = Item::find($id);
+        $itemLogs = ItemLog::where('item_id', '=', $id)->get();
 
-            return view('pages.admin.viewItemDetails')->with(compact('item', 'itemLogs'));
-        } else {
-            $item = Item::find($id);
-            $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->get();
-            $room = $item->room->room_name;
-            $item['room'] = $room;
-            $model = $item->model;
-            $items = Item::where('model', '=', $model)->get();
-            $itemCategories = ItemCategory::all();
-            return view('pages.admin.viewItemDetails')->with(compact('items', 'rooms', 'itemCategories'));
-        }
+        return view('pages.admin.viewItemDetails')->with(compact('item', 'itemLogs'));
     }
 
     public function addItem()
