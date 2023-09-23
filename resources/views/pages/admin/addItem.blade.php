@@ -16,7 +16,6 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -51,8 +50,6 @@
                             {{ session()->forget('invalidSerialNumbers') }}
                         @endif
 
-                        <!-- /.card-header -->
-                        <!-- form start -->
                         <form action="{{ route('save_new_item') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
@@ -216,7 +213,10 @@
                                             <div class="col">
                                                 <div style="display: flex">
                                                     <input type="text" id="duration" name="duration" value="7"
-                                                        class="form-control" style="width: 45px;" readonly>
+                                                        class="form-control @error('duration')
+                                                            border-danger
+                                                        @enderror"
+                                                        style="width: 45px;" readonly required>
                                                     <label for="" class="radio-inline pl-1">
                                                         day/s
                                                     </label>
@@ -532,14 +532,10 @@
         });
 
         $(document).ready(function() {
-            // Use jQuery to attach the event listener
             $("#duration_type").on("change", function() {
-                // Check the selected value
                 if ($(this).val() === "Specific") {
-                    // If "Specific" is selected, make the input writable
-                    $("#duration").prop("readonly", false).val(""); // Clear the value
+                    $("#duration").prop("readonly", false).val("");
                 } else {
-                    // If "General" is selected, make the input readonly and set the default value to 7
                     $("#duration").prop("readonly", true).val("7");
                 }
             });

@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-body">
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -35,9 +35,6 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
                             <table id="listofcategories" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>

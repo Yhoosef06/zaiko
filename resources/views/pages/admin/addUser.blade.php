@@ -17,20 +17,22 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                            </div>
-                        @elseif (session('danger'))
-                            <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                            </div>
-                        @endif
                         <form action="{{ route('save_new_user') }}" method="POST">
                             @csrf
                             <div class="card-body">
+                                @if (session('success'))
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                    </div>
+                                @elseif (session('danger'))
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                    </div>
+                                @endif
                                 <div class="row">
                                     <div class="col">
                                         <label for="I.D. Number">I.D. Number:</label>

@@ -16,22 +16,20 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                            </div>
-                        @elseif (session('danger'))
-                            <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                            </div>
-                        @endif
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                        <form action="{{ route('download_pdf', ['download' => 'pdf']) }}" method="POST">
-                            @csrf
-                            <div class="card-body">
+                        <div class="card-body">
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
+                            @endif
+                            <form action="{{ route('download_pdf', ['download' => 'pdf']) }}" method="POST">
+                                @csrf
                                 <label for="location">Room/Location: </label>
                                 <div style="display:flex">
                                     <div>
@@ -167,15 +165,15 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- /.card-body -->
-                            <div class="card-footer">
-                                <hr>
-                                <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                                <Button type="submit" class="btn btn-dark">Generate</Button>
-                                <Button type="button" id="saveReferencesBtn" class="btn btn-info">Save
-                                    References</Button>
-                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <hr>
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
+                            <Button type="submit" class="btn btn-dark">Generate</Button>
+                            <Button type="button" id="saveReferencesBtn" class="btn btn-info">Save
+                                References</Button>
+                        </div>
                         </form>
                     </div>
                 </div><!-- /.container-fluid -->

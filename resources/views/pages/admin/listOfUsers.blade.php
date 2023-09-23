@@ -17,18 +17,18 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                            </div>
-                        @elseif (session('danger'))
-                            <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                            </div>
-                        @endif
                         <div class="card-body">
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                </div>
+                            @elseif (session('danger'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                </div>
+                            @endif
                             <table id="listofusers" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>

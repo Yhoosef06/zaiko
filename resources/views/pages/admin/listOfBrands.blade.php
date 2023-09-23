@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-body">
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -35,9 +35,6 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
                             <table id="listofbrands" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -50,7 +47,8 @@
                                     @foreach ($brands as $brand)
                                         @if ($brand->created_at)
                                             @if ($brand->created_at->format('Y-m-d H:i:s') == $dateTime->format('Y-m-d H:i:s'))
-                                                <tr style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); background-color:lightgreen">
+                                                <tr
+                                                    style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); background-color:lightgreen">
                                                     <td>{{ $brand->id }}</td>
                                                     <td> {{ $brand->brand_name }}</td>
                                                     <td>
@@ -80,7 +78,7 @@
                                     @endforeach
                                     @foreach ($brands as $brand)
                                         <tr data-brand-id="{{ $brand->id }}">
-                                            <td>{{ $brand->id}}</td>
+                                            <td>{{ $brand->id }}</td>
                                             <td>{{ $brand->brand_name }}</td>
                                             <td>
                                                 <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
