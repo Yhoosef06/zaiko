@@ -10,7 +10,7 @@
         </section>
 
         <section class="content">
-            <div class="container-fluid"> 
+            <div class="container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-12">
                         <div class="card" style="background-color: rgba(255, 255, 255, 0.75);">
@@ -29,7 +29,7 @@
                                     </div>
                                 @endif
                                 <div class="card-title">
-                                    <h3>Hello {{Auth::user()->first_name}}!</h3>
+                                    <h3>Hello {{ Auth::user()->first_name }}!</h3>
                                 </div>
                             </div>
                             <div class="container">
@@ -127,7 +127,7 @@
     </div>
 
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

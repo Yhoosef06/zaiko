@@ -21,7 +21,8 @@ class PagesController extends Controller
     public function index()
     {
         if (Auth::user()->account_type == 'admin') {
-            $totalItems = Item::sum('quantity');
+            $totalItems = Item::where('parent_item', null)
+            ->sum('quantity');
             $users = User::all();
             $totalUsers = $users->count();
             $totalMissingItems = ItemLog::where('mode', 'missing')
@@ -39,7 +40,8 @@ class PagesController extends Controller
                 ->where('department_id', $manager_dept_id)
                 ->get();
             $items = Item::whereHas('room', function ($query) use ($manager_dept_id) {
-                $query->where('department_id', $manager_dept_id);
+                $query->where('department_id', $manager_dept_id)
+                ->where('parent_item', null);
             })->get();
 
             $totalItems = $items->count();
