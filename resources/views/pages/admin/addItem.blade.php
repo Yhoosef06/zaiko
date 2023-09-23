@@ -16,43 +16,46 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                            </div>
-                        @elseif (session('danger'))
-                            <div class="alert alert-danger alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                            </div>
-                        @elseif(session('invalidSerialNumbers') && session('error'))
-                            <div class="alert alert-danger">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>
-                                    {{ session('error') }}
-                                    @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
-                                        {{ $invalidSerialNumber }},
-                                    @endforeach
-                                </p>
-                            </div>
-                            {{ session()->forget('invalidSerialNumbers') }}
-                        @elseif (session('invalidSerialNumbers') && session('warning'))
-                            <div class="alert alert-warning">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <p><i class="icon fas fa-exclamation-triangle"></i>
-                                    {{ session('warning') }}
-                                    @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
-                                        {{ $invalidSerialNumber }},
-                                    @endforeach
-                                </p>
-                            </div>
-                            {{ session()->forget('invalidSerialNumbers') }}
-                        @endif
-
                         <form action="{{ route('save_new_item') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
+                                @if (session('success'))
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                    </div>
+                                @elseif (session('danger'))
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                    </div>
+                                @elseif(session('invalidSerialNumbers') && session('error'))
+                                    <div class="alert alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>
+                                            {{ session('error') }}
+                                            @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                                {{ $invalidSerialNumber }},
+                                            @endforeach
+                                        </p>
+                                    </div>
+                                    {{ session()->forget('invalidSerialNumbers') }}
+                                @elseif (session('invalidSerialNumbers') && session('warning'))
+                                    <div class="alert alert-warning">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>
+                                            {{ session('warning') }}
+                                            @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                                {{ $invalidSerialNumber }},
+                                            @endforeach
+                                        </p>
+                                    </div>
+                                    {{ session()->forget('invalidSerialNumbers') }}
+                                @endif
                                 <div class="row">
                                     <div class="col">
                                         <label for="location">Room/Location: </label>
@@ -305,7 +308,6 @@
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
-        </div>
         </div>
     </section>
     {{-- FOR ADDING A ROOM --}}
