@@ -86,7 +86,7 @@
                                             // echo $quantity;
                                         @endphp
                                         <div class="col-lg-2 col-6">
-                                            <div class="small-box bg-warning bg-gradient">
+                                            <div class="small-box bg-success bg-gradient">
                                                 <div class="inner">
                                                     <h3>{{ $item->brand->brand_name }}</h3>
                                                     <p>{{ Str::limit($item->model->model_name, 30, '...') }}</p>
