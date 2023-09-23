@@ -240,48 +240,13 @@
                             </li>
                         </ul>
                     </li>
-                @elseif (Auth::user()->account_type == 'reads')
+                @elseif (Auth::user()->role == 'manager')
                     <li class="nav-item">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    {{-- <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>
-                                Borrow Items
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Browse Items</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Borrowed Items</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>History</p>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> --}}
                     @if (Auth::user()->role == 'manager')
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -318,120 +283,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
-                                <p>
-                                    Manage Borrowings
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('pending') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Pending</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('borrowed') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Borrowed Items</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('returned') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Returned Items</p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    @endif
-                @elseif (Auth::user()->account_type == 'faculty')
-                    <li class="nav-item">
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Dashboard</p>
-                        </a>
-                    </li>
-                    {{-- <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>
-                                Borrow Items
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Browse Items</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Borrowed Items</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <div class="ml-3">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>History</p>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> --}}
-                    @if (Auth::user()->role == 'manager')
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-circle"></i>
-                                <p>
-                                    Inventory
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('add_item') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            Add New Item
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('view_items') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>View All Items</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('generate_report') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Generate Report</p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>   
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-circle"></i>
@@ -489,6 +340,23 @@
                                         <div class="ml-3">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Returned Items</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('overdue') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Overdue</p>
+                                        </div>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="{{ route('returned') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Returned</p>
                                         </div>
                                     </a>
                                 </li>
