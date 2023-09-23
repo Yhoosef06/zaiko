@@ -29,7 +29,7 @@
                                     </div>
                                 @endif
                                 <div class="card-title">
-                                    <h3>Hello! {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h3>
+                                    <h3>Hello {{Auth::user()->first_name}}!</h3>
                                 </div>
                             </div>
                             <div class="container">

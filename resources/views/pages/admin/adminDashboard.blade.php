@@ -40,7 +40,7 @@
                                     </div>
                                 @endif
                                 <div class="card-title">
-                                    <h3>Welcome Admin!</h3>
+                                    <h3>Welcome {{Auth::user()->first_name}}!</h3>
                                 </div>
                             </div>
                             <div class="container pt-2">
