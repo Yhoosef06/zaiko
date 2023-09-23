@@ -103,11 +103,11 @@
                                                     <li class="item">
                                                         <div class="container">
                                                             <div class="text-center">
-                                                                <h3><strong>Here, you'll have easy access to all the tools and information you need to manage your borrowing activites effortlessly.</strong></h3> 
-                                                                <h5>From checking the status of your pending requests to exploring the items you currently borrowed.</h5>
-                                                                <h5>Our user-friendly dashboard is designed to streamline your borrowing experience.</h5>
-                                                                <h5>Stay updated on due dates, review your borrowing history, and initiate new requests with just few clicks.</h5>
-                                                                <h4><b>We're here to make borrowing items a breeze, so you can focus on what matters to you.</b></h4>
+                                                                <h3><strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie velit tellus, in consequat ante posuere quis.</strong></h3> 
+                                                                <h5>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</h5>
+                                                                <h5>Integer eu fringilla arcu. Proin risus neque, consectetur eget metus id, tempor tempor lectus.</h5>
+                                                                <h5> Donec lacinia nunc id scelerisque venenatis. Morbi ornare mattis turpis et fringilla.</h5>
+                                                                <h4><b>Aenean tincidunt, orci pellentesque luctus varius, risus ligula blandit augue.</b></h4>
                                                             </div>
                                                         </div>
                                                     </li>
