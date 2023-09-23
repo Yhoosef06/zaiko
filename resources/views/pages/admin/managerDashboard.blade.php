@@ -125,44 +125,4 @@
             </div>
         </section>
     </div>
-
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
-        aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title danger" id="loginModalLabel">Welcome!</h5>
-                </div>
-                <div class="modal-body">
-                    <p class=" text-lg-center">
-                        Before you begin please
-                        @if (Auth::user()->password_updated == false)
-                            <a href="{{ route('change_user_password', ['id_number' => Auth::user()->id_number]) }}">click
-                                this
-                                link</a>
-                        @else
-                            <a href="{{ route('setup_security_question', ['id_number' => Auth::user()->id_number]) }}">click
-                                this
-                                link</a>
-                        @endif
-                        to setup your security settings. Thank you!
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        $(document).ready(function() {
-            var accountType = "{{ auth()->user()->account_type }}";
-
-            if (accountType != 'admin') {
-                if ("{{ auth()->user()->password_updated }}" == 0 ||
-                    "{{ auth()->user()->security_question_id }}" ==
-                    '' || "{{ auth()->user()->answer }}" == '') {
-                    $('#loginModal').modal('show');
-                }
-            }
-        });
-    </script>
 @endsection
