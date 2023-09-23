@@ -11,7 +11,7 @@
             <div class="card-body">
                 <form action="{{ route('student_registration') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <H5>Registering as a Student</H5>
+                    <H5>Registering an account</H5>
 
                     <label for="inputIdNumber" class="sr-only">I.D. Number</label>
                     <input type="text" id="id_number" value="{{ old('id_number') }}" name="id_number"
@@ -85,7 +85,8 @@
                         </div>
                     @enderror
                     <hr>
-                    <a href="{{ route('select_registration_type') }}" class="btn btn-md btn-outline-success">Back</a>
+                    {{-- <a href="{{ route('select_registration_type') }}" class="btn btn-md btn-outline-success">Back</a> --}}
+                    <a href="{{ route('signin.page') }}" class="btn btn-md btn-dark">Cancel</a>
                     <button class="btn btn-md btn-success btn-block" type="submit">Submit</button>
                 </form>
             </div>

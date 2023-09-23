@@ -26,7 +26,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="modal-edit-user-info">Edit
-                    {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }} Information</h4>
+                    {{-- {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }} Information --}}
+                   User Information
+                </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

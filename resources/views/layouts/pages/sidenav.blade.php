@@ -293,7 +293,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-circle"></i>
                                     <p>
-                                        Manage Students
+                                        Manage Users
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -302,7 +302,7 @@
                                         <a href="{{ route('add_user') }}" class="nav-link">
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>Add New Student</p>
+                                                <p>Add New User</p>
                                             </div>
                                         </a>
                                     </li>
@@ -310,7 +310,7 @@
                                         <a href="{{ route('view_users') }}" class="nav-link">
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>View All Students</p>
+                                                <p>View All Users</p>
                                             </div>
                                         </a>
                                     </li>

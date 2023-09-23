@@ -5,7 +5,8 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="text-decoration-underline">{{ Auth::user()->account_type == 'faculty' ? 'Students' : 'Users' }}</h1>
+                    {{-- <h1 class="text-decoration-underline">{{ Auth::user()->account_type == 'faculty' ? 'Students' : 'Users' }}</h1> --}}
+                    <h1 class="text-decoration-underline">List of All Users</h1>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
@@ -105,7 +106,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modal-user-info">
-                        {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }} Information</h4>
+                        {{-- {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }} Information --}}
+                        User Information
+                    </h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
