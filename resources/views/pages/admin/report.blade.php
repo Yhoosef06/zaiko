@@ -16,19 +16,17 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        <div class="card-header">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                                </div>
-                            @elseif (session('danger'))
-                                <div class="alert alert-danger alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                                </div>
-                            @endif
-                        </div>
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                            </div>
+                        @elseif (session('danger'))
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                            </div>
+                        @endif
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form action="{{ route('download_pdf', ['download' => 'pdf']) }}" method="POST">
@@ -40,25 +38,13 @@
                                         <select id="location" name="location"
                                             class="form-control @error('location')
                                                     border-danger @enderror">
-                                            @if (old('location') == true)
-                                                @foreach ($rooms as $room)
-                                                    @if ($room->id == old('location'))
-                                                        <option value="{{ old('location') }}" selected>
-                                                            {{ $room->room_name }}</option>
-                                                    @endif
-                                                @endforeach
-                                                @foreach ($rooms as $room)
-                                                    <option value="{{ $room->id }}">{{ $room->room_name }}
-                                                    </option>
-                                                @endforeach
-                                            @else
-                                                <option value="option_select" disabled selected>Select a room
+                                            <option value="option_select" disabled selected>Select a room</option>
+                                            @foreach ($rooms as $room)
+                                                <option value="{{ $room->id }}"
+                                                    {{ old('location') == $room->id ? 'selected' : '' }}>
+                                                    {{ $room->room_name }}
                                                 </option>
-                                                @foreach ($rooms as $room)
-                                                    <option value="{{ $room->id }}">{{ $room->room_name }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
+                                            @endforeach
                                         </select>
                                         @error('location')
                                             <div class="text-danger">

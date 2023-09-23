@@ -1,35 +1,32 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="text-decoration-underline">List of All Items</h1>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="text-decoration-underline">List of All Items</h1>
+                </div>
             </div>
-        </div>
-    </div><!-- /.container-fluid -->
-</section>
+        </div><!-- /.container-fluid -->
+    </section>
 
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                                </div>
-                            @elseif (session('danger'))
-                                <div class="alert alert-danger alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                                </div>
-                            @endif
-                        </div>
-                        <!-- /.card-header -->
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                            </div>
+                        @elseif (session('danger'))
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                            </div>
+                        @endif
                         <div class="card-body">
                             <table id="listofitems" class="table table-bordered table-striped">
                                 <thead>
@@ -184,7 +181,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         function deleteButton(itemId) {
             // Remove previous highlighting

@@ -1,56 +1,56 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="text-decoration-underline">Adding New Item</h1>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="text-decoration-underline">Adding New Item</h1>
+                </div>
             </div>
-        </div>
-    </div><!-- /.container-fluid -->
-</section>
+        </div><!-- /.container-fluid -->
+    </section>
 
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        <div class="card-header">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                                </div>
-                            @elseif (session('danger'))
-                                <div class="alert alert-danger alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                                </div>
-                            @elseif(session('invalidSerialNumbers') && session('error'))
-                                <div class="alert alert-danger">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>
-                                        {{ session('error') }}
-                                        @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
-                                            {{ $invalidSerialNumber }},
-                                        @endforeach
-                                    </p>
-                                </div>
-                                {{ session()->forget('invalidSerialNumbers') }}
-                            @elseif (session('invalidSerialNumbers') && session('warning'))
-                                <div class="alert alert-warning">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>
-                                        {{ session('warning') }}
-                                        @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
-                                            {{ $invalidSerialNumber }},
-                                        @endforeach
-                                    </p>
-                                </div>
-                                {{ session()->forget('invalidSerialNumbers') }}
-                            @endif
-                        </div>
+
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                            </div>
+                        @elseif (session('danger'))
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                            </div>
+                        @elseif(session('invalidSerialNumbers') && session('error'))
+                            <div class="alert alert-danger">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>
+                                    {{ session('error') }}
+                                    @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                        {{ $invalidSerialNumber }},
+                                    @endforeach
+                                </p>
+                            </div>
+                            {{ session()->forget('invalidSerialNumbers') }}
+                        @elseif (session('invalidSerialNumbers') && session('warning'))
+                            <div class="alert alert-warning">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>
+                                    {{ session('warning') }}
+                                    @foreach (session('invalidSerialNumbers') as $invalidSerialNumber)
+                                        {{ $invalidSerialNumber }},
+                                    @endforeach
+                                </p>
+                            </div>
+                            {{ session()->forget('invalidSerialNumbers') }}
+                        @endif
+
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form action="{{ route('save_new_item') }}" method="POST" enctype="multipart/form-data">

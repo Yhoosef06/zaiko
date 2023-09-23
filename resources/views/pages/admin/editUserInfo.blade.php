@@ -45,35 +45,35 @@
                 <label for="account type">Account Type:</label>
                 <select id="account_type" name="account_type" class="form-control">
                     @if ($user->account_type == 'student')
-                        <option value="student">student</option>
-                        <option value="admin">admin</option>
-                        <option value="reads">reads</option>
+                        <option value="student" selected>student</option>
+                        {{-- <option value="admin">admin</option> --}}
+                        {{-- <option value="reads">reads</option> --}}
                         <option value="faculty">faculty</option>
                     @elseif ($user->account_type == 'admin')
-                        <option value="admin">admin</option>
+                        <option value="admin" selected>admin</option>
                         <option value="student">student</option>
-                        <option value="reads">reads</option>
+                        {{-- <option value="reads">reads</option> --}}
                         <option value="faculty">Faculty</option>
                     @elseif ($user->account_type == 'faculty')
-                        <option value="faculty">faculty</option>
+                        <option value="faculty" selected>faculty</option>
+                        {{-- <option value="reads">reads</option> --}}
+                        {{-- <option value="admin">admin</option> --}}
+                        <option value="student">student</option>
+                    {{-- @else
                         <option value="reads">reads</option>
                         <option value="admin">admin</option>
                         <option value="student">student</option>
-                    @else
-                        <option value="reads">reads</option>
-                        <option value="admin">admin</option>
-                        <option value="student">student</option>
-                        <option value="faculty">faculty</option>
+                        <option value="faculty">faculty</option> --}}
                     @endif
                 </select>
 
                 <label for="account status">Account Status:</label>
                 <select id="account_status" name="account_status" class="form-control">
                     @if ($user->account_status == 'pending')
-                        <option value="pending">pending</option>
+                        <option value="pending" selected>pending</option>
                         <option value="approved">approved</option>
                     @else
-                        <option value="approved">approved</option>
+                        <option value="approved" selected>approved</option>
                         <option value="pending">pending</option>
                     @endif
                 </select>

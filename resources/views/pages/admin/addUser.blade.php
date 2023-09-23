@@ -17,22 +17,17 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        <div class="card-header">
-
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                                </div>
-                            @elseif (session('danger'))
-                                <div class="alert alert-danger alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                                </div>
-                            @endif
-                        </div>
-                        <!-- /.card-header -->
-                        <!-- form start -->
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                            </div>
+                        @elseif (session('danger'))
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                            </div>
+                        @endif
                         <form action="{{ route('save_new_user') }}" method="POST">
                             @csrf
                             <div class="card-body">
@@ -101,21 +96,23 @@
                                     <div class="col">
                                         <label for="account type">Account Type:</label>
                                         <select id="account_type" name="account_type" class="form-control">
-                                            <option value="student">student</option>
-                                            <option value="admin">admin</option>
+                                            <option value="student" selected>student</option>
+                                            @if (Auth::user()->account_type == 'admin')
+                                                <option value="admin">admin</option>
+                                            @endif
                                             <option value="faculty">faculty</option>
-                                            <option value="reads">reads</option>
+                                            {{-- <option value="reads">reads</option> --}}
                                         </select>
 
                                         <label for="account status">Account Status:</label>
                                         <select id="account_status" name="account_status" class="form-control">
-                                            <option value="approved">approved</option>
+                                            <option value="approved" selected>approved</option>
                                             <option value="pending">ending</option>
                                         </select>
 
                                         <label for="account status">Role:</label>
                                         <select id="role" name="role" class="form-control">
-                                            <option value="borrower">borrower</option>
+                                            <option value="borrower" selected>borrower</option>
                                             <option value="manager">manager</option>
                                         </select>
 

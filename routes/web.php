@@ -102,7 +102,6 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
     Route::post('/save-replaced-item-{id}', [ItemsController::class, 'saveReplacedItem'])->name('save_replaced_item');
     Route::get('/check-serial-number/{serial_number}', [ItemsController::class, 'checkSerialNumber'])->name('check_serial_number');
 
-
     // FOR USERS
     Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
     Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
