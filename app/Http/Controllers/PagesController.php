@@ -22,14 +22,14 @@ class PagesController extends Controller
     {
         if (Auth::user()->account_type == 'admin') {
             $totalItems = Item::where('parent_item', null)
-            ->sum('quantity');
+                ->sum('quantity');
             $users = User::all();
             $totalUsers = $users->count();
             $totalMissingItems = ItemLog::where('mode', 'missing')
                 ->sum('quantity');
             $borrowedItems = OrderItem::where('status', 'borrowed')
                 ->sum('order_quantity');
-            return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers','borrowedItems'));
+            return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers', 'borrowedItems'));
         } elseif (Auth::user()->role == 'manager') {
             $manager_dept_id = Auth::user()->department_id;
             $room_dept_id = Room::where('department_id', $manager_dept_id);
@@ -41,13 +41,15 @@ class PagesController extends Controller
                 ->get();
             $items = Item::whereHas('room', function ($query) use ($manager_dept_id) {
                 $query->where('department_id', $manager_dept_id)
-                ->where('parent_item', null);
+                    ->where('parent_item', null);
             })->get();
+            $pendingBorrowItems = Order::where('approval_date', null)->get();
+            $totalPendingBorrowItems = $pendingBorrowItems->count();
 
             $totalItems = $items->count();
             $totalPendingRegistrants = $pendingRegistrants->count();
             $totalApprovedUsers = $approvedUsers->count();
-            return view('pages.admin.managerDashboard')->with(compact('totalPendingRegistrants', 'totalApprovedUsers', 'totalItems'));
+            return view('pages.admin.managerDashboard')->with(compact('totalPendingBorrowItems', 'totalPendingRegistrants', 'totalApprovedUsers', 'totalItems'));
         }
     }
 
