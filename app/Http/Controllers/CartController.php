@@ -44,15 +44,100 @@ class CartController extends Controller
             $item_temp->save();
 
         }else{
+            $itemModel = $item->model->model_name;
+            // dd($itemModel);
+
+            $itemTemps = OrderItemTemp::where('order_id', $order->id)->get();
+
+            $filteredItems = $itemTemps->filter(function ($itemTemp) use ($itemModel) {
+                return $itemTemp->item->model->model_name === $itemModel;
+            });
+            
+            $exists = $filteredItems->isNotEmpty();
+
+            // dd($exists);
+
+            if($exists == false){
+                $item_temp = new OrderItemTemp;
+
+                $item_temp->order_id = $order->id;
+                $item_temp->item_id = $item->id;
+                $item_temp->quantity = $request->quantity;
+
+                $item_temp->save();
+            }else{
+                $borrowedList= OrderItem::where('status', 'borrowed')->get();
+                $missingList = ItemLog::where('mode', 'missing')->get();
+
+                foreach($itemTemps as $itemTemp){
+                    if($itemTemp->item->model->model_name == $itemModel){ 
+                        // dd($itemTemp->item->model->model_name);
+                        if($itemTemp->item->category_id == 5 || $itemTemp->item->category_id == 6 || $itemTemp->item->category_id == 7){
+                            // dd($itemTemp->item->quantity);
+
+                            $missingQty = 0;
+                            $borrowedQty = 0;
+                            $totalDeduct = 0;
+                            foreach($borrowedList as $borrowed){                                                        
+                                if($borrowed->item_id == $item->id){
+                                    $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                }    
+                            }
+                
+                            foreach ($missingList as $missing) {
+                                if($missing->item_id == $itemModel->id){
+                                    $missingQty = $missingQty + $missing->quantity;
+                                }
+                            }
+                                    
+                
+                            $totalDeduct = $missingQty + $borrowedQty;
+                
+                            // dd($totalDeduct);
+                            if($itemTemp->quantity + $request->quantity <= $itemTemp->item->quantity - $totalDeduct){
+                                $itemTemp->quantity = $itemTemp->quantity + $request->quantity;
+                                // dd($itemTemp->quantity);
+                                $itemTemp->save();
+                            }        
+
+                        }else{
+                            // dd($itemTemp->item);
+                            $catItem = $itemTemp->item->where('category_id',$itemTemp->item->category->id)->where('brand_id',$itemTemp->item->brand_id)->where('model_id',$itemTemp->item->model_id)->where('borrowed','no')->count();
+                            
+                            // dd($catItem);
+                            if($itemTemp->quantity + $request->quantity <= $catItem){
+                                $itemTemp->quantity = $itemTemp->quantity + $request->quantity;
+                                // dd($itemTemp->quantity);
+                                $itemTemp->save();
+                            }
+                        }
+                    }else{
+                        
+                        if($itemTemps == null){
+                            $item_temp = new OrderItemTemp;
+
+                            $item_temp->order_id = $order->id;
+                            $item_temp->item_id = $item->id;
+                            $item_temp->quantity = $request->quantity;
+
+                            $item_temp->save();
+                        }
+                    }
+                    
+                }
+            }
+
+           
+            
 
             // dd($order);
-            $item_temp = new OrderItemTemp;
+            // $item_temp = new OrderItemTemp;
 
-            $item_temp->order_id = $order->id;
-            $item_temp->item_id = $item->id;
-            $item_temp->quantity = $request->quantity;
+            // $item_temp->order_id = $order->id;
+            // $item_temp->item_id = $item->id;
+            // $item_temp->quantity = $request->quantity;
 
-            $item_temp->save();
+            // $item_temp->save();
 
             // dd($item_temp);
 
