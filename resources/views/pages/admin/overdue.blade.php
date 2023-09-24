@@ -41,7 +41,9 @@
                                             <table id="user-pending" class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>                                         
-                                                        <th>Order ID</th>
+                                                        <th>Transaction ID</th>
+                                                     
+                                                        <th>Description</th>
                                                         <th>Student Name</th>
                                                         <th>Date Borrowed</th>
                                                         <th>Option</th>
@@ -54,6 +56,8 @@
                                           
                                                     <tr>
                                                         <td>{{ $overdueItem->id }}</td>
+                                                       
+                                                        <td>{{ $overdueItem->description }}</td>
                                                         <td>
                                                             {{ $overdueItem->first_name }} {{ $overdueItem->last_name }}
                                                         </td>
@@ -63,6 +67,12 @@
                                                             <a href="{{ route('view-borrow-item', $overdueItem->id) }}"
                                                                 class="btn btn-sm btn-primary" title="Disregard">
                                                                 view</a>
+                                                                <a href="{{ route('view-borrow-item', $overdueItem->id) }}"
+                                                                    class="btn btn-sm btn-success" title="Disregard">
+                                                                    return</a>
+                                                                    <a href="{{ route('view-borrow-item', $overdueItem->id) }}"
+                                                                        class="btn btn-sm btn-danger" title="Disregard">
+                                                                        lost</a>
                                                         </td>
                                                     </tr>
                                                     

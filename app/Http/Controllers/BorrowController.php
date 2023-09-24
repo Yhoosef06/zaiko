@@ -47,17 +47,27 @@ class BorrowController extends Controller
     public function overdue()
     {   
         $currentDate = Carbon::now();
+        $user = auth()->user();
+        $user_dept_id = $user->department_id;
+        $department = Department::with('college')->find($user_dept_id);
+        $college = $department->college;
 
+     
+        $overdueItems = Order::select('orders.id as order_id', 'users.*','brands.brand_name as brand', 'models.model_name as model','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('departments', 'users.department_id', '=', 'departments.id')
+            ->join('colleges', 'departments.college_id', '=', 'colleges.id')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('item_categories', 'items.category_id', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->where('colleges.id', $college->id)
+            ->where('order_items.date_returned', '<', $currentDate->toDateString())
+            ->where('order_items.status', 'borrowed')
+            ->get();
 
-        $overdueItems = OrderItem::join('users', 'order_items.user_id', '=', 'users.id_number')
-                    ->join('orders', 'order_items.order_id', '=', 'orders.id')
-                    ->join('items', 'order_items.item_id', '=', 'items.id')
-                    ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-                    ->join('models', 'items.model_id', '=', 'models.id')
-                    ->join('brands', 'models.brand_id', '=', 'brands.id')
-                    ->where('order_items.date_returned', '<', $currentDate->toDateString())
-                    ->get();
-      
+  
 
         // echo '<pre>';
         // echo print_r($overdueItems);
@@ -301,7 +311,36 @@ public function orderAdminRemove($id)
     
         return response()->json($response);
     }
+    public function lostItem(Request $request)
+    {
+        $orderItemReturn = $request->orderItemReturn;
+        $itemIdReturn = $request->itemIdReturn;
+        $item_remark = $request->item_remark;
+        $quantity_return = $request->quantity_return;
+        $categoryName = $request->categoryName;
+        $user = auth()->user();
 
+        if($user){
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
+            $id_number = $user->id_number;
+
+            Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'lost']);
+            OrderItem::where('id',$orderItemReturn)->update([ 'status' => 'lost','order_quantity' => $quantity_return , 'remarks' => $item_remark, 'returned_to' => $lastName .', '. $firstName ]);
+            ItemLog::create([
+                'order_item_id' => $orderItemReturn,
+                'item_id' => $itemIdReturn,
+                'encoded_by' => $id_number,
+                'quantity' => $quantity_return,
+                'mode' => 'missing',
+                'date' => Carbon::today(),
+
+            ]);
+            Session::flash('success', 'A lost item has been successfully logged.');
+            return redirect('borrowed');
+            
+        }
+    }
 
     public function addRemark(Request $request)
     {
@@ -316,22 +355,16 @@ public function orderAdminRemove($id)
         if($user){
             $firstName = $user->first_name;
             $lastName = $user->last_name;
+            $id_number = $user->id_number;
         if($categoryName == 'Tools'){
             if( $quantity_return < $borrowOrderQuantity){
-                $available = Item::find($itemIdReturn);
-
-                $availableQuantity = $available->available_quantity;
-                $availableQuantity += $quantity_return;
-
-                $borrowOrderQuantity -= $quantity_return;
-        
-
-
-                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'available_quantity' => $availableQuantity]);
+  
+                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no']);
                 OrderItem::where('id',$orderItemReturn)->update([ 'status' => 'returned','order_quantity' => $quantity_return , 'remarks' => $item_remark, 'returned_to' => $lastName .', '. $firstName ]);
                 ItemLog::create([
                     'order_item_id' => $orderItemReturn,
                     'item_id' => $itemIdReturn,
+                    'encoded_by' => $id_number,
                     'quantity' => $borrowOrderQuantity,
                     'mode' => 'missing',
                     'date' => Carbon::today(),
@@ -340,7 +373,7 @@ public function orderAdminRemove($id)
                 Session::flash('success', 'Successfuly Return.');
                 return redirect('borrowed');
             }else{
-                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no', 'available_quantity' => $availableQuantity]);
+                Item::where('id','=',$itemIdReturn)->update(['borrowed' => 'no']);
                 OrderItem::where('id',$orderItemReturn)->update([ 'status' => 'returned','order_quantity' => $quantity_return , 'remarks' => $item_remark, 'returned_to' => $lastName .', '. $firstName ]);
                 Session::flash('success', 'Successfuly Return.');
                 return redirect('borrowed');
@@ -384,7 +417,7 @@ public function orderAdminRemove($id)
             ->join('item_categories', 'items.category_id', 'item_categories.id')
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->select('orders.id as order_id', 'users.*','brands.brand_name as brand', 'models.model_name as model','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
+            ->select('orders.id as order_id', 'users.*','brands.brand_name as brand', 'models.model_name as model','order_items.id as order_item_id', 'order_items.*', 'items.id as item_id_borrow','item_categories.*')
             ->where('orders.id', $id)
             ->where('order_items.status', 'borrowed')
             ->get();
@@ -427,7 +460,7 @@ public function orderAdminRemove($id)
     public function borrowItem(){
         return view('pages.admin.borrowItem');
     }
-
+   
     public function addItem($id){
         $item = Item::select('items.*', 'brands.brand_name as brand', 'models.model_name as model')
             ->join('models', 'items.model_id', '=', 'models.id')

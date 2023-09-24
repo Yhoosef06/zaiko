@@ -197,7 +197,7 @@
                             @csrf
                             <input type="hidden"  class="form-control" value="{{ $borrow->order_item_id }}" name="orderItemReturn">
                             <input type="hidden"  class="form-control" value="{{ $borrow->item_id_borrow }}" name="itemIdReturn">
-                            <input type="hidden"  class="form-control" value="{{ $borrow->order_quantity }}" name="borrowOrderQuantity">
+                           
                             <input type="hidden"  class="form-control" value="{{ $borrow->category_name }}" name="categoryName">
                           <div class="form-group">
                                       <label>Remarks</label>

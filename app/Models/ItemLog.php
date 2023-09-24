@@ -34,6 +34,10 @@ class ItemLog extends Model
     {
         return $this->hasOne(Room::class, 'id', 'room_to');
     }
+    public function orderItem(): BelongsTo
+    {
+        return $this->belongsTo(OrderItem::class);
+    }
 }
 
 
