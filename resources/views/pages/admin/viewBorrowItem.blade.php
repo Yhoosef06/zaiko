@@ -58,7 +58,7 @@
                         {{-- <a href="#" class="btn btn-danger">Remove</a> --}}
                         <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showBorrow{{$borrow->order_item_id}}">View</button>
                         <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#returnBorrow{{$borrow->order_item_id}}">Return</button>
-                        <button type="button" class="btn btn-danger" id="btn-lost" >Lost</button>
+                        <button type="button" class="btn btn-danger" id="btn-lost" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#lostItem{{$borrow->order_item_id}}">Lost</button>
                       </td>
                     </tr>
 
@@ -99,7 +99,7 @@
                               <div class="col-sm-6">
                                 <div class="form-group">
                                   <label>Brand: </label>
-                                 {{ $borrow->brand_name }}
+                                 {{ $borrow->brand }}
                                 </div>
                               </div>
                             </div>
@@ -108,7 +108,7 @@
                               <div class="col-sm-6">
                                 <div class="form-group">
                                   <label>Model: </label>
-                                  {{ $borrow->model_name }}
+                                  {{ $borrow->model }}
                                 </div>
                               </div>
                               <div class="col-sm-6">
@@ -144,7 +144,7 @@
                       <div class="modal-dialog modal-sm">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h4 class="modal-title">Add Remark</h4>
+                            <h4 class="modal-title">Return Item</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
@@ -160,15 +160,49 @@
                                       <label>Remarks</label>
                                       <textarea class="form-control" rows="3" name="item_remark" placeholder="Enter ..."></textarea>
                           </div>
-                          {{-- <div class="form-group">
-                                      <label>Status</label>
-                                      <select class="form-control" name="status">
-                                        <option value="Active">Active</option>
-                                        <option value="Obsolete">Obsolete</option>
-                                        <option value="Lost">Lost</option>
-                                        <option value="For Repair">For Repair</option>   
-                                      </select>
-                          </div> --}}
+                          <div class="form-group">
+                            <label>Quantity</label>
+                            <select name="quantity_return" class="form-control">
+                              @for ($i = 1; $i <= $borrow->order_quantity; $i++)
+                                <option value="{{ $i }}" {{ $i == $borrow->order_quantity ? 'selected' : '' }}>
+                                  {{ $i }}
+                                </option>
+                              @endfor
+                            </select>
+                           
+                          </div>
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                          </div>
+                          </form>
+                        </div>
+                    
+                      </div>
+                     
+                    </div>
+
+                    <div class="modal fade hide" id="lostItem{{$borrow->order_item_id}}">
+                      <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Lost Item</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                          <form method="POST" action="{{ route('lostItem') }}">
+                            @csrf
+                            <input type="hidden"  class="form-control" value="{{ $borrow->order_item_id }}" name="orderItemReturn">
+                            <input type="hidden"  class="form-control" value="{{ $borrow->item_id_borrow }}" name="itemIdReturn">
+                            <input type="hidden"  class="form-control" value="{{ $borrow->order_quantity }}" name="borrowOrderQuantity">
+                            <input type="hidden"  class="form-control" value="{{ $borrow->category_name }}" name="categoryName">
+                          <div class="form-group">
+                                      <label>Remarks</label>
+                                      <textarea class="form-control" rows="3" name="item_remark" placeholder="Enter ..."></textarea>
+                          </div>
                           <div class="form-group">
                             <label>Quantity</label>
                             <select name="quantity_return" class="form-control">

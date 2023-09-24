@@ -200,6 +200,7 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
 
     // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
     Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
+    Route::post('/lostItem', [BorrowController::class, 'lostItem'])->name('lostItem');
     Route::get('view-order-admin/{id}', [BorrowController::class, 'viewOrderAdmin'])->name('view-order-admin');
     Route::get('view-order-user/{id}', [BorrowController::class, 'viewOrderUser'])->name('view-order-user');
     Route::get('view-borrow-item/{id}', [BorrowController::class, 'viewBorrowItem'])->name('view-borrow-item');

@@ -41,7 +41,7 @@
                                             <table id="user-pending" class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>                                         
-                                                        <th>Order ID</th>
+                                                        <th>Transaction ID</th>
                                                         <th>Student Name</th>
                                                         <th>Date Borrowed</th>
                                                         <th>Option</th>
@@ -53,14 +53,14 @@
 
                                           
                                                     <tr>
-                                                        <td>{{ $borrow->id }}</td>
+                                                        <td>{{ $borrow->transactionId }}</td>
                                                         <td>
                                                             {{ $borrow->first_name }} {{ $borrow->last_name }}
                                                         </td>
                                                        
                                                         <td> {{ \Carbon\Carbon::parse($borrow->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
-                                                            <a href="{{ route('view-borrow-item', $borrow->id) }}"
+                                                            <a href="{{ route('view-borrow-item', $borrow->transactionId) }}"
                                                                 class="btn btn-sm btn-primary" title="Disregard">
                                                                 view</a>
                                                         </td>

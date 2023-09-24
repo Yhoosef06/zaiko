@@ -337,7 +337,7 @@
                                         <a href="{{ route('borrowed') }}" class="nav-link">
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>Borrowed Items</p>
+                                                <p>Borrowed</p>
                                             </div>
                                         </a>
                                     </li>
@@ -345,7 +345,7 @@
                                         <a href="{{ route('returned') }}" class="nav-link">
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>Returned Items</p>
+                                                <p>Returned</p>
                                             </div>
                                         </a>
                                     </li>

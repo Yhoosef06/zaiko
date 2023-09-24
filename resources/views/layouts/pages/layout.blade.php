@@ -1504,7 +1504,7 @@
                             } else if (response.error) {
                                 Swal.fire(
                                     'Error',
-                                    'The serial number does not exist.',
+                                    'The serial number does not exist or is already borrowed.',
                                     'error'
                                 );
                             } else if (response.duplicate) {

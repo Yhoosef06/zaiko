@@ -7,6 +7,9 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\OrderItem;
 use App\Models\OrderItemTemp;
+use App\Models\Room;
+use App\Models\Department;
+use App\Models\College;
 use App\Models\ItemCategory;
 use App\Models\ItemLog;
 use Illuminate\Http\Request;
@@ -22,16 +25,23 @@ class BorrowController extends Controller
 
     public function borrowed()
     {   
-        $borrows = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        $user = auth()->user();
+        $user_dept_id = $user->department_id;
+        $department = Department::with('college')->find($user_dept_id);
+        $college = $department->college;
+
+
+        $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+        ->join('users', 'orders.user_id', '=', 'users.id_number')
+        ->join('departments', 'users.department_id', '=', 'departments.id')
+        ->join('colleges', 'departments.college_id', '=', 'colleges.id')
+        ->where('colleges.id', $college->id)
         ->whereNotNull('orders.approval_date')
         ->whereNotNull('orders.approved_by')
         ->groupBy('orders.user_id')
         ->get();
 
-        // echo '<pre>';
-        // echo print_r($borrows);
-        // echo '</pre>';
-        // exit;
+       
         return view('pages.admin.borrowed')->with(compact('borrows'));
     }
     public function overdue()
@@ -58,13 +68,25 @@ class BorrowController extends Controller
 
     public function pending()
     {
+        $user = auth()->user();
+        $user_dept_id = $user->department_id;
+        $department = Department::with('college')->find($user_dept_id);
+        $college = $department->college;
 
-        $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
-        ->whereNotNull('orders.date_submitted')
-        ->whereNull('orders.approved_by')
-        ->groupBy('orders.id')
-        ->get();
-      
+
+
+       
+        $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('departments', 'users.department_id', '=', 'departments.id')
+            ->join('colleges', 'departments.college_id', '=', 'colleges.id')
+            ->where('colleges.id', $college->id)
+            ->whereNotNull('orders.date_submitted')
+            ->whereNull('orders.approved_by')
+            ->groupBy('orders.id')
+            ->get();
+
+     
 
         return view('pages.admin.pending')->with(compact('userPendings'));
        
@@ -335,9 +357,6 @@ public function orderAdminRemove($id)
             
         }
 
-        
-
-
      
     }
 
@@ -365,17 +384,12 @@ public function orderAdminRemove($id)
             ->join('item_categories', 'items.category_id', 'item_categories.id')
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->select('orders.id as order_id', 'users.*','brands.brand_name', 'models.model_name','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
+            ->select('orders.id as order_id', 'users.*','brands.brand_name as brand', 'models.model_name as model','order_items.id as order_item_id', 'order_items.*', 'items.*','item_categories.*')
             ->where('orders.id', $id)
             ->where('order_items.status', 'borrowed')
             ->get();
 
-         
-    //    echo '<pre>';
-    //     echo print_r($borrows);
-    //     echo '</pre>';
-     
-    //     exit;
+
     
         return view('pages.admin.viewBorrowItem')->with(compact('borrows'));
 
@@ -684,7 +698,7 @@ public function orderAdminRemove($id)
         }
     
         
-        $existingItems = Item::whereIn('serial_number', $serialNumbers)->get();
+        $existingItems = Item::whereIn('serial_number', $serialNumbers)->where('borrowed', 'no')->get();
         
     
         foreach ($serialNumbers as $serialNumber) {

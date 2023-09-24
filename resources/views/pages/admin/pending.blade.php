@@ -44,7 +44,7 @@
                                                 @foreach ($userPendings as $pending)
                                                     @if ($pending->created_by == 'admin')
                                                         <tr>
-                                                            <td>{{ $pending->id }}</td>
+                                                            <td>{{ $pending->transactionId }}</td>
 
 
                                                             <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}
@@ -53,14 +53,14 @@
                                                                 {{ $pending->first_name }} {{ $pending->last_name }}
                                                             </td>
                                                             <td>
-                                                                <a href="{{ route('view-order-admin', $pending->id) }}"
+                                                                <a href="{{ route('view-order-admin', $pending->transactionId) }}"
                                                                     class="btn btn-sm btn-primary" title="Disregard">
                                                                     view</a>
                                                             </td>
                                                         </tr>
                                                     @else
                                                         <tr>
-                                                            <td>{{ $pending->id }}</td>
+                                                            <td>{{ $pending->transactionId }}</td>
 
                                                             <td> {{ \Carbon\Carbon::parse($pending->date_submitted)->format('F d, Y') }}
                                                             </td>
@@ -68,7 +68,7 @@
                                                                 {{ $pending->first_name }} {{ $pending->last_name }}
                                                             </td>
                                                             <td>
-                                                                <a href="{{ route('view-order-user', $pending->id) }}"
+                                                                <a href="{{ route('view-order-user', $pending->transactionId) }}"
                                                                     class="btn btn-sm btn-primary" title="Disregard">
                                                                     view</a>
                                                             </td>
