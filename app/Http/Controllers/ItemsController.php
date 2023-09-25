@@ -180,6 +180,119 @@ class ItemsController extends Controller
         }
     }
 
+    // public function saveNewItem(Request $request)
+    // {
+    //     $serial_numbers = $request->serial_number;
+    //     $quantity = $request->has('quantity_checkbox') ? 1 : $request->input('quantity');
+    //     $randomString = Str::random(10);
+    //     $itemImage = $request->file('item_image');
+    //     $imagePath = null;
+    //     $invalidSerialNumbers = [];
+    //     $validSerialNumbers = [];
+
+    //     if ($itemImage) {
+    //         $imagePath = $itemImage->storeAs(
+    //             'Item Images',
+    //             $randomString . '.' . $itemImage->getClientOriginalExtension(),
+    //             'public'
+    //         );
+    //     }
+
+    //     $this->validate($request, [
+    //         'location' => 'required',
+    //         'item_category' => 'required',
+    //         'item_description' => 'required',
+    //         'aquisition_date' => 'required',
+    //         'inventory_tag' => 'required',
+    //         'quantity' => 'required|numeric|min:1',
+    //         'status' => 'required',
+    //     ]);
+
+    //     if ($serial_numbers !== null) {
+
+    //         foreach ($serial_numbers as $serial_number) {
+
+    //             $validator = Validator::make(['serial_number' => $serial_number], [
+    //                 'serial_number' => ['unique:items,serial_number', 'regex:/^[a-zA-Z0-9]*$/'],
+    //             ]);
+
+    //             if ($validator->fails()) {
+    //                 $invalidSerialNumbers[] = $serial_number;
+    //             } else {
+    //                 $validSerialNumbers[] = $serial_number;
+    //             }
+    //         }
+
+    //         foreach ($validSerialNumbers as $validSerialNumber) {
+    //             $item = Item::create([
+    //                 'serial_number' => $validSerialNumber ? $validSerialNumber : 'N/A',
+    //                 'location' => $request->location,
+    //                 'category_id' => $request->item_category,
+    //                 'brand_id' => $request->brand ? $request->brand : 1,
+    //                 'model_id' => $request->model ? $request->model : 1,
+    //                 'part_number' => $request->part_number ? $request->part_number : 'N/A',
+    //                 'description' => $request->item_description,
+    //                 'aquisition_date' => $request->aquisition_date,
+    //                 'inventory_tag' => $request->inventory_tag,
+    //                 'quantity' => $quantity,
+    //                 'status' => $request->status,
+    //                 'duration_type' => $request->duration_type,
+    //                 'duration' => $request->duration,
+    //                 'borrowed' => 'no',
+    //                 'item_image' =>  $imagePath,
+    //             ]);
+
+    //             $itemLog = new ItemLog();
+    //             $itemLog->item_id = $item->id;
+    //             $itemLog->quantity = $item->quantity;
+    //             $itemLog->encoded_by = Auth::user()->id_number;
+    //             $itemLog->mode = 'added';
+    //             $itemLog->date = now();
+    //             $itemLog->save();
+    //         }
+
+    //         if (!empty($invalidSerialNumbers) && empty($validSerialNumbers)) {
+    //             session()->put('invalidSerialNumbers', $invalidSerialNumbers);
+    //             return redirect('/adding-new-item')->with('error', 'Failed to add item(s) due to invalid serial numbers. Please check the following serial numbers: ');
+    //         } elseif (!empty($invalidSerialNumbers) && !empty($validSerialNumbers)) {
+    //             session()->put('invalidSerialNumbers', $invalidSerialNumbers);
+    //             return redirect('/adding-new-item')->with('warning', 'Item(s) added successfully, but some serial numbers are invalid. Please check the following serial numbers: ');
+    //         } else {
+    //             Session::flash('success', 'Item(s) added successfully. Do you want to add another one?');
+    //             return redirect('/adding-new-item');
+    //         }
+    //     } else {
+    //         $item = Item::create([
+    //             'serial_number' => 'N/A',
+    //             'location' => $request->location,
+    //             'category_id' => $request->item_category,
+    //             'brand_id' => $request->brand ? $request->brand : 1,
+    //             'model_id' => $request->model ? $request->model : 1,
+    //             'part_number' => $request->part_number ? $request->part_number : 'N/A',
+    //             'description' => $request->item_description,
+    //             'aquisition_date' => $request->aquisition_date,
+    //             'inventory_tag' => $request->inventory_tag,
+    //             'quantity' => $quantity,
+    //             'status' => $request->status,
+    //             'duration_type' => $request->duration_type,
+    //             'duration' => $request->duration,
+    //             'borrowed' => 'no',
+    //             'item_image' =>  $imagePath,
+    //         ]);
+
+    //         $itemLog = new ItemLog();
+    //         $itemLog->item_id = $item->id;
+    //         $itemLog->quantity = $item->quantity;
+    //         $itemLog->encoded_by = Auth::user()->id_number;
+    //         $itemLog->mode = 'added';
+    //         $itemLog->date = now();
+    //         $itemLog->save();
+    //     }
+
+    //     Session::flash('success', 'Item(s) added successfully. Do you want to add another one?');
+    //     return redirect('/adding-new-item');
+    // }
+    
     public function saveNewItem(Request $request)
     {
         $serial_numbers = $request->serial_number;
@@ -190,12 +303,24 @@ class ItemsController extends Controller
         $invalidSerialNumbers = [];
         $validSerialNumbers = [];
 
+        if ($request->input('location') == null) {
+            return response()->json(['emptyLocation' => 'Please select a room/location.']);
+        }
+
+        if ($request->input('item_category') == null) {
+            return response()->json(['emptyCategory' => 'Please select a category for the item.']);
+        }
+
         if ($itemImage) {
             $imagePath = $itemImage->storeAs(
                 'Item Images',
                 $randomString . '.' . $itemImage->getClientOriginalExtension(),
                 'public'
             );
+        }
+
+        if ($this->hasDuplicateSerialNumbers($serial_numbers)) {
+            return response()->json(['duplicate' => 'Duplicate serial number(s) detected. Please review your entries']);
         }
 
         $this->validate($request, [
@@ -208,24 +333,19 @@ class ItemsController extends Controller
             'status' => 'required',
         ]);
 
+
         if ($serial_numbers !== null) {
 
             foreach ($serial_numbers as $serial_number) {
-
                 $validator = Validator::make(['serial_number' => $serial_number], [
                     'serial_number' => ['unique:items,serial_number', 'regex:/^[a-zA-Z0-9]*$/'],
                 ]);
 
                 if ($validator->fails()) {
-                    $invalidSerialNumbers[] = $serial_number;
-                } else {
-                    $validSerialNumbers[] = $serial_number;
+                    return response()->json(['error' => 'Serial number(s) already exists in the database']);
                 }
-            }
-
-            foreach ($validSerialNumbers as $validSerialNumber) {
                 $item = Item::create([
-                    'serial_number' => $validSerialNumber ? $validSerialNumber : 'N/A',
+                    'serial_number' => $serial_number ? $serial_number : 'N/A',
                     'location' => $request->location,
                     'category_id' => $request->item_category,
                     'brand_id' => $request->brand ? $request->brand : 1,
@@ -250,17 +370,21 @@ class ItemsController extends Controller
                 $itemLog->date = now();
                 $itemLog->save();
             }
-
-            if (!empty($invalidSerialNumbers) && empty($validSerialNumbers)) {
-                session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-                return redirect('/adding-new-item')->with('error', 'Failed to add item(s) due to invalid serial numbers. Please check the following serial numbers: ');
-            } elseif (!empty($invalidSerialNumbers) && !empty($validSerialNumbers)) {
-                session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-                return redirect('/adding-new-item')->with('warning', 'Item(s) added successfully, but some serial numbers are invalid. Please check the following serial numbers: ');
-            } else {
-                Session::flash('success', 'Item(s) added successfully. Do you want to add another one?');
-                return redirect('/adding-new-item');
-            }
+            // if (!empty($invalidSerialNumbers) && empty($validSerialNumbers)) {
+            //     session()->put('invalidSerialNumbers', $invalidSerialNumbers);
+            // Session::flash('error', 'The following serial number(s) are already found the database: ');
+            // return response()->json(['error' => 'Serial number already exists in the database']);
+            // return redirect('/adding-new-item')->with('error', 'Failed to add item(s). The following serial numbers are already taken:',);
+            // } 
+            // else
+            // if (!empty($invalidSerialNumbers) && !empty($validSerialNumbers)) {
+            //     session()->put('invalidSerialNumbers', $invalidSerialNumbers);
+            //     return redirect('/adding-new-item')->with('warning', 'Item(s) added successfully, but some serial numbers are invalid. Please check the following serial numbers: ');
+            // } else {
+            // dd('2');
+            Session::flash('success', 'Do you want to add another one?');
+            return response()->json(['success' => 'Item(s) added successfully']);
+            // }
         } else {
             $item = Item::create([
                 'serial_number' => 'N/A',
@@ -287,10 +411,15 @@ class ItemsController extends Controller
             $itemLog->mode = 'added';
             $itemLog->date = now();
             $itemLog->save();
-        }
 
-        Session::flash('success', 'Item(s) added successfully. Do you want to add another one?');
-        return redirect('/adding-new-item');
+            Session::flash('success', 'Do you want to add another one?');
+            return response()->json(['success' => 'Item(s) added successfully']);
+        }
+    }
+
+    private function hasDuplicateSerialNumbers($serial_numbers)
+    {
+        return count($serial_numbers) !== count(array_unique($serial_numbers));
     }
 
     public function generateReportPage()

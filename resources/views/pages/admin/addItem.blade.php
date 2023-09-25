@@ -16,7 +16,9 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        <form action="{{ route('save_new_item') }}" method="POST" enctype="multipart/form-data">
+                        {{-- action="{{ route('save_new_item') }}" --}}
+                        <form id="addNewItem" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
                                 @if (session('success'))
@@ -62,7 +64,8 @@
                                         <div style="display:flex">
                                             <select id="location" name="location"
                                                 class="form-control @error('location')
-                                                            border-danger @enderror">
+                                                            border-danger @enderror"
+                                                required>
                                                 <option value="option_select" disabled selected>Choose a room</option>
                                                 @foreach ($rooms as $room)
                                                     <option value="{{ $room->id }}"
@@ -85,7 +88,8 @@
                                         <div style="display:flex">
                                             <select id="item_category" name="item_category"
                                                 class="form-control @error('item_category')
-                                            border-danger @enderror">
+                                            border-danger @enderror"
+                                                required>
                                                 <option value="option_select" disabled selected>Select a category
                                                 </option>
                                                 @foreach ($itemCategories as $category)
@@ -166,7 +170,7 @@
                                             class="form-control @error('item_description')
                                         border-danger
                                         @enderror"
-                                            placeholder="Enter an item description">
+                                            placeholder="Enter an item description" required>
                                         @error('item_description')
                                             <div class="text-danger">
                                                 {{ $message }}
@@ -180,7 +184,7 @@
                                             class="form-control  @error('aquisition_date')
                                             border-danger
                                             @enderror"
-                                            value="{{ old('aquisition_date') }}" placeholder="Aquistion Date">
+                                            value="{{ old('aquisition_date') }}" placeholder="Aquistion Date" required>
                                         @error('aquisition_date')
                                             <div class="text-danger">
                                                 {{ $message }}
@@ -272,7 +276,7 @@
                                                     class="form-control @error('quantity') border-danger @enderror"
                                                     value="{{ old('quantity') }}"
                                                     @if (session('invalidSerialNumbers')) value="{{ old('quantity') }}" @endif
-                                                    placeholder="Enter a quantity" oninput="updateSerialNumberFields()">
+                                                    placeholder="Enter a quantity" oninput="updateSerialNumberFields()" required>
 
                                                 @error('quantity')
                                                     <div class="text-danger">
@@ -300,9 +304,8 @@
                             <div class="card-footer">
                                 <hr>
                                 <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                                <Button type="submit" class="btn btn-success" data-toggle="modal"
-                                    data-target="#modal-submitConfirmation"
-                                    onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')">Save</Button>
+                                <Button type="submit" class="btn btn-success">Save</Button>
+                                {{-- onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')" --}}
                             </div>
                         </form>
                     </div>
@@ -568,6 +571,7 @@
                     // input.value = oldSerialNumberValue || '';
                     input.classList.add('form-control', 'col-10');
                     input.placeholder = 'Enter a serial number.';
+                    input.required = true;
 
                     container.appendChild(label);
                     container.appendChild(input);
@@ -584,6 +588,70 @@
                 }
             }
         }
+
+        $(document).ready(function() {
+            $('#addNewItem').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Please double check your entries.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('save_new_item') }}",
+                            type: "POST",
+                            data: formData,
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire(
+                                        'Success',
+                                        'Item(s) added successfully',
+                                        'success'
+                                    );
+                                    window.location.href =
+                                        "{{ url('adding-new-item') }}";
+
+                                } else if (response.emptyLocation) {
+                                    Swal.fire(
+                                        'Error',
+                                        'Please select a room/location.',
+                                        'error'
+                                    );
+
+                                } else if (response.emptyCategory) {
+                                    Swal.fire(
+                                        'Error',
+                                        'Please select a category for the item.',
+                                        'error'
+                                    );
+                                } else if (response.error) {
+                                    Swal.fire(
+                                        'Error',
+                                        'Serial number(s) already found in the database. Please review your entries.',
+                                        'error'
+                                    );
+                                } else if (response.duplicate) {
+                                    Swal.fire(
+                                        'Error',
+                                        'Duplicate serial number(s) detected. Please review your entries',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.log(xhr.responseText);
+                            }
+                        });
+                    }
+                })
+            });
+        });
     </script>
 
     <style>
