@@ -58,6 +58,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('borrowed-items') }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Borrowed Items <i class="bi bi-handbag-fill"></i></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('history') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>History <i class="bi bi-card-list"></i></p>
