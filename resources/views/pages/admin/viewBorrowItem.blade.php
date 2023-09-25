@@ -32,7 +32,11 @@
                     <h3 class="card-title"><strong>Borrowed Items</strong></h3>
                   </div>
                   <div class="col md-4 text-right">
-                    <Button type="submit" class="btn btn-success">Generate Report</Button>
+                   
+                        <a href="#" class="btn btn-success" data-id="{{ $transactionIds->id }}" id="transactionComplete">Completed</a>            
+                      
+                   
+                   
                   </div>
                 </div>
                 <!-- /.card-header -->
@@ -40,7 +44,7 @@
                 <table id="borrowed" class="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th class="d-none">Order ID</th>
+                      <th class="d-none">Transaction ID</th>
                       <th>Serial</th>
                       <th>Brand</th>
                       <th>QTY Borrowed</th>

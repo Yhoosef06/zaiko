@@ -146,7 +146,12 @@
 
     $(function() {
 
+        $("#user-overdue").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false
 
+        });
         $("#borrowed").DataTable({
             "responsive": true,
             "lengthChange": false,
@@ -1381,6 +1386,42 @@
         });
     });
 
+    $(document).ready(function() {
+    $("#transactionComplete").click(function(e) {
+        var orderId = $(this).data("id");
+        var url = '/complete-transaction/' + orderId;
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: {
+                orderId: orderId
+            },
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire(
+                        'Success',
+                        'Transaction Marked as Complete',
+                        'success'
+                    );
+                    window.location.href = '/borrowed/';
+                } else if (response.error) {
+                    Swal.fire(
+                        'Error',
+                        'There are still items that must be returned.',
+                        'error'
+                    );
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle error response, if needed
+                console.log(xhr.responseText);
+            }
+        });
+    });
+});
+
+   
 
     $(document).ready(function() {
         $(".remove-borrow").click(function(e) {
@@ -1570,22 +1611,7 @@
             });
         });
 
-        // $('.borrowed-approve').click(function(event){
-        //         var form =  $(this).closest("form");
-        //         event.preventDefault();
-        //         Swal.fire({
-        //         position: 'top-end',
-        //         icon: 'success',
-        //         title: 'Borow has been approved,
-        //         showConfirmButton: false,
-        //         timer: 1500
-        //         }).then((result) => {
-        //         if (result.isConfirmed) {
-        //                 form.submit();
-
-        //             }
-        //         });
-        // });
+ 
 
     });
 
@@ -1635,65 +1661,8 @@
         });
     });
 
-    function updateItemQuantity(quantity, rowIndex) {
-        var itemId = $('#item_id_' + rowIndex).val();
-        var orderItemId = $('#order_item_id_' + rowIndex).val();
 
-        console.log(itemId);
-        console.log(quantity);
 
-        $.ajax({
-            url: "{{ route('updateQuantity') }}",
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            },
-            data: {
-                quantity: quantity,
-                itemId: itemId,
-                orderItemId: orderItemId,
-            },
-            success: function(response) {
-
-                console.log(response);
-                //   $('#quantity_' + rowIndex).text(quantity);
-            },
-            error: function(xhr, status, error) {
-                // Handle errors
-                console.error(error);
-            }
-        });
-    }
-
-    function borrowUpdateItemQuantity(quantity, rowIndex) {
-        var itemId = $('#borrow_item_id_' + rowIndex).val();
-        var orderItemId = $('#borrow_order_item_id_' + rowIndex).val();
-
-        console.log(itemId);
-        console.log(quantity);
-
-        $.ajax({
-            url: "{{ route('updateQuantity') }}",
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            },
-            data: {
-                quantity: quantity,
-                itemId: itemId,
-                orderItemId: orderItemId,
-            },
-            success: function(response) {
-
-                console.log(response);
-
-            },
-            error: function(xhr, status, error) {
-                // Handle errors
-                console.error(error);
-            }
-        });
-    }
 </script>
 
 

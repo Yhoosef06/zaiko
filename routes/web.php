@@ -178,6 +178,7 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
     // Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
     // Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
     Route::get('remove-borrow/{id}', [BorrowController::class, 'removeBorrow'])->name('remove-borrow');
+    Route::get('complete-transaction/{id}', [BorrowController::class, 'completeTransaction'])->name('complete-transaction');
     Route::get('order-admin-remove/{id}', [BorrowController::class, 'orderAdminRemove'])->name('order-admin-remove');
     Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
     Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
@@ -194,13 +195,15 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
     Route::post('/submitAdminBorrow', [BorrowController::class, 'submitAdminBorrow'])->name('submitAdminBorrow');
     Route::post('/submitUserBorrow', [BorrowController::class, 'submitUserBorrow'])->name('submitUserBorrow');
     Route::post('/submit-admin-order', [BorrowController::class, 'submitAdminOrder'])->name('submitAdminOrder');
-    Route::post('/updateQuantity', [BorrowController::class, 'updateQuantity'])->name('updateQuantity');
+
 
 
 
     // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
     Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
     Route::post('/lostItem', [BorrowController::class, 'lostItem'])->name('lostItem');
+    Route::post('/lostOverdueItem', [BorrowController::class, 'lostOverdueItem'])->name('lostOverdueItem');
+    Route::post('/returnOverdueItem', [BorrowController::class, 'returnOverdueItem'])->name('returnOverdueItem');
     Route::get('view-order-admin/{id}', [BorrowController::class, 'viewOrderAdmin'])->name('view-order-admin');
     Route::get('view-order-user/{id}', [BorrowController::class, 'viewOrderUser'])->name('view-order-user');
     Route::get('view-borrow-item/{id}', [BorrowController::class, 'viewBorrowItem'])->name('view-borrow-item');

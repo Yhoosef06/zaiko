@@ -48,9 +48,9 @@
                       <td class="d-none">{{ $forReturn->id }}</td>
                       <td>{{ $forReturn->user_id }}</td>
                       <td>{{ $forReturn->order_serial_number}}</td>
-                      <td>{{ $forReturn->brand }}</td>
+                      <td>{{ $forReturn->brand_name }}</td>
                       <td>{{ $forReturn->released_by }}</td>
-                      <td>{{ $forReturn->date_returned }}</td>
+                      <td>{{ $forReturn->returndate }}</td>
                       <td>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#showReturn{{$forReturn->id}}"><i class="fa fa-eye"></i></button>
                     
@@ -61,11 +61,9 @@
                       <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h4 class="modal-title"><span> @foreach ($users as $user)
-                              @if ($user->id_number == $forReturn->user_id)
-                              {{ $user->last_name }}, {{ $user->first_name }} 
-                              @endif
-                        @endforeach</span></h4>
+                            <h4 class="modal-title"><span> 
+                              {{ $forReturn->last_name }}, {{ $forReturn->first_name }} 
+                              </span></h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
@@ -92,17 +90,15 @@
                               <div class="col-sm-6">
                                 <div class="form-group">
                                   <label>Category: </label>
-                                 @foreach ($categories as $category)
-                                        @if ($category->id == $forReturn->category_id)
-                                            {{ $category->category_name }}
-                                        @endif
-                                  @endforeach
+                                 
+                                            {{ $forReturn->category_name }}
+                                     
                                 </div>
                               </div>
                               <div class="col-sm-6">
                                 <div class="form-group">
                                   <label>Brand: </label>
-                                 {{ $forReturn->brand }}
+                                 {{ $forReturn->brand_name }}
                                 </div>
                               </div>
                             </div>
@@ -111,7 +107,7 @@
                               <div class="col-sm-6">
                                 <div class="form-group">
                                   <label>Model: </label>
-                                  {{ $forReturn->model }}
+                                  {{ $forReturn->model_name }}
                                 </div>
                               </div>
                               <div class="col-sm-6">
