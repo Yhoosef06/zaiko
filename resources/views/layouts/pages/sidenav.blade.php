@@ -357,15 +357,6 @@
                                             </div>
                                         </a>
                                     </li>
-
-                                    <li class="nav-item">
-                                        <a href="{{ route('returned') }}" class="nav-link">
-                                            <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Returned</p>
-                                            </div>
-                                        </a>
-                                    </li>
                                 </ul>
                             </li>
                         @endif
