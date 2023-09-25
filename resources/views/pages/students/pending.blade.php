@@ -43,8 +43,9 @@
                                         </td>
                                     </tr>
                                 </tbody>
-
-                                <div class="modal fade bd-example-modal-xl" id="itemModal" tabindex="-1" role="dialog"
+                            @endforeach
+                            </table>
+                            <div class="modal fade bd-example-modal-xl" id="itemModal" tabindex="-1" role="dialog"
                                     aria-labelledby="itemModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-xl" role="document">
                                         <div class="modal-content">
@@ -111,10 +112,10 @@
                                                 });
                                             </script>
 
-                                        </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            </div>
+
                         @else
                             <tbody>
                                 <tr>
@@ -125,7 +126,8 @@
                                 </tr>
                             </tbody>
                         @endif
-                    </table>
+                    
+                    
                 </div>
             </div>
 
