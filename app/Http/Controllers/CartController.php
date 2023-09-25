@@ -270,6 +270,14 @@ class CartController extends Controller
         return view('pages.students.pending')->with(compact('pendingOrder'));
     }
 
+    public function borrowed(){
+        
+        $borrowedItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->get();
+        // dd($borrowedItems);
+      
+        return view('pages.students.borrowed')->with(compact('borrowedItems'));
+    }
+
     
     
 }

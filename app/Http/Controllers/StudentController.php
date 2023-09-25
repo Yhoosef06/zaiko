@@ -122,8 +122,9 @@ class StudentController extends Controller
         // }
     }
 
-    public function borrowList()
+    public function borrowed()
     {
         echo 'test';
     }
+
 }

@@ -247,6 +247,7 @@ Route::middleware(['auth', 'user-role:borrower'])->group(function () {
             Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
             Route::get('/history', [CartController::class, 'history'])->name('history');
             Route::get('/pending-order', [CartController::class, 'pending'])->name('pending-order');
+            Route::get('/borrowed-items', [CartController::class, 'borrowed'])->name('borrowed-items');
             Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
 
 
