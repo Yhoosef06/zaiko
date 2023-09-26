@@ -16,7 +16,7 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        {{-- action="{{ route('save_new_item') }}" --}}
+                        {{-- action="{{ route('save_new_item') }}"  id="addNewItem"--}}
                         <form id="addNewItem" method="POST"
                             enctype="multipart/form-data">
                             @csrf
@@ -292,7 +292,7 @@
                                             </div>
                                             <div class="col">
                                                 <strong>With serial number/s?</strong>
-                                                <input type="checkbox" id="checkbox" name="checkbox" value="1"
+                                                <input type="checkbox" id="checkbox" name="checkbox"
                                                     @if ($errors->has('serial_number'))  @endif
                                                     onchange="updateSerialNumberFields();">
                                             </div>

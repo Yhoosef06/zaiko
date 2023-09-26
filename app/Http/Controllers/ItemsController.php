@@ -292,7 +292,7 @@ class ItemsController extends Controller
     //     Session::flash('success', 'Item(s) added successfully. Do you want to add another one?');
     //     return redirect('/adding-new-item');
     // }
-    
+
     public function saveNewItem(Request $request)
     {
         $serial_numbers = $request->serial_number;
@@ -300,17 +300,15 @@ class ItemsController extends Controller
         $randomString = Str::random(10);
         $itemImage = $request->file('item_image');
         $imagePath = null;
-        $invalidSerialNumbers = [];
-        $validSerialNumbers = [];
-
+       
         if ($request->input('location') == null) {
             return response()->json(['emptyLocation' => 'Please select a room/location.']);
         }
-
+     
         if ($request->input('item_category') == null) {
             return response()->json(['emptyCategory' => 'Please select a category for the item.']);
         }
-
+      
         if ($itemImage) {
             $imagePath = $itemImage->storeAs(
                 'Item Images',
@@ -318,11 +316,7 @@ class ItemsController extends Controller
                 'public'
             );
         }
-
-        if ($this->hasDuplicateSerialNumbers($serial_numbers)) {
-            return response()->json(['duplicate' => 'Duplicate serial number(s) detected. Please review your entries']);
-        }
-
+    
         $this->validate($request, [
             'location' => 'required',
             'item_category' => 'required',
@@ -333,8 +327,11 @@ class ItemsController extends Controller
             'status' => 'required',
         ]);
 
+        if ($serial_numbers != null) {
 
-        if ($serial_numbers !== null) {
+            if ($this->hasDuplicateSerialNumbers($serial_numbers)) {
+                return response()->json(['duplicate' => 'Duplicate serial number(s) detected. Please review your entries']);
+            }
 
             foreach ($serial_numbers as $serial_number) {
                 $validator = Validator::make(['serial_number' => $serial_number], [
