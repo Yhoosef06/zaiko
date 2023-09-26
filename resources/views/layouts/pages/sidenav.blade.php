@@ -7,9 +7,7 @@
 </style>
 <aside class="main-sidebar sidebar-dark-olive elevation-4" style="background-color: rgb(29, 44, 29)">
     <!-- Brand Logo -->
-    <a 
-    @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null) 
-    href="#"
+    <a @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null) href="#"
     @elseif (Auth::user()->role == 'borrower')
         href="{{ route('student.dashboard') }}"
     @else
@@ -152,6 +150,9 @@
                                         <div class="ml-3">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Pending</p>
+                                            @if ($itemcount != 0)
+                                                <span class="badge badge-warning right">{{ $itemcount }}</span>
+                                            @endif
                                         </div>
                                     </a>
                                 </li>
@@ -169,6 +170,9 @@
                                         <div class="ml-3">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Overdue</p>
+                                            @if ($itemcount != 0)
+                                                <span class="badge badge-danger right">{{ $itemcount }}</span>
+                                            @endif
                                         </div>
                                     </a>
                                 </li>
@@ -336,6 +340,9 @@
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Pending</p>
+                                                @if ($itemcount != 0)
+                                                    <span class="badge badge-warning right">{{ $itemcount }}</span>
+                                                @endif
                                             </div>
                                         </a>
                                     </li>
@@ -360,6 +367,9 @@
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Overdue</p>
+                                                @if ($itemcount != 0)
+                                                    <span class="badge badge-danger right">{{ $itemcount }}</span>
+                                                @endif
                                             </div>
                                         </a>
                                     </li>
