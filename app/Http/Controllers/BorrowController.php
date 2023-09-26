@@ -30,7 +30,6 @@ class BorrowController extends Controller
         $department = Department::with('college')->find($user_dept_id);
         $college = $department->college;
 
-
         $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('departments', 'users.department_id', '=', 'departments.id')

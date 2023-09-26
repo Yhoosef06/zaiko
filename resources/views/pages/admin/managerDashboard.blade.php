@@ -54,7 +54,7 @@
                                                     class="fa fa-arrow-alt-circle-up"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Borrowed Items </span>
-                                                <span class="info-box-number">0</span>
+                                                <span class="info-box-number">{{$totalborrowedItems}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -65,7 +65,7 @@
                                                     class="fas fa-tag"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Pending Borrow Items </span>
-                                                <span class="info-box-number">{{$totalPendingBorrowItems}}</span>
+                                                <span class="info-box-number">{{$totalBorrowPendings}}</span>
                                             </div>
                                         </div>
                                     </div>

@@ -20,6 +20,11 @@ class PagesController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+        $user_dept_id = $user->department_id;
+        $department = Department::with('college')->find($user_dept_id);
+        $college = $department->college;
+
         if (Auth::user()->account_type == 'admin') {
             $totalItems = Item::where('parent_item', null)
                 ->sum('quantity');
@@ -43,13 +48,32 @@ class PagesController extends Controller
                 $query->where('department_id', $manager_dept_id)
                     ->where('parent_item', null);
             })->get();
-            $pendingBorrowItems = Order::where('approval_date', null)->get();
-            $totalPendingBorrowItems = $pendingBorrowItems->count();
+            $borrowedItems = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+                ->join('users', 'orders.user_id', '=', 'users.id_number')
+                ->join('departments', 'users.department_id', '=', 'departments.id')
+                ->join('colleges', 'departments.college_id', '=', 'colleges.id')
+                ->where('colleges.id', $college->id)
+                ->WhereNull('orders.order_status')
+                ->whereNotNull('orders.approval_date')
+                ->whereNotNull('orders.approved_by')
+                ->groupBy('orders.id')
+                ->get();
+            $borrowPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+                ->join('users', 'orders.user_id', '=', 'users.id_number')
+                ->join('departments', 'users.department_id', '=', 'departments.id')
+                ->join('colleges', 'departments.college_id', '=', 'colleges.id')
+                ->where('colleges.id', $college->id)
+                ->whereNotNull('orders.date_submitted')
+                ->whereNull('orders.approved_by')
+                ->groupBy('orders.id')
+                ->get();
 
+            $totalborrowedItems = $borrowedItems->count();
+            $totalBorrowPendings = $borrowPendings->count();
             $totalItems = $items->count();
             $totalPendingRegistrants = $pendingRegistrants->count();
             $totalApprovedUsers = $approvedUsers->count();
-            return view('pages.admin.managerDashboard')->with(compact('totalPendingBorrowItems', 'totalPendingRegistrants', 'totalApprovedUsers', 'totalItems'));
+            return view('pages.admin.managerDashboard')->with(compact('totalBorrowPendings','totalborrowedItems', 'totalPendingRegistrants', 'totalApprovedUsers', 'totalItems'));
         }
     }
 
