@@ -40,7 +40,7 @@
                             </label>
                             <select id="department_id" name="department_id"
                                 class="form-control @error('department_id') border-danger @enderror">
-                                <option value="" disabled>Select a Program</option>
+                                <option value="{{$user->department_id}}" selected>{{$user->departments->department_name}}</option>
                                 @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
                                     <optgroup label="{{ $collegeName }}">
                                         @foreach ($departmentsGroup as $department)
@@ -52,7 +52,6 @@
                                     </optgroup>
                                 @endforeach
                             </select>
-
                             <hr>
                             <div>
                                 <a href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}"
