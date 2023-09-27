@@ -1514,6 +1514,52 @@
         });
     });
 
+    $(document).ready(function() {
+        $(".order-user-remove").click(function(e) {
+            var orderId = $(this).data("id");
+            var currentOrderId = $("#order-user-id").val().trim();
+            var url = '/order-user-remove/' + orderId;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        data: {
+                            orderId: orderId
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire(
+                                    'Success',
+                                    'Successfully Removed',
+                                    'success'
+                                );
+                                // Redirect to another page after success
+                                window.location.href = '/view-order-user/' +
+                                    currentOrderId;
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle error response, if needed
+                            console.log(xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    });
+
 
 
     $(document).ready(function() {

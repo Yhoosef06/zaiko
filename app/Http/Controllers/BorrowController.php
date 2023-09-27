@@ -166,11 +166,26 @@ class BorrowController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function orderUserRemove($id)
+    {
+        $item = OrderItemTemp::where('id',$id)->first();
+
+        if( $item->quantity > 1){
+            $newQty = $item->quantity - 1;
+            OrderItemTemp::where('id',$id)->update(['quantity' => $newQty]);
+            return response()->json(['success' => true]);
+        }else{
+            $item->delete();
+            return response()->json(['success' => true]);
+        }
+
+    }
+
     public function searchUser(Request $request)
     {
         $query = $request->input('query');
 
-        $users = User::where('account_status', 'approved')->where('role', 'borrower')->where('id_number', 'LIKE', $query . '%')->take(10)->get();
+        $users = User::where('account_status', 'approved')->where('id_number', 'LIKE', $query . '%')->take(10)->get();
 
         $response = $users->map(function ($user) {
             return [
@@ -526,7 +541,7 @@ class BorrowController extends Controller
             ->distinct()
             ->count();
 
-        $orders = Order::select('orders.id as order_id', 'item_categories.category_name', 'order_item_temps.quantity as orderQty', 'items.quantity as itemQty', 'items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name', 'items.serial_number', 'brands.brand_name', 'models.model_name', 'items.description', 'order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
+        $orders = Order::select('orders.id as order_id', 'item_categories.category_name', 'order_item_temps.quantity as orderQty', 'items.quantity as itemQty', 'items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name', 'items.serial_number', 'brands.brand_name', 'models.model_name', 'items.description', 'order_item_temps.id as orderItempId','order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
             ->join('items', 'order_item_temps.item_id', '=', 'items.id')

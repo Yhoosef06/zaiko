@@ -14,12 +14,12 @@
 
                 <div class="col-sm-6">
         
-                  <div class="form-group">
+                  {{-- <div class="form-group">
                       <div id="search-item-user-to-borrow">
                           <input type="text" id="searchItemUser" name="searchItemUser" class="form-control"
                               placeholder="Search Item to Borrow - Serial Number or Item Description" required>
                       </div>     
-                  </div>
+                  </div> --}}
 
                   
 
@@ -38,11 +38,16 @@
                   <div class="card">
                    
                     <!-- /.card-header -->
+                    <input type="text" id="order-user-id" name="order-id" value="@foreach($orders as $index => $item)
+                    @if($index === 0)
+                        {{$item->order_id}}
+                    @endif
+                 @endforeach" class="form-control"  style="display:none;">
                     <div class="card-body table-responsive p-0" id="viewOrderUserShowTable" style="height: 130px; display:none;">
                       <table class="table table-head-fixed text-nowrap" id="orderUser">
                         <thead>
                           <tr>
-                            <th class="d-none">ID</th>
+                            <th >ID</th>
                             <th class="d-none">ItemId</th>
                             <th class="d-none">Order ID</th>
                             <th style="background-color:#343a40; color:aliceblue">Brand</th>
@@ -79,6 +84,7 @@
                           <table class="table table-head-fixed text-nowrap" id="submitUser">
                             <thead>
                               <tr>
+                                <th class="d-none">Order Item Temp</th>
                                 <th class="d-none">ORDER ID</th>
                                 <th class="d-none">Item ID</th>
                                 <th class="d-none">Duration</th>
@@ -106,6 +112,9 @@
                                 @endphp
                                         <tr>
                                           <td class="d-none">
+                                            <input type="text" name="orderItemTemp" value="{{ $item->orderItempId }}">
+                                          </td>
+                                          <td class="d-none">
                                             <input type="text" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                           </td>
                                           <td class="d-none">
@@ -129,7 +138,7 @@
                                             <input type="hidden" name="quantity[]" value="1">1
                                           </td>
                                           <td>
-                                            <a href="#" class="btn btn-danger">Remove</a>
+                                            <a href="#" data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
                                           </td>
                                         </tr>
                                     @endfor
@@ -138,6 +147,9 @@
                                   
                             @elseif ($item->category_name === 'Tools')
                                   <tr>
+                                    <td class="d-none">
+                                      <input type="text" name="orderItemTemp" value="{{ $item->orderItempId }}">
+                                    </td>
                                     <td class="d-none">
                                       <input type="text" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                     </td>
@@ -182,13 +194,16 @@
                                       </select>
                                     </td>
                                     <td>
-                                      <a href="#" class="btn btn-danger">Remove</a>
+                                      <a href="#" data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
                                     </td>
                                   </tr>
-                            @else
+                            {{-- @else
                                   <tr>
+                                    <td class="d-none">
+                                      <input type="text" name="orderItemTemp" value="">
+                                    </td>
                                     <td class="d-none" >
-                                      <input type="text" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                      <input type="text" name=" []" value="{{ $item->order_id }}"> {{ $item->order_id }}
                                     </td>
                                     <td class="d-none">
                                       <input type="text" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
@@ -206,9 +221,9 @@
                                       <input type="hidden" name="quantity[]" value="1">1
                                     </td>
                                     <td>
-                                      <a href="#" class="btn btn-danger">Remove</a>
+                                      <a href="#" data-id="{{ $item->order_item_id }}" class="btn btn-danger order-admin-remove">Remove</a>
                                     </td>
-                                  </tr>
+                                  </tr> --}}
                             @endif
                           @endforeach
 

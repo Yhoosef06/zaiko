@@ -175,7 +175,7 @@
                                                                             @endfor
                                                                         </select>
                                                                     @endif
-                                                                    @if ($item->category_id == 5 || $item->category_id == 6 || $item->category_id == 7)
+                                                                    @if ($item->category_id == 5 || $item->category_id == 6 || $item->category_id == 7 )
                                                                         @php
                                                                             $missingQty = 0;
                                                                             $borrowedQty = 0;
