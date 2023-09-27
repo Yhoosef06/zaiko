@@ -96,10 +96,16 @@
                             <tr>
                                 <td>{{ $item->id }}</td>
                                 <td>{{ $item->brand->brand_name }}</td>
-                                <td>{{ $item->model->model_name }}</td>
+                                <td>
+                                    @if ($item->model == null)
+                                        No Model
+                                    @else
+                                        {{ $item->model->model_name }}
+                                    @endif
+                                </td>
                                 <td>{{ $item->description }}</td>
                                 <td>{{ $item->quantity }}</td>
-                                <td>{{$item->aquisition_date}}</td>
+                                <td>{{ $item->aquisition_date }}</td>
                                 <td style="font-size: 12px"><b>{{ $item->status }}</b></td>
                                 <td>{{ $item->inventory_tag }}
                                 </td>
