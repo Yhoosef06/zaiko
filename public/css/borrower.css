@@ -1,14 +1,18 @@
 .borrower-bg {
-    background-image: url('/images/usjr main.jpg');
+    /* background-image: url('/images/usjr main.jpg'); */
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-position: center left;
+ 
+    
     
     /* Optional: Scale the background image to cover the entire element */
     /* Add other background properties as needed */
     
 }
+
+
 
 .borrower-page-height{
     height: 95vh;

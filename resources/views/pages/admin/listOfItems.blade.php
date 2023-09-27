@@ -36,6 +36,7 @@
                                         <th>Model</th>
                                         <th>Category</th>
                                         <th>Description</th>
+                                        <th>Location</th>
                                         <th>Quantity</th>
                                         <th>Actions</th>
                                     </tr>
@@ -51,9 +52,9 @@
                                                 {{ $item->model_id ? $item->model->model_name : 'N/A' }}
                                             </td>
                                             <td>{{ $item->category->category_name }}</td>
-                                            <td>{{ Str::limit($item->description, 20, '...') }}
+                                            <td>{{ Str::limit($item->description, 20, '...') }}</td>
+                                            <td>{{ $item->room->room_name }}</td>
                                             <td>{{ $item->quantity }}</td>
-                                            </td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#modal-item-details" data-toggle="tooltip" title='View'
