@@ -39,7 +39,7 @@
                                 {{ Auth::user()->account_type == 'student' ? 'Program:' : 'Department:' }}
                             </label>
                             <select id="department_id" name="department_id"
-                                class="form-control @error('department_id') border-danger @enderror">
+                                class="form-control @error('department_id') border-danger @enderror" disabled>
                                 <option value="{{$user->department_id}}" selected>{{$user->departments->department_name}}</option>
                                 @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
                                     <optgroup label="{{ $collegeName }}">

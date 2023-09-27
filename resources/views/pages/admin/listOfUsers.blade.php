@@ -34,7 +34,7 @@
                                     <tr>
                                         <th>ID #</th>
                                         <th>Name</th>
-                                        <th>Type</th>
+                                        {{-- <th>Type</th> --}}
                                         <th>Status</th>
                                         <th>Department</th>
                                         <th>Actions</th>
@@ -47,7 +47,7 @@
                                             <tr data-user-id="{{ $user->id_number }}">
                                                 <td>{{ $user->id_number }}</td>
                                                 <td>{{ $user->first_name }} {{ $user->last_name }}</td>
-                                                @if ($user->account_type == 'student')
+                                                {{-- @if ($user->account_type == 'student')
                                                     <td>{{ 'Student' }}</td>
                                                 @elseif ($user->account_type == 'admin')
                                                     <td>{{ 'Admin' }}</td>
@@ -55,7 +55,7 @@
                                                     <td>{{ 'Faculty' }}</td>
                                                 @else
                                                     <td>{{ 'READS' }}</td>
-                                                @endif
+                                                @endif --}}
 
                                                 @if ($user->account_status == 'pending')
                                                     <td><span class="bg-warning p-1 m-1"
