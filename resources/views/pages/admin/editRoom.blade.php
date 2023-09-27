@@ -2,13 +2,23 @@
     enctype="multipart/form-data">
     @csrf
     <label for="">Department Name:</label>
-    <select class="form-control @error('department_id') border-danger @enderror" name="department_id" id="department_id"
-        required>
-        <option value="{{ $room->department_id }}">{{ $room->department->department_name }}</option>
-        @foreach ($departments as $department)
-            <option value="{{ $department->id }}">{{ $department->department_name }}</option>
-        @endforeach
-    </select>
+    @if (isset($departments))
+        <select id="department_id" name="department_id"
+            class="form-control @error('department_id') border-danger @enderror">
+            <option value="" disabled selected>Select a Program/Department
+            </option>
+            @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                <optgroup label="{{ $collegeName }}">
+                    @foreach ($departmentsGroup as $department)
+                        <option value="{{ $department->id }}"
+                            {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                            {{ $department->department_name }}
+                        </option>
+                    @endforeach
+                </optgroup>
+            @endforeach
+        </select>
+    @endif
     <label for="">Room Name:</label>
     <input type="text" name="room_name" id="room_name" placeholder="Enter a room name" class="form-control"
         value="{{ $room->room_name }}">

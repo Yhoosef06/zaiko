@@ -74,9 +74,27 @@ class RoomController extends Controller
 
     public function editRoom($id)
     {
-        $departments = Department::all();
-        $room = Room::find($id);
-        return view('pages.admin.editRoom')->with(compact('room', 'departments'));
+        if (Auth::user()->account_type == 'admin') {
+            $room = Room::find($id);
+            $departments = Department::with('college')->get();
+
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
+            return view('pages.admin.editRoom')->with(compact('room', 'departments'));
+        } else {
+
+            $room = Room::find($id);
+            $room_dept_id = $room->department_id;
+            $room_department = Department::find($room_dept_id);
+            $room_college_id = $room_department->college_id;
+            $departments = Department::with('college')->where('college_id', $room_college_id)->get();
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
+
+            return view('pages.admin.editRoom')->with(compact('room', 'departments'));
+        }
     }
 
     public function saveEditedRoom(Request $request, $id)
