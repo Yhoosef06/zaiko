@@ -30,7 +30,7 @@ class UserController extends Controller
             $departments = Department::all();
 
             return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
-        } else if (Auth::user()->account_type == 'faculty') {
+        } else if (Auth::user()->role == 'manager') {
             $userDeptId = Auth::user()->department_id;
             $userCollegeId = Department::where('id', $userDeptId)->value('college_id');
 
