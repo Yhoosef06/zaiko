@@ -58,7 +58,7 @@ class ItemsController extends Controller
         //admin
         if (Auth::user()->account_type == 'admin') {
             $rooms = Room::all();
-            $brands = Brand::all();
+            $brands = Brand::all()->sortBy('brand_name');
             $models = Models::all();
             $itemCategories = ItemCategory::all();
             $departments = Department::with('college')->get();
@@ -70,7 +70,7 @@ class ItemsController extends Controller
         } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
-            $brands = Brand::all();
+            $brands = Brand::all()->sortBy('brand_name');
             $models = Models::all();
             $itemCategories = ItemCategory::all();
             return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories', 'brands', 'models'));
