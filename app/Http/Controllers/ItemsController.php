@@ -351,7 +351,7 @@ class ItemsController extends Controller
                     'description' => $request->item_description,
                     'aquisition_date' => $request->aquisition_date,
                     'inventory_tag' => $request->inventory_tag,
-                    'quantity' => $quantity,
+                    'quantity' => 1,
                     'status' => $request->status,
                     'duration_type' => $request->duration_type,
                     'duration' => $request->duration,
