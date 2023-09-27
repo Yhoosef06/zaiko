@@ -38,7 +38,7 @@ class SignInController extends Controller
                 } elseif (auth()->user()->security_question_id == null) {
                     return redirect()->route('setup_security_question', ['id_number' => auth()->user()->id_number]);
                 } else {
-                    return redirect()->route('admin.dashboard');
+                    return view('pages.admin.managerDashboard');
                 }
             } else if (auth()->user()->role == 'borrower') {
                 $userId = auth()->user()->id_number;
