@@ -258,7 +258,7 @@
                         </li>
                     @elseif (Auth::user()->role == 'manager')
                         <li class="nav-item">
-                            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                            <a href="{{ route('dashboard') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Dashboard</p>
                             </a>

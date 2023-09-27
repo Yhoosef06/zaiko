@@ -64,6 +64,7 @@ Route::get('/setup-security-question-{id_number}', [SecurityQuestionController::
 Route::post('/store-security-question-{id_number}', [SecurityQuestionController::class, 'storeSecurityQuestion'])->name('store_security_question');
 
 //common
+Route::get('/dashboard', [PagesController::class, 'index'])->name('dashboard');
 Route::get('change-user-{id_number}-password', [UserController::class, 'changeUserPassword'])->name('change_user_password');
 Route::post('updating-user-{id_number}-password', [UserController::class, 'saveUserNewPassword'])->name('save_user_new_password');
 Route::get('profile-{id_number}', [UserController::class, 'viewProfile'])->name('view_profile');
