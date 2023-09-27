@@ -74,14 +74,14 @@ Route::get('modify-security-question-{id_number}', [UserController::class, 'modi
 Route::post('save-modified-security-question-{id_number}', [UserController::class, 'saveModifiedSecurityQuestion'])->name('save_modified_security_question');
 
 //admin
-Route::middleware(['auth', 'user-status:admin|students|faculty'])->group(function () {
+Route::middleware(['auth', 'user-status:admin|student|faculty'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
     // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
     // Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');
-    
+
     // FOR ITEMS
     Route::get('adding-new-item', [ItemsController::class, 'addItem'])->name('add_item');
     Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
