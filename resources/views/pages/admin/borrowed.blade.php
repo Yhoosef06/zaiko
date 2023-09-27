@@ -61,7 +61,7 @@
                                                         <td> {{ \Carbon\Carbon::parse($borrow->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
                                                             <a href="{{ route('view-borrow-item', $borrow->transactionId) }}"
-                                                                class="btn btn-sm btn-primary" title="Disregard">
+                                                                class="btn btn-sm btn-primary" >
                                                                 view</a>
                                                         </td>
                                                     </tr>
