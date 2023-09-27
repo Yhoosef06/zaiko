@@ -18,7 +18,7 @@ class SignInController extends Controller
     {
         $input = $request->all();
         $this->validate($request, [
-            'id_number' => 'required',
+            'id_number' => 'required|regex:/^[a-zA-Z0-9]*$/',
             'password' => 'required'
         ]);
 
