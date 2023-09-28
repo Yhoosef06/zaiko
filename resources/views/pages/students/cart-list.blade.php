@@ -52,32 +52,15 @@
                                                 @php 
                                                     $catItem = $items->where('category_id',$cart->item->category->id)->where('brand',$cart->item->brand)->where('model',$cart->item->model)->where('borrowed','no')->sortByDesc('id');
                                                 
-                                                    
+                                                     
                                                 @endphp
                                             
                                             <form action="{{ route('cart.update',$cart->id) }}" method="POST">
                                             @csrf
-                                                @if($cart->item->category_id == 5 || $cart->item->category_id == 6 || $cart->item->category_id == 7)
+                                               
                                                     <div class="row">
                                                         <div class="col md-6">
-                                                            @php
-                                                            $missingQty = 0;
-                                                            $borrowedQty = 0;
-                                                            $totalDeduct = 0;
-                                                            foreach($borrowedList as $borrowed){                                                        
-                                                                if($borrowed->item_id == $cart->item->id){
-                                                                    $borrowedQty = $borrowedQty + $borrowed->order_quantity;
-                                                                }    
-                                                            }
-
-                                                            foreach ($missingList as $missing) {
-                                                                if($missing->item_id == $cart->item->id){
-                                                                    $missingQty = $missingQty + $missing->quantity;
-                                                                }
-                                                            }
-                                                            $totalDeduct = $missingQty + $borrowedQty;
-
-                                                            @endphp
+                                                            
                                                             {{-- <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
                                                                 @for($i = 1; $i <= $item->quantity-$totalDeduct; $i++)
                                                                 <option value="{{$i}}">{{$i}}</option>
@@ -86,34 +69,47 @@
 
                                                             {{-- ___________________ --}}
                                                             <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
-                                                                @for($i = 1; $i <= $cart->item->quantity-$totalDeduct; $i++)
-                                                                @if($i == $cart->quantity)
-                                                                    <option value="{{$i}}" selected>{{$i}}</option>
-                                                                @else
-                                                                    <option value="{{$i}}">{{$i}}</option>
+                                                                @if($cart->item->serial_number == null || $cart->item->serial_number =='N/A')
+                                                                    @php
+                                                                    $missingQty = 0;
+                                                                    $borrowedQty = 0;
+                                                                    $totalDeduct = 0;
+                                                                    foreach($borrowedList as $borrowed){                                                        
+                                                                        if($borrowed->item_id == $cart->item->id){
+                                                                            $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                                        }    
+                                                                    }
+        
+                                                                    foreach ($missingList as $missing) {
+                                                                        if($missing->item_id == $cart->item->id){
+                                                                            $missingQty = $missingQty + $missing->quantity;
+                                                                        }
+                                                                    }
+                                                                    $totalDeduct = $missingQty + $borrowedQty;
+        
+                                                                    @endphp
+                                                                    @for($i = 1; $i <= $cart->item->quantity-$totalDeduct; $i++)
+                                                                        @if($i == $cart->quantity)
+                                                                            <option value="{{$i}}" selected>{{$i}}</option>
+                                                                        @else
+                                                                            <option value="{{$i}}">{{$i}}</option>
+                                                                        @endif
+                                                                    @endfor
                                                                 @endif
-                                                                @endfor
+
+                                                                @if($cart->item->serial_number != null || $cart->item->serial_number !='N/A')
+                                                                    @for($i = 1; $i <= count($catItem); $i++)
+                                                                    @if($i == $cart->quantity)
+                                                                        <option value="{{$i}}" selected>{{$i}}</option>
+                                                                    @else
+                                                                        <option value="{{$i}}">{{$i}}</option>
+                                                                    @endif
+                                                                    @endfor
+                                                                @endif
                                                             </select>
                                                         </div>
                                                     </div>      
-                                                @else
-                                                    {{-- <input id="quantity-input" type="number" value="{{ $cart->quantity }}" min="0"
-                                                    max="{{ count($catItem) }}"> --}}
-                                                    <div class="row">
-                                                        <div class="col md-6">
-                                                        
-                                                            <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
-                                                                @for($i = 1; $i <= count($catItem); $i++)
-                                                                @if($i == $cart->quantity)
-                                                                    <option value="{{$i}}" selected>{{$i}}</option>
-                                                                @else
-                                                                    <option value="{{$i}}">{{$i}}</option>
-                                                                @endif
-                                                                @endfor
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                @endif
+                                               
                                             </form>
                                                 {{-- <button class="btn btn-default btn-sm plus-btn">
                                                     <i class="fa fa-plus"></i>
