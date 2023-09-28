@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
                 'password_updated' => 1,
             ],
             [
-                'id_number' => 201406392,
+                'id_number' => 2014036392,
                 'first_name' => 'Peter',
                 'last_name' => 'Alao',
                 'password' => Hash::make('usjrscs-123'),
