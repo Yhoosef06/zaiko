@@ -117,8 +117,8 @@ class ItemsController extends Controller
             );
         }
 
-        $item->brand_id = $request->brand;
-        $item->model_id = $request->model;
+        $item->brand_id = $request->brand ? $request->brand : 1;
+        $item->model_id = $request->model ? $request->model : 1;
         $item->serial_number = $request->serial_number;
         $item->location = $request->location;
         $item->category_id = $request->item_category;
