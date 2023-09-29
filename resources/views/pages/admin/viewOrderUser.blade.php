@@ -14,12 +14,12 @@
 
                 <div class="col-sm-6">
         
-                  {{-- <div class="form-group">
+                  <div class="form-group">
                       <div id="search-item-user-to-borrow">
                           <input type="text" id="searchItemUser" name="searchItemUser" class="form-control"
                               placeholder="Search Item to Borrow - Serial Number or Item Description" required>
                       </div>     
-                  </div> --}}
+                  </div>
 
                   
 
@@ -104,7 +104,7 @@
                               
                           @foreach ($orders as $item)
                              
-                            @if (empty($item->temp_serial_number) && $item->category_name != 'Tools')
+                            @if (empty($item->temp_serial_number) && $item->serial_number != 'N/A')
                            
                                 @for ($i = 1; $i <= $item->temp_quantity; $i++)
                                 @php
@@ -145,7 +145,7 @@
                                 
                           
                                   
-                            @elseif ($item->category_name === 'Tools')
+                            @else ($item->serial_number === 'N/A')
                                   <tr>
                                     <td class="d-none">
                                       <input type="text" name="orderItemTemp" value="{{ $item->orderItempId }}">
@@ -197,34 +197,36 @@
                                       <a href="#" data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
                                     </td>
                                   </tr>
-                            {{-- @else
-                                  <tr>
-                                    <td class="d-none">
-                                      <input type="text" name="orderItemTemp" value="">
-                                    </td>
-                                    <td class="d-none" >
-                                      <input type="text" name=" []" value="{{ $item->order_id }}"> {{ $item->order_id }}
-                                    </td>
-                                    <td class="d-none">
-                                      <input type="text" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
-                                    </td>
-                                    <td class="d-none">
-                                      <input type="text" name="duration[]" value="{{ $item->duration}}">{{ $item->duration}}
-                                    </td>
-                                    <td>{{ $item->brand_name }}</td>
-                                    <td>{{ $item->model_name }}</td>
-                                    <td>{{ $item->description }}</td>
-                                    <td>
-                                      <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
-                                    </td>
-                                    <td>
-                                      <input type="hidden" name="quantity[]" value="1">1
-                                    </td>
-                                    <td>
-                                      <a href="#" data-id="{{ $item->order_item_id }}" class="btn btn-danger order-admin-remove">Remove</a>
-                                    </td>
-                                  </tr> --}}
                             @endif
+                          @endforeach
+                          @foreach ($orderItems as $item)
+                          <tr>
+                            <td class="d-none">
+                              <input type="text" name="orderItemTemp" value="">
+                            </td>
+                            <td class="d-none" >
+                              <input type="text" name=" []" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                            </td>
+                            <td class="d-none">
+                              <input type="text" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
+                            </td>
+                            <td class="d-none">
+                              <input type="text" name="duration[]" value="{{ $item->duration}}">{{ $item->duration}}
+                            </td>
+                            <td>{{ $item->brand_name }}</td>
+                            <td>{{ $item->model_name }}</td>
+                            <td>{{ $item->description }}</td>
+                            <td>
+                              <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
+                            </td>
+                            <td>
+                              <input type="hidden" name="quantity[]" value="1">1
+                            </td>
+                            <td>
+                              <a href="#" data-id="{{ $item->order_item_id }}" class="btn btn-danger order-admin-remove">Remove</a>
+                            </td>
+                          </tr>
+                              
                           @endforeach
 
 
