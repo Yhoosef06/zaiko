@@ -28,15 +28,15 @@ class StudentController extends Controller
     {
 
         $categories = ItemCategory::all();
-        $user_dept_id = Auth::user()->department_id;
+        // $user_dept_id = Auth::user()->department_id;
         $itemlogs = ItemLog::all();
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
+        // $departments = Department::with('college')->get();
+        $department = Department::where('id', Auth::user()->department_id)->first();
+        // dd($department);
 
-        // $rooms = Room::where('department_id', $user_dept_id)->get();x    x   
-        // $items = Item::all();
 
-        $departments = Department::with('college')->get();
         // $rooms = Room::with('departments')->get();
         // $items = Item::with('room')->get();
 
@@ -54,19 +54,23 @@ class StudentController extends Controller
         //         }
         //     }
         // }   
+        
 
-        $collegeId = null;
-        foreach ($departments as $department) {
-            if ($department->id == $user_dept_id) {
-                $collegeId =  $department->college->id;
-                break;
-            }
-        }
-        if($collegeId != null){
-            $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
-                $query->where('id', $collegeId);
-            })->get();
-        }
+        
+         $collegeId = $department->college_id;   
+        // foreach ($departments as $department) {
+        //     if ($department->id == $user_dept_id) {
+        //         $collegeId =  $department->college->id;
+        //         break;
+        //     }
+        // }
+        // if($collegeId != null){
+        //     $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
+        //         $query->where('id', $collegeId);
+        //     })->get();
+        // }
+        
+
         $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
             $query->where('id', $collegeId);
         })->get();
