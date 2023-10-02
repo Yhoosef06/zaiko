@@ -551,10 +551,16 @@ class BorrowController extends Controller
             ->whereNull('orders.approved_by')
             ->where('orders.id', $id)
             ->get();
+        $orderItems = OrderITem::join('orders', 'order_items.order_id', '=', 'orders.id')
+                    ->join('items', 'order_items.item_id', '=', 'items.id')
+                    ->join('models', 'items.model_id', '=', 'models.id')
+                    ->join('brands', 'models.brand_id', '=', 'brands.id')
+                    ->where('order_items.order_id',$id)
+                    ->get();
 
 
 
-        return view('pages.admin.viewOrderUser')->with(compact('orders', 'borrowedList', 'missingList', 'countTempSerial'));
+        return view('pages.admin.viewOrderUser')->with(compact('orders','orderItems', 'borrowedList', 'missingList', 'countTempSerial'));
     }
 
     public function borrowItem()
@@ -621,18 +627,29 @@ class BorrowController extends Controller
     {
         $userID = $request->userID;
         $itemId = $request->itemId;
+        $order_id_user = $request->order_id_user;
         $serialNumber = $request->serialNumber;
+        $currentDate = Carbon::now();
 
+       dd($serialNumber);
+       $getItem = Item::where('id',$itemId)->first();
+       $durationDay = $getItem->duration;
+
+       $dateReturn = $currentDate->copy()->addDays($durationDay);
+       if ($dateReturn->dayOfWeek === Carbon::SUNDAY) {
+           $dateReturn->addDay();
+       }
 
         $dataOrder = Order::where('user_id', $userID)
             ->whereNotNull('date_submitted')
             ->whereNull('date_returned')
             ->get();
+              dd($dataOrder);
 
         if ($dataOrder->isEmpty()) {
             $insertOrder = Order::create([
                 'user_id' => $userID,
-                'created_by' => 'user',
+                'created_by' => 'admin',
                 'date_submitted' => Carbon::today()
             ]);
             if ($insertOrder) {
