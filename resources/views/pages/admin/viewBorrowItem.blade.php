@@ -29,11 +29,16 @@
               <div class="card">
                 <div class="card-header row">
                   <div class="col md-8">
-                    <h3 class="card-title"><strong>Borrowed Items</strong></h3>
+                    <h3 class="card-title"><strong>Transaction #: @foreach($borrows as $index => $borrow)
+                      @if($index === 0)
+                          <span style="color:green">{{ $borrow->order_item_id }}</span>
+                          
+                      @endif
+                  @endforeach</strong></h3>
                   </div>
                   <div class="col md-4 text-right">
                    
-                        <a href="#" class="btn btn-success" data-id="{{ $transactionIds->id }}" id="transactionComplete">Completed</a>            
+                        {{-- <a href="#" class="btn btn-success" data-id="{{ $transactionIds->id }}" id="transactionComplete">Completed</a>             --}}
                       
                    
                    

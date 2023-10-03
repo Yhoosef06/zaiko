@@ -334,6 +334,7 @@ class BorrowController extends Controller
                 'brand' => $item->brand,
                 'model' => $item->model,
                 'description' => $item->description,
+                'duration' => $item->duration,
                 'itemID' => $item->id
             ];
         });
@@ -640,11 +641,16 @@ class BorrowController extends Controller
         $itemId = $request->itemId;
         $order_id_user = $request->order_id_user;
         $serialNumber = $request->serialNumber;
+        $duration = $request->duration;
+
+        
+  
       
        OrderItemTemp::create([
         'order_id' => $order_id_user,
         'item_id'=> $itemId,
         'temp_serial_number' => $serialNumber,
+        'temp_duration' => $duration,
         'quantity' => 1
        ]);
       
@@ -828,7 +834,8 @@ class BorrowController extends Controller
                 return response()->json(['error' => "Serial number '$serialNumber' does not exist in the item table."]);
             }
         }
-
+        
+       
         if ($user) {
             $firstName = $user->first_name;
             $lastName = $user->last_name;
@@ -840,54 +847,58 @@ class BorrowController extends Controller
          
             foreach ($itemId as $index => $id) {
                
-                  
-                $item = Item::join('item_categories', 'items.category_id', '=', 'item_categories.id')
-                ->where('items.id', $itemId[$index])
-                ->first();
+                
+                $item = Item::find($itemId[$index]);
+               
                 if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serialNumbers[$index])) {
                     $order = $orderId[$index];
                     $durationDay = $duration[$index];
 
-
+                
                     $dateReturn = $currentDate->copy()->addDays($durationDay);
-
-                    if ($dateReturn->dayOfWeek === Carbon::SUNDAY) {
-                        $dateReturn->addDay();
-                    }
-
-
-                    if ($item->category_name === 'Tools') {
-                        OrderItem::create([
-                            'order_id' => $order,
-                            'user_id' => $student_id_added_user,
-                            'item_id' => $itemId[$index],
-                            'order_quantity' => $quantity[$index],
-                            'status' => 'borrowed',
-                            'order_serial_number' => $serialNumbers[$index],
-                            'date_returned' =>  $dateReturn->format('Y-m-d'),
-                            'released_by' => $lastName . ' ' . $firstName
-                        ]);
-                    } else {
-                        Item::whereIn('id', $itemId)->update(['borrowed' => 'yes']);
-                        OrderItem::create([
-                            'order_id' => $order,
-                            'user_id' => $student_id_added_user,
-                            'item_id' => $itemId[$index],
-                            'order_quantity' => $quantity[$index],
-                            'status' => 'borrowed',
-                            'order_serial_number' => $serialNumbers[$index],
-                            'date_returned' =>  $dateReturn->format('Y-m-d'),
-                            'released_by' => $lastName . ' ' . $firstName
-                        ]);
+                  
+                    // if ($currentDate->copy()->addDays($durationDay)->dayOfWeek === Carbon::SUNDAY) {
+                    //     $dateReturn->addDay();
                         
+                    // }
+                    if ($item->quantity > 1) {
+                            OrderItem::create([
+                                'order_id' => $order,
+                                'user_id' => $student_id_added_user,
+                                'item_id' => $itemId[$index],
+                                'order_quantity' => $quantity[$index],
+                                'status' => 'borrowed',
+                                'order_serial_number' => $serialNumbers[$index],
+                                'date_returned' =>  $dateReturn->format('Y-m-d'),
+                                'released_by' => $lastName . ' ' . $firstName
+                            ]);
+                        } else {
+                            Item::where('id', $itemId[$index])->update(['borrowed' => 'yes']);
+                            OrderItem::create([
+                                'order_id' => $order,
+                                'user_id' => $student_id_added_user,
+                                'item_id' => $itemId[$index],
+                                'order_quantity' => $quantity[$index],
+                                'status' => 'borrowed',
+                                'order_serial_number' => $serialNumbers[$index],
+                                'date_returned' =>  $dateReturn->format('Y-m-d'),
+                                'released_by' => $lastName . ' ' . $firstName
+                            ]);
+                                        
                     }
-                }
-            }
-        }
+                //  echo '<pre>';
+                // echo print_r($duration);
+                // echo '</pre>';
+                // exit;
 
+                }
+            
+        }
+   
 
         return response()->json(['success' => 'Serial numbers are valid.']);
     }
+}
 
 
 
@@ -929,47 +940,57 @@ class BorrowController extends Controller
 
     public function userNewOrder(Request $request)
     {
-        $userId = $request->userId;
+       
         $itemId = $request->itemId;
-        $brand = $request->brand;
-        $model = $request->model;
-        $description = $request->description;
+        $orderId = $request->order_id_user;
         $serial = $request->serial;
         $orderQuantity = $request->quantity;
+        $duration = $request->duration;
 
 
-
-        $dataOrder = Order::where('user_id', $userId)
-            ->whereNotNull('date_submitted')
-            ->whereNull('date_returned')
-            ->get();
-
-        if ($dataOrder->isEmpty()) {
-            $insertOrder = Order::create([
-                'user_id' => $userId,
-                'created_by' => 'user',
-                'date_submitted' => Carbon::today()
-            ]);
-
-            if ($insertOrder) {
-                $orderId = $insertOrder->id;
-                OrderItemTemp::create([
-                    'order_id' => $orderId,
-                    'item_id' => $itemId,
-                    'quantity' => $orderQuantity,
-                    'temp_serial_number' => 'N/A'
-                ]);
-            }
-        } else {
-            $orderId = $dataOrder->first()->id;
-            OrderItemTemp::create([
-                'order_id' => $orderId,
-                'item_id' => $itemId,
-                'quantity' => $orderQuantity,
-                'temp_serial_number' => 'N/A'
-            ]);
-        }
+       OrderItemTemp::create([
+        'order_id' => $orderId,
+        'item_id'=> $itemId,
+        'temp_serial_number' => 'N/A',
+        'temp_duration' => $duration,
+        'quantity' => $orderQuantity
+       ]);
+      
         return response()->json(['success' => true]);
+
+
+
+        // $dataOrder = Order::where('user_id', $userId)
+        //     ->whereNotNull('date_submitted')
+        //     ->whereNull('date_returned')
+        //     ->get();
+
+        // if ($dataOrder->isEmpty()) {
+        //     $insertOrder = Order::create([
+        //         'user_id' => $userId,
+        //         'created_by' => 'user',
+        //         'date_submitted' => Carbon::today()
+        //     ]);
+
+        //     if ($insertOrder) {
+        //         $orderId = $insertOrder->id;
+        //         OrderItemTemp::create([
+        //             'order_id' => $orderId,
+        //             'item_id' => $itemId,
+        //             'quantity' => $orderQuantity,
+        //             'temp_serial_number' => 'N/A'
+        //         ]);
+        //     }
+        // } else {
+        //     $orderId = $dataOrder->first()->id;
+        //     OrderItemTemp::create([
+        //         'order_id' => $orderId,
+        //         'item_id' => $itemId,
+        //         'quantity' => $orderQuantity,
+        //         'temp_serial_number' => 'N/A'
+        //     ]);
+        // }
+        // return response()->json(['success' => true]);
     }
 
 

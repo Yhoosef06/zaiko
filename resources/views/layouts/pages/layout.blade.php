@@ -1070,6 +1070,7 @@
                         var userID = $("#student_id_added_user").val();
                         var itemId = ui.item.id;
                         var order_id_user = $("#order-user-id").val();
+                        var duration = ui.item.duration;
 
                         console.log(userID);
 
@@ -1140,10 +1141,9 @@
                                     var requestData = {
                                         userId: userId,
                                         itemId: itemId,
-                                        brand: brand,
-                                        model: model,
-                                        description: description,
+                                        order_id_user: order_id_user,
                                         serial: serial,
+                                        duration: duration,
                                         quantity: order_quantity
                                     };
 
@@ -1198,6 +1198,7 @@
                         var itemId = ui.item.id;
                         var order_id_user = $("#order-user-id").val();
                         var serialNumber = ui.item.serialNumber;
+                        var duration = ui.item.duration;
 
 
                         $.ajax({
@@ -1209,6 +1210,7 @@
                             data: {
                                 userID: userID,
                                 itemId: itemId,
+                                duration: duration,
                                 order_id_user:order_id_user,
                                 serialNumber: serialNumber
                             },

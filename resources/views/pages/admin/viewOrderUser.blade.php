@@ -157,7 +157,7 @@
                                       <input type="text" name="itemId[]" value="{{ $item->item_id}}">
                                     </td>
                                     <td class="d-none">
-                                      <input type="text" name="duration[]" id="duration_{{ $counter }}">
+                                      <input type="text" name="duration[]" value="{{ $item->temp_duration }}">
                                     </td>
                                     <td>{{ $item->brand_name }}</td>
                                     <td>{{ $item->model_name }}</td>
@@ -209,7 +209,7 @@
                                   <input type="text" name="itemId[]" value="{{ $item->item_id}}">
                                 </td>
                                 <td class="d-none">
-                                  <input type="text" name="duration[]" id="duration_{{ $counter }}">
+                                  <input type="text" name="duration[]" value="{{ $item->temp_duration }}">
                                 </td>
                                 <td>{{ $item->brand_name }}</td>
                                 <td>{{ $item->model_name }}</td>
@@ -218,32 +218,7 @@
                                   <input type="hidden" name="user_serial_number[]" value="{{ $item->temp_serial_number}}">{{ $item->temp_serial_number }}
                                 </td>
                                 <td>
-                                  @php
-                                  $borrowedQty = 0;
-                                  $missingQty = 0;
-                              
-                                  foreach ($borrowedList as $borrowed) {
-                                      if ($borrowed->item_id == $item->id) {
-                                          $borrowedQty += $borrowed->order_quantity;
-                                      }
-                                  }
-                              
-                                  foreach ($missingList as $missing) {
-                                      if ($missing->item_id == $item->id) {
-                                          $missingQty += $missing->quantity;
-                                      }
-                                  }
-                              
-                                  $totalDeduct = $missingQty + $borrowedQty;
-                                @endphp
-                              
-                                  <select name="quantity[]" class="form-control">
-                                    @for ($i = 1; $i <= $item->itemQty-$totalDeduct; $i++)
-                                    <option value="{{ $i }}" {{ $i == $item->orderQty ? 'selected' : '' }}>
-                                      {{ $i }}
-                                    </option>
-                                    @endfor
-                                  </select>
+                                  <input type="hidden" name="quantity[]" value="1">1
                                 </td>
                                 <td>
                                   <a href="#" data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>

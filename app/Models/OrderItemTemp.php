@@ -16,6 +16,7 @@ class OrderItemTemp extends Model
         'order_id',
         'item_id',
         'temp_serial_number',
+        'temp_duration',
         'quantity',
     ];
 
