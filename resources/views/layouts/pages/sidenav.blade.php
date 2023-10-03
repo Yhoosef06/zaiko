@@ -37,13 +37,13 @@
                         <li class="nav-item">
                             <a href="{{ route('student.items') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>Browse Items <i class="fa fa-search"></i></p>
+                                <p>Browse Items</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('cart.list') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>Cart <i class="bi bi-cart text-right"></i></p>
+                                <p>Cart</p>
                                 @if ($itemcount != 0)
                                     <span class="badge badge-danger right">{{ $itemcount }}</span>
                                 @endif
@@ -52,19 +52,19 @@
                         <li class="nav-item">
                             <a href="{{ route('pending-order') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>Pending <i class="bi bi-card-list"></i></p>
+                                <p>Pending</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('borrowed-items') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>Borrowed Items <i class="bi bi-handbag-fill"></i></p>
+                                <p>Borrowed Items</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('history') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>History <i class="bi bi-card-list"></i></p>
+                                <p>History</p>
                             </a>
                         </li>
                     @elseif(Auth::user()->account_type == 'admin')

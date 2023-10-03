@@ -254,7 +254,7 @@ class CartController extends Controller
 
     public function history(){
         
-        $orderHistory = Order::whereNotNull('date_submitted')->whereNotNull('date_returned')->get();
+        $orderHistory = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('date_returned')->get();
 
         // dd($orderHistory);
 
@@ -272,7 +272,7 @@ class CartController extends Controller
 
     public function borrowed(){
         
-        $borrowedItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->get();
+        $borrowedItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->whereNull('date_returned')->get();
         // dd($borrowedItems);
       
         return view('pages.students.borrowed')->with(compact('borrowedItems'));

@@ -20,8 +20,8 @@
 
                         <thead>
                             <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
-                                <th style="width:10%" class="text-wrap">Order ID</th>
-                                <th style="width:10%" class="text-wrap">Date Submitted</th>
+                                <th style="width:10%" class="text-wrap text-center">Transaction ID</th>
+                                <th style="width:10%" class="text-wrap text-center">Date Submitted</th>
                                 <th style="width:10%" class="text-wrap text-center">View</th>
                             </tr>
                         </thead>
@@ -31,8 +31,8 @@
                                 <tbody>
                                     <tr style="background-color: rgba(255, 255, 255, 0.8);">
 
-                                        <td class="text-wrap">{{ $order->id }}</td>
-                                        <td class="text-wrap">{{ date('F j, Y', strToTime($order->date_submitted)) }}</td>
+                                        <td class="text-wrap text-center">{{ $order->id }}</td>
+                                        <td class="text-wrap text-center">{{ date('F j, Y', strToTime($order->date_submitted)) }}</td>
                                         <td class="text-center">
                                             <a href="#" class="link-secondary">
                                                 <button type="button" class="btn btn-outline-success btn-sm"
@@ -87,7 +87,7 @@
                                                                                 {{ $item->item->model->model_name }}</td>
                                                                             <td class="text-wrap">
                                                                                 {{ $item->item->description }}</td>
-                                                                            <td class="text-wrap">{{ $item->quantity }}</td>
+                                                                            <td class="text-wrap text-center">{{ $item->quantity }}</td>
                                                                         </tr>
                                                                     @endforeach
                                                                 </tbody>
