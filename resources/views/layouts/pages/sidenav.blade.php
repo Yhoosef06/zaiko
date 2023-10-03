@@ -44,8 +44,8 @@
                             <a href="{{ route('cart.list') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Cart</p>
-                                @if ($itemcount != 0)
-                                    <span class="badge badge-danger right">{{ $itemcount }}</span>
+                                @if ($cartcount != 0)
+                                    <span class="badge badge-danger right">{{ $cartcount }}</span>
                                 @endif
                             </a>
                         </li>
@@ -53,18 +53,27 @@
                             <a href="{{ route('pending-order') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Pending</p>
+                                @if ($pendingcount !=0)
+                                <span class="badge badge-danger right">{{ $pendingcount }}</span>
+                                @endif
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('borrowed-items') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Borrowed Items</p>
+                                @if ($borrowedcount !=0)
+                                <span class="badge badge-danger right">{{ $borrowedcount }}</span>
+                                @endif
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('history') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>History</p>
+                                @if ($historycount !=0)
+                                <span class="badge badge-danger right">{{ $historycount }}</span>
+                                @endif
                             </a>
                         </li>
                     @elseif(Auth::user()->account_type == 'admin')

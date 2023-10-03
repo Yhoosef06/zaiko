@@ -32,20 +32,28 @@ class ViewServiceProvider extends ServiceProvider
 
             $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
 
-            // dd($order);
+            //BORROWER SIDE NAV
+            $pendingItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
+            $borrowedItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->whereNull('date_returned')->get();
+            $orderHistory = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('date_returned')->get();
 
-            $itemcount = null;
+            $cartcount = null;
 
             if($order == null){
-                $itemcount = 0;
+                $cartcount = 0;
             }else{
                 $items = OrderItemTemp::where('order_id', $order->id)->get();
 
-                $itemcount = count($items);
+                $cartcount = count($items);
             }
+
+            //END OF BORROWER SIDE NAV
             
             $view->with([
-                'itemcount' => $itemcount
+                'cartcount' => $cartcount,
+                "pendingcount" => count($pendingItems),
+                'borrowedcount' => count($borrowedItems),
+                'historycount' => count($orderHistory)
             ]);
 
 
