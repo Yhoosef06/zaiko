@@ -47,7 +47,7 @@
                       <table class="table table-head-fixed text-nowrap" id="orderUser">
                         <thead>
                           <tr>
-                            <th >ID</th>
+                            <th class="d-none">ID</th>
                             <th class="d-none">ItemId</th>
                             <th class="d-none">Order ID</th>
                             <th style="background-color:#343a40; color:aliceblue">Brand</th>
@@ -145,7 +145,7 @@
                                 
                           
                                   
-                            @else ($item->serial_number === 'N/A')
+                            @elseif($item->serial_number === 'N/A')
                                   <tr>
                                     <td class="d-none">
                                       <input type="text" name="orderItemTemp" value="{{ $item->orderItempId }}">
@@ -197,40 +197,63 @@
                                       <a href="#" data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
                                     </td>
                                   </tr>
-                            @endif
-                          @endforeach
-                          @foreach ($orderItems as $item)
-                          <tr>
-                            <td class="d-none">
-                              <input type="text" name="orderItemTemp" value="">
-                            </td>
-                            <td class="d-none" >
-                              <input type="text" name=" []" value="{{ $item->order_id }}"> {{ $item->order_id }}
-                            </td>
-                            <td class="d-none">
-                              <input type="text" name="itemId[]" value="{{ $item->item_id}}">{{ $item->item_id}}
-                            </td>
-                            <td class="d-none">
-                              <input type="text" name="duration[]" value="{{ $item->duration}}">{{ $item->duration}}
-                            </td>
-                            <td>{{ $item->brand_name }}</td>
-                            <td>{{ $item->model_name }}</td>
-                            <td>{{ $item->description }}</td>
-                            <td>
-                              <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
-                            </td>
-                            <td>
-                              <input type="hidden" name="quantity[]" value="1">1
-                            </td>
-                            <td>
-                              <a href="#" data-id="{{ $item->order_item_id }}" class="btn btn-danger order-admin-remove">Remove</a>
-                            </td>
-                          </tr>
+                              @else
+                              <tr>
+                                <td class="d-none">
+                                  <input type="text" name="orderItemTemp" value="{{ $item->orderItempId }}">
+                                </td>
+                                <td class="d-none">
+                                  <input type="text" name="order_id[]" value="{{ $item->order_id }}"> {{ $item->order_id }}
+                                </td>
+                                <td class="d-none">
+                                  <input type="text" name="itemId[]" value="{{ $item->item_id}}">
+                                </td>
+                                <td class="d-none">
+                                  <input type="text" name="duration[]" id="duration_{{ $counter }}">
+                                </td>
+                                <td>{{ $item->brand_name }}</td>
+                                <td>{{ $item->model_name }}</td>
+                                <td>{{ $item->description }}</td>
+                                <td>
+                                  <input type="hidden" name="user_serial_number[]" value="{{ $item->temp_serial_number}}">{{ $item->temp_serial_number }}
+                                </td>
+                                <td>
+                                  @php
+                                  $borrowedQty = 0;
+                                  $missingQty = 0;
                               
+                                  foreach ($borrowedList as $borrowed) {
+                                      if ($borrowed->item_id == $item->id) {
+                                          $borrowedQty += $borrowed->order_quantity;
+                                      }
+                                  }
+                              
+                                  foreach ($missingList as $missing) {
+                                      if ($missing->item_id == $item->id) {
+                                          $missingQty += $missing->quantity;
+                                      }
+                                  }
+                              
+                                  $totalDeduct = $missingQty + $borrowedQty;
+                                @endphp
+                              
+                                  <select name="quantity[]" class="form-control">
+                                    @for ($i = 1; $i <= $item->itemQty-$totalDeduct; $i++)
+                                    <option value="{{ $i }}" {{ $i == $item->orderQty ? 'selected' : '' }}>
+                                      {{ $i }}
+                                    </option>
+                                    @endfor
+                                  </select>
+                                </td>
+                                <td>
+                                  <a href="#" data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
+                                </td>
+                              </tr>
+
+                            @endif
+                            
                           @endforeach
-
-
-
+                         
 
 
 
@@ -248,7 +271,6 @@
                   </div>
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      {{-- <input type="date" class="form-control" name="date_returned"> --}}
                       <input type="text" id="student_id_added_user" name="student_id_added_user" value="@foreach($orders as $index => $item)
                     @if($index === 0)
                         {{$item->id_number}}

@@ -1085,14 +1085,14 @@
                                 var tableRow = $('<tr>');
                                 $('<td class="d-none">').text(userID).appendTo(
                                     tableRow);
-                                $('<td class="d-none">').text(response.id).appendTo(
+                                $('<td class="d-none">').text(response.item.id).appendTo(
                                     tableRow);
-                                $('<td>').text(response.brand).appendTo(tableRow);
-                                $('<td>').text(response.model).appendTo(tableRow);
-                                $('<td>').text(response.description).appendTo(tableRow);
+                                $('<td>').text(response.item.brand).appendTo(tableRow);
+                                $('<td>').text(response.item.model).appendTo(tableRow);
+                                $('<td>').text(response.item.description).appendTo(tableRow);
                                 var quantityInput = $('<input>').attr('type', 'number')
-                                    .attr('max', response.available_quantity).val(
-                                        response.available_quantity);
+                                    .attr('max', response.availableQuantity).val(
+                                        response.availableQuantity);
                                 $('<td>').append(quantityInput).appendTo(tableRow);
                                 var buttonCell = $('<td>');
                                 var addButton = $('<button class="btn btn-success">')
@@ -1497,7 +1497,7 @@
                             } else if (response.error) {
                                 Swal.fire(
                                     'Error',
-                                    'The serial number does not exist or is already borrowed.',
+                                    response.error,
                                     'error'
                                 );
                             } else if (response.duplicate) {
