@@ -48,7 +48,7 @@ class ItemsController extends Controller
     public function viewItemDetails($id)
     {
         $item = Item::find($id);
-        $itemLogs = ItemLog::where('item_id', '=', $id)->get();
+        $itemLogs = ItemLog::where('item_id', '=', $id)->orderBy('date', 'desc')->get();
 
         return view('pages.admin.viewItemDetails')->with(compact('item', 'itemLogs'));
     }

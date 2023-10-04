@@ -138,7 +138,7 @@
                                                 class="form-control @error('model') border-danger @enderror">
                                                 <option value="option_select" disabled selected>Select a model. (Skip if
                                                     none)</option>
-                                                <!-- Models options will be populated dynamically here -->
+                                              
                                             </select>
                                             <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
                                                     data-toggle="modal" data-target="#addModelModal" data-toggle="tooltip"

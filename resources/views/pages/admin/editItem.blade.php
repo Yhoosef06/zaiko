@@ -1,7 +1,7 @@
 <form action="{{ route('update_item_details', $item->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
-    <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+    <div class="card-body">
         <div class="row">
             <div class="col">
                 <label for="location">Room/Location: </label>
@@ -16,11 +16,6 @@
                             </option>
                         @endforeach
                     </select>
-                    @if (Auth::user()->account_type != 'admin')
-                        <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                data-target="#addRoomModal" data-toggle="tooltip" title='Add a room' data-toggle="modal"
-                                {{-- data-target="#modal-addRoom" --}}></i></a>
-                    @endif
                 </div>
                 @error('location')
                     <div class="text-danger">
@@ -42,11 +37,6 @@
                             </option>
                         @endforeach
                     </select>
-                    @if (Auth::user()->account_type != 'admin')
-                        <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                data-target="#addItemCategoryModal" data-toggle="tooltip"
-                                title='Add a category'></i></a>
-                    @endif
                 </div>
                 @error('item_category')
                     <div class="text-danger">
@@ -71,10 +61,6 @@
                             </option>
                         @endforeach
                     </select>
-                    @if (Auth::user()->account_type != 'admin')
-                        <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                data-target="#addBrandModal" data-toggle="tooltip" title='Add a brand'></i></a>
-                    @endif
                 </div>
 
                 <label for="Model">Model:</label>
@@ -86,12 +72,7 @@
                                 {{ $model->model_name }}
                             </option>
                         @endforeach
-                        <!-- Models options will be populated dynamically here -->
                     </select>
-                    @if (Auth::user()->account_type != 'admin')
-                        <a class="btn text-blue" href="#"><i class="fa fa-plus-circle" data-toggle="modal"
-                                data-target="#addModelModal" data-toggle="tooltip" title='Add a model'></i></a>
-                    @endif
                 </div>
 
                 <label for="Model">Part Number:</label>
@@ -158,8 +139,7 @@
                             </label>
                             /
                             <label for="" class="radio-inline">
-                                <input type="radio" id='inventory_tag' name="inventory_tag" value="without"
-                                    checked>
+                                <input type="radio" id='inventory_tag' name="inventory_tag" value="without" checked>
                                 Without
                             </label>
                         </div>
@@ -184,7 +164,7 @@
 
                     <div class="col">
                         <div style="display: flex">
-                            <input type="text" id="duration" name="duration" value="{{$item->duration}}"
+                            <input type="text" id="duration" name="duration" value="{{ $item->duration }}"
                                 class="form-control" style="width: 45px;" readonly>
                             <label for="" class="radio-inline pl-1">
                                 day/s
@@ -241,39 +221,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        // Listen for changes in the brand select dropdown
-        $('#brand').change(function() {
-            // Get the selected brand's ID
-            var selectedBrandId = $(this).val();
-
-            // Send an AJAX request to fetch models associated with the selected brand
-            $.ajax({
-                url: '/get-models/' + selectedBrandId, // Replace with the actual route
-                type: 'GET',
-                success: function(data) {
-                    // Clear existing model options
-                    $('#model').empty();
-
-                    // Populate the model select dropdown with new options
-                    $.each(data, function(index, model) {
-                        $('#model').append('<option value="' + model.id + '">' +
-                            model.model_name + '</option>');
-                    });
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $('#addModelModal').on('show.bs.modal', function(event) {
-            var modal = $(this);
-
-            $.get("{{ route('add_model') }}", function(data) {
-                modal.find('.modal-body').html(data);
-            });
-        });
-    });
+   
 
     $(document).ready(function() {
         $('#addRoomModal').on('show.bs.modal', function(event) {
@@ -377,6 +325,37 @@
             },
             minLength: 1,
             autoFocus: true,
+        });
+    });
+
+    $(document).ready(function() {
+        // Reference to the model select dropdown
+        var modelSelect = $('#model');
+
+        // Listen for changes in the brand select dropdown
+        $('#brand').change(function() {
+            // Get the selected brand's ID
+            var selectedBrandId = $(this).val();
+
+            // Send an AJAX request to fetch models associated with the selected brand
+            $.ajax({
+                url: '/get-models/' + selectedBrandId, // Replace with the actual route
+                type: 'GET',
+                success: function(data) {
+                    // Clear existing model options
+                    modelSelect.empty();
+
+                    // Add the static "N/A" option
+                    modelSelect.append(
+                        '<option value="1">Select a model. (Skip if none.)</option>');
+
+                    // Populate the model select dropdown with new options
+                    $.each(data, function(index, model) {
+                        modelSelect.append('<option value="' + model.id + '">' +
+                            model.model_name + '</option>');
+                    });
+                }
+            });
         });
     });
 

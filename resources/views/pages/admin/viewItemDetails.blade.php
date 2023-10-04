@@ -1,5 +1,5 @@
     <div class="container">
-        <div class="row" style="max-height: 300px; overflow-y: auto;">
+        <div class="row">
             <div class="col">
                 <div>
                     <label for="">Item ID #:</label> {{ $item->id }}
