@@ -513,7 +513,7 @@ class BorrowController extends Controller
 
     public function viewBorrowItem($id)
     {
-        $borrows = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        $count = Order::join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', 'item_categories.id')
@@ -522,13 +522,28 @@ class BorrowController extends Controller
             ->select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.id as item_id_borrow', 'item_categories.*', 'items.description as description')
             ->where('orders.id', $id)
             ->where('order_items.status', 'borrowed')
-            ->get();
+            ->count();
 
-        $transactionIds = Order::where('id', $id)->first();
+            if( $count === 0){
+            Order::where('id', $id)->update(['order_status' => 'Completed', 'date_returned' => Carbon::today()]);
+            return redirect('borrowed');
+            }else{
+            
+                $borrows = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+                    ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+                    ->join('items', 'order_items.item_id', '=', 'items.id')
+                    ->join('item_categories', 'items.category_id', 'item_categories.id')
+                    ->join('models', 'items.model_id', '=', 'models.id')
+                    ->join('brands', 'models.brand_id', '=', 'brands.id')
+                    ->select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.id as item_id_borrow', 'item_categories.*', 'items.description as description')
+                    ->where('orders.id', $id)
+                    ->where('order_items.status', 'borrowed')
+                    ->get();
+                return view('pages.admin.viewBorrowItem')->with(compact('borrows'));
+            }
 
 
-
-        return view('pages.admin.viewBorrowItem')->with(compact('borrows','transactionIds'));
+       
     }
 
     public function viewOrderUser($id)
