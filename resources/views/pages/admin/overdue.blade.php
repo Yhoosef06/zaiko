@@ -151,7 +151,7 @@
                                                         <div class="modal-dialog modal-sm">
                                                           <div class="modal-content">
                                                             <div class="modal-header">
-                                                              <h4 class="modal-title">Return Item</h4>
+                                                              <h4 class="modal-title">Return Overdue Item</h4>
                                                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                               </button>
@@ -164,9 +164,20 @@
                                                               <input type="hidden"  class="form-control" value="{{ $overdueItem->order_quantity }}" name="borrowOrderQuantity">
                                                               <input type="hidden"  class="form-control" value="{{ $overdueItem->category_name }}" name="categoryName">
                                                             <div class="form-group">
-                                                                        <label>Remarks</label>
-                                                                        <textarea class="form-control" rows="3" name="item_remark" placeholder="Enter ..."></textarea>
+                                                                  <label>Number Of Day Overdue</label>
+                                                                  <input type="text"  class="form-control"  id="number_of_day_overdue" name="number_of_day_overdue" value="{{ $overdueItem->days_overdue }}"readonly>
+                                                                       
                                                             </div>
+                                                            <div class="form-group">
+                                                              <label>Payment Per Day</label>
+                                                              <input type="text"  class="form-control"  name="payment_per_day" id="payment_per_day" required>
+                                                                   
+                                                          </div>
+                                                          <div class="form-group">
+                                                            <label>Total</label>
+                                                            <input type="text"  class="form-control"  name="total_amount" readonly>
+                                                                 
+                                                        </div>
                                                             <div class="form-group">
                                                               <label>Quantity</label>
                                                               <select name="quantity_return" class="form-control">

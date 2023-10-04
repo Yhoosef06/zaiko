@@ -67,7 +67,7 @@
                         {{-- <a href="#" class="btn btn-danger">Remove</a> --}}
                         <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showBorrow{{$borrow->order_item_id}}">View</button>
                         <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#returnBorrow{{$borrow->order_item_id}}">Return</button>
-                        <button type="button" class="btn btn-danger" id="btn-lost" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#lostItem{{$borrow->order_item_id}}">Lost</button>
+                        <button type="button" class="btn btn-danger" id="btn-lost" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#lostItem{{$borrow->order_item_id}}">Replace</button>
                       </td>
                     </tr>
 

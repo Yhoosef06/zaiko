@@ -227,6 +227,19 @@
 
     });
 
+    $(document).ready(function() {
+
+    $('#payment_per_day').on('change', function() {
+        var days = $('#number_of_day_overdue').val();
+        var amount = $(this).val();
+
+        var totalAmount = amount * days;
+        
+        $('#total_amount').val(totalAmount);
+        console.log(days);
+    });
+    });
+
 
 
 

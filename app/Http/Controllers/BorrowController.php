@@ -51,8 +51,7 @@ class BorrowController extends Controller
         $user_dept_id = $user->department_id;
         $department = Department::with('college')->find($user_dept_id);
         $college = $department->college;
-
-
+    
         $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('departments', 'users.department_id', '=', 'departments.id')
@@ -62,19 +61,21 @@ class BorrowController extends Controller
             ->join('item_categories', 'items.category_id', 'item_categories.id')
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->where('colleges.id', $college->id)
             ->where('order_items.date_returned', '<', $currentDate->toDateString())
+            ->where('colleges.id', $college->id)
             ->where('order_items.status', 'borrowed')
             ->get();
-
-
-
-        // echo '<pre>';
-        // echo print_r($overdueItems);
-        // echo '</pre>';
-        // exit;
+    
+        
+        foreach ($overdueItems as $item) {
+            $dateReturned = Carbon::parse($item->date_returned); 
+            $daysOverdue = $dateReturned->diffInDays($currentDate);
+            $item->days_overdue = $daysOverdue;
+        }
+    
         return view('pages.admin.overdue')->with(compact('overdueItems'));
     }
+    
 
     public function pending()
     {
