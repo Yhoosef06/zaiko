@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             SecurityQuestionSeeder::class,
             ItemSeeder::class,
             UserSeeder::class,
+            RolesSeeder::class,
+            UserRolesSeeder::class
             // Add more seeders here
         ]);
     }

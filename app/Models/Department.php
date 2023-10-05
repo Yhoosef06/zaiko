@@ -27,8 +27,8 @@ class Department extends Model
         return $this->hasMany(Room::class);
     }
 
-    public function users(): HasMany
+    public function users()
     {
-        return $this->hasMany(User::class, 'department_id');
+        return $this->belongsToMany(User::class);
     }
 }

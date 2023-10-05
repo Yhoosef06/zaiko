@@ -22,15 +22,13 @@ class CreateUsersTable extends Migration
             $table->string('account_status');
             $table->string('role');
             $table->unsignedBigInteger('security_question_id')->nullable();
-            $table->string('answer')->nullable();
-            $table->unsignedBigInteger('department_id');
+            $table->string('answer')->nullable();  
             $table->rememberToken();
             $table->date('last_login_at')->nullable();
             $table->boolean('password_updated')->nullable();
             $table->timestamps();
 
             $table->foreign('security_question_id')->references('id')->on('security_questions');
-            $table->foreign('department_id')->references('id')->on('departments');
         });
     }
 

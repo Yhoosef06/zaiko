@@ -59,11 +59,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function departments(): HasOne
-    {
-        return $this->hasOne(Department::class, 'id', 'department_id');
-    }
-
     public function order_item_temp(): HasMany
     {
         return $this->hasMany(OrderItemTemp::class);
@@ -87,5 +82,15 @@ class User extends Authenticatable
     public function itemLog(): HasMany
     {
         return $this->hasMany(ItemLog::class, 'id', 'encoded_by');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class);
     }
 }
