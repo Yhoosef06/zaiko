@@ -159,9 +159,9 @@
                                         <div class="ml-3">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Pending</p>
-                                            @if ($itemcount != 0)
+                                            {{-- @if ($itemcount != 0)
                                                 <span class="badge badge-warning right">{{ $itemcount }}</span>
-                                            @endif
+                                            @endif --}}
                                         </div>
                                     </a>
                                 </li>
@@ -349,9 +349,9 @@
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Pending</p>
-                                                @if ($itemcount != 0)
+                                                {{-- @if ($itemcount != 0)
                                                     <span class="badge badge-warning right">{{ $itemcount }}</span>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         </a>
                                     </li>
@@ -376,9 +376,9 @@
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Overdue</p>
-                                                @if ($itemcount != 0)
+                                                {{-- @if ($itemcount != 0)
                                                     <span class="badge badge-danger right">{{ $itemcount }}</span>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         </a>
                                     </li>
