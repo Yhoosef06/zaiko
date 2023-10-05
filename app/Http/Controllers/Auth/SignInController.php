@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class SignInController extends Controller
@@ -23,11 +24,13 @@ class SignInController extends Controller
         ]);
 
         if (auth()->attempt(['id_number' => $input['id_number'], 'password' => $input['password']])) {
+            $userId = auth()->user()->id_number;
+            $user = User::find($userId);
+            $managerRole = Role::where('name', 'manager')->first(); // Adjust the role name as needed.
+
             if (auth()->user()->account_type == 'admin') {
                 return redirect()->route('admin.dashboard');
-            } else if (auth()->user()->role == 'manager') {
-                $userId = auth()->user()->id_number;
-                $user = User::find($userId);
+            } else if ($user && $user->hasRole($managerRole)) {
                 if ($user) {
                     $user->update([
                         'last_login_at' => now()
@@ -40,7 +43,7 @@ class SignInController extends Controller
                 } else {
                     return redirect()->route('dashboard');
                 }
-            } else if (auth()->user()->role == 'borrower') {
+            } else {
                 $userId = auth()->user()->id_number;
                 $user = User::find($userId);
                 if ($user) {

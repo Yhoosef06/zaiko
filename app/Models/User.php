@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -59,11 +60,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function departments(): HasOne
-    {
-        return $this->hasOne(Department::class, 'id', 'department_id');
-    }
-
     public function order_item_temp(): HasMany
     {
         return $this->hasMany(OrderItemTemp::class);
@@ -87,5 +83,20 @@ class User extends Authenticatable
     public function itemLog(): HasMany
     {
         return $this->hasMany(ItemLog::class, 'id', 'encoded_by');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id_number', 'role_id');
+    }
+
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class);
+    }
+
+    public function hasRole(Role $role)
+    {
+        return $this->roles->contains('id', $role->id);
     }
 }
