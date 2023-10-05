@@ -68,7 +68,7 @@
 
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Missing Items</span>
-                                                <span class="info-box-number">{{ $totalMissingItems }}</span>
+                                                {{-- <span class="info-box-number">{{ $totalMissingItems }}</span> --}}
                                             </div>
                                             <!-- /.info-box-content -->
                                         </div>

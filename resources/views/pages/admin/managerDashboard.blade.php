@@ -41,7 +41,7 @@
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Pending Registrants</span>
                                                 <span class="info-box-number">
-                                                    {{ $totalPendingRegistrants }}
+                                                    {{-- {{ $totalPendingRegistrants }} --}}
                                                 </span>
                                             </div>
                                         </div>
@@ -54,7 +54,7 @@
                                                     class="fa fa-arrow-alt-circle-up"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Borrowed Items </span>
-                                                <span class="info-box-number">{{$totalborrowedItems}}</span>
+                                                {{-- <span class="info-box-number">{{$totalborrowedItems}}</span> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -65,7 +65,7 @@
                                                     class="fas fa-tag"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Pending Borrow Items </span>
-                                                <span class="info-box-number">{{$totalBorrowPendings}}</span>
+                                                {{-- <span class="info-box-number">{{$totalBorrowPendings}}</span> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -76,7 +76,7 @@
                                                     class="fas fa-box"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Inventory</span>
-                                                <span class="info-box-number">{{ $totalItems }}</span>
+                                                {{-- <span class="info-box-number">{{ $totalItems }}</span> --}}
                                             </div>
 
                                         </div>

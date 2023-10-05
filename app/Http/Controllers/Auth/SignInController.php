@@ -26,7 +26,7 @@ class SignInController extends Controller
         if (auth()->attempt(['id_number' => $input['id_number'], 'password' => $input['password']])) {
             $userId = auth()->user()->id_number;
             $user = User::find($userId);
-            $managerRole = Role::where('name', 'manager')->first(); // Adjust the role name as needed.
+            $managerRole = Role::where('name', 'manager')->first(); 
 
             if (auth()->user()->account_type == 'admin') {
                 return redirect()->route('admin.dashboard');
