@@ -18,6 +18,7 @@ class CreateOrderItemTemps extends Migration
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('item_id');
             $table->string('temp_serial_number');
+            $table->integer('temp_duration')->nullable();
             $table->integer('quantity');
             $table->timestamps();
 
