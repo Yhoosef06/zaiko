@@ -227,6 +227,19 @@
 
     });
 
+    $(document).ready(function() {
+
+    $('#payment_per_day').on('change', function() {
+        var days = $('#number_of_day_overdue').val();
+        var amount = $(this).val();
+
+        var totalAmount = amount * days;
+        
+        $('#total_amount').val(totalAmount);
+        console.log(days);
+    });
+    });
+
 
 
 
@@ -1070,6 +1083,7 @@
                         var userID = $("#student_id_added_user").val();
                         var itemId = ui.item.id;
                         var order_id_user = $("#order-user-id").val();
+                        var duration = ui.item.duration;
 
                         console.log(userID);
 
@@ -1085,14 +1099,14 @@
                                 var tableRow = $('<tr>');
                                 $('<td class="d-none">').text(userID).appendTo(
                                     tableRow);
-                                $('<td class="d-none">').text(response.id).appendTo(
+                                $('<td class="d-none">').text(response.item.id).appendTo(
                                     tableRow);
-                                $('<td>').text(response.brand).appendTo(tableRow);
-                                $('<td>').text(response.model).appendTo(tableRow);
-                                $('<td>').text(response.description).appendTo(tableRow);
+                                $('<td>').text(response.item.brand).appendTo(tableRow);
+                                $('<td>').text(response.item.model).appendTo(tableRow);
+                                $('<td>').text(response.item.description).appendTo(tableRow);
                                 var quantityInput = $('<input>').attr('type', 'number')
-                                    .attr('max', response.available_quantity).val(
-                                        response.available_quantity);
+                                    .attr('max', response.availableQuantity).val(
+                                        response.availableQuantity);
                                 $('<td>').append(quantityInput).appendTo(tableRow);
                                 var buttonCell = $('<td>');
                                 var addButton = $('<button class="btn btn-success">')
@@ -1140,10 +1154,9 @@
                                     var requestData = {
                                         userId: userId,
                                         itemId: itemId,
-                                        brand: brand,
-                                        model: model,
-                                        description: description,
+                                        order_id_user: order_id_user,
                                         serial: serial,
+                                        duration: duration,
                                         quantity: order_quantity
                                     };
 
@@ -1198,6 +1211,7 @@
                         var itemId = ui.item.id;
                         var order_id_user = $("#order-user-id").val();
                         var serialNumber = ui.item.serialNumber;
+                        var duration = ui.item.duration;
 
 
                         $.ajax({
@@ -1209,6 +1223,7 @@
                             data: {
                                 userID: userID,
                                 itemId: itemId,
+                                duration: duration,
                                 order_id_user:order_id_user,
                                 serialNumber: serialNumber
                             },
@@ -1497,7 +1512,7 @@
                             } else if (response.error) {
                                 Swal.fire(
                                     'Error',
-                                    'The serial number does not exist or is already borrowed.',
+                                    response.error,
                                     'error'
                                 );
                             } else if (response.duplicate) {

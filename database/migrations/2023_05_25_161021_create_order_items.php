@@ -24,6 +24,8 @@ class CreateOrderItems extends Migration
             $table->string('remarks')->nullable();
             $table->string('order_serial_number')->nullable();
             $table->date('date_returned');
+            $table->integer('number_of_day_overdue')->nullable();
+            $table->integer('overdue_payment')->nullable();
             $table->string('released_by')->nullable();
             $table->string('returned_to')->nullable();
             $table->timestamps();

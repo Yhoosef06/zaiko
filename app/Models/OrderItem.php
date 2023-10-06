@@ -19,6 +19,8 @@ class OrderItem extends Model
         'order_quantity',
         'status',
         'remarks',
+        'number_of_day_overdue',
+        'overdue_payment',
         'order_serial_number',
         'date_returned',
         'returned_to',
