@@ -12,7 +12,7 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::withCount('users')->get();
+        $departments = Department::all();
 
         return view('pages.admin.listOfDepartments', compact('departments'));
     }
