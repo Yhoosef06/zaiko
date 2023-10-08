@@ -20,6 +20,7 @@ use App\Rules\ExistsInDatabase;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
@@ -32,10 +33,15 @@ class ItemsController extends Controller
     public function index()
     {
         //admin
-        if (Auth::user()->account_type == 'admin') {
-            $items = Item::all();
-            // dd($items);
-            return view('pages.admin.listOfItems')->with(compact('items'));
+        if (Auth::user()->roles->contains('name', 'admin')) {
+            $role = Role::where('name', 'admin')->first();
+            $canManageInventory = $role->permissions->contains('id', 1);
+            if (!$canManageInventory) {
+                $items = Item::all();
+                return view('pages.admin.listOfItems')->with(compact('items'));
+            } else {
+                return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
+            }
         } else {
             $user_dept_id = Auth::user()->department_id;
             $rooms = Room::where('department_id', $user_dept_id)->get();
@@ -300,15 +306,15 @@ class ItemsController extends Controller
         $randomString = Str::random(10);
         $itemImage = $request->file('item_image');
         $imagePath = null;
-       
+
         if ($request->input('location') == null) {
             return response()->json(['emptyLocation' => 'Please select a room/location.']);
         }
-     
+
         if ($request->input('item_category') == null) {
             return response()->json(['emptyCategory' => 'Please select a category for the item.']);
         }
-      
+
         if ($itemImage) {
             $imagePath = $itemImage->storeAs(
                 'Item Images',
@@ -316,7 +322,7 @@ class ItemsController extends Controller
                 'public'
             );
         }
-    
+
         $this->validate($request, [
             'location' => 'required',
             'item_category' => 'required',

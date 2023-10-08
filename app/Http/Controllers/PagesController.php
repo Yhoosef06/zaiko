@@ -28,9 +28,8 @@ class PagesController extends Controller
 
         $userId = auth()->user()->id_number;
         $user = User::find($userId);
-        $managerRole = Role::where('name', 'manager')->first(); 
 
-        if (Auth::user()->account_type == 'admin') {
+        if ($user->roles->contains('name', 'admin')) {
             $totalItems = Item::where('parent_item', null)
                 ->sum('quantity');
             $users = User::all();
@@ -40,7 +39,7 @@ class PagesController extends Controller
             $borrowedItems = OrderItem::where('status', 'borrowed')
                 ->sum('order_quantity');
             return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers', 'borrowedItems'));
-        } elseif ($user && $user->hasRole($managerRole)) {
+        } else {
             // $manager_dept_id = Auth::user()->department_id;
             // $room_dept_id = Room::where('department_id', $manager_dept_id);
             // $pendingRegistrants = User::where('account_status', 'pending')

@@ -27,7 +27,7 @@
                     data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
        with font-awesome or any other icon font library -->
-                    @if (Auth::user()->role == 'borrower')
+                    @if (Auth::user()->roles->contains('name', 'student'))
                         <li class="nav-item">
                             <a href="{{ route('student.dashboard') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
@@ -76,7 +76,7 @@
                                 @endif
                             </a>
                         </li>
-                    @elseif(Auth::user()->account_type == 'admin')
+                    @elseif(Auth::user()->roles->contains('name', 'admin') || Auth::user()->roles->contains('name', 'lab-oic'))
                         <li class="nav-item">
                             <a href="{{ route('admin.dashboard') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
@@ -179,9 +179,9 @@
                                         <div class="ml-3">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Overdue</p>
-                                            @if ($itemcount != 0)
+                                            {{-- @if ($itemcount != 0)
                                                 <span class="badge badge-danger right">{{ $itemcount }}</span>
-                                            @endif
+                                            @endif --}}
                                         </div>
                                     </a>
                                 </li>

@@ -73,7 +73,7 @@ Route::get('modify-security-question-{id_number}', [UserController::class, 'modi
 Route::post('save-modified-security-question-{id_number}', [UserController::class, 'saveModifiedSecurityQuestion'])->name('save_modified_security_question');
 
 //admin
-Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function () {
+// Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
@@ -224,7 +224,7 @@ Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function (
     Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
     Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
     Route::get('/report-test', [ItemsController::class, 'reportTest']);
-});
+// });
 
 //student
 Route::middleware(['auth', 'user-role:borrower'])->group(function () {

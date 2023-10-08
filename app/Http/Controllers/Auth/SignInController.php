@@ -28,7 +28,7 @@ class SignInController extends Controller
             $user = User::find($userId);
 
             if ($user->roles->contains('name', 'admin')) {
-                dd('hey admin');
+                // dd('hey admin');
                 return redirect()->route('admin.dashboard');
             } else if ($user->roles->contains('name', 'lab-oic') || $user->roles->contains('name', 'reads')) {
                 dd('hey lab-oic');
