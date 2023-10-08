@@ -25,18 +25,14 @@ class UserRoleSeeder extends Seeder
             ],
             [
                 'user_id_number' => 2016013001,
-                'role_id' => 2
+                'role_id' => 4
             ],
             [
                 'user_id_number' => 2014036392,
-                'role_id' => 3
+                'role_id' => 2
             ],
             [
                 'user_id_number' => 2012321404,
-                'role_id' => 3
-            ],
-            [
-                'user_id_number' => 2016331404,
                 'role_id' => 3
             ],
             [

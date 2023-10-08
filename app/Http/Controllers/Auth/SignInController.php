@@ -26,11 +26,12 @@ class SignInController extends Controller
         if (auth()->attempt(['id_number' => $input['id_number'], 'password' => $input['password']])) {
             $userId = auth()->user()->id_number;
             $user = User::find($userId);
-            $managerRole = Role::where('name', 'manager')->first(); 
 
-            if (auth()->user()->account_type == 'admin') {
+            if ($user->roles->contains('name', 'admin')) {
+                dd('hey admin');
                 return redirect()->route('admin.dashboard');
-            } else if ($user && $user->hasRole($managerRole)) {
+            } else if ($user->roles->contains('name', 'lab-oic') || $user->roles->contains('name', 'reads')) {
+                dd('hey lab-oic');
                 if ($user) {
                     $user->update([
                         'last_login_at' => now()
@@ -43,7 +44,8 @@ class SignInController extends Controller
                 } else {
                     return redirect()->route('dashboard');
                 }
-            } else {
+            } else if($user->roles->contains('name', 'student' || $user->roles->contains('name', 'faculty'))) {
+            dd('hey student');
                 $userId = auth()->user()->id_number;
                 $user = User::find($userId);
                 if ($user) {
@@ -55,7 +57,7 @@ class SignInController extends Controller
                     return redirect()->route('change_user_password', ['id_number' => auth()->user()->id_number]);
                 } elseif (auth()->user()->security_question_id == null) {
                     return redirect()->route('setup_security_question', ['id_number' => auth()->user()->id_number]);
-                }else {
+                } else {
                     return redirect()->route('student.dashboard');
                 }
             }

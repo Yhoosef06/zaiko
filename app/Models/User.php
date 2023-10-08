@@ -94,9 +94,4 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Department::class);
     }
-
-    public function hasRole(Role $role)
-    {
-        return $this->roles->contains('id', $role->id);
-    }
 }

@@ -64,7 +64,6 @@ Route::get('/setup-security-question-{id_number}', [SecurityQuestionController::
 Route::post('/store-security-question-{id_number}', [SecurityQuestionController::class, 'storeSecurityQuestion'])->name('store_security_question');
 
 //common
-Route::get('/dashboard', [PagesController::class, 'index'])->name('dashboard');
 Route::get('change-user-{id_number}-password', [UserController::class, 'changeUserPassword'])->name('change_user_password');
 Route::post('updating-user-{id_number}-password', [UserController::class, 'saveUserNewPassword'])->name('save_user_new_password');
 Route::get('profile-{id_number}', [UserController::class, 'viewProfile'])->name('view_profile');
@@ -74,13 +73,13 @@ Route::get('modify-security-question-{id_number}', [UserController::class, 'modi
 Route::post('save-modified-security-question-{id_number}', [UserController::class, 'saveModifiedSecurityQuestion'])->name('save_modified_security_question');
 
 //admin
-Route::middleware(['auth', 'user-status:admin|student|faculty'])->group(function () {
+Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
     // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
     // Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
-    Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');
+    Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
 
     // FOR ITEMS
     Route::get('adding-new-item', [ItemsController::class, 'addItem'])->name('add_item');
@@ -181,7 +180,6 @@ Route::middleware(['auth', 'user-status:admin|student|faculty'])->group(function
     Route::get('remove-borrow/{id}', [BorrowController::class, 'removeBorrow'])->name('remove-borrow');
     Route::get('complete-transaction/{id}', [BorrowController::class, 'completeTransaction'])->name('complete-transaction');
     Route::get('order-admin-remove/{id}', [BorrowController::class, 'orderAdminRemove'])->name('order-admin-remove');
-    Route::get('order-user-remove/{id}', [BorrowController::class, 'orderUserRemove'])->name('order-user-remove');
     Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
     Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
     Route::get('/searchItemAdmin', [BorrowController::class, 'searchItemAdmin'])->name('searchItemAdmin');
