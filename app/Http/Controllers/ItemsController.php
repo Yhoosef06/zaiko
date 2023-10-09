@@ -544,7 +544,7 @@ class ItemsController extends Controller
     public function transferItem($id)
     {
         $item = Item::find($id);
-        if (auth::user()->account_type == 'admin') {
+        if (Auth::user()->roles->contains('name', 'admin')) {
             $rooms = Room::all();
         } else {
             $dept_id = auth::user()->department_id;
