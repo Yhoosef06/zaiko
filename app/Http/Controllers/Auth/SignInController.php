@@ -30,8 +30,8 @@ class SignInController extends Controller
             if ($user->roles->contains('name', 'admin')) {
                 // dd('hey admin');
                 return redirect()->route('admin.dashboard');
-            } else if ($user->roles->contains('name', 'lab-oic') || $user->roles->contains('name', 'reads')) {
-                dd('hey lab-oic');
+            } else if ($user->roles->contains('name', 'lab-oic') || $user->roles->contains('name', 'lab-ass')) {
+
                 if ($user) {
                     $user->update([
                         'last_login_at' => now()
@@ -42,7 +42,7 @@ class SignInController extends Controller
                 } elseif (auth()->user()->security_question_id == null) {
                     return redirect()->route('setup_security_question', ['id_number' => auth()->user()->id_number]);
                 } else {
-                    return redirect()->route('dashboard');
+                    return redirect()->route('admin.dashboard');
                 }
             } else if($user->roles->contains('name', 'student' || $user->roles->contains('name', 'faculty'))) {
             dd('hey student');

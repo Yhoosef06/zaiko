@@ -28,6 +28,14 @@ class UserDepartmentSeeder extends Seeder
                 'department_id' => 19
             ],
             [
+                'user_id_number' => 2016013001,
+                'department_id' => 18
+            ],
+            [
+                'user_id_number' => 2016013001,
+                'department_id' => 20
+            ],
+            [
                 'user_id_number' => 2014036392,
                 'department_id' => 19
             ],

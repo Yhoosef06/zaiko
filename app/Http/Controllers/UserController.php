@@ -25,19 +25,16 @@ class UserController extends Controller
     public function index()
     {
         //admin
-        if (Auth::user()->account_type == 'admin') {
+        if (Auth::user()->roles->contains('name', 'admin')) {
             $users = User::all();
-            $departments = Department::all();
+            return view('pages.admin.listOfUsers')->with(compact('users'));
+        } else {
+            $department = Auth::user()->departments->first();
+            $userCollegeId = $department->college_id;
 
-            return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
-        } else if (Auth::user()->role == 'manager') {
-            $userDeptId = Auth::user()->department_id;
-            $userCollegeId = Department::where('id', $userDeptId)->value('college_id');
-
-            $users = User::where('account_type', 'student')
-                ->whereHas('departments', function ($query) use ($userCollegeId) {
-                    $query->where('college_id', $userCollegeId);
-                })
+            $users = User::whereHas('departments', function ($query) use ($userCollegeId) {
+                $query->where('college_id', $userCollegeId);
+            })
                 ->orderBy('id_number', 'DESC')
                 ->get();
             $departments = Department::all();
@@ -75,31 +72,29 @@ class UserController extends Controller
     {
         $securityQuestions = SecurityQuestion::all();
 
-        if (Auth::user()->account_type != 'admin') {
+        if (Auth::user()->roles->contains('name', 'lab-oic') || Auth::user()->roles->contains('name', 'lab-ass')) {
 
-            $user_dept_id = Auth::user()->department_id;
-            $user_department = Department::find($user_dept_id);
-            $user_college_id = $user_department->college_id;
+            $department = Auth::user()->departments->first();
+            $user_college_id = $department->college_id;
 
             $departments = Department::with('college')->where('college_id', $user_college_id)->get();
             $departments->each(function ($department) {
                 $department->college_name = $department->college->college_name;
             });
 
-            return view('pages.admin.addUser')->with(compact('departments', 'securityQuestions'));
-        } else {
+            return view('pages.admin.addUser')->with(compact('departments'));
+        } else if (Auth::user()->roles->contains('name', 'admin')) {
             $departments = Department::with('college')->get();
 
             $departments->each(function ($department) {
                 $department->college_name = $department->college->college_name;
             });
-            return view('pages.admin.addUser')->with(compact('departments', 'securityQuestions'));
+            return view('pages.admin.addUser')->with(compact('departments'));
         }
     }
 
     public function saveNewUser(Request $request)
     {
-
         $this->validate(
             $request,
             [
@@ -118,13 +113,13 @@ class UserController extends Controller
                 'id_number' => $request->id_number,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
-                'account_type' => $request->account_type,
                 'account_status' => $request->account_status,
-                'role' => $request->role,
-                'department_id' => $request->department_id,
                 'password' => Hash::make($request->id_number),
                 'password_updated' => 0,
             ]);
+
+            
+
             Session::flash('success', 'User Successfully Added. Do you want to add another user?');
             return redirect('add-new-user');
         } else {

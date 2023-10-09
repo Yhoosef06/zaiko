@@ -41,7 +41,7 @@
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Pending Registrants</span>
                                                 <span class="info-box-number">
-                                                    {{-- {{ $totalPendingRegistrants }} --}}
+                                                    {{ $totalPendingRegistrants }}
                                                 </span>
                                             </div>
                                         </div>
@@ -76,7 +76,7 @@
                                                     class="fas fa-box"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Inventory</span>
-                                                {{-- <span class="info-box-number">{{ $totalItems }}</span> --}}
+                                                <span class="info-box-number">{{ $totalItems }}</span>
                                             </div>
 
                                         </div>

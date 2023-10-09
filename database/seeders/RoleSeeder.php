@@ -28,7 +28,7 @@ class RoleSeeder extends Seeder
                 'name' => 'lab-oic',
             ],
             [
-                'name' => 'reads',
+                'name' => 'lab-ass',
             ],
         ];
         DB::table('roles')->insert($role); 

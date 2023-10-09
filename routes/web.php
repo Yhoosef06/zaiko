@@ -77,7 +77,7 @@ Route::post('save-modified-security-question-{id_number}', [UserController::clas
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
-    // Route::get('admin-dashboard', [PagesController::class,'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [PagesController::class,'index'])->name('admin.dashboard');
     // Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
 
@@ -196,9 +196,6 @@ Route::post('save-modified-security-question-{id_number}', [UserController::clas
     Route::post('/submitUserBorrow', [BorrowController::class, 'submitUserBorrow'])->name('submitUserBorrow');
     Route::post('/submit-admin-order', [BorrowController::class, 'submitAdminOrder'])->name('submitAdminOrder');
 
-
-
-
     // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
     Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
     Route::post('/lostItem', [BorrowController::class, 'lostItem'])->name('lostItem');
@@ -211,8 +208,6 @@ Route::post('save-modified-security-question-{id_number}', [UserController::clas
     Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
     Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
     Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
-
-
 
     //storing references
     Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');

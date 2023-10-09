@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Role;
 use App\Models\Room;
+use App\Models\User;
 use App\Models\Brand;
 use App\Models\Order;
 use App\Models\Models;
@@ -20,7 +22,6 @@ use App\Rules\ExistsInDatabase;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
-use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
@@ -36,20 +37,32 @@ class ItemsController extends Controller
         if (Auth::user()->roles->contains('name', 'admin')) {
             $role = Role::where('name', 'admin')->first();
             $canManageInventory = $role->permissions->contains('id', 1);
-            if (!$canManageInventory) {
+            if ($canManageInventory) {
                 $items = Item::all();
                 return view('pages.admin.listOfItems')->with(compact('items'));
             } else {
                 return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
             }
-        } else {
-            $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->get();
-            // $items = Item::whereIn('location', $rooms->pluck('id'))->get()->groupBy(['brand', 'model', 'item_category']);
-            $items = Item::whereIn('location', $rooms->pluck('id'))->get();
-            return view('pages.admin.listOfItems')->with('items', $items);
+        } else if (Auth::user()->roles->contains('name', 'lab-oic') || Auth::user()->roles->contains('name', 'lab-ass')) {
+            $role = Role::where('name', 'lab-oic')
+                ->orWhere('name', 'lab-ass')
+                ->first();
+            $canManageInventory = $role->permissions->contains('id', 1);
+            if ($canManageInventory) {
+                $userId = auth()->user()->id_number;
+                $user = User::find($userId);
+                $departments = $user->departments;
+
+                $rooms = Room::where('department_id', $departments->pluck('id'))->get();
+                $items = Item::whereIn('location', $rooms->pluck('id'))->get();
+
+                return view('pages.admin.listOfItems')->with('items', $items);
+            } else {
+                return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
+            }
         }
     }
+
     // dd($itemLogs);
     public function viewItemDetails($id)
     {
@@ -62,7 +75,7 @@ class ItemsController extends Controller
     public function addItem()
     {
         //admin
-        if (Auth::user()->account_type == 'admin') {
+        if (Auth::user()->roles->contains('name', 'admin')) {
             $rooms = Room::all();
             $brands = Brand::all()->sortBy('brand_name');
             $models = Models::all();
@@ -74,8 +87,11 @@ class ItemsController extends Controller
             $colleges = College::with('departments')->orderBy('college_name')->get();
             return view('pages.admin.addItem')->with(compact('rooms', 'itemCategories', 'departments', 'colleges', 'brands', 'models'));
         } else {
-            $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $userId = auth()->user()->id_number;
+            $user = User::find($userId);
+            $departments = $user->departments;
+
+            $rooms = Room::where('department_id', $departments->pluck('id'))->get();
             $brands = Brand::all()->sortBy('brand_name');
             $models = Models::all();
             $itemCategories = ItemCategory::all();
@@ -96,11 +112,12 @@ class ItemsController extends Controller
     public function editItemPage($id)
     {
         $user = Auth::user();
-        $isAdmin = $user->account_type == 'admin';
+        $departments = $user->departments;
+        $isAdmin = Auth::user()->roles->contains('name', 'admin');
         $item = Item::find($id);
         $brands = Brand::all();
         $models = Models::all();
-        $rooms = $isAdmin ? Room::all() : Room::where('department_id', $user->department_id)->get();
+        $rooms = $isAdmin ? Room::all() : Room::where('department_id', $departments->pluck('id'))->get();
         $itemCategories = ItemCategory::all();
         $category = $item->category ? $item->category->category_name : null;
 
@@ -185,119 +202,6 @@ class ItemsController extends Controller
             return redirect('list-of-items');
         }
     }
-
-    // public function saveNewItem(Request $request)
-    // {
-    //     $serial_numbers = $request->serial_number;
-    //     $quantity = $request->has('quantity_checkbox') ? 1 : $request->input('quantity');
-    //     $randomString = Str::random(10);
-    //     $itemImage = $request->file('item_image');
-    //     $imagePath = null;
-    //     $invalidSerialNumbers = [];
-    //     $validSerialNumbers = [];
-
-    //     if ($itemImage) {
-    //         $imagePath = $itemImage->storeAs(
-    //             'Item Images',
-    //             $randomString . '.' . $itemImage->getClientOriginalExtension(),
-    //             'public'
-    //         );
-    //     }
-
-    //     $this->validate($request, [
-    //         'location' => 'required',
-    //         'item_category' => 'required',
-    //         'item_description' => 'required',
-    //         'aquisition_date' => 'required',
-    //         'inventory_tag' => 'required',
-    //         'quantity' => 'required|numeric|min:1',
-    //         'status' => 'required',
-    //     ]);
-
-    //     if ($serial_numbers !== null) {
-
-    //         foreach ($serial_numbers as $serial_number) {
-
-    //             $validator = Validator::make(['serial_number' => $serial_number], [
-    //                 'serial_number' => ['unique:items,serial_number', 'regex:/^[a-zA-Z0-9]*$/'],
-    //             ]);
-
-    //             if ($validator->fails()) {
-    //                 $invalidSerialNumbers[] = $serial_number;
-    //             } else {
-    //                 $validSerialNumbers[] = $serial_number;
-    //             }
-    //         }
-
-    //         foreach ($validSerialNumbers as $validSerialNumber) {
-    //             $item = Item::create([
-    //                 'serial_number' => $validSerialNumber ? $validSerialNumber : 'N/A',
-    //                 'location' => $request->location,
-    //                 'category_id' => $request->item_category,
-    //                 'brand_id' => $request->brand ? $request->brand : 1,
-    //                 'model_id' => $request->model ? $request->model : 1,
-    //                 'part_number' => $request->part_number ? $request->part_number : 'N/A',
-    //                 'description' => $request->item_description,
-    //                 'aquisition_date' => $request->aquisition_date,
-    //                 'inventory_tag' => $request->inventory_tag,
-    //                 'quantity' => $quantity,
-    //                 'status' => $request->status,
-    //                 'duration_type' => $request->duration_type,
-    //                 'duration' => $request->duration,
-    //                 'borrowed' => 'no',
-    //                 'item_image' =>  $imagePath,
-    //             ]);
-
-    //             $itemLog = new ItemLog();
-    //             $itemLog->item_id = $item->id;
-    //             $itemLog->quantity = $item->quantity;
-    //             $itemLog->encoded_by = Auth::user()->id_number;
-    //             $itemLog->mode = 'added';
-    //             $itemLog->date = now();
-    //             $itemLog->save();
-    //         }
-
-    //         if (!empty($invalidSerialNumbers) && empty($validSerialNumbers)) {
-    //             session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-    //             return redirect('/adding-new-item')->with('error', 'Failed to add item(s) due to invalid serial numbers. Please check the following serial numbers: ');
-    //         } elseif (!empty($invalidSerialNumbers) && !empty($validSerialNumbers)) {
-    //             session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-    //             return redirect('/adding-new-item')->with('warning', 'Item(s) added successfully, but some serial numbers are invalid. Please check the following serial numbers: ');
-    //         } else {
-    //             Session::flash('success', 'Item(s) added successfully. Do you want to add another one?');
-    //             return redirect('/adding-new-item');
-    //         }
-    //     } else {
-    //         $item = Item::create([
-    //             'serial_number' => 'N/A',
-    //             'location' => $request->location,
-    //             'category_id' => $request->item_category,
-    //             'brand_id' => $request->brand ? $request->brand : 1,
-    //             'model_id' => $request->model ? $request->model : 1,
-    //             'part_number' => $request->part_number ? $request->part_number : 'N/A',
-    //             'description' => $request->item_description,
-    //             'aquisition_date' => $request->aquisition_date,
-    //             'inventory_tag' => $request->inventory_tag,
-    //             'quantity' => $quantity,
-    //             'status' => $request->status,
-    //             'duration_type' => $request->duration_type,
-    //             'duration' => $request->duration,
-    //             'borrowed' => 'no',
-    //             'item_image' =>  $imagePath,
-    //         ]);
-
-    //         $itemLog = new ItemLog();
-    //         $itemLog->item_id = $item->id;
-    //         $itemLog->quantity = $item->quantity;
-    //         $itemLog->encoded_by = Auth::user()->id_number;
-    //         $itemLog->mode = 'added';
-    //         $itemLog->date = now();
-    //         $itemLog->save();
-    //     }
-
-    //     Session::flash('success', 'Item(s) added successfully. Do you want to add another one?');
-    //     return redirect('/adding-new-item');
-    // }
 
     public function saveNewItem(Request $request)
     {
@@ -428,12 +332,12 @@ class ItemsController extends Controller
     public function generateReportPage()
     {
         //admin
-        if (Auth::user()->account_type == 'admin') {
+        if (Auth::user()->roles->contains('name', 'admin')) {
             $rooms = Room::all();
             return view('pages.admin.report')->with(compact('rooms'));
         } else {
-            $user_dept_id = Auth::user()->department_id;
-            $rooms = Room::where('department_id', $user_dept_id)->get();
+            $departments = Auth::user()->departments;
+            $rooms = Room::where('department_id', $departments->pluck('id'))->get();
             return view('pages.admin.report')->with(compact('rooms'));
         }
     }

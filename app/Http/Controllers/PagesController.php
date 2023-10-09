@@ -21,13 +21,10 @@ class PagesController extends Controller
 {
     public function index()
     {
-        // $user = auth()->user();
-        // $user_dept_id = $user->department_id;
-        // $department = Department::with('college')->find($user_dept_id);
-        // $college = $department->college;
-
         $userId = auth()->user()->id_number;
         $user = User::find($userId);
+        $departmentIds = $user->departments->pluck('id');
+        $college = $user->departments->first()->college;
 
         if ($user->roles->contains('name', 'admin')) {
             $totalItems = Item::where('parent_item', null)
@@ -39,19 +36,28 @@ class PagesController extends Controller
             $borrowedItems = OrderItem::where('status', 'borrowed')
                 ->sum('order_quantity');
             return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers', 'borrowedItems'));
-        } else {
-            // $manager_dept_id = Auth::user()->department_id;
-            // $room_dept_id = Room::where('department_id', $manager_dept_id);
-            // $pendingRegistrants = User::where('account_status', 'pending')
-            //     ->where('department_id', $manager_dept_id)
-            //     ->get();
-            // $approvedUsers = User::where('account_status', 'approved')
-            //     ->where('department_id', $manager_dept_id)
-            //     ->get();
-            // $items = Item::whereHas('room', function ($query) use ($manager_dept_id) {
-            //     $query->where('department_id', $manager_dept_id)
-            //         ->where('parent_item', null);
-            // })->get();
+            
+        } else if ($user->roles->contains('name', 'lab-oic') || $user->roles->contains('name', 'lab-ass')) {
+
+            $room_dept_id = Room::whereIn('department_id', $departmentIds)->get();
+
+            $pendingRegistrants = User::whereHas('departments', function ($query) use ($departmentIds) {
+                $query->whereIn('department_id', $departmentIds);
+            })
+                ->where('account_status', 'pending')
+                ->get();
+
+            $approvedUsers = User::whereHas('departments', function ($query) use ($departmentIds) {
+                $query->whereIn('department_id', $departmentIds);
+            })
+                ->where('account_status', 'approved')
+                ->get();
+
+            $items = Item::whereHas('room', function ($query) use ($departmentIds) {
+                $query->whereIn('department_id', $departmentIds)
+                    ->where('parent_item', null);
+            })->get();
+
             // $borrowedItems = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
             //     ->join('users', 'orders.user_id', '=', 'users.id_number')
             //     ->join('departments', 'users.department_id', '=', 'departments.id')
@@ -74,11 +80,12 @@ class PagesController extends Controller
 
             // $totalborrowedItems = $borrowedItems->count();
             // $totalBorrowPendings = $borrowPendings->count();
-            // $totalItems = $items->count();
-            // $totalPendingRegistrants = $pendingRegistrants->count();
-            // $totalApprovedUsers = $approvedUsers->count();
-            // return view('pages.admin.managerDashboard')->with(compact('totalBorrowPendings','totalborrowedItems', 'totalPendingRegistrants', 'totalApprovedUsers', 'totalItems'));
-            return view('pages.admin.managerDashboard');
+
+            $totalItems = $items->count();
+            $totalPendingRegistrants = $pendingRegistrants->count();
+            $totalApprovedUsers = $approvedUsers->count();
+
+            return view('pages.admin.managerDashboard')->with(compact('totalPendingRegistrants', 'totalApprovedUsers', 'totalItems'));
         }
     }
 

@@ -36,9 +36,11 @@
                                         <th>Name</th>
                                         {{-- <th>Type</th> --}}
                                         <th>Status</th>
-                                        <th>Department</th>
+                                        @if (Auth::user()->roles->contains('name', 'admin'))
+                                            <th>Role</th>
+                                        @endif
+                                        <th>Department(s)</th>
                                         <th>Actions</th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,7 +68,18 @@
                                                             style="padding:10px">{{ 'Approved' }}</span>
                                                     </td>
                                                 @endif
-                                                <td>{{ $user->departments->department_name }}</td>
+                                                @if (Auth::user()->roles->contains('name', 'admin'))
+                                                    <td>
+                                                        @foreach ($user->roles as $role)
+                                                            {{ $role->name }} <br>
+                                                        @endforeach
+                                                    </td>
+                                                @endif
+                                                <td>
+                                                    @foreach ($user->departments as $department)
+                                                        {{ $department->department_name }} <br>
+                                                    @endforeach
+                                                </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                         data-target="#modal-user-info" data-toggle="tooltip" title='View'
