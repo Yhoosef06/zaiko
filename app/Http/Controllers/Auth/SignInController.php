@@ -30,7 +30,7 @@ class SignInController extends Controller
             if ($user->roles->contains('name', 'admin')) {
                 // dd('hey admin');
                 return redirect()->route('admin.dashboard');
-            } else if ($user->roles->contains('name', 'lab-oic') || $user->roles->contains('name', 'lab-ass')) {
+            } else if ($user->roles->contains('name', 'manager')) {
 
                 if ($user) {
                     $user->update([
@@ -44,8 +44,7 @@ class SignInController extends Controller
                 } else {
                     return redirect()->route('admin.dashboard');
                 }
-            } else if($user->roles->contains('name', 'student' || $user->roles->contains('name', 'faculty'))) {
-            // dd('hey student');
+            } else if($user->roles->contains('name', 'borrower')) {
                 $userId = auth()->user()->id_number;
                 $user = User::find($userId);
                 if ($user) {

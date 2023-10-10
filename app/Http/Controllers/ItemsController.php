@@ -43,10 +43,8 @@ class ItemsController extends Controller
             } else {
                 return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
             }
-        } else if (Auth::user()->roles->contains('name', 'lab-oic') || Auth::user()->roles->contains('name', 'lab-ass')) {
-            $role = Role::where('name', 'lab-oic')
-                ->orWhere('name', 'lab-ass')
-                ->first();
+        } else if (Auth::user()->roles->contains('name', 'manager')) {
+            $role = Role::where('name', 'manager')->first();
             $canManageInventory = $role->permissions->contains('id', 1);
             if ($canManageInventory) {
                 $userId = auth()->user()->id_number;

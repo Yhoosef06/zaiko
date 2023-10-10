@@ -59,8 +59,13 @@
                                         </div>
                                         <div class="container">
                                             <Label>
-                                                {{ Auth::user()->account_type == 'student' || Auth::user()->account_type == 'reads' ? 'Program:' : 'Department:' }}</Label>
-                                            {{ $user->departments->department_name }}
+                                                {{ Auth::user()->account_type == 'student' || Auth::user()->account_type == 'reads' ? 'Program:' : 'Department(s):' }}</Label>
+                                            @foreach ($user->departments as $key => $department)
+                                                {{ $department->department_name }}
+                                                @if ($key < count($user->departments) - 1)
+                                                    ,
+                                                @endif
+                                            @endforeach
                                         </div>
                                         <hr>
                                         <div class="text-right">
