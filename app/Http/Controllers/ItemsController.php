@@ -54,8 +54,7 @@ class ItemsController extends Controller
                 $departmentIds = $user->departments->pluck('id');
                 $rooms = Room::whereIn('department_id', $departmentIds)->get();
                 $roomIds = $rooms->pluck('id');
-                $items = Item::whereIn('location', $roomIds)->get();
-                return view('pages.admin.listOfItems')->with('items', $items);
+                $items = Item::whereIn('location', $roomIds)->get();                return view('pages.admin.listOfItems')->with('items', $items);
             } else {
                 return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
             }
@@ -88,9 +87,9 @@ class ItemsController extends Controller
         } else {
             $userId = auth()->user()->id_number;
             $user = User::find($userId);
-            $departments = $user->departments;
+            $departmentIds = $user->departments->pluck('id');
 
-            $rooms = Room::where('department_id', $departments->pluck('id'))->get();
+            $rooms = Room::whereIn('department_id', $departmentIds)->get();
             $brands = Brand::all()->sortBy('brand_name');
             $models = Models::all();
             $itemCategories = ItemCategory::all();
