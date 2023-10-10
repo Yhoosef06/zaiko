@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Role;
 use App\Models\OrderItem;
 use App\Models\OrderItemTemp;
 use App\Models\Room;
@@ -14,6 +15,7 @@ use App\Models\ItemCategory;
 use App\Models\ItemLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -79,27 +81,28 @@ class BorrowController extends Controller
 
     public function pending()
     {
-        $user = auth()->user();
-        $user_dept_id = $user->department_id;
-        $department = Department::with('college')->find($user_dept_id);
-        $college = $department->college;
-
-
-
-
-        $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+        if (Auth::user()->roles->contains('name', 'admin')) {
+          
+         $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('departments', 'users.department_id', '=', 'departments.id')
-            ->join('colleges', 'departments.college_id', '=', 'colleges.id')
-            ->where('colleges.id', $college->id)
             ->whereNotNull('orders.date_submitted')
             ->whereNull('orders.approved_by')
             ->groupBy('orders.id')
             ->get();
 
+            return view('pages.admin.pending')->with(compact('userPendings'));
+
+        } else if (Auth::user()->roles->contains('name', 'lab-oic') || Auth::user()->roles->contains('name', 'lab-ass')) {
+            $user = auth()->user();
+           dd($user);
+        
+        }
 
 
-        return view('pages.admin.pending')->with(compact('userPendings'));
+    
+
+
+        
     }
 
     public function returned()
