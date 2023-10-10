@@ -21,9 +21,9 @@ class UserPermission
         $user = auth()->user();
 
         // Check if the user has the required permission
-        if (!$user->hasPermission($permission)) {
-            abort(403, 'Unauthorized'); // You can customize the error message and status code
-        }
+        // if (!$user->hasPermission($permission)) {
+        //     abort(403, 'Unauthorized'); // You can customize the error message and status code
+        // }
 
         return $next($request);
     }

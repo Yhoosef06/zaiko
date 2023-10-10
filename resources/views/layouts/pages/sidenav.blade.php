@@ -27,7 +27,7 @@
                     data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
        with font-awesome or any other icon font library -->
-                    @if (Auth::user()->roles->contains('name', 'student') || Auth::user()->roles->contains('name', 'faculty'))
+                    @if (Auth::user()->roles->contains('name', 'borrower'))
                         <li class="nav-item">
                             <a href="{{ route('student.dashboard') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
