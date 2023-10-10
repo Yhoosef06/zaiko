@@ -73,7 +73,7 @@ Route::get('modify-security-question-{id_number}', [UserController::class, 'modi
 Route::post('save-modified-security-question-{id_number}', [UserController::class, 'saveModifiedSecurityQuestion'])->name('save_modified_security_question');
 
 //admin
-// Route::middleware(['auth', 'user-status:admin|reads|faculty'])->group(function () {
+Route::middleware(['auth', 'permission:manage-inventory,manage-user,generate-report,manage-settings,manage-borrowings'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
@@ -219,13 +219,12 @@ Route::post('save-modified-security-question-{id_number}', [UserController::clas
     Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
     Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
     Route::get('/report-test', [ItemsController::class, 'reportTest']);
-// });
+});
 
 //student
-Route::middleware(['auth', 'user-role:borrower'])->group(function () {
+Route::middleware(['auth', 'permission:borrow-items'])->group(function () {
     //student
-    Route::middleware(['user-role:borrower'])->group(function () {
-
+   
         Route::middleware(['account_status:pending'])->group(function () {
             Route::get('/approve', [PagesController::class, 'approve'])->name('approval');
         });
@@ -261,5 +260,4 @@ Route::middleware(['auth', 'user-role:borrower'])->group(function () {
             // Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
 
         });
-    });
 });
