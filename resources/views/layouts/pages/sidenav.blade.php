@@ -76,9 +76,7 @@
                                 @endif
                             </a>
                         </li>
-                    @elseif(Auth::user()->roles->contains('name', 'admin') ||
-                            Auth::user()->roles->contains('name', 'lab-ass') ||
-                            Auth::user()->roles->contains('name', 'lab-oic'))
+                    @elseif(Auth::user()->roles->contains('name', 'admin') || Auth::user()->roles->contains('name', 'manager'))
                         <li class="nav-item">
                             <a href="{{ route('admin.dashboard') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>

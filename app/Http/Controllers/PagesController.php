@@ -37,7 +37,7 @@ class PagesController extends Controller
                 ->sum('order_quantity');
             return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers', 'borrowedItems'));
             
-        } else if ($user->roles->contains('name', 'lab-oic') || $user->roles->contains('name', 'lab-ass')) {
+        } else if ($user->roles->contains('name', 'manager')) {
 
             $room_dept_id = Room::whereIn('department_id', $departmentIds)->get();
 

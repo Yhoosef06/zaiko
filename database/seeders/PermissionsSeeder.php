@@ -33,6 +33,39 @@ class PermissionsSeeder extends Seeder
             [
                 'name' => 'borrow-items',
             ],
+            [
+                'name' => 'add-items',
+            ],
+            [
+                'name' => 'update-items',
+            ],
+            [
+                'name' => 'view-items',
+            ],
+            [
+                'name' => 'delete-items',
+            ],
+            [
+                'name' => 'transfer-items',
+            ],
+            [
+                'name' => 'add-sub-items',
+            ],
+            [
+                'name' => 'replace-items',
+            ],
+            [
+                'name' => 'add-users',
+            ],
+            [
+                'name' => 'update-users',
+            ],
+            [
+                'name' => 'delete-users',
+            ],
+            [
+                'name' => 'view-users',
+            ],
         ];
         DB::table('permissions')->insert($permission); 
     }

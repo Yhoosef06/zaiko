@@ -72,7 +72,7 @@ class UserController extends Controller
     {
         $securityQuestions = SecurityQuestion::all();
 
-        if (Auth::user()->roles->contains('name', 'lab-oic') || Auth::user()->roles->contains('name', 'lab-ass')) {
+        if (Auth::user()->roles->contains('name', 'admin')) {
 
             $department = Auth::user()->departments->first();
             $user_college_id = $department->college_id;
@@ -83,7 +83,7 @@ class UserController extends Controller
             });
 
             return view('pages.admin.addUser')->with(compact('departments'));
-        } else if (Auth::user()->roles->contains('name', 'admin')) {
+        } else {
             $departments = Department::with('college')->get();
 
             $departments->each(function ($department) {
@@ -118,7 +118,7 @@ class UserController extends Controller
                 'password_updated' => 0,
             ]);
 
-            
+
 
             Session::flash('success', 'User Successfully Added. Do you want to add another user?');
             return redirect('add-new-user');
