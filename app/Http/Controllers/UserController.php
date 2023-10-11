@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\College;
-use App\Models\Department;
 use App\Models\User;
+use App\Models\College;
+use App\Models\UserRole;
+use App\Models\Department;
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
+use App\Models\UserDepartment;
 use App\Rules\MatchOldPassword;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use App\Models\SecurityQuestion;
 use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\Console\Question\Question;
 
 class UserController extends Controller
@@ -59,9 +61,9 @@ class UserController extends Controller
     {
         $user = User::find($id_number);
 
-        $department = $user->departments->department_name;
+        // $department = $user->departments->department_name;
 
-        $user['department'] = $department;
+        // $user['department'] = $department;
 
         // dd($user);
         // return response()->json($user);
@@ -102,8 +104,8 @@ class UserController extends Controller
                 'first_name' => 'required',
                 'last_name' => 'required',
                 'account_type' => 'required',
-                'account_status' => 'required',
-                'department_id' => 'required',
+                // 'account_status' => 'required',
+                // 'department_id' => 'required',
             ]
         );
 
@@ -113,12 +115,20 @@ class UserController extends Controller
                 'id_number' => $request->id_number,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
-                'account_status' => $request->account_status,
+                'account_status' => 'approved',
                 'password' => Hash::make($request->id_number),
                 'password_updated' => 0,
             ]);
 
+            UserDepartment::create([
+                'user_id_number' => $request->id_number,
+                'department_id' => $request->department_id
+            ]);
 
+            UserRole::create([
+                'user_id_number' => $request->id_number,
+                'role_id' => $request->role_id
+            ]);
 
             Session::flash('success', 'User Successfully Added. Do you want to add another user?');
             return redirect('add-new-user');

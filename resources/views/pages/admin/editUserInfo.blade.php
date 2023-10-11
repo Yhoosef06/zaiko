@@ -21,7 +21,7 @@
                                                 border-danger @enderror"
                     value="{{ $user->last_name }}">
 
-                <label>Program/Department:</label>
+                {{-- <label>Program/Department:</label>
                 @if (isset($departments))
                     <select id="department_id" name="department_id"
                         class="form-control @error('department_id') border-danger @enderror">
@@ -38,7 +38,7 @@
                             </optgroup>
                         @endforeach
                     </select>
-                @endif
+                @endif --}}
             </div>
 
             <div class="col">

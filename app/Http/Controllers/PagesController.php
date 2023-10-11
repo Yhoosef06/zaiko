@@ -23,9 +23,6 @@ class PagesController extends Controller
     {
         $userId = auth()->user()->id_number;
         $user = User::find($userId);
-        $departmentIds = $user->departments->pluck('id');
-        $college = $user->departments->first()->college;
-
         if ($user->roles->contains('name', 'admin')) {
             $totalItems = Item::where('parent_item', null)
                 ->sum('quantity');
@@ -36,8 +33,9 @@ class PagesController extends Controller
             $borrowedItems = OrderItem::where('status', 'borrowed')
                 ->sum('order_quantity');
             return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers', 'borrowedItems'));
-            
         } else if ($user->roles->contains('name', 'manager')) {
+            $departmentIds = $user->departments->pluck('id');
+            $college = $user->departments->first()->college;
 
             $room_dept_id = Room::whereIn('department_id', $departmentIds)->get();
 

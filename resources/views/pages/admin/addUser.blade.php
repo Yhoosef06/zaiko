@@ -69,24 +69,35 @@
                                             </div>
                                         @enderror
 
-                                        <label for="Item name">Program/Department:</label>
-                                        @if (isset($departments))
-                                            <select id="department_id" name="department_id"
-                                                class="form-control @error('department_id') border-danger @enderror">
-                                                <option value="" disabled selected>Select a Program/Department
+                                        <label for="Item name">School/Program:</label>
+                                        {{-- @if (isset($departments)) --}}
+                                        {{-- <select id="department_id" name="department_id"
+                                            class="form-control @error('department_id') border-danger @enderror">
+                                            <option value="" disabled selected>Select a Program/Department
+                                            </option>
+                                            @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                                <optgroup label="{{ $collegeName }}">
+                                                    @foreach ($departmentsGroup as $department)
+                                                        <option value="{{ $department->id }}"
+                                                            {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                                                            {{ $department->department_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </optgroup>
+                                            @endforeach
+                                        </select> --}}
+
+                                        @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                            <h5><input type="checkbox" name="" id=""> {{ $collegeName }}</h5>
+                                            @foreach ($departmentsGroup as $department)
+                                                <option value="{{ $department->id }}"
+                                                    {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                                                    {{ $department->department_name }}
                                                 </option>
-                                                @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                                                    <optgroup label="{{ $collegeName }}">
-                                                        @foreach ($departmentsGroup as $department)
-                                                            <option value="{{ $department->id }}"
-                                                                {{ old('department_id') == $department->id ? 'selected' : '' }}>
-                                                                {{ $department->department_name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </optgroup>
-                                                @endforeach
-                                            </select>
-                                        @endif
+                                            @endforeach
+                                        @endforeach
+
+                                        {{-- @endif --}}
 
                                         @error('department_id')
                                             <div class="text-danger">

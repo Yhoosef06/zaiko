@@ -59,7 +59,7 @@
 
             <a class="btn nav-link border-right border-1 text-lg text-bold" 
             @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null)
-                href="#"
+                href="{{ url()->current() }}"
             @else
                 href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}"
             @endif

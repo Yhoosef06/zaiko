@@ -25,9 +25,9 @@ class CreateItemLogsTable extends Migration
             $table->string('room_to')->nullable();
             $table->timestamps();
 
-            $table->foreign('encoded_by')->references('id_number')->on('users');
-            $table->foreign('order_item_id')->references('id')->on('order_items');
-            $table->foreign('item_id')->references('id')->on('items');
+            $table->foreign('encoded_by')->references('id_number')->on('users')->onDelete('cascade');
+            $table->foreign('order_item_id')->references('id')->on('order_items')->onDelete('cascade');
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
         });
     }
 

@@ -82,7 +82,6 @@ class SecurityQuestionController extends Controller
 
     public function storeSecurityQuestion(Request $request)
     {
-
         $request->validate([
             'question' => 'required|exists:security_questions,id',
             'answer' => 'required|string',
@@ -93,9 +92,13 @@ class SecurityQuestionController extends Controller
             'answer' => $request->answer
         ]);
 
-        if (Auth::user()->role == 'borrower') {
+        $userRoles = Auth::user()->roles;
+
+        $userRole = $userRoles->pluck('name')->first();
+
+        if ($userRole == 'borrower') {
             return redirect()->route('student.dashboard')->with('success', 'Security Settings Updated Successfully');
-        } else if (Auth::user()->role == 'manager') {
+        } else if ($userRole == 'manager') {
             return redirect()->route('dashboard');
         } else {
             return redirect()->route('admin.dashboard')->with('success', 'Security Settings Updated Successfully');

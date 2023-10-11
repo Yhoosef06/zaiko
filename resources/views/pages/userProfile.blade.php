@@ -91,7 +91,7 @@
                             <!-- /.card -->
                         </div>
                         <div>
-                            @if (Auth::user()->account_type == 'admin' || Auth::user()->role == 'manager')
+                            @if (Auth::user()->roles->contains('name', 'admin') || Auth::user()->roles->contains('name', 'manager'))
                                 <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Back</a>
                             @else
                                 <a href="{{ route('student.dashboard') }}" class="btn btn-outline-dark">Back</a>
