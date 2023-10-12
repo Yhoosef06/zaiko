@@ -33,7 +33,8 @@ class StudentController extends Controller
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
         // $departments = Department::with('college')->get();
-        $department = Department::where('id', Auth::user()->department_id)->first();
+        $department = Auth::user()->departments->first();
+        // $department = Department::where('id', Auth::user()->department_id)->first();
         // dd($department);
 
 
@@ -58,6 +59,7 @@ class StudentController extends Controller
 
         
          $collegeId = $department->college_id;   
+        //  dd($collegeId);
         // foreach ($departments as $department) {
         //     if ($department->id == $user_dept_id) {
         //         $collegeId =  $department->college->id;
