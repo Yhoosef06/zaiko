@@ -16,15 +16,15 @@ class UserPermission
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next, $permission)
+    public function handle(Request $request, Closure $next, ...$permissions)
     {
         $user = auth()->user();
+        foreach ($permissions as $permission) {
+            if ($user->hasPermission($permission)) {
+                return $next($request);
+            }
+        }
 
-        // Check if the user has the required permission
-        // if (!$user->hasPermission($permission)) {
-        //     abort(403, 'Unauthorized'); // You can customize the error message and status code
-        // }
-
-        return $next($request);
+        abort(403, 'Unauthorized');
     }
 }

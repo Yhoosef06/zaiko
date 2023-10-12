@@ -15,12 +15,16 @@ class UserRole
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
-        $role = explode('|', $role);
-        if(Auth::check() && in_array(Auth::user()->role, $role)){
-            return $next($request);
+        $user = auth()->user();
+
+        foreach ($roles as $role) {
+            if ($user->hasRole($role)) {
+                return $next($request);
+            }
         }
-        return response()->json(["You don't have permission to access this page"]);
+
+        abort(403, 'Unauthorized');
     }
 }
