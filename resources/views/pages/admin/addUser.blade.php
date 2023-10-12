@@ -69,24 +69,36 @@
                                             </div>
                                         @enderror
 
-                                        <label for="Item name">Program/Department:</label>
-                                        @if (isset($departments))
-                                            <select id="department_id" name="department_id"
-                                                class="form-control @error('department_id') border-danger @enderror">
-                                                <option value="" disabled selected>Select a Program/Department
-                                                </option>
-                                                @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                                                    <optgroup label="{{ $collegeName }}">
-                                                        @foreach ($departmentsGroup as $department)
-                                                            <option value="{{ $department->id }}"
-                                                                {{ old('department_id') == $department->id ? 'selected' : '' }}>
-                                                                {{ $department->department_name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </optgroup>
+                                        <label for="Item name">Select a School/Program(s):</label>
+                                        {{-- @if (isset($departments)) --}}
+                                        {{-- <select id="department_id" name="department_id"
+                                            class="form-control @error('department_id') border-danger @enderror">
+                                            <option value="" disabled selected>Select a Program/Department
+                                            </option>
+                                            @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                                <optgroup label="{{ $collegeName }}">
+                                                    @foreach ($departmentsGroup as $department)
+                                                        <option value="{{ $department->id }}"
+                                                            {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                                                            {{ $department->department_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </optgroup>
+                                            @endforeach
+                                        </select> --}}
+                                        
+                                        @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                            <h5 class=" text-decoration-underline"><input type="checkbox" name="" id=""> {{ $collegeName }}
+                                            </h5>
+                                            <div class="container">
+                                                @foreach ($departmentsGroup as $department)
+                                                    <input type="checkbox" name="" id="">
+                                                    {{ $department->department_name }}<br>
                                                 @endforeach
-                                            </select>
-                                        @endif
+                                            </div>
+                                        @endforeach
+
+                                        {{-- @endif --}}
 
                                         @error('department_id')
                                             <div class="text-danger">
@@ -113,17 +125,20 @@
                                         </select>
 
                                         <label for="account status">Role:</label>
-                                        <select id="role" name="role" class="form-control">
-                                            <option value="borrower" selected>borrower</option>
-                                            <option value="manager">manager</option>
-                                        </select>
-
+                                        <div class=" form-group">
+                                            @foreach ($roles as $role)
+                                                <div class="container">
+                                                    <input type="checkbox" name="role_id" id="role_id"
+                                                        value="{{ $role->id }}"> {{ $role->name }}
+                                                </div>
+                                            @endforeach
+                                        </div>
                                         <hr>
                                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                                         <Button type="submit" class="btn btn-success"
                                             onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')">Save</Button>
                                     </div>
-                                </div>
+                                </div>                
                             </div>
                             <!-- /.card-body -->
                         </form>

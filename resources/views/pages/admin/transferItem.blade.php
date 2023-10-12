@@ -17,10 +17,10 @@
                         <label for="">Model:</label> {{ $item->model->model_name }}
                     </div>
                     <div>
-                        <label for="">Part Number:</label> {{ $item->model->part_number }}
+                        <label for="">Part Number:</label> {{ $item->part_number === null ? 'N/A' : $item->part_number }}
                     </div>
                     <div>
-                        <label for="">Serial Number:</label> {{ $item->model->serial_number }}
+                        <label for="">Serial Number:</label> {{ $item->serial_number === null ? 'N/A' : $item->serial_number}}
                     </div>
                     <div>
                         <label for="">Aquisition Date:</label> {{ $item->aquisition_date }}

@@ -2,7 +2,14 @@
     <strong>I.D. Number:</strong> {{ $user->id_number }} <br>
     <strong>First Name:</strong> {{ $user->first_name }} <br>
     <strong>Last Name:</strong> {{ $user->last_name }} <br>
-    <strong>Program/Department:</strong> {{ $user->departments->department_name }} <br>
+    <strong>{{ $user->account_type === 'faculty' ? 'Department(s)' : 'Program' }}:</strong>
+    @foreach ($user->departments as $key => $department)
+        {{ $department->department_name }}
+        @if ($key < count($user->departments) - 1)
+            ,
+        @endif
+    @endforeach
+    <br>
     <strong>Account Type:</strong>
     {{ $user->account_type === 'student' ? 'Student' : ($user->account_type === 'admin' ? 'Admin' : ($user->account_type === 'faculty' ? 'Faculty' : 'Reads')) }}
     <br>
@@ -10,7 +17,12 @@
     {{ $user->account_status === 'pending' ? 'Pending' : 'Approved' }}
     <br>
     <strong>Role:</strong>
-    {{ $user->role === 'borrower' ? 'Borrower' : 'Manager' }}
+    @foreach ($user->roles as $key => $role)
+        {{ $role->name === 'manager' ? 'Manager' : 'Borrower' }}
+        @if ($key < count($user->roles) - 1)
+            ,
+        @endif
+    @endforeach
     <br>
     <hr>
     <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
@@ -27,7 +39,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="modal-edit-user-info">Edit
                     {{-- {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }} Information --}}
-                   User Information
+                    User Information
                 </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -43,10 +55,10 @@
     function openEditUserModal(userId) {
         var modal = $('#modal-edit-user-info');
         var url = "{{ route('edit_user_info', ['id_number' => ':userId']) }}".replace(':userId', userId);
-        
+
         // Clear previous content from the modal
         modal.find('.modal-body').html('');
-     
+
         $.get(url, function(data) {
             modal.find('.modal-body').html(data);
         });

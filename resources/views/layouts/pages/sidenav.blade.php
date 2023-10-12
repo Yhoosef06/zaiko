@@ -145,6 +145,7 @@
                                 </li>
                             </ul>
                         </li>
+                        @if (Auth::user()->roles->contains('name', 'manager'))
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
@@ -196,6 +197,7 @@
                                 </li>
                             </ul>
                         </li>
+                        @endif
                         @if (Auth::user()->roles->contains('name', 'admin'))
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
@@ -263,8 +265,17 @@
                                             </div>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('view_models') }}" class="nav-link">
+                                            <div class="ml-3">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Roles & Permissions</p>
+                                            </div>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
+                            
                         @endif
 
                     @endif
