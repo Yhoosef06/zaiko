@@ -73,7 +73,8 @@ Route::get('modify-security-question-{id_number}', [UserController::class, 'modi
 Route::post('save-modified-security-question-{id_number}', [UserController::class, 'saveModifiedSecurityQuestion'])->name('save_modified_security_question');
 
 //admin
-Route::middleware(['auth', 'permission:manage-inventory,manage-user,generate-report,manage-settings,manage-borrowings'])->group(function () {
+Route::middleware(['auth', 'role:admin,manager'])->group(function () {
+
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
@@ -82,35 +83,73 @@ Route::middleware(['auth', 'permission:manage-inventory,manage-user,generate-rep
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
 
     // FOR ITEMS
-    Route::get('adding-new-item', [ItemsController::class, 'addItem'])->name('add_item');
-    Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
-    Route::get('view-item-details-{id}', [ItemsController::class, 'viewItemDetails'])->name('view_item_details');
-    Route::get('list-of-items-filtered', [ItemsController::class, 'searchItem'])->name('filtered_view');
-    Route::post('saving-new-item', [ItemsController::class, 'saveNewItem'])->name('save_new_item');
-    Route::get('get-item-{id}-details', [ItemsController::class, 'getItemDetails'])->name('get_item_details');
-    Route::get('edit-item-{id}', [ItemsController::class, 'editItemPage'])->name('edit_item_details');
-    Route::put('updating-item-{id}-details', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
-    Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
-    Route::get('/get-brand', [ItemsController::class, 'getBrand']);
-    Route::get('/get-model', [ItemsController::class, 'getModel']);
-    Route::get('/get-part-number', [ItemsController::class, 'getPartNumber']);
-    Route::get('/transfer-item-{id}', [ItemsController::class, 'transferItem'])->name('transfer_item');
-    Route::post('/save-transfer-item-{id}', [ItemsController::class, 'saveTransferItem'])->name('save_transfer_item');
-    Route::get('/add-sub-item-{id}', [ItemsController::class, 'addSubItem'])->name('add_sub_item');
-    Route::post('/save-sub-item-{id}', [ItemsController::class, 'saveSubItem'])->name('save_sub_item');
-    Route::get('/replace-item-{id}', [ItemsController::class, 'replaceItem'])->name('replace_item');
-    Route::post('/save-replaced-item-{id}', [ItemsController::class, 'saveReplacedItem'])->name('save_replaced_item');
-    Route::get('/check-serial-number/{serial_number}', [ItemsController::class, 'checkSerialNumber'])->name('check_serial_number');
+    Route::middleware(['permission:manage-inventory,view-items'])->group(function (){
+        Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
+        Route::get('view-item-details-{id}', [ItemsController::class, 'viewItemDetails'])->name('view_item_details');
+        Route::get('list-of-items-filtered', [ItemsController::class, 'searchItem'])->name('filtered_view');
+        Route::get('get-item-{id}-details', [ItemsController::class, 'getItemDetails'])->name('get_item_details');
+        Route::get('/get-brand', [ItemsController::class, 'getBrand']);
+        Route::get('/get-model', [ItemsController::class, 'getModel']);
+        Route::get('/get-part-number', [ItemsController::class, 'getPartNumber']);
+        Route::get('/check-serial-number/{serial_number}', [ItemsController::class, 'checkSerialNumber'])->name('check_serial_number');
+
+    });
+
+    Route::middleware(['permission:manage-inventory,add-items'])->group(function (){
+        Route::get('adding-new-item', [ItemsController::class, 'addItem'])->name('add_item');
+        Route::post('saving-new-item', [ItemsController::class, 'saveNewItem'])->name('save_new_item');
+    });
+
+    Route::middleware(['permission:manage-inventory,update-items'])->group(function (){
+        Route::get('edit-item-{id}', [ItemsController::class, 'editItemPage'])->name('edit_item_details');
+        Route::put('updating-item-{id}-details', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
+    });
+
+    Route::middleware(['permission:manage-inventory,delete-items'])->group(function (){
+        Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
+    });
+
+    Route::middleware(['permission:manage-inventory,transfer-items'])->group(function (){
+        Route::get('/transfer-item-{id}', [ItemsController::class, 'transferItem'])->name('transfer_item');
+        Route::post('/save-transfer-item-{id}', [ItemsController::class, 'saveTransferItem'])->name('save_transfer_item');
+    });
+   
+    Route::middleware(['permission:manage-inventory,add-sub-items'])->group(function (){
+        Route::get('/add-sub-item-{id}', [ItemsController::class, 'addSubItem'])->name('add_sub_item');
+        Route::post('/save-sub-item-{id}', [ItemsController::class, 'saveSubItem'])->name('save_sub_item');
+    });
+
+    Route::middleware(['permission:manage-inventory,replace-items'])->group(function (){
+        Route::get('/replace-item-{id}', [ItemsController::class, 'replaceItem'])->name('replace_item');
+        Route::post('/save-replaced-item-{id}', [ItemsController::class, 'saveReplacedItem'])->name('save_replaced_item');
+    });
+    
+    
+    
+    
 
     // FOR USERS
-    Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
-    Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
-    Route::get('list-of-users-filtered', [UserController::class, 'searchUser'])->name('filtered_view_users');
-    Route::get('view-user-{id_number}', [UserController::class, 'viewUserInfo'])->name('view_user_info');
-    Route::post('saving-new-user', [UserController::class, 'saveNewUser'])->name('save_new_user');
-    Route::get('edit-user-{id_number}', [UserController::class, 'editUserInfo'])->name('edit_user_info');
-    Route::put('updating-user-{id_number}', [UserController::class, 'saveEditedUserInfo'])->name('update_user_info');
-    Route::post('deleting-user-{id_number}', [UserController::class, 'deleteUser'])->name('delete_user');
+    Route::middleware(['permission:manage-user,view-users'])->group(function (){
+        Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
+        Route::get('list-of-users-filtered', [UserController::class, 'searchUser'])->name('filtered_view_users');
+        Route::get('view-user-{id_number}', [UserController::class, 'viewUserInfo'])->name('view_user_info');
+    });
+
+    Route::middleware(['permission:manage-user,add-users'])->group(function (){
+        Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
+        Route::post('saving-new-user', [UserController::class, 'saveNewUser'])->name('save_new_user');
+    });
+
+    Route::middleware(['permission:manage-user,update-users'])->group(function (){
+        Route::get('edit-user-{id_number}', [UserController::class, 'editUserInfo'])->name('edit_user_info');
+        Route::put('updating-user-{id_number}', [UserController::class, 'saveEditedUserInfo'])->name('update_user_info');
+    });
+    
+    Route::middleware(['permission:manage-user,delete-users'])->group(function (){
+        Route::post('deleting-user-{id_number}', [UserController::class, 'deleteUser'])->name('delete_user');
+    });
+    
+    
 
     // FOR Colleges
     Route::get('colleges', [CollegeController::class, 'index'])->name('view_colleges');
@@ -170,66 +209,73 @@ Route::middleware(['auth', 'permission:manage-inventory,manage-user,generate-rep
     Route::post('current-term/{id}', [TermController::class, 'currentTerm'])->name('current_term');
 
     //FOR Manage Borrowings
-    Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');
-    Route::get('overdue', [BorrowController::class, 'overdue'])->name('overdue');
-    Route::get('pending', [BorrowController::class, 'pending'])->name('pending');
-    Route::get('returned', [BorrowController::class, 'returned'])->name('returned');
+    Route::middleware(['permission:manage-borrowings'])->group(function (){
+        Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');
+        Route::get('overdue', [BorrowController::class, 'overdue'])->name('overdue');
+        Route::get('pending', [BorrowController::class, 'pending'])->name('pending');
+        Route::get('returned', [BorrowController::class, 'returned'])->name('returned');
 
-    // Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
-    // Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
-    Route::get('remove-borrow/{id}', [BorrowController::class, 'removeBorrow'])->name('remove-borrow');
-    Route::get('complete-transaction/{id}', [BorrowController::class, 'completeTransaction'])->name('complete-transaction');
-    Route::get('order-admin-remove/{id}', [BorrowController::class, 'orderAdminRemove'])->name('order-admin-remove');
-    Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
-    Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
-    Route::get('/searchItemAdmin', [BorrowController::class, 'searchItemAdmin'])->name('searchItemAdmin');
-    Route::get('/searchForSerial', [BorrowController::class, 'searchForSerial'])->name('searchForSerial');
-    Route::get('/searchItemForAdmin', [BorrowController::class, 'searchItemForAdmin'])->name('searchItemForAdmin');
-    Route::get('/searchItemForUser', [BorrowController::class, 'searchItemForUser'])->name('searchItemForUser');
-    Route::get('/borrow-item', [BorrowController::class, 'borrowItem'])->name('borrowItem');
-    Route::get('/borrow-item/{id}', [BorrowController::class, 'borrowItemAdmin'])->name('borrowItemAdmin');
-    Route::get('/add-item/{id}', [BorrowController::class, 'addItem'])->name('addItem');
-    Route::get('/check-userID/{id}', [BorrowController::class, 'checkUserId'])->name('checkUserId');
-    Route::post('/pending-borrow', [BorrowController::class, 'pendingBorrow'])->name('pendingBorrow');
-    Route::post('/userPendingBorrow', [BorrowController::class, 'userPendingBorrow'])->name('userPendingBorrow');
-    Route::post('/submitAdminBorrow', [BorrowController::class, 'submitAdminBorrow'])->name('submitAdminBorrow');
-    Route::post('/submitUserBorrow', [BorrowController::class, 'submitUserBorrow'])->name('submitUserBorrow');
-    Route::post('/submit-admin-order', [BorrowController::class, 'submitAdminOrder'])->name('submitAdminOrder');
+        // Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
+        // Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
+        Route::get('remove-borrow/{id}', [BorrowController::class, 'removeBorrow'])->name('remove-borrow');
+        Route::get('complete-transaction/{id}', [BorrowController::class, 'completeTransaction'])->name('complete-transaction');
+        Route::get('order-admin-remove/{id}', [BorrowController::class, 'orderAdminRemove'])->name('order-admin-remove');
+        Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
+        Route::get('/searchItem', [BorrowController::class, 'searchItem'])->name('searchItem');
+        Route::get('/searchItemAdmin', [BorrowController::class, 'searchItemAdmin'])->name('searchItemAdmin');
+        Route::get('/searchForSerial', [BorrowController::class, 'searchForSerial'])->name('searchForSerial');
+        Route::get('/searchItemForAdmin', [BorrowController::class, 'searchItemForAdmin'])->name('searchItemForAdmin');
+        Route::get('/searchItemForUser', [BorrowController::class, 'searchItemForUser'])->name('searchItemForUser');
+        Route::get('/borrow-item', [BorrowController::class, 'borrowItem'])->name('borrowItem');
+        Route::get('/borrow-item/{id}', [BorrowController::class, 'borrowItemAdmin'])->name('borrowItemAdmin');
+        Route::get('/add-item/{id}', [BorrowController::class, 'addItem'])->name('addItem');
+        Route::get('/check-userID/{id}', [BorrowController::class, 'checkUserId'])->name('checkUserId');
+        Route::post('/pending-borrow', [BorrowController::class, 'pendingBorrow'])->name('pendingBorrow');
+        Route::post('/userPendingBorrow', [BorrowController::class, 'userPendingBorrow'])->name('userPendingBorrow');
+        Route::post('/submitAdminBorrow', [BorrowController::class, 'submitAdminBorrow'])->name('submitAdminBorrow');
+        Route::post('/submitUserBorrow', [BorrowController::class, 'submitUserBorrow'])->name('submitUserBorrow');
+        Route::post('/submit-admin-order', [BorrowController::class, 'submitAdminOrder'])->name('submitAdminOrder');
 
-    // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
-    Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
-    Route::post('/lostItem', [BorrowController::class, 'lostItem'])->name('lostItem');
-    Route::post('/lostOverdueItem', [BorrowController::class, 'lostOverdueItem'])->name('lostOverdueItem');
-    Route::post('/returnOverdueItem', [BorrowController::class, 'returnOverdueItem'])->name('returnOverdueItem');
-    Route::get('view-order-admin/{id}', [BorrowController::class, 'viewOrderAdmin'])->name('view-order-admin');
-    Route::get('view-order-user/{id}', [BorrowController::class, 'viewOrderUser'])->name('view-order-user');
-    Route::get('view-borrow-item/{id}', [BorrowController::class, 'viewBorrowItem'])->name('view-borrow-item');
-    Route::post('/admin-added-order', [BorrowController::class, 'adminAddedOrder'])->name('adminAddedOrder');
-    Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
-    Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
-    Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
+        // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
+        Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
+        Route::post('/lostItem', [BorrowController::class, 'lostItem'])->name('lostItem');
+        Route::post('/lostOverdueItem', [BorrowController::class, 'lostOverdueItem'])->name('lostOverdueItem');
+        Route::post('/returnOverdueItem', [BorrowController::class, 'returnOverdueItem'])->name('returnOverdueItem');
+        Route::get('view-order-admin/{id}', [BorrowController::class, 'viewOrderAdmin'])->name('view-order-admin');
+        Route::get('view-order-user/{id}', [BorrowController::class, 'viewOrderUser'])->name('view-order-user');
+        Route::get('view-borrow-item/{id}', [BorrowController::class, 'viewBorrowItem'])->name('view-borrow-item');
+        Route::post('/admin-added-order', [BorrowController::class, 'adminAddedOrder'])->name('adminAddedOrder');
+        Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
+        Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
+        Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
+    });
+    
+    
 
     //storing references
     Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
     Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
 
     //reports
-    Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
-    Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
-    Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
-    Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
-    Route::get('/report-test', [ItemsController::class, 'reportTest']);
+    Route::middleware(['permission:generate-report'])->group(function(){
+        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
+        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
+        Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
+        Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
+        Route::get('/report-test', [ItemsController::class, 'reportTest']);
+    });
+    
 });
 
 //student
-Route::middleware(['auth', 'permission:borrow-items'])->group(function () {
+Route::middleware(['auth', 'role:borrower'])->group(function () {
     //student
    
         Route::middleware(['account_status:pending'])->group(function () {
             Route::get('/approve', [PagesController::class, 'approve'])->name('approval');
         });
 
-        Route::middleware(['account_status:approved'])->group(function () {
+        Route::middleware(['account_status:approved','permission:borrow-items'])->group(function () {
 
             Route::controller(StudentController::class)->group(function () {
                 Route::get('/student-dashboard', 'index')->name('student.dashboard');
