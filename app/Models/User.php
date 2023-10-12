@@ -106,4 +106,15 @@ class User extends Authenticatable
 
         return false;
     }
+    public function hasRole($permission)
+    {
+        // Loop through the user's roles
+        foreach ($this->roles as $role) {
+            if ($role->permissions->contains('name', $permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
