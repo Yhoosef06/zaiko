@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\College;
 use App\Models\UserRole;
 use App\Models\Department;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\UserDepartment;
 use App\Rules\MatchOldPassword;
@@ -73,6 +74,7 @@ class UserController extends Controller
     public function addUser()
     {
         $securityQuestions = SecurityQuestion::all();
+        $roles = Role::all();
 
         if (Auth::user()->roles->contains('name', 'manager')) {
 
@@ -84,14 +86,14 @@ class UserController extends Controller
                 $department->college_name = $department->college->college_name;
             });
 
-            return view('pages.admin.addUser')->with(compact('departments'));
+            return view('pages.admin.addUser')->with(compact('departments','roles'));
         } else if (Auth::user()->roles->contains('name', 'admin')) {
             $departments = Department::with('college')->get();
 
             $departments->each(function ($department) {
                 $department->college_name = $department->college->college_name;
             });
-            return view('pages.admin.addUser')->with(compact('departments'));
+            return view('pages.admin.addUser')->with(compact('departments', 'roles'));
         }
     }
 
