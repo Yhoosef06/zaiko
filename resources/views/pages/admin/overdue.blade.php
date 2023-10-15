@@ -175,7 +175,7 @@
                                                           </div>
                                                           <div class="form-group">
                                                             <label>Total</label>
-                                                            <input type="text"  class="form-control"  name="total_amount" readonly>
+                                                            <input type="text"  class="form-control" id="total_amount" name="total_amount" readonly>
                                                                  
                                                         </div>
                                                             <div class="form-group">
