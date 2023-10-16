@@ -27,21 +27,20 @@ class BorrowController extends Controller
 
     public function borrowed()
     {
-        $user = auth()->user();
-        $user_dept_id = $user->department_id;
-        $department = Department::with('college')->find($user_dept_id);
-        $college = $department->college;
+        $department = Auth::user()->departments->first();
 
         $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('departments', 'users.department_id', '=', 'departments.id')
-            ->join('colleges', 'departments.college_id', '=', 'colleges.id')
-            ->where('colleges.id', $college->id)
+            ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
+            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
+            ->where('departments.college_id', $department->college_id)
             ->WhereNull('orders.order_status')
             ->whereNotNull('orders.approval_date')
             ->whereNotNull('orders.approved_by')
             ->groupBy('orders.id')
             ->get();
+            
+       
 
 
         return view('pages.admin.borrowed')->with(compact('borrows'));
@@ -49,22 +48,19 @@ class BorrowController extends Controller
     public function overdue()
     {
         $currentDate = Carbon::now();
-        $user = auth()->user();
-        $user_dept_id = $user->department_id;
-        $department = Department::with('college')->find($user_dept_id);
-        $college = $department->college;
+        $department = Auth::user()->departments->first();
     
         $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('departments', 'users.department_id', '=', 'departments.id')
-            ->join('colleges', 'departments.college_id', '=', 'colleges.id')
+            ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
+            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', 'item_categories.id')
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
             ->where('order_items.date_returned', '<', $currentDate->toDateString())
-            ->where('colleges.id', $college->id)
+            ->where('departments.college_id', $department->college_id)
             ->where('order_items.status', 'borrowed')
             ->get();
     
@@ -85,7 +81,8 @@ class BorrowController extends Controller
        
      
 
-        $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+        ->join('users', 'orders.user_id', '=', 'users.id_number')
         ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
         ->join('departments', 'user_departments.department_id', '=', 'departments.id')
         ->where('departments.college_id', $department->college_id)
@@ -93,20 +90,24 @@ class BorrowController extends Controller
         ->whereNull('orders.approved_by')
         ->groupBy('orders.id')
         ->get();
-dd($userPendings);
+
         return view('pages.admin.pending')->with(compact('userPendings'));
         
     }
 
     public function returned()
     {
+        $department = Auth::user()->departments->first();
         $forReturns = OrderItem::select('order_items.date_returned as returndate', 'items.*', 'users.*', 'brands.*', 'models.*', 'item_categories.*', 'orders.*', 'order_items.*')
             ->join('users', 'order_items.user_id', '=', 'users.id_number')
+            ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
+            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->where('departments.college_id', $department->college_id)
             ->where('order_items.status','returned')
             ->get();
      
@@ -446,12 +447,14 @@ dd($userPendings);
     public function addRemark(Request $request)
     {
         $orderItemReturn = $request->orderItemReturn;
+        $orderTransaId = $request->orderTransacId;
         $itemIdReturn = $request->itemIdReturn;
         $borrowOrderQuantity = $request->borrowOrderQuantity;
         $item_remark = $request->item_remark;
         $quantity_return = $request->quantity_return;
         $categoryName = $request->categoryName;
         $user = auth()->user();
+        // dd($orderItemReturn);
 
         if ($user) {
             $firstName = $user->first_name;
@@ -472,12 +475,13 @@ dd($userPendings);
 
                     ]);
                     Session::flash('success', 'Successfuly Return.');
-                    return redirect('borrowed');
+                    return redirect()->route('view-borrow-item', ['id' => $orderTransaId]);
                 } else {
                     Item::where('id', '=', $itemIdReturn)->update(['borrowed' => 'no']);
                     OrderItem::where('id', $orderItemReturn)->update(['status' => 'returned', 'order_quantity' => $quantity_return, 'remarks' => $item_remark, 'returned_to' => $lastName . ', ' . $firstName]);
                     Session::flash('success', 'Successfuly Return.');
-                    return redirect('borrowed');
+                   
+                    return redirect()->route('view-borrow-item', ['id' => $orderTransaId]);
                 }
             } else {
 
@@ -485,7 +489,7 @@ dd($userPendings);
                 OrderItem::where('id', '=', $orderItemReturn)->update(['status' => 'returned', 'remarks' =>  $item_remark, 'returned_to' => $lastName . ', ' . $firstName]);
 
                 Session::flash('success', 'Successfuly Return.');
-                return redirect('borrowed');
+                return redirect()->route('view-borrow-item', ['id' => $orderTransaId]);
             }
         }
     }
