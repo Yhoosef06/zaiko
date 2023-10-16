@@ -81,22 +81,24 @@ class BorrowController extends Controller
 
     public function pending()
     {
-        if (Auth::user()->roles->contains('name', 'admin')) {
+        $department = Auth::user()->departments->first();
+        dd($department);
+        // if (Auth::user()->roles->contains('name', 'admin')) {
           
-         $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
-            ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->whereNotNull('orders.date_submitted')
-            ->whereNull('orders.approved_by')
-            ->groupBy('orders.id')
-            ->get();
+        //  $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+        //     ->join('users', 'orders.user_id', '=', 'users.id_number')
+        //     ->whereNotNull('orders.date_submitted')
+        //     ->whereNull('orders.approved_by')
+        //     ->groupBy('orders.id')
+        //     ->get();
 
-            return view('pages.admin.pending')->with(compact('userPendings'));
+        //     return view('pages.admin.pending')->with(compact('userPendings'));
 
-        } else if (Auth::user()->roles->contains('name', 'lab-oic') || Auth::user()->roles->contains('name', 'lab-ass')) {
-            $user = auth()->user();
-           dd($user);
+        // } else if (Auth::user()->roles->contains('name', 'lab-oic') || Auth::user()->roles->contains('name', 'lab-ass')) {
+        //     $user = auth()->user();
+        //    dd($user);
         
-        }
+        // }
 
 
     
