@@ -28,8 +28,8 @@ class SignInController extends Controller
             $user = User::find($userId);
             
             if ($user->roles->contains('name', 'admin')) {
-                $userRole = Auth::user()->roles-> contains('name', 'admin')->first();
-                dd($userRole);
+                $userRole = Auth::user()->roles-> contains('name', 'admin');
+                // dd($userRole);
                 return redirect()->route('admin.dashboard');
             } else if ($user->roles->contains('name', 'manager')) {
 
