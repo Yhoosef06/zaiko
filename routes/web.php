@@ -209,7 +209,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::post('current-term/{id}', [TermController::class, 'currentTerm'])->name('current_term');
 
     //FOR Manage Borrowings
-    // Route::middleware(['permission:manage-borrowings'])->group(function (){
+    Route::middleware(['permission:manage-borrowings'])->group(function (){
         Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');
         Route::get('overdue', [BorrowController::class, 'overdue'])->name('overdue');
         Route::get('pending', [BorrowController::class, 'pending'])->name('pending');
@@ -248,7 +248,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
         Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
         Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
-    // });
+    });
     
     
 

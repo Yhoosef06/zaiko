@@ -82,28 +82,19 @@ class BorrowController extends Controller
     public function pending()
     {
         $department = Auth::user()->departments->first();
-        dd($department);
-        // if (Auth::user()->roles->contains('name', 'admin')) {
-          
-        //  $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
-        //     ->join('users', 'orders.user_id', '=', 'users.id_number')
-        //     ->whereNotNull('orders.date_submitted')
-        //     ->whereNull('orders.approved_by')
-        //     ->groupBy('orders.id')
-        //     ->get();
+       
+     
 
-        //     return view('pages.admin.pending')->with(compact('userPendings'));
-
-        // } else if (Auth::user()->roles->contains('name', 'lab-oic') || Auth::user()->roles->contains('name', 'lab-ass')) {
-        //     $user = auth()->user();
-        //    dd($user);
-        
-        // }
-
-
-    
-
-
+        $userPendings = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
+        ->join('departments', 'user_departments.department_id', '=', 'departments.id')
+        ->where('departments.college_id', $department->college_id)
+        ->whereNotNull('orders.date_submitted')
+        ->whereNull('orders.approved_by')
+        ->groupBy('orders.id')
+        ->get();
+dd($userPendings);
+        return view('pages.admin.pending')->with(compact('userPendings'));
         
     }
 
