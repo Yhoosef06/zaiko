@@ -270,8 +270,6 @@ Route::middleware(['role:manager'])->group(function(){
         Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
         Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
         Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
-<<<<<<< HEAD
-=======
     });
     
     
@@ -287,7 +285,6 @@ Route::middleware(['role:manager'])->group(function(){
         Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
         Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
         Route::get('/report-test', [ItemsController::class, 'reportTest']);
->>>>>>> new-table-query
     });
 });
 
