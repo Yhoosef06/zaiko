@@ -1,7 +1,11 @@
 @extends('layouts.pages.yields')
 
 @section('content')
-
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -31,7 +35,7 @@
                   <div class="col md-8">
                     <h3 class="card-title"><strong>Transaction #: @foreach($borrows as $index => $borrow)
                       @if($index === 0)
-                          <span style="color:green">{{ $borrow->order_item_id }}</span>
+                          <span style="color:green">{{ $borrow->order_id }}</span>
                           
                       @endif
                   @endforeach</strong></h3>
@@ -161,6 +165,8 @@
                           <div class="modal-body">
                           <form method="POST" action="{{ route('addRemark') }}">
                             @csrf
+                          
+                            <input type="hidden"  class="form-control" value="{{ $borrow->order_id }}" name="orderTransacId">
                             <input type="hidden"  class="form-control" value="{{ $borrow->order_item_id }}" name="orderItemReturn">
                             <input type="hidden"  class="form-control" value="{{ $borrow->item_id_borrow }}" name="itemIdReturn">
                             <input type="hidden"  class="form-control" value="{{ $borrow->order_quantity }}" name="borrowOrderQuantity">
@@ -204,6 +210,7 @@
                           <div class="modal-body">
                           <form method="POST" action="{{ route('lostItem') }}">
                             @csrf
+                            <input type="hidden"  class="form-control" value="{{ $borrow->order_id }}" name="orderTransacId">
                             <input type="hidden"  class="form-control" value="{{ $borrow->order_item_id }}" name="orderItemReturn">
                             <input type="hidden"  class="form-control" value="{{ $borrow->item_id_borrow }}" name="itemIdReturn">
                            

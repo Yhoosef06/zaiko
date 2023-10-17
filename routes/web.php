@@ -270,6 +270,24 @@ Route::middleware(['role:manager'])->group(function(){
         Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
         Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
         Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
+<<<<<<< HEAD
+=======
+    });
+    
+    
+
+    //storing references
+    Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
+    Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
+
+    //reports
+    Route::middleware(['permission:generate-report'])->group(function(){
+        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
+        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
+        Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
+        Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
+        Route::get('/report-test', [ItemsController::class, 'reportTest']);
+>>>>>>> new-table-query
     });
 });
 
