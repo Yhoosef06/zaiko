@@ -1,5 +1,10 @@
 @extends('layouts.pages.yields')
 
+
+
+
+
+
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
