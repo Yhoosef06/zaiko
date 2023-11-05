@@ -496,7 +496,21 @@ class BorrowController extends Controller
 
     public function viewOrderAdmin($id)
     {
-        $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        $count = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->select('orders.id as order_id', 'users.*', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*', 'models.model_name as model', 'brands.brand_name as brand')
+            ->where('orders.id', $id)
+            ->where('order_items.status', 'pending')
+            ->count();
+        if($count == 0){
+            Order::find($id)->delete();
+            return redirect('pending');
+        }else{
+            $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
@@ -508,7 +522,10 @@ class BorrowController extends Controller
             ->get();
 
 
-        return view('pages.admin.viewOrderAdmin')->with(compact('order'));
+            return view('pages.admin.viewOrderAdmin')->with(compact('order'));
+        }
+
+        
     }
 
     public function viewBorrowItem($id)
@@ -585,6 +602,8 @@ class BorrowController extends Controller
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
             ->find($id);
+        
+         
 
 
             $itemQuantity = $item->quantity;
@@ -725,7 +744,21 @@ class BorrowController extends Controller
     }
     public function borrowItemAdmin($id)
     {
-        $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+        $count = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('item_categories', 'items.category_id', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->select('orders.id as order_id', 'brands.*', 'models.*', 'users.*', 'order_items.order_quantity as order_quantity', 'order_items.id as order_item_id', 'order_items.user_id as user_id', 'items.*', 'item_categories.*')
+            ->where('users.id_number', $id)
+            ->where('order_items.status', 'pending')
+            ->count();
+        if($count == 0){
+            return redirect('pending');
+
+        }else{
+            $order = Order::join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
             ->join('item_categories', 'items.category_id', 'item_categories.id')
@@ -737,6 +770,9 @@ class BorrowController extends Controller
             ->get();
 
         return view('pages.admin.borrowItemAdmin')->with(compact('order'));
+        }
+
+       
     }
 
 
