@@ -47,12 +47,13 @@
                                                 <input type="text" name="" id="" value="{{ $cart->quantity }}">
                                                 <i class="fa fa-plus" onclick="updateQuantity('{{ $cart->id }}', 1)"></i>
                                             </td> --}}
-
                                             <td class="text-center position-relative">
                                                 @php 
-                                                    $catItem = $items->where('category_id',$cart->item->category->id)->where('brand',$cart->item->brand)->where('model',$cart->item->model)->where('borrowed','no')->sortByDesc('id');
-                                                
-                                                     
+                                                    $catItem = $items->where('category_id',$cart->item->category->id)
+                                                    ->where('brand',$cart->item->brand)
+                                                    ->where('model',$cart->item->model)
+                                                    ->where('borrowed','no')
+                                                    ->sortByDesc('id');
                                                 @endphp
                                             
                                             <form action="{{ route('cart.update',$cart->id) }}" method="POST">

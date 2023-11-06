@@ -124,6 +124,7 @@
                                                 </span>
                                             </div>
                                         </li> --}} -->
+                                        @if(count($overdueItems) == 0)
                                             <li class="item">
                                                 <div class="container">
                                                     <div class="text-center">
@@ -132,19 +133,80 @@
                                                 </div>
                                             </li>
                                         </ul>
+                                        @else
+                                        <li class="item">
+                                            <div class="container">
+                                                <div class="text-center">
+                                                    You have <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">
+                                                        {{count($overdueItems)}}
+                                                    </button> items that are overdue.   
+                                                </div>
+                                               
+                                                <!-- Modal -->
+                                                <div class="modal" id="myModal">
+                                                    <div class="modal-dialog modal-xl">
+                                                        <div class="modal-content">
+
+                                                            <!-- Modal Header -->
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">Overdue Items</h4>
+                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                            </div>
+
+                                                            <!-- Modal Body -->
+                                                            <div class="modal-body">
+                                                                <!-- Add the content you want to display in the modal -->
+                                                                <!-- For instance, a list of the overdue items -->
+                                                                <table class="table table-bordered table-striped">
+                                                                    <thead>
+                                                                        <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
+                                                                            <th style="width:10%" class="text-wrap">Order ID</th>
+                                                                            <th style="width:10%" class="text-wrap">Brand</th>
+                                                                            <th style="width:10%" class="text-wrap">Model</th>
+                                                                            <th style="width:10%" class="text-wrap">Description</th>
+                                                                            <th style="width:10%" class="text-wrap text-center">Quantity</th>
+                                                                            <th style="width:10%" class="text-wrap text-center">Days Overdue</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach($overdueItems as $item)
+                                                                        <tr style="background-color: rgba(255, 255, 255, 0.8);">
+                                                                            <td class="text-wrap text-center">{{ $item->order_id }}</td>
+                                                                            <td class="text-wrap">{{ $item->brand }}</td>
+                                                                            <td class="text-wrap">{{ $item->model }}</td>
+                                                                            <td class="text-wrap">{{ $item->description }}</td>
+                                                                            <td class="text-wrap text-center">{{ $item->order_quantity }}</td>
+                                                                            <td class="text-wrap text-center">{{ $item->days_overdue }}</td>
+                                                                        </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+                                                            <!-- Modal Footer -->
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @endif
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
                             </div>
-                                                        </div>
-                                                  
-                                                  
-                                                        <div class="container mb-2">
-                                                            <div class="text-center">
-                                                                <a href="{{ route('student.items') }}" class="btn btn-lg btn-warning">Start Borrowing</a>
-                                                            </div>
-                                                        </div>
-                                                    
+                                    </div>
+                                
+                                
+                                    <div class="container mb-2">
+                                        <div class="text-center">
+                                            <a href="{{ route('student.items') }}" class="btn btn-lg btn-warning">Start Borrowing</a>
+                                        </div>
+                                    </div>
+                                
                                                 
                                             </div>
                                             <!-- /.card-body -->

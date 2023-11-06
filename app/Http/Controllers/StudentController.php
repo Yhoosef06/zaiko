@@ -21,7 +21,34 @@ class StudentController extends Controller
 {
     public function index()
     {
-        return view('pages.students.home');
+        $currentDate = Carbon::now();
+        $department = Auth::user()->departments->first();
+        
+        // $items = OrderItem::where('user_id',Auth::user()->id_number)->where('date_returned', '<', $currentDate->toDateString())->get();
+        // dd($items);
+
+        $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
+            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('item_categories', 'items.category_id', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->where('order_items.user_id', Auth::user()->id_number)
+            ->where('order_items.date_returned', '<', $currentDate->toDateString())
+            ->where('departments.college_id', $department->college_id)
+            ->where('order_items.status', 'borrowed')
+            ->get();
+
+        foreach ($overdueItems as $item) {
+            $dateReturned = Carbon::parse($item->date_returned); 
+            $daysOverdue = $dateReturned->diffInDays($currentDate);
+            $item->days_overdue = $daysOverdue;
+        }
+        // dd($overdueItems);  
+        return view('pages.students.home')->with(compact('overdueItems'));
     }
 
     public function items()
@@ -128,9 +155,33 @@ class StudentController extends Controller
         // }
     }
 
-    public function borrowed()
+    public function overdue()
     {
-        echo 'test';
+        $currentDate = Carbon::now();
+        $department = Auth::user()->departments->first();
+    
+        $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
+            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('item_categories', 'items.category_id', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->where('order_items.date_returned', '<', $currentDate->toDateString())
+            ->where('departments.college_id', $department->college_id)
+            ->where('order_items.status', 'borrowed')
+            ->get();
+    
+        
+        foreach ($overdueItems as $item) {
+            $dateReturned = Carbon::parse($item->date_returned); 
+            $daysOverdue = $dateReturned->diffInDays($currentDate);
+            $item->days_overdue = $daysOverdue;
+        }
+    
+        return view('pages.admin.overdue')->with(compact('overdueItems'));
     }
 
 }

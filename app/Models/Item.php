@@ -72,4 +72,8 @@ class Item extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function orderItems(){
+        return $this->belongsToMany(OrderItem::class);
+    }
 }
