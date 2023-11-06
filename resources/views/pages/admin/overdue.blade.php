@@ -50,10 +50,16 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                  @php
+                                                  $counter = 0;  
+                                                  @endphp
+                                                 
 
                                                     @foreach ($overdueItems as $overdueItem)
 
-                                          
+                                                    @php
+                                                    $counter++;  
+                                                    @endphp
                                                     <tr>
                                                         <td>{{ $overdueItem->id }}</td>
                                                        
@@ -165,17 +171,17 @@
                                                               <input type="hidden"  class="form-control" value="{{ $overdueItem->category_name }}" name="categoryName">
                                                             <div class="form-group">
                                                                   <label>Number Of Day Overdue</label>
-                                                                  <input type="text"  class="form-control"  id="number_of_day_overdue" name="number_of_day_overdue" value="{{ $overdueItem->days_overdue }}"readonly>
+                                                                  <input type="text"  class="form-control" id="number_of_day_overdue_{{ $counter }}" name="number_of_day_overdue" value="{{ $overdueItem->days_overdue }}"readonly>
                                                                        
                                                             </div>
                                                             <div class="form-group">
                                                               <label>Payment Per Day</label>
-                                                              <input type="text"  class="form-control"  name="payment_per_day" id="payment_per_day" required>
+                                                              <input type="text"  class="form-control" id="payment_per_day_{{ $counter }}"  name="payment_per_day" required>
                                                                    
                                                           </div>
                                                           <div class="form-group">
                                                             <label>Total</label>
-                                                            <input type="text"  class="form-control" id="total_amount" name="total_amount" readonly>
+                                                            <input type="text"  class="form-control" id="total_amount_{{ $counter }}" name="total_amount" readonly>
                                                                  
                                                         </div>
                                                             <div class="form-group">
@@ -246,7 +252,9 @@
                                                     
                                                 
                                                         
-                                                      
+                                                      <script>
+                                                        var counter = {{ $counter }};
+                                                      </script>      
 
                                                     @endforeach
                                                 </tbody>

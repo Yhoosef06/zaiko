@@ -228,18 +228,26 @@
     });
 
     $(document).ready(function() {
+    for (let i = 1; i <= counter; i++) {
+        attachChangeHandler(i);
+    }
 
-    $('#payment_per_day').on('change', function() {
-        var days = $('#number_of_day_overdue').val();
-        var amount = $(this).val();
+    function attachChangeHandler(i) {
+        $("#payment_per_day_" + i).on('change', function() {
+            console.log(i); // Use 'i' instead of 'counter'
 
-        var totalAmount = amount * days;
-        
-        $('#total_amount').val(totalAmount);
-        console.log(days);
-    });
-    });
+            var days = $("#number_of_day_overdue_" + i).val();
+            var amount = $(this).val();
 
+            console.log('Days: ' + days);
+            console.log('Amount: ' + amount);
+
+            var totalAmount = amount * days;
+
+            $("#total_amount_" +i).val(totalAmount); // Use 'i' instead of '1'
+        });
+    }
+});
 
 
 
