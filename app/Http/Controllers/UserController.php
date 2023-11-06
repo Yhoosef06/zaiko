@@ -86,7 +86,7 @@ class UserController extends Controller
                 $department->college_name = $department->college->college_name;
             });
 
-            return view('pages.admin.addUser')->with(compact('departments','roles'));
+            return view('pages.admin.addUser')->with(compact('departments', 'roles'));
         } else if (Auth::user()->roles->contains('name', 'admin')) {
             $departments = Department::with('college')->get();
 
@@ -99,6 +99,9 @@ class UserController extends Controller
 
     public function saveNewUser(Request $request)
     {
+        $role_ids = $request->input('role_ids', []);
+        $department_ids = $request->input('department_ids', []);
+
         $this->validate(
             $request,
             [
@@ -122,15 +125,19 @@ class UserController extends Controller
                 'password_updated' => 0,
             ]);
 
-            UserDepartment::create([
-                'user_id_number' => $request->id_number,
-                'department_id' => $request->department_id
-            ]);
+            foreach ($department_ids as $department_id) {
+                UserDepartment::create([
+                    'user_id_number' => $request->id_number,
+                    'department_id' => $department_id
+                ]);
+            }
 
-            UserRole::create([
-                'user_id_number' => $request->id_number,
-                'role_id' => $request->role_id
-            ]);
+            foreach ($role_ids as $role_id) {
+                UserRole::create([
+                    'user_id_number' => $request->id_number,
+                    'role_id' => $role_id,
+                ]);
+            }
 
             Session::flash('success', 'User Successfully Added. Do you want to add another user?');
             return redirect('add-new-user');
