@@ -145,6 +145,25 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         Route::post('deleting-user-{id_number}', [UserController::class, 'deleteUser'])->name('delete_user');
     });
 
+    
+
+    //storing references
+    Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
+    Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
+
+    //reports
+    Route::middleware(['permission:generate-report'])->group(function(){
+        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
+        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
+        Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
+        Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
+        Route::get('/report-test', [ItemsController::class, 'reportTest']);
+    });
+    
+});
+
+//ADMIN
+Route::middleware(['auth', 'role:admin'])->group(function(){
     // FOR Colleges
     Route::get('colleges', [CollegeController::class, 'index'])->name('view_colleges');
     Route::get('add-college', [CollegeController::class, 'addCollege'])->name('add_college');
@@ -201,24 +220,10 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::post('save-new-term', [TermController::class, 'saveNewTerm'])->name('save_new_term');
     Route::post('delete-term/{id}', [TermController::class, 'deleteTerm'])->name('delete_term');
     Route::post('current-term/{id}', [TermController::class, 'currentTerm'])->name('current_term');
-
-    //storing references
-    Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
-    Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
-
-    //reports
-    Route::middleware(['permission:generate-report'])->group(function(){
-        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
-        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
-        Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
-        Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
-        Route::get('/report-test', [ItemsController::class, 'reportTest']);
-    });
-    
 });
 
 //MANAGER
-Route::middleware(['role:manager'])->group(function(){
+Route::middleware(['auth','role:manager'])->group(function(){
     //FOR Manage Borrowings
     Route::middleware(['permission:manage-borrowings'])->group(function (){
         Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');
