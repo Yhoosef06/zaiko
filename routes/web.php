@@ -151,7 +151,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     
     
 
-    // FOR Colleges
+    // FOR Colleges - ADMIN
     Route::get('colleges', [CollegeController::class, 'index'])->name('view_colleges');
     Route::get('add-college', [CollegeController::class, 'addCollege'])->name('add_college');
     Route::get('edit/college/{id}', [CollegeController::class, 'editCollege'])->name('edit_college');
@@ -159,7 +159,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::post('save-edited-college/{id}', [CollegeController::class, 'saveEditedCollege'])->name('save_edited_college');
     Route::post('delete-college-{id}', [CollegeController::class, 'deleteCollege'])->name('delete_college');
 
-    //FOR Departments
+    //FOR Departments - ADMIN
     Route::get('departments', [DepartmentController::class, 'index'])->name('view_departments');
     Route::get('add-department', [DepartmentController::class, 'addDepartment'])->name('add_department');
     Route::post('save-new-department', [DepartmentController::class, 'saveNewDepartment'])->name('save_new_department');
@@ -167,7 +167,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::post('save-edited-department/{id}', [DepartmentController::class, 'saveEditedDepartment'])->name('save_edited_department');
     Route::post('delete-department/{id}', [DepartmentController::class, 'deleteDepartment'])->name('delete_department');
 
-    // FOR ROOM
+    // FOR ROOM - ADMIN
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
     Route::get('add-room', [RoomController::class, 'addRoom'])->name('add_room');
     Route::post('save-new-room', [RoomController::class, 'saveNewRoom'])->name('save_new_room');
@@ -176,7 +176,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
     Route::get('/get-departments/{college_id}', [DepartmentController::class, 'getDepartments'])->name('get_departments');
     
-    // FOR Item Category
+    // FOR Item Category -ADMIN
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
     Route::get('add-item-category', [ItemCategoryController::class, 'addItemCategory'])->name('add_item_category');
     Route::get('edit/item-category/{id}', [ItemCategoryController::class, 'editItemCategory'])->name('edit_item_category');
@@ -184,7 +184,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::post('save-edited-item-category/{id}', [ItemCategoryController::class, 'saveEditedItemCategory'])->name('save_edited_item_category');
     Route::post('delete-category/{id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
 
-    //FOR BRAND
+    //FOR BRAND - ADMIN
     Route::get('brands', [BrandController::class, 'index'])->name('view_brands');
     Route::get('add-brand', [BrandController::class, 'addBrand'])->name('add_brand');
     Route::post('save-new-brand', [BrandController::class, 'saveNewBrand'])->name('save_new_brand');
@@ -192,7 +192,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::post('save-edited-brand/{id}', [BrandController::class, 'saveEditedBrand'])->name('save_edited_brand');
     Route::post('delete-brand/{id}', [BrandController::class, 'deleteBrand'])->name('delete_brand');
 
-    //FOR MODELS
+    //FOR MODELS - ADMIN
     Route::get('models', [ModelsController::class, 'index'])->name('view_models');
     Route::get('/get-models/{brandId}', [ModelsController::class, 'getModels'])->name('get_models');
     Route::get('add-model', [ModelsController::class, 'addModel'])->name('add_model');
@@ -201,7 +201,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::post('save-edited-model/{id}', [ModelsController::class, 'saveEditedModel'])->name('save_edited_model');
     Route::post('delete-model/{id}', [ModelsController::class, 'deleteModel'])->name('delete_model');
 
-    //TERM
+    //TERM - ADMIN
     Route::get('terms', [TermController::class, 'index'])->name('view_terms');
     Route::get('add-term', [TermController::class, 'addTerm'])->name('add_term');
     Route::post('save-new-term', [TermController::class, 'saveNewTerm'])->name('save_new_term');

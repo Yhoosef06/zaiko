@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Cart;
 use App\Models\Department;
+use App\Models\UserDepartment;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -181,9 +182,10 @@ class CartController extends Controller
         }
         
 
+        $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
+        // dd($user_department->department_id);
 
-        $user_dept_id = Auth::user()->department_id;
-       
+        $user_dept_id = $user_department->department_id;
         $departments = Department::with('college')->get();
     
         $collegeId = null;
@@ -197,9 +199,7 @@ class CartController extends Controller
         $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
             $query->where('id', $collegeId);
         })->get();
-
-        
-
+       
         return view('pages.students.cart-list')->with(compact('cartItems','items','borrowedList','missingList'));
 
     }
