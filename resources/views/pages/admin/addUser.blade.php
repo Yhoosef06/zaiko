@@ -86,13 +86,17 @@
                                                 </optgroup>
                                             @endforeach
                                         </select> --}}
-                                        
+
                                         @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                                            <h5 class=" text-decoration-underline"><input type="checkbox" name="" id=""> {{ $collegeName }}
+                                            <h5 class="text-decoration-underline">
+                                                <input type="checkbox" class="college-checkbox"
+                                                    data-college="{{ $collegeName }}">
+                                                {{ $collegeName }}
                                             </h5>
                                             <div class="container">
                                                 @foreach ($departmentsGroup as $department)
-                                                    <input type="checkbox" name="" id="">
+                                                    <input type="checkbox" class="department-checkbox" name="department_ids[]"
+                                                        data-college="{{ $collegeName }}" value="{{ $department->id }}">
                                                     {{ $department->department_name }}<br>
                                                 @endforeach
                                             </div>
@@ -121,15 +125,15 @@
                                         <label for="account status">Account Status:</label>
                                         <select id="account_status" name="account_status" class="form-control">
                                             <option value="approved" selected>approved</option>
-                                            <option value="pending">ending</option>
+                                            <option value="pending">pending</option>
                                         </select>
 
                                         <label for="account status">Role:</label>
                                         <div class=" form-group">
                                             @foreach ($roles as $role)
                                                 <div class="container">
-                                                    <input type="checkbox" name="role_id" id="role_id"
-                                                        value="{{ $role->id }}"> {{ $role->name }}
+                                                    <input type="checkbox" name="role_ids[]" value="{{ $role->id }}">
+                                                    {{ $role->name }}
                                                 </div>
                                             @endforeach
                                         </div>
@@ -138,7 +142,7 @@
                                         <Button type="submit" class="btn btn-success"
                                             onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')">Save</Button>
                                     </div>
-                                </div>                
+                                </div>
                             </div>
                             <!-- /.card-body -->
                         </form>
@@ -149,4 +153,27 @@
     </section>
 
     <!-- /.card -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.college-checkbox').change(function() {
+                var collegeName = $(this).data('college');
+                var isChecked = $(this).prop('checked');
+
+                $('.department-checkbox[data-college="' + collegeName + '"]').prop('checked', isChecked);
+            });
+
+            // Update the college checkbox state based on department checkboxes
+            $('.department-checkbox').change(function() {
+                var collegeName = $(this).data('college');
+                var departmentCheckboxes = $('.department-checkbox[data-college="' + collegeName + '"]');
+                var collegeCheckbox = $('.college-checkbox[data-college="' + collegeName + '"]');
+
+                collegeCheckbox.prop('checked', departmentCheckboxes.length === departmentCheckboxes.filter(
+                    ':checked').length);
+            });
+        });
+    </script>
 @endsection
