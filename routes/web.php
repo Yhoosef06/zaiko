@@ -258,7 +258,7 @@ Route::middleware(['role:manager'])->group(function(){
         Route::post('/submitUserBorrow', [BorrowController::class, 'submitUserBorrow'])->name('submitUserBorrow');
         Route::post('/submit-admin-order', [BorrowController::class, 'submitAdminOrder'])->name('submitAdminOrder');
 
-        // Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
+        Route::post('/addOrder', [BorrowController::class, 'addOrder'])->name('addOrder');
         Route::post('/addRemark', [BorrowController::class, 'addRemark'])->name('addRemark');
         Route::post('/lostItem', [BorrowController::class, 'lostItem'])->name('lostItem');
         Route::post('/lostOverdueItem', [BorrowController::class, 'lostOverdueItem'])->name('lostOverdueItem');

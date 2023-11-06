@@ -126,7 +126,7 @@
                                   <td>{{ $item->serial_number }}</td>
                                   <td id="quantity_{{ $index }}">
                                     <select name="quantity[]" class="form-control" onchange="updateItemQuantity(this.value, {{ $index }})">
-                                      @for ($i = 1; $i <= $item->available_quantity + $item->order_quantity; $i++)
+                                      @for ($i = 1; $i <= $item->quantity; $i++)
                                         <option value="{{ $i }}" {{ $i == $item->order_quantity ? 'selected' : '' }}>
                                           {{ $i }}
                                         </option>
