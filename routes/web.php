@@ -124,10 +124,6 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         Route::post('/save-replaced-item-{id}', [ItemsController::class, 'saveReplacedItem'])->name('save_replaced_item');
     });
     
-    
-    
-    
-
     // FOR USERS
     Route::middleware(['permission:manage-user,view-users'])->group(function (){
         Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
@@ -220,7 +216,6 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     });
     
 });
-
 
 //MANAGER
 Route::middleware(['role:manager'])->group(function(){
