@@ -266,10 +266,18 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ route('view_models') }}" class="nav-link">
+                                        <a href="{{ route('view_roles') }}" class="nav-link">
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>Roles & Permissions</p>
+                                                <p>Roles</p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('view_permissions') }}" class="nav-link">
+                                            <div class="ml-3">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Permissions</p>
                                             </div>
                                         </a>
                                     </li>

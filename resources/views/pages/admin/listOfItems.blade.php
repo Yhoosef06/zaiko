@@ -28,82 +28,128 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <table id="listofitems" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Brand</th>
-                                        <th>Model</th>
-                                        <th>Category</th>
-                                        <th>Description</th>
-                                        <th>Location</th>
-                                        <th>Quantity</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($items as $item)
-                                        <tr data-item-id="{{ $item->id }}">
-                                            <td>{{ $item->id }}</td>
-                                            <td>
-                                                {{ $item->brand_id ? $item->brand->brand_name : 'N/A' }}
-                                            </td>
-                                            <td>
-                                                {{ $item->model_id ? $item->model->model_name : 'N/A' }}
-                                            </td>
-                                            <td>{{ $item->category->category_name }}</td>
-                                            <td>{{ Str::limit($item->description, 20, '...') }}</td>
-                                            <td>{{ $item->room->room_name }}</td>
-                                            <td>{{ $item->quantity }}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-item-details" data-toggle="tooltip" title='View'
-                                                    onclick="openItemModal('{{ $item->id }}')">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
 
-                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#addSubItemModal" data-toggle="tooltip"
-                                                    title='Add Sub Item'
-                                                    data-route="{{ route('add_sub_item', ['id' => $item->id]) }}"
-                                                    onclick="openAddSubItemModal({{ $item->id }}, $(this).data('route'))">
-                                                    <i class="fa fa-plus-square"></i>
-                                                </button>
+                            <div class="table-responsive">
+                                <div class="ml-1 float-md-right">
+                                    <button name="searchFilter" class="btn bg-yellow" data-toggle="modal"
+                                        data-target="#filterModal" data-toggle="tooltip" title="Filter Items"><i
+                                            class="fa fa-filter" onclick="filterItems()"></i></button>
+                                </div>
 
-                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-transfer-item" data-toggle="tooltip"
-                                                    title='Transfer Item'
-                                                    data-route="{{ route('transfer_item', ['id' => $item->id]) }}"
-                                                    onclick="openTransferItemModal({{ $item->id }}, $(this).data('route'))">
-                                                    <i class="fa fa-arrow-alt-circle-right"></i>
-                                                </button>
+                                <div class="ml-1 float-md-right">
+                                    <a href="{{ route('sort_items', ['order' => 'asc']) }}"
+                                        class="btn bg-yellow {{ $sortOrder === 'asc' ? 'active' : '' }}"
+                                        data-toggle="tooltip" title="Sort By Row # (Ascending)">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
 
-                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-target="#modal-replace-item" data-toggle="tooltip"
-                                                    title='Replace Item'
-                                                    data-route="{{ route('replace_item', ['id' => $item->id]) }}"
-                                                    onclick="openReplaceItemModal({{ $item->id }}, $(this).data('route'))">
-                                                    <i class="fa fa-exchange-alt"></i>
-                                                </button>
+                                <div class="ml-1 float-md-right">
+                                    <a href="{{ route('sort_items', ['order' => 'desc']) }}"
+                                        class="btn bg-yellow {{ $sortOrder === 'desc' ? 'active' : '' }}"
+                                        data-toggle="tooltip" title="Sort By Row # (Descending)">
+                                        <i class="fa fa-chevron-down"></i>
+                                    </a>
+                                </div>
 
-                                                @if ($item->borrowed == 'no')
-                                                    <form class="form_delete_btn" method="POST"
-                                                        action="{{ route('delete_item', $item->id) }}">
-                                                        @csrf
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="modal" data-target="#show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'
-                                                            onclick="deleteButton({{ $item->id }})">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            </td>
+                                <div class="search-bar mb-2 float-md-right">
+                                    <form action="{{ route('items.search') }}" method="GET">
+                                        <div class="input-group">
+                                            <input type="text" name="search" class="form-control"
+                                                placeholder="Search items..."
+                                                value="{{ old('search', request('search')) }}">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn bg-yellow" data-toggle="tooltip"
+                                                    title="Search">Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <table id="listofitems" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Brand</th>
+                                            <th>Model</th>
+                                            <th>Category</th>
+                                            <th>Description</th>
+                                            <th>Location</th>
+                                            <th>Quantity</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($items as $item)
+                                            <tr data-item-id="{{ $item->id }}">
+                                                <td>{{ $item->id }}</td>
+                                                <td>
+                                                    {{ $item->brand_id ? $item->brand->brand_name : 'N/A' }}
+                                                </td>
+                                                <td>
+                                                    {{ $item->model_id ? $item->model->model_name : 'N/A' }}
+                                                </td>
+                                                <td>{{ $item->category->category_name }}</td>
+                                                <td>{{ Str::limit($item->description, 30, '...') }} </td>
+                                                <td>{{ $item->room->room_name }}</td>
+                                                <td>{{ $item->quantity }}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                        data-target="#modal-item-details" data-toggle="tooltip"
+                                                        title='View' onclick="openItemModal('{{ $item->id }}')">
+                                                        <i class="fa fa-eye"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                        data-target="#addSubItemModal" data-toggle="tooltip"
+                                                        title='Add Sub Item'
+                                                        data-route="{{ route('add_sub_item', ['id' => $item->id]) }}"
+                                                        onclick="openAddSubItemModal({{ $item->id }}, $(this).data('route'))">
+                                                        <i class="fa fa-plus-square"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                        data-target="#modal-transfer-item" data-toggle="tooltip"
+                                                        title='Transfer Item'
+                                                        data-route="{{ route('transfer_item', ['id' => $item->id]) }}"
+                                                        onclick="openTransferItemModal({{ $item->id }}, $(this).data('route'))">
+                                                        <i class="fa fa-arrow-alt-circle-right"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                        data-target="#modal-replace-item" data-toggle="tooltip"
+                                                        title='Replace Item'
+                                                        data-route="{{ route('replace_item', ['id' => $item->id]) }}"
+                                                        onclick="openReplaceItemModal({{ $item->id }}, $(this).data('route'))">
+                                                        <i class="fa fa-exchange-alt"></i>
+                                                    </button>
+
+                                                    @if ($item->borrowed == 'no')
+                                                        <form class="form_delete_btn" method="POST"
+                                                            action="{{ route('delete_item', $item->id) }}">
+                                                            @csrf
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                data-toggle="modal" data-target="#show-alert-delete-item"
+                                                                data-toggle="tooltip" title='Delete'
+                                                                onclick="deleteButton({{ $item->id }})">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center bg-white">No available data in the
+                                                    table</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="float-md-right">
+                                {{ $items->links() }}
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -183,6 +229,25 @@
         </div>
     </div>
 
+    <!-- Modal for Filtering -->
+    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Filter Items</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+         
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         function deleteButton(itemId) {
             // Remove previous highlighting
@@ -195,6 +260,17 @@
             $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
                 'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
                 'background-color': '#A9F5F2' // Adjust the color as needed
+            });
+        }
+
+        function filterItems() {
+            var modal = $('#filterModal');
+            var url = "{{ route('filter_items')}}";
+            // Clear previous content from the modal
+            modal.find('.modal-body').html('');
+
+            $.get(url, function(data) {
+                modal.find('.modal-body').html(data);
             });
         }
 
@@ -309,4 +385,11 @@
             });
         }
     </script>
+    <style>
+        /* for sort buttons */
+        .active {
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
 @endsection
