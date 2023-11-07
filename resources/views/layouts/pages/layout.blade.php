@@ -176,17 +176,16 @@
             "autoWidth": false
 
         });
-        $("#listofitems").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false
+        // $("#listofitems").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false
 
-        });
+        // });
         $("#listofusers").DataTable({
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false
-
         });
         $("#listofcolleges").DataTable({
             "responsive": true,

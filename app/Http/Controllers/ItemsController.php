@@ -36,15 +36,17 @@ class ItemsController extends Controller
         //admin
         if (Auth::user()->roles->contains('name', 'admin')) {
             $role = Role::where('name', 'admin')->first();
+            $sortOrder = 'asc';
             $canManageInventory = $role->permissions->contains('id', 1);
             if ($canManageInventory) {
-                $items = Item::all();
-                return view('pages.admin.listOfItems')->with(compact('items'));
+                $items = Item::paginate(20);
+                return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder'));
             } else {
                 return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
             }
         } else if (Auth::user()->roles->contains('name', 'manager')) {
             $role = Role::where('name', 'manager')->first();
+            $sortOrder = 'asc';
             $canManageInventory = $role->permissions->contains('id', 1);
             if ($canManageInventory) {
                 $userId = auth()->user()->id_number;
@@ -52,8 +54,8 @@ class ItemsController extends Controller
                 $departmentIds = $user->departments->pluck('id');
                 $rooms = Room::whereIn('department_id', $departmentIds)->get();
                 $roomIds = $rooms->pluck('id');
-                $items = Item::whereIn('location', $roomIds)->get();
-                return view('pages.admin.listOfItems')->with('items', $items);
+                $items = Item::whereIn('location', $roomIds)->paginate(10);
+                return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder'));
             } else {
                 return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
             }
@@ -114,7 +116,7 @@ class ItemsController extends Controller
         $item = Item::find($id);
         $brands = Brand::all();
         $models = Models::all();
-        $rooms = $isAdmin ? Room::all() : Room::where('department_id', $departments->pluck('id'))->get();
+        $rooms = $isAdmin ? Room::all() : Room::whereIn('department_id', $departments->pluck('id'))->get();
         $itemCategories = ItemCategory::all();
         $category = $item->category ? $item->category->category_name : null;
 
@@ -498,18 +500,99 @@ class ItemsController extends Controller
     }
 
 
-    // public function searchItem(Request $request)
-    // {
-    //     $search_text = request('query');
+    public function searchItem(Request $request)
+    {
+        $search_text = $request->input('search');
+        $sortOrder = 'asc';
+        $items = Item::with('brand', 'model', 'category', 'room')
+            ->where(function ($query) use ($search_text) {
+                $query->where('description', 'LIKE', '%' . $search_text . '%')
+                    ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
+                    ->orWhere('part_number', 'LIKE', '%' . $search_text . '%')
+                    ->orWhereHas('brand', function ($query) use ($search_text) {
+                        $query->where('brand_name', 'LIKE', '%' . $search_text . '%');
+                    })
+                    ->orWhereHas('model', function ($query) use ($search_text) {
+                        $query->where('model_name', 'LIKE', '%' . $search_text . '%');
+                    })
+                    ->orWhereHas('category', function ($query) use ($search_text) {
+                        $query->where('category_name', 'LIKE', '%' . $search_text . '%');
+                    })
+                    ->orWhereHas('room', function ($query) use ($search_text) {
+                        $query->where('room_name', 'LIKE', '%' . $search_text . '%');
+                    });
+            })
+            ->paginate(20);
 
-    //     $items = Item::where('item_name', 'LIKE', '%' . $search_text . '%')
-    //         ->orWhere('location', 'LIKE', '%' . $search_text . '%')
-    //         ->orWhere('item_description', 'LIKE', '%' . $search_text . '%')
-    //         ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')->orderBy('location', 'desc')->paginate(5);
+        return view('pages.admin.listOfItems', compact('items', 'sortOrder'));
+    }
 
-    //     // dd($items);
-    //     return view('pages.admin.listOfItems', compact('items'));
-    // }
+    public function sortItems($order)
+    {
+        // Sort the items based on the "id" column and the provided order
+        $sortOrder = $order;
+        $items = Item::orderBy('id', $order)->paginate(10);
+
+        return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder'));
+    }
+
+    public function filterItems()
+    {
+        if (Auth::user()->roles->contains('name', 'admin')) {
+            $role = Role::where('name', 'admin')->first();
+            $canManageInventory = $role->permissions->contains('id', 1);
+            if ($canManageInventory) {
+                $items = Item::all();
+                return view('pages.admin.filterItems')->with(compact('items'));
+            }
+        } else {
+            $user = Auth::user();
+            $departments = $user->departments;
+            $rooms = Room::whereIn('department_id', $departments->pluck('id'))->get();
+            $items = Item::whereHas('room', function ($query) use ($departments) {
+                $query->whereIn('department_id', $departments->pluck('id'));
+            })->get();
+
+            return view('pages.admin.filterItems')->with(compact('items'));
+        }
+
+        // $items = Item::all();
+        // return view('pages.admin.filterItems')->with(compact('items'));
+    }
+
+    public function getFilteredItems(Request $request)
+    {
+        $brandIds = $request->input('brand_ids', []);
+        $modelIds = $request->input('model_ids', []);
+        $categoryIds = $request->input('category_ids', []);
+        $roomIds = $request->input('room_ids', []);
+        $sortOrder = 'asc';
+
+        // Use the retrieved filter parameters to query the items
+        $filteredItems = Item::query();
+
+        if (!empty($brandIds)) {
+            $filteredItems->whereIn('brand_id', $brandIds);
+        }
+
+        if (!empty($modelIds)) {
+            $filteredItems->whereIn('model_id', $modelIds);
+        }
+
+        if (!empty($categoryIds)) {
+            $filteredItems->whereIn('category_id', $categoryIds);
+        }
+
+        if (!empty($roomIds)) {
+            $filteredItems->whereIn('location', $roomIds);
+        }
+
+        // Retrieve the filtered items
+        $items = $filteredItems->paginate(20);
+
+        // Pass the filtered items to the view
+        return view('pages.admin.listOfItems', compact('items', 'sortOrder'));
+    }
 
     public function getBrand()
     {

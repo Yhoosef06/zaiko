@@ -39,7 +39,7 @@
                                         @if (Auth::user()->roles->contains('name', 'admin'))
                                             <th>Role</th>
                                         @endif
-                                        <th>Department(s)</th>
+                                        <th>Program(s)/Department(s)</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>

@@ -5,6 +5,7 @@ use App\Models\SecurityQuestion;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QRController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\UserController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -92,7 +94,10 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         Route::get('/get-model', [ItemsController::class, 'getModel']);
         Route::get('/get-part-number', [ItemsController::class, 'getPartNumber']);
         Route::get('/check-serial-number/{serial_number}', [ItemsController::class, 'checkSerialNumber'])->name('check_serial_number');
-
+        Route::get('/items/search', [ItemsController::class, 'searchItem'])->name('items.search');
+        Route::get('/items/sort/{order}', [ItemsController::class, 'sortItems'])->name('sort_items');
+        Route::get('/filter-items', [ItemsController::class, 'filterItems'])->name('filter_items');
+        Route::get('/get-filtered-items', [ItemsController::class, 'getFilteredItems'])->name('get_filtered_items');
     });
 
     Route::middleware(['permission:manage-inventory,add-items'])->group(function (){
@@ -220,6 +225,12 @@ Route::middleware(['auth', 'role:admin'])->group(function(){
     Route::post('save-new-term', [TermController::class, 'saveNewTerm'])->name('save_new_term');
     Route::post('delete-term/{id}', [TermController::class, 'deleteTerm'])->name('delete_term');
     Route::post('current-term/{id}', [TermController::class, 'currentTerm'])->name('current_term');
+
+    //Roles
+    Route::get('roles', [RoleController::class, 'index'])->name('view_roles');
+
+    //Permissions
+    Route::get('permissions', [PermissionController::class, 'index'])->name('view_permissions');
 });
 
 //MANAGER
@@ -264,21 +275,6 @@ Route::middleware(['auth','role:manager'])->group(function(){
         Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
         Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
         Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
-    });
-    
-    
-
-    //storing references
-    Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
-    Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
-
-    //reports
-    Route::middleware(['permission:generate-report'])->group(function(){
-        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
-        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
-        Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
-        Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
-        Route::get('/report-test', [ItemsController::class, 'reportTest']);
     });
 });
 
