@@ -96,7 +96,6 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         Route::get('/check-serial-number/{serial_number}', [ItemsController::class, 'checkSerialNumber'])->name('check_serial_number');
         Route::get('/items/search', [ItemsController::class, 'searchItem'])->name('items.search');
         Route::get('/items/sort/{order}', [ItemsController::class, 'sortItems'])->name('sort_items');
-        Route::get('/filter-items', [ItemsController::class, 'filterItems'])->name('filter_items');
         Route::get('/get-filtered-items', [ItemsController::class, 'getFilteredItems'])->name('get_filtered_items');
     });
 

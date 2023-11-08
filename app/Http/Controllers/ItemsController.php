@@ -40,7 +40,8 @@ class ItemsController extends Controller
             $canManageInventory = $role->permissions->contains('id', 1);
             if ($canManageInventory) {
                 $items = Item::paginate(20);
-                return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder'));
+                $filterItems = Item::all();
+                return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder', 'filterItems'));
             } else {
                 return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
             }
@@ -55,7 +56,8 @@ class ItemsController extends Controller
                 $rooms = Room::whereIn('department_id', $departmentIds)->get();
                 $roomIds = $rooms->pluck('id');
                 $items = Item::whereIn('location', $roomIds)->paginate(10);
-                return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder'));
+                $filterItems = Item::whereIn('location', $roomIds)->get();
+                return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder', 'filterItems'));
             } else {
                 return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
             }
@@ -150,7 +152,7 @@ class ItemsController extends Controller
         $item->status = $request->status;
         $item->duration = $request->duration;
         $item->duration_type = $request->duration_type;
-        $item->part_number  = $request->part_number;
+        $item->part_number = $request->part_number;
         $item->inventory_tag = $request->inventory_tag;
         $item->item_image = $imagePath;
         $item->save();
@@ -182,7 +184,7 @@ class ItemsController extends Controller
             // Check if the item is currently borrowed
             if ($item->borrowed == 'yes') {
                 Session::flash('danger', 'Warning: Unable to remove item that is currently being borrowed.');
-                return  redirect('list-of-items');
+                return redirect('list-of-items');
             }
 
             // Delete the item
@@ -265,7 +267,7 @@ class ItemsController extends Controller
                     'duration_type' => $request->duration_type,
                     'duration' => $request->duration,
                     'borrowed' => 'no',
-                    'item_image' =>  $imagePath,
+                    'item_image' => $imagePath,
                 ]);
 
                 $itemLog = new ItemLog();
@@ -307,7 +309,7 @@ class ItemsController extends Controller
                 'duration_type' => $request->duration_type,
                 'duration' => $request->duration,
                 'borrowed' => 'no',
-                'item_image' =>  $imagePath,
+                'item_image' => $imagePath,
             ]);
 
             $itemLog = new ItemLog();
@@ -361,17 +363,22 @@ class ItemsController extends Controller
 
         if ($request->has('download')) {
             $pdf = App::make('dompdf.wrapper');
-            $pdf->loadView('pages.pdfReturnedItems', compact(
-                'items'
-            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+            $pdf->loadView(
+                'pages.pdfReturnedItems',
+                compact(
+                    'items'
+                )
+            )->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
 
             return $pdf->download('ReturnedItemsReport' . '.pdf');
         }
 
-        return view('pages.pdfReturnedItems')->with(compact(
-            'first_name',
-            'items'
-        ));
+        return view('pages.pdfReturnedItems')->with(
+            compact(
+                'first_name',
+                'items'
+            )
+        );
     }
 
     public function downloadBorrowedReport(Request $request)
@@ -381,17 +388,22 @@ class ItemsController extends Controller
 
         if ($request->has('download')) {
             $pdf = App::make('dompdf.wrapper');
-            $pdf->loadView('pages.pdfBorrowedItems', compact(
-                'items'
-            ))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
+            $pdf->loadView(
+                'pages.pdfBorrowedItems',
+                compact(
+                    'items'
+                )
+            )->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4');
 
             return $pdf->download('BorrowedItemsReport' . '.pdf');
         }
 
-        return view('pages.pdfBorrowedItems')->with(compact(
-            'first_name',
-            'items'
-        ));
+        return view('pages.pdfBorrowedItems')->with(
+            compact(
+                'first_name',
+                'items'
+            )
+        );
     }
 
 
@@ -453,20 +465,23 @@ class ItemsController extends Controller
 
         if ($request->has('download')) {
             $pdf = App::make('dompdf.wrapper');
-            $pdf->loadView('pages.pdfReport', compact(
-                'items',
-                'location',
-                'prepared_by',
-                'verified_by',
-                'noted_by',
-                'approved_by',
-                'department',
-                'rooms',
-                'role_1',
-                'role_2',
-                'role_3',
-                'role_4'
-            ))->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
+            $pdf->loadView(
+                'pages.pdfReport',
+                compact(
+                    'items',
+                    'location',
+                    'prepared_by',
+                    'verified_by',
+                    'noted_by',
+                    'approved_by',
+                    'department',
+                    'rooms',
+                    'role_1',
+                    'role_2',
+                    'role_3',
+                    'role_4'
+                )
+            )->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
             Reference::create([
                 'location' => $request->location,
                 'prepared_by' => $request->prepared_by,
@@ -504,7 +519,35 @@ class ItemsController extends Controller
     {
         $search_text = $request->input('search');
         $sortOrder = 'asc';
-        $items = Item::with('brand', 'model', 'category', 'room')
+
+        if (Auth::user()->roles->contains('name', 'admin')) {
+            $filterItems = Item::all();
+            $items = Item::with('brand', 'model', 'category', 'room')
+                ->where(function ($query) use ($search_text) {
+                    $query->where('description', 'LIKE', '%' . $search_text . '%')
+                        ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
+                        ->orWhere('part_number', 'LIKE', '%' . $search_text . '%')
+                        ->orWhereHas('brand', function ($query) use ($search_text) {
+                            $query->where('brand_name', 'LIKE', '%' . $search_text . '%');
+                        })
+                        ->orWhereHas('model', function ($query) use ($search_text) {
+                            $query->where('model_name', 'LIKE', '%' . $search_text . '%');
+                        })
+                        ->orWhereHas('category', function ($query) use ($search_text) {
+                            $query->where('category_name', 'LIKE', '%' . $search_text . '%');
+                        })
+                        ->orWhereHas('room', function ($query) use ($search_text) {
+                            $query->where('room_name', 'LIKE', '%' . $search_text . '%');
+                        });
+                })
+                ->paginate(20);
+        } else {
+            $userId = auth()->user()->id_number;
+            $user = User::find($userId);
+            $departmentIds = $user->departments->pluck('id');
+            $rooms = Room::whereIn('department_id', $departmentIds)->get();
+            $roomIds = $rooms->pluck('id');
+            $items = Item::whereIn('location', $roomIds)->with('brand', 'model', 'category', 'room')
             ->where(function ($query) use ($search_text) {
                 $query->where('description', 'LIKE', '%' . $search_text . '%')
                     ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
@@ -523,41 +566,28 @@ class ItemsController extends Controller
                     });
             })
             ->paginate(20);
+            $filterItems = Item::whereIn('location', $roomIds)->get();
+        }
 
-        return view('pages.admin.listOfItems', compact('items', 'sortOrder'));
+        return view('pages.admin.listOfItems', compact('items', 'sortOrder', 'filterItems'));
     }
 
     public function sortItems($order)
-    {
-        // Sort the items based on the "id" column and the provided order
+    {   
         $sortOrder = $order;
-        $items = Item::orderBy('id', $order)->paginate(10);
-
-        return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder'));
-    }
-
-    public function filterItems()
-    {
         if (Auth::user()->roles->contains('name', 'admin')) {
-            $role = Role::where('name', 'admin')->first();
-            $canManageInventory = $role->permissions->contains('id', 1);
-            if ($canManageInventory) {
-                $items = Item::all();
-                return view('pages.admin.filterItems')->with(compact('items'));
-            }
+            $items = Item::orderBy('id', $order)->paginate(20);
+            $filterItems = Item::all();
         } else {
-            $user = Auth::user();
-            $departments = $user->departments;
-            $rooms = Room::whereIn('department_id', $departments->pluck('id'))->get();
-            $items = Item::whereHas('room', function ($query) use ($departments) {
-                $query->whereIn('department_id', $departments->pluck('id'));
-            })->get();
-
-            return view('pages.admin.filterItems')->with(compact('items'));
+            $userId = auth()->user()->id_number;
+            $user = User::find($userId);
+            $departmentIds = $user->departments->pluck('id');
+            $rooms = Room::whereIn('department_id', $departmentIds)->get();
+            $roomIds = $rooms->pluck('id');
+            $filterItems = Item::whereIn('location', $roomIds)->get();
+            $items = item::whereIn('location', $roomIds)->orderBy('id', $order)->paginate(20);
         }
-
-        // $items = Item::all();
-        // return view('pages.admin.filterItems')->with(compact('items'));
+        return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder', 'filterItems'));
     }
 
     public function getFilteredItems(Request $request)
@@ -587,16 +617,24 @@ class ItemsController extends Controller
             $filteredItems->whereIn('location', $roomIds);
         }
 
-        // Retrieve the filtered items
         $items = $filteredItems->paginate(20);
 
-        // Pass the filtered items to the view
-        return view('pages.admin.listOfItems', compact('items', 'sortOrder'));
+        if (Auth::user()->roles->contains('name', 'admin')) {
+            $filterItems = Item::all();
+        } else {
+            $userId = auth()->user()->id_number;
+            $user = User::find($userId);
+            $departmentIds = $user->departments->pluck('id');
+            $rooms = Room::whereIn('department_id', $departmentIds)->get();
+            $roomIds = $rooms->pluck('id');
+            $filterItems = Item::whereIn('location', $roomIds)->get();
+        }
+        return view('pages.admin.listOfItems', compact('items', 'sortOrder', 'filterItems'));
     }
 
     public function getBrand()
     {
-        $brands  = Brand::distinct()->pluck('brand_name')->reject(function ($brand) {
+        $brands = Brand::distinct()->pluck('brand_name')->reject(function ($brand) {
             return $brand === null;
         })->toArray();
 
