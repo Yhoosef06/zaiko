@@ -145,7 +145,7 @@
                                 
                           
                                   
-                            @elseif($item->serial_number === 'N/A')
+                             @elseif($item->serial_number === 'N/A')
                                   <tr>
                                     <td class="d-none">
                                       <input type="text" name="orderItemTemp" value="{{ $item->orderItempId }}">
@@ -169,24 +169,24 @@
                                       @php
                                       $borrowedQty = 0;
                                       $missingQty = 0;
-                                  
                                       foreach ($borrowedList as $borrowed) {
-                                          if ($borrowed->item_id == $item->id) {
+                                          if ($borrowed->item_id == $item->item_id) {
                                               $borrowedQty += $borrowed->order_quantity;
                                           }
                                       }
-                                  
+                                      
                                       foreach ($missingList as $missing) {
-                                          if ($missing->item_id == $item->id) {
+                                          if ($missing->item_id == $item->item_id) {
                                               $missingQty += $missing->quantity;
                                           }
                                       }
-                                  
-                                      $totalDeduct = $missingQty + $borrowedQty;
-                                    @endphp
+                              
+                                      $availableQty = $item->itemQty - ($borrowedQty + $missingQty);
+                                     @endphp
+                              
                                   
                                       <select name="quantity[]" class="form-control">
-                                        @for ($i = 1; $i <= $item->itemQty-$totalDeduct; $i++)
+                                        @for ($i = 1; $i <= $availableQty; $i++)
                                         <option value="{{ $i }}" {{ $i == $item->orderQty ? 'selected' : '' }}>
                                           {{ $i }}
                                         </option>

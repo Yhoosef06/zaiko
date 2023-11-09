@@ -61,7 +61,7 @@
                                                     $counter++;  
                                                     @endphp
                                                     <tr>
-                                                        <td>{{ $overdueItem->id }}</td>
+                                                        <td>{{ $overdueItem->order_id }}</td>
                                                        
                                                         <td>{{ $overdueItem->description }}</td>
                                                         <td>
@@ -76,14 +76,14 @@
                                                         </td>
                                                     </tr>
 
-                                                    <div class="modal fade hide" id="showOverdue{{$overdueItem->order_item_id}}">
+                                                    <div class="modal fade" id="showOverdue{{$overdueItem->order_item_id}}">
                                                         <div class="modal-dialog modal-lg">
                                                           <div class="modal-content">
                                                             <div class="modal-header">
                                                               <h4 class="modal-title">{{ $overdueItem->last_name }}, {{$overdueItem->first_name}}</h4>
                                                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
-                                                              </button>
+                                                            </button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="row">
@@ -153,7 +153,7 @@
                                                         <!-- /.modal-dialog -->
                                                       </div>
 
-                                                      <div class="modal fade hide" id="returnOverdue{{$overdueItem->order_item_id}}">
+                                                      <div class="modal fade" id="returnOverdue{{$overdueItem->order_item_id}}">
                                                         <div class="modal-dialog modal-sm">
                                                           <div class="modal-content">
                                                             <div class="modal-header">
@@ -171,17 +171,17 @@
                                                               <input type="hidden"  class="form-control" value="{{ $overdueItem->category_name }}" name="categoryName">
                                                             <div class="form-group">
                                                                   <label>Number Of Day Overdue</label>
-                                                                  <input type="text"  class="form-control" id="number_of_day_overdue_{{ $counter }}" name="number_of_day_overdue" value="{{ $overdueItem->days_overdue }}"readonly>
+                                                                  <input type="number"  class="form-control" id="number_of_day_overdue_{{ $counter }}" name="number_of_day_overdue" value="{{ $overdueItem->days_overdue }}"readonly>
                                                                        
                                                             </div>
                                                             <div class="form-group">
                                                               <label>Payment Per Day</label>
-                                                              <input type="text"  class="form-control" id="payment_per_day_{{ $counter }}"  name="payment_per_day" required>
+                                                              <input type="number"  class="form-control" id="payment_per_day_{{ $counter }}"  name="payment_per_day" required>
                                                                    
                                                           </div>
                                                           <div class="form-group">
                                                             <label>Total</label>
-                                                            <input type="text"  class="form-control" id="total_amount_{{ $counter }}" name="total_amount" readonly>
+                                                            <input type="number"  class="form-control" id="total_amount_{{ $counter }}" name="total_amount" readonly required>
                                                                  
                                                         </div>
                                                             <div class="form-group">
@@ -284,4 +284,6 @@
         <!-- /.container-fluid -->
     </section>
 @endsection
+
+
 

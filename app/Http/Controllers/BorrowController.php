@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\Rule;
@@ -49,28 +50,34 @@ class BorrowController extends Controller
     {
         $currentDate = Carbon::now();
         $department = Auth::user()->departments->first();
-    
+
         $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
-            ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
-            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
-            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
-            ->join('items', 'order_items.item_id', '=', 'items.id')
-            ->join('item_categories', 'items.category_id', 'item_categories.id')
-            ->join('models', 'items.model_id', '=', 'models.id')
-            ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->where('order_items.date_returned', '<', $currentDate->toDateString())
-            ->where('departments.college_id', $department->college_id)
-            ->where('order_items.status', 'borrowed')
-            ->get();
-    
-        
+    ->join('users', 'orders.user_id', '=', 'users.id_number')
+    ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
+    ->join('departments', 'user_departments.department_id', '=', 'departments.id')
+    ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+    ->join('items', 'order_items.item_id', '=', 'items.id')
+    ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+    ->join('models', 'items.model_id', '=', 'models.id')
+    ->join('brands', 'models.brand_id', '=', 'brands.id')
+    ->where('order_items.status', 'borrowed')
+    ->where('order_items.date_returned', '<', $currentDate->toDateString())
+    ->where('departments.college_id', $department->college_id)
+    ->groupBy('order_item_id') // Group by order ID or any other unique identifier
+    ->get();
+
+
         foreach ($overdueItems as $item) {
             $dateReturned = Carbon::parse($item->date_returned); 
             $daysOverdue = $dateReturned->diffInDays($currentDate);
             $item->days_overdue = $daysOverdue;
         }
-    
+        
+    // echo '<pre>';
+    // print_r($overdueItems);
+    // echo '</pre>';
+    // exit;
+
         return view('pages.admin.overdue')->with(compact('overdueItems'));
     }
     
@@ -565,15 +572,9 @@ class BorrowController extends Controller
 
     public function viewOrderUser($id)
     {
-        $borrowedList = OrderItem::where('status', 'borrowed')->get();
+        $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
-        $countTempSerial = OrderItemTemp::join('items', 'order_item_temps.item_id', '=', 'items.id')
-            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-            ->where('order_item_temps.order_id', $id)
-            ->where('order_item_temps.temp_serial_number', '')
-            ->where('item_categories.category_name', '!=', 'Tools')
-            ->distinct()
-            ->count();
+     
 
         $orders = Order::select('orders.id as order_id', 'item_categories.category_name', 'order_item_temps.quantity as orderQty', 'items.quantity as itemQty', 'items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name', 'items.serial_number', 'brands.brand_name', 'models.model_name', 'items.description', 'order_item_temps.id as orderItempId','order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
@@ -586,9 +587,9 @@ class BorrowController extends Controller
             ->where('orders.id', $id)
             ->get();
    
+        // dd($borrowedList);
 
-
-        return view('pages.admin.viewOrderUser')->with(compact('orders', 'borrowedList', 'missingList', 'countTempSerial'));
+        return view('pages.admin.viewOrderUser')->with(compact('orders', 'borrowedList', 'missingList'));
     }
 
     public function borrowItem()
@@ -602,9 +603,6 @@ class BorrowController extends Controller
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
             ->find($id);
-        
-         
-
 
             $itemQuantity = $item->quantity;
         
@@ -620,7 +618,6 @@ class BorrowController extends Controller
                 'availableQuantity' => $availableQuantity,
             ];
         
-       
 
         return response()->json($data);
     }
@@ -781,8 +778,7 @@ class BorrowController extends Controller
     public function checkUserId($id)
     {
         $checkUser = Order::where('user_id', $id)
-            ->whereNotNull('date_submitted')
-            ->whereNull('date_returned')
+            ->whereNull('approval_date')
             ->get();
 
         if ($checkUser->count() > 0) {
