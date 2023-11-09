@@ -423,9 +423,18 @@
         $(document).ready(function() {
             // Listen for the "Clear" button click
             $('#clearFilters').click(function() {
-                // Uncheck all checkboxes with the specified names
-                $('input[name^="brand_ids"], input[name^="model_ids"], input[name^="category_ids"], input[name^="room_ids"]')
-                    .prop('checked', false);
+    
+                // Uncheck all checkboxes with names starting with "brand_ids[]"
+                $('input[name^="brand_ids[]"]').prop('checked', false);
+
+                // Uncheck all checkboxes with names starting with "model_ids[]"
+                $('input[name^="model_ids[]"]').prop('checked', false);
+
+                // Uncheck all checkboxes with names starting with "category_ids[]"
+                $('input[name^="category_ids[]"]').prop('checked', false);
+
+                // Uncheck all checkboxes with names starting with "room_ids[]"
+                $('input[name^="room_ids[]"]').prop('checked', false);
             });
         });
     </script>
