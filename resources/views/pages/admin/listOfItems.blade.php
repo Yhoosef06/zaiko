@@ -423,7 +423,7 @@
         $(document).ready(function() {
             // Listen for the "Clear" button click
             $('#clearFilters').click(function() {
-    
+
                 // Uncheck all checkboxes with names starting with "brand_ids[]"
                 $('input[name^="brand_ids[]"]').prop('checked', false);
 

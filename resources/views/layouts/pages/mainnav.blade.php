@@ -1,3 +1,44 @@
+<style>
+    /* Initially hide collapse-content */
+    .collapse-content {
+        display: none;
+    }
+
+    /* Style for collapse-content items */
+    .collapse-content a {
+        display: block;
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.759);
+    }
+
+    .dropdown-menu a:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* Style for collapse-content items when hovered */
+    .collapse-content a:hover {
+        background-color: #f0f0f0;
+        padding-left: 5px;
+    }
+
+    /* Show collapse-content when hovering over the parent dropdown and the "Change Department" item or collapse-content */
+    .dropdown:hover .dropdown-item-change-department:hover+.collapse-content,
+    .dropdown-item-change-department:hover .collapse-content,
+    .collapse-content:hover {
+        display: block;
+    }
+
+    .dropdown:hover .dropdown-item-change-department {
+        background-color: #f0f0f0;
+        /* Adjust the background color on hover */
+    }
+
+    /* Highlight the "Change Department" item when a collapse-content item is selected */
+    .dropdown-item-change-department.active {
+        background-color: #d3d3d3;
+        /* Adjust the background color for the active state */
+    }
+</style>
 <nav class="main-header navbar navbar-expand navbar-olive navbar-dark">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -56,12 +97,32 @@
             </a>
         </li> --}}
         <li class="nav-item text-bold">
+            <div class="dropdown">
+                <a class="btn nav-link border-right border-1 text-lg text-bold dropdown-toggle" href="#"
+                    role="button" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
+                </a>
 
-            <a class="btn nav-link border-right border-1 text-lg text-bold"
-                @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null) href="{{ url()->current() }}"
-            @else
-                href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}" @endif
-                tabindex="-1" aria-disabled="true">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }} </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null)
+                        <a class="dropdown-item" href="{{ url()->current() }}">Update Password</a>
+                    @else
+                        <a class="dropdown-item"
+                            href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}">View
+                            Profile</a>
+                    @endif
+                    <a href="#" class="dropdown-item">Switch to Borrower</a>
+
+                    <a href="#" class="dropdown-item dropdown-item-change-department">Change Department</a>
+                    <!-- Content that expands/collapses -->
+                    <div class="collapse-content">
+                        <a href="#" class="dropdown-item">Department 1</a>
+                        <a href="#" class="dropdown-item">Department 2</a>
+                        <!-- Add more department options as needed -->
+                    </div>
+                </div>
+            </div>
         </li>
         <li class="nav-item">
             <form action="/logout" method="POST">
@@ -76,3 +137,32 @@
         </li>
     </ul>
 </nav>
+{{-- <!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Your existing HTML code -->
+
+<script>
+    $(document).ready(function() {
+        var timeoutId;
+
+        // Show collapse-content when hovering over "Change Department" dropdown item
+        $('.dropdown-item-change-department').mouseenter(function() {
+            clearTimeout(timeoutId);
+            $('.collapse-content').slideDown();
+        });
+
+        // Hide collapse-content after a delay when mouse leaves "Change Department" dropdown item
+        $('.dropdown-item-change-department').mouseleave(function() {
+            timeoutId = setTimeout(function() {
+                $('.collapse-content').slideUp();
+            }, 500); // Adjust the delay time (in milliseconds) as needed
+        });
+
+        // Hide collapse-content when mouse leaves the entire dropdown
+        $('.dropdown').mouseleave(function() {
+            clearTimeout(timeoutId);
+            $('.collapse-content').slideUp();
+        });
+    });
+</script> --}}
