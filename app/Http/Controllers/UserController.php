@@ -97,6 +97,16 @@ class UserController extends Controller
         }
     }
 
+    public function uploadCSVFile(){
+        return view('pages.admin.uploadCSV');
+    }
+
+    public function storeCSVFile(Request $request){
+
+        dd($request->file('csv_file')->get());
+        // return view('pages.admin.uploadCSV');
+    }
+
     public function saveNewUser(Request $request)
     {
         $role_ids = $request->input('role_ids', []);

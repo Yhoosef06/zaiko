@@ -80,12 +80,13 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
-    Route::get('/dashboard', [PagesController::class,'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [PagesController::class, 'index'])->name('admin.dashboard');
     // Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
-    Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');;
+    Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');
+    ;
 
     // FOR ITEMS
-    Route::middleware(['permission:manage-inventory,view-items'])->group(function (){
+    Route::middleware(['permission:manage-inventory,view-items'])->group(function () {
         Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
         Route::get('view-item-details-{id}', [ItemsController::class, 'viewItemDetails'])->name('view_item_details');
         Route::get('list-of-items-filtered', [ItemsController::class, 'searchItem'])->name('filtered_view');
@@ -99,75 +100,77 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         Route::get('/get-filtered-items', [ItemsController::class, 'getFilteredItems'])->name('get_filtered_items');
     });
 
-    Route::middleware(['permission:manage-inventory,add-items'])->group(function (){
+    Route::middleware(['permission:manage-inventory,add-items'])->group(function () {
         Route::get('adding-new-item', [ItemsController::class, 'addItem'])->name('add_item');
         Route::post('saving-new-item', [ItemsController::class, 'saveNewItem'])->name('save_new_item');
     });
 
-    Route::middleware(['permission:manage-inventory,update-items'])->group(function (){
+    Route::middleware(['permission:manage-inventory,update-items'])->group(function () {
         Route::get('edit-item-{id}', [ItemsController::class, 'editItemPage'])->name('edit_item_details');
         Route::put('updating-item-{id}-details', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
     });
 
-    Route::middleware(['permission:manage-inventory,delete-items'])->group(function (){
+    Route::middleware(['permission:manage-inventory,delete-items'])->group(function () {
         Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
     });
 
-    Route::middleware(['permission:manage-inventory,transfer-items'])->group(function (){
+    Route::middleware(['permission:manage-inventory,transfer-items'])->group(function () {
         Route::get('/transfer-item-{id}', [ItemsController::class, 'transferItem'])->name('transfer_item');
         Route::post('/save-transfer-item-{id}', [ItemsController::class, 'saveTransferItem'])->name('save_transfer_item');
     });
-   
-    Route::middleware(['permission:manage-inventory,add-sub-items'])->group(function (){
+
+    Route::middleware(['permission:manage-inventory,add-sub-items'])->group(function () {
         Route::get('/add-sub-item-{id}', [ItemsController::class, 'addSubItem'])->name('add_sub_item');
         Route::post('/save-sub-item-{id}', [ItemsController::class, 'saveSubItem'])->name('save_sub_item');
     });
 
-    Route::middleware(['permission:manage-inventory,replace-items'])->group(function (){
+    Route::middleware(['permission:manage-inventory,replace-items'])->group(function () {
         Route::get('/replace-item-{id}', [ItemsController::class, 'replaceItem'])->name('replace_item');
         Route::post('/save-replaced-item-{id}', [ItemsController::class, 'saveReplacedItem'])->name('save_replaced_item');
     });
-    
+
     // FOR USERS
-    Route::middleware(['permission:manage-user,view-users'])->group(function (){
+    Route::middleware(['permission:manage-user,view-users'])->group(function () {
         Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
         Route::get('list-of-users-filtered', [UserController::class, 'searchUser'])->name('filtered_view_users');
         Route::get('view-user-{id_number}', [UserController::class, 'viewUserInfo'])->name('view_user_info');
     });
 
-    Route::middleware(['permission:manage-user,add-users'])->group(function (){
+    Route::middleware(['permission:manage-user,add-users'])->group(function () {
         Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
         Route::post('saving-new-user', [UserController::class, 'saveNewUser'])->name('save_new_user');
     });
 
-    Route::middleware(['permission:manage-user,update-users'])->group(function (){
+    Route::middleware(['permission:manage-user,update-users'])->group(function () {
         Route::get('edit-user-{id_number}', [UserController::class, 'editUserInfo'])->name('edit_user_info');
         Route::put('updating-user-{id_number}', [UserController::class, 'saveEditedUserInfo'])->name('update_user_info');
     });
-    
-    Route::middleware(['permission:manage-user,delete-users'])->group(function (){
+
+    Route::middleware(['permission:manage-user,delete-users'])->group(function () {
         Route::post('deleting-user-{id_number}', [UserController::class, 'deleteUser'])->name('delete_user');
     });
 
-    
+
+    Route::get('upload/csvfile', [UserController::class, 'uploadCSVFile'])->name('upload_csv_file');
+    Route::post('store/csvfile', [UserController::class, 'storeCSVFile'])->name('store_csv_file');
 
     //storing references
     Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
     Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
 
     //reports
-    Route::middleware(['permission:generate-report'])->group(function(){
+    Route::middleware(['permission:generate-report'])->group(function () {
         Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
         Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
         Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
         Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
         Route::get('/report-test', [ItemsController::class, 'reportTest']);
     });
-    
+
 });
 
 //ADMIN
-Route::middleware(['auth', 'role:admin'])->group(function(){
+Route::middleware(['auth', 'role:admin'])->group(function () {
     // FOR Colleges
     Route::get('colleges', [CollegeController::class, 'index'])->name('view_colleges');
     Route::get('add-college', [CollegeController::class, 'addCollege'])->name('add_college');
@@ -192,7 +195,7 @@ Route::middleware(['auth', 'role:admin'])->group(function(){
     Route::post('save-edited-room/{id}', [RoomController::class, 'saveEditedRoom'])->name('save_edited_room');
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
     Route::get('/get-departments/{college_id}', [DepartmentController::class, 'getDepartments'])->name('get_departments');
-    
+
     // FOR Item Category -ADMIN
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
     Route::get('add-item-category', [ItemCategoryController::class, 'addItemCategory'])->name('add_item_category');
@@ -233,9 +236,9 @@ Route::middleware(['auth', 'role:admin'])->group(function(){
 });
 
 //MANAGER
-Route::middleware(['auth','role:manager'])->group(function(){
+Route::middleware(['auth', 'role:manager'])->group(function () {
     //FOR Manage Borrowings
-    Route::middleware(['permission:manage-borrowings'])->group(function (){
+    Route::middleware(['permission:manage-borrowings'])->group(function () {
         Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');
         Route::get('overdue', [BorrowController::class, 'overdue'])->name('overdue');
         Route::get('pending', [BorrowController::class, 'pending'])->name('pending');
@@ -281,40 +284,40 @@ Route::middleware(['auth','role:manager'])->group(function(){
 //student
 Route::middleware(['auth', 'role:borrower'])->group(function () {
     //student
-   
-        Route::middleware(['account_status:pending'])->group(function () {
-            Route::get('/approve', [PagesController::class, 'approve'])->name('approval');
+
+    Route::middleware(['account_status:pending'])->group(function () {
+        Route::get('/approve', [PagesController::class, 'approve'])->name('approval');
+    });
+
+    Route::middleware(['account_status:approved', 'permission:borrow-items'])->group(function () {
+
+        Route::controller(StudentController::class)->group(function () {
+            Route::get('/student-dashboard', 'index')->name('student.dashboard');
+            Route::get('/student-items', 'items')->name('student.items');
+            Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
         });
 
-        Route::middleware(['account_status:approved','permission:borrow-items'])->group(function () {
-
-            Route::controller(StudentController::class)->group(function () {
-                Route::get('/student-dashboard', 'index')->name('student.dashboard');
-                Route::get('/student-items', 'items')->name('student.items');
-                Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
-            });
-
-            //cart
-            Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
-            Route::get('/student-cart-list', [CartController::class, 'cart_list'])->name('cart.list');
-            Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('remove.cart');
-            Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
-            Route::get('/history', [CartController::class, 'history'])->name('history');
-            Route::get('/pending-order', [CartController::class, 'pending'])->name('pending-order');
-            Route::get('/borrowed-items', [CartController::class, 'borrowed'])->name('borrowed-items');
-            Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
+        //cart
+        Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
+        Route::get('/student-cart-list', [CartController::class, 'cart_list'])->name('cart.list');
+        Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('remove.cart');
+        Route::get('/order-cart', [CartController::class, 'order_cart'])->name('order.cart');
+        Route::get('/history', [CartController::class, 'history'])->name('history');
+        Route::get('/pending-order', [CartController::class, 'pending'])->name('pending-order');
+        Route::get('/borrowed-items', [CartController::class, 'borrowed'])->name('borrowed-items');
+        Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
 
 
-            //agreement
-            Route::get('/agreement', [StudentController::class, 'agreement'])->name('agreement');
-            Route::get('agreement-approve/{id}', [StudentController::class, 'agreement_approve'])->name('agreement.approve');
-            // Route::get('/test',[PagesController::class,'test'])->name('test');
+        //agreement
+        Route::get('/agreement', [StudentController::class, 'agreement'])->name('agreement');
+        Route::get('agreement-approve/{id}', [StudentController::class, 'agreement_approve'])->name('agreement.approve');
+        // Route::get('/test',[PagesController::class,'test'])->name('test');
 
-            Route::post('/store-selected-category', 'App\Http\Controllers\CategoryController@storeSelectedCategory')->name('storeSelectedCategory');
+        Route::post('/store-selected-category', 'App\Http\Controllers\CategoryController@storeSelectedCategory')->name('storeSelectedCategory');
 
-            // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
-            // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
-            // Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
+        // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
+        // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
+        // Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
 
-        });
+    });
 });
