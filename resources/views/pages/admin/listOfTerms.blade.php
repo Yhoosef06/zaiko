@@ -56,7 +56,7 @@
                                             <td>
                                                 <input class="size-32 checkbox-toggle" type="checkbox" name="currentTerm"
                                                     id="currentTerm{{ $term->id }}" data-term-id="{{ $term->id }}"
-                                                    {{ $term->isCurrent || $term->id == $currentTermId ? 'checked' : '' }}>
+                                                    {{ $term->isCurrent || $term->id == $currentTermId ? 'checked' : '' }} onclick="return confirm('Do you wish to continue changing current term?')">
                                             </td>
                                             <td>
                                                 @if ($term->id != $currentTermId)
