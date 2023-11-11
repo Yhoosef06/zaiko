@@ -143,6 +143,14 @@
                                         </div>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('upload_csv_file') }}" class="nav-link">
+                                        <div class="ml-3">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Upload a CSV File</p>
+                                        </div>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         @if (Auth::user()->roles->contains('name', 'manager'))
