@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration
             $table->boolean('password_updated')->nullable();
             $table->timestamps();
 
-            $table->foreign('security_question_id')->references('id')->on('security_questions');
+            $table->foreign('security_question_id')->references('id')->on('security_questions')->onDelete('cascade');
         });
     }
 

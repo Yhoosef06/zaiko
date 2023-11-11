@@ -151,6 +151,7 @@ class ItemsController extends Controller
         $item->quantity = $request->quantity;
         $item->status = $request->status;
         $item->duration = $request->duration;
+        $item->penalty_fee = $request->penalty_fee;
         $item->duration_type = $request->duration_type;
         $item->part_number = $request->part_number;
         $item->inventory_tag = $request->inventory_tag;
@@ -236,6 +237,7 @@ class ItemsController extends Controller
             'inventory_tag' => 'required',
             'quantity' => 'required|numeric|min:1',
             'status' => 'required',
+            'penalty_fee' => 'required'
         ]);
 
         if ($serial_numbers != null) {
@@ -262,6 +264,7 @@ class ItemsController extends Controller
                     'description' => $request->item_description,
                     'aquisition_date' => $request->aquisition_date,
                     'inventory_tag' => $request->inventory_tag,
+                    'penalty_fee' => $request->penalty_fee,
                     'quantity' => 1,
                     'status' => $request->status,
                     'duration_type' => $request->duration_type,

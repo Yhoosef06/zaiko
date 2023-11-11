@@ -26,6 +26,7 @@ class CreateItemsTable extends Migration
             $table->integer('quantity');
             $table->string('serial_number')->nullable();
             $table->date('aquisition_date')->nullable();
+            $table->integer('penalty_fee')->nullable();
             $table->string('status');
             $table->string('inventory_tag');
             $table->string('borrowed');

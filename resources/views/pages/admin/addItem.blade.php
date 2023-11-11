@@ -16,9 +16,8 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        {{-- action="{{ route('save_new_item') }}"  id="addNewItem"--}}
-                        <form id="addNewItem" method="POST"
-                            enctype="multipart/form-data">
+                        {{-- action="{{ route('save_new_item') }}"  id="addNewItem" --}}
+                        <form id="addNewItem" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
                                 @if (session('success'))
@@ -138,7 +137,7 @@
                                                 class="form-control @error('model') border-danger @enderror">
                                                 <option value="option_select" disabled selected>Select a model. (Skip if
                                                     none)</option>
-                                              
+
                                             </select>
                                             <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
                                                     data-toggle="modal" data-target="#addModelModal" data-toggle="tooltip"
@@ -230,6 +229,11 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <label for="duration">Set Penalty Fee (in PHP):</label>
+                                        <input type="number" id="penalty_fee" name="penalty_fee"
+                                            value="{{ old('penalty_fee', 0.0) }}"
+                                            class="form-control @error('penalty_fee') border-danger @enderror"
+                                            style="width: 100px;" step="0.01" min="0.00">
 
                                         <div class="row">
                                             <div class="col">
@@ -276,7 +280,8 @@
                                                     class="form-control @error('quantity') border-danger @enderror"
                                                     value="{{ old('quantity') }}"
                                                     @if (session('invalidSerialNumbers')) value="{{ old('quantity') }}" @endif
-                                                    placeholder="Enter a quantity" oninput="updateSerialNumberFields()" required>
+                                                    placeholder="Enter a quantity" oninput="updateSerialNumberFields()"
+                                                    required>
 
                                                 @error('quantity')
                                                     <div class="text-danger">

@@ -18,7 +18,20 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{route('store_csv_file')}}" method="POST" enctype="multipart/form-data">
+                            <div>
+                                @if (session('success'))
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                    </div>
+                                @elseif (session('danger'))
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                            <form action="{{ route('store_csv_file') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <label for="csv_file">Add your file here:</label><br>
                                 <input type="file" name="csv_file" id="csv_file">

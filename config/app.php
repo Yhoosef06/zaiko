@@ -1,11 +1,6 @@
 <?php
 
 return [
-
-    'providers' => [
-        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
-    ],
-
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -167,7 +162,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
-
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -238,7 +234,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
-        
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

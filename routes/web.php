@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use App\Models\SecurityQuestion;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QRController;
+use App\Http\Controllers\CsvController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RoomController;
@@ -152,7 +153,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
 
 
     Route::get('upload/csvfile', [UserController::class, 'uploadCSVFile'])->name('upload_csv_file');
-    Route::post('store/csvfile', [UserController::class, 'storeCSVFile'])->name('store_csv_file');
+    Route::post('/upload-csv', [CsvController::class, 'store'])->name('store_csv_file');
 
     //storing references
     Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');

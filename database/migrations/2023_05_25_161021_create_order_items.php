@@ -30,10 +30,10 @@ class CreateOrderItems extends Migration
             $table->string('returned_to')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id_number')->on('users');
-            $table->foreign('item_id')->references('id')->on('items');
-            $table->foreign('order_temp_id')->references('id')->on('order_item_temps');
-            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('user_id')->references('id_number')->on('users')->onDelete('cascade');
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreign('order_temp_id')->references('id')->on('order_item_temps')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
         });
     }
 

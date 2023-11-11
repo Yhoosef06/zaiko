@@ -22,7 +22,7 @@ class CreateOrderItemTemps extends Migration
             $table->integer('quantity');
             $table->timestamps();
 
-            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('item_id')->references('id')->on('items');
         });
     }

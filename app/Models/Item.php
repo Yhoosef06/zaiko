@@ -28,6 +28,7 @@ class Item extends Model
         'aquisition_date',
         'status',
         'borrowed',
+        'penalty_fee',
         'inventory_tag',
         'serial_number',
         'parent_item',
