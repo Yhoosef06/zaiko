@@ -136,7 +136,7 @@ class UserController extends Controller
     {
         $role_ids = $request->input('role_id');
         $department_ids = $request->input('department_ids', []);
-        
+
         $this->validate(
             $request,
             [
@@ -225,9 +225,21 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->account_type = $request->account_type;
         $user->account_status = $request->account_status;
-        $user->role = $request->role;
-        $user->department_id = $request->department_id;
+        // $user->department_id = $request->department_id;
         $user->update();
+
+        $userRole = UserRole::where('user_id_number', $id_number)->first();
+
+        $role_id = $request->role;
+
+        if ($userRole) {
+            $userRole->update(['role_id' => $role_id]);
+        } else {
+            UserRole::create([
+                'user_id_number' => $request->id_number,
+                'role_id' => $role_id,
+            ]);
+        }
 
         Session::flash('success', 'User ' . $id_number . ' has been updated.');
         return redirect('list-of-users');

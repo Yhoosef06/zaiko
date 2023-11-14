@@ -7,7 +7,7 @@
                 <label for="I.D. Number">I.D. Number:</label>
                 <input type="text" id="id_number" name="id_number" value="{{ $user->id_number }}" disabled
                     class="form-control">
-                <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br>
+                {{-- <input type="checkbox" id="edit_id" onclick="edit()"> Edit I.D. Number <br> --}}
 
                 <label for="first name">First Name:</label>
                 <input type="text" id="first_name" name="first_name"
@@ -46,24 +46,10 @@
                 <select id="account_type" name="account_type" class="form-control">
                     @if ($user->account_type == 'student')
                         <option value="student" selected>student</option>
-                        {{-- <option value="admin">admin</option> --}}
-                        {{-- <option value="reads">reads</option> --}}
                         <option value="faculty">faculty</option>
-                    @elseif ($user->account_type == 'admin')
-                        <option value="admin" selected>admin</option>
-                        <option value="student">student</option>
-                        {{-- <option value="reads">reads</option> --}}
-                        <option value="faculty">Faculty</option>
                     @elseif ($user->account_type == 'faculty')
                         <option value="faculty" selected>faculty</option>
-                        {{-- <option value="reads">reads</option> --}}
-                        {{-- <option value="admin">admin</option> --}}
                         <option value="student">student</option>
-                    {{-- @else
-                        <option value="reads">reads</option>
-                        <option value="admin">admin</option>
-                        <option value="student">student</option>
-                        <option value="faculty">faculty</option> --}}
                     @endif
                 </select>
 
@@ -80,9 +66,15 @@
 
                 <label for="account status">Role:</label>
                 <select id="role" name="role" class="form-control">
-                    <option value="{{$user->role}}" selected>{{$user->role}}</option>
-                    <option value="borrower">borrower</option>
-                    <option value="manager">manager</option>
+                    @foreach ($user->roles as $role)
+                        <option value="{{ $role->id }}" selected>{{ $role->name }}</option>
+                    @endforeach
+
+                    @if (!$user->roles->contains('name', 'borrower'))
+                        <option value="3">borrower</option>
+                    @else
+                        <option value="2">manager</option>
+                    @endif
                 </select>
                 <br>
                 <a href="#" data-toggle="modal" data-target="#modal-change-user-password"
