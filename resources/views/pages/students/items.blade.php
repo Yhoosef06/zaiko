@@ -60,9 +60,9 @@
                         <form action="{{ route('department') }}" method="POST">
                             @csrf
                             <select class="form-control" id="department" name="department" onchange="this.form.submit()">
-                                <option value="" selected>All Departments</option>
+                                <option value=""  {{ old('department') == '' ? 'selected' : '' }} disabled>Choose Department</option>
                                 @foreach($departments as $department)
-                                    <option value="{{ $department->id }}">
+                                    <option value="{{ $department->id }}" {{ old('department') == $department->id ? 'selected' : '' }}>
                                         {{ $department->department_name }}
                                     </option>
                                 @endforeach
@@ -71,9 +71,35 @@
                     </div>
                 </div>
             </div>
-            @foreach ($items as $item)
-                {{ $item->brand->brand_name }} {{ $item->model->model_name}}
-            @endforeach
+           
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    @foreach ($items as $item)
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder"> {{ $item->brand->brand_name }}  {{ $item->model->model_name}}</h5>
+                                    <!-- Product price-->
+                                    {{ $item->quantity }}
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+
+                </div>
+            </div>
+               
+            
         </section>
     </div>
     <script>
