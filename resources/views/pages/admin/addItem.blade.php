@@ -156,6 +156,7 @@
                                         border-danger
                                         @enderror"
                                             placeholder="Enter a part number. (Leave blank if none)">
+                                        <div id="suggestions-container"></div>
                                         @error('part_number')
                                             <div class="text-danger">
                                                 {{ $message }}
@@ -656,6 +657,44 @@
                     }
                 })
             });
+        });
+
+        $(document).ready(function() {
+            $('#part_number').on('input', function() {
+                var term = $(this).val();
+
+                if (term.length >= 3) {
+                    $.ajax({
+                        url: '/get-part-number-suggestions',
+                        method: 'GET',
+                        data: {
+                            term: term
+                        },
+                        success: function(data) {
+                            displaySuggestions(data);
+                        }
+                    });
+                } else {
+                    $('#suggestions-container').html('');
+                }
+            });
+
+            function displaySuggestions(suggestions) {
+                var suggestionsContainer = $('#suggestions-container');
+                suggestionsContainer.html('');
+
+                if (suggestions.length > 0) {
+                    var dropdown = $('<select></select>').attr('id', 'partNumberSuggestions').addClass(
+                        'form-control');
+                    $.each(suggestions, function(index, suggestion) {
+                        dropdown.append($('<option></option>').text(suggestion));
+                    });
+
+                    suggestionsContainer.append(dropdown);
+                } else {
+                    suggestionsContainer.html('');
+                }
+            }
         });
     </script>
 

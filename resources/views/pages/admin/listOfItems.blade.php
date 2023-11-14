@@ -56,7 +56,7 @@
                                     <form action="{{ route('items.search') }}" method="GET">
                                         <div class="input-group">
                                             <input type="text" name="search" class="form-control"
-                                                placeholder="Search items..."
+                                                placeholder="Search..."
                                                 value="{{ old('search', request('search')) }}">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn bg-yellow" data-toggle="tooltip"
@@ -140,8 +140,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="8" class="text-center bg-white">No available data in the
-                                                    table</td>
+                                                <td colspan="8" class="text-center bg-white">No available data.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>

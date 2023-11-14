@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('account_type');
             $table->string('account_status');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->unsignedBigInteger('security_question_id')->nullable();
             $table->string('answer')->nullable();
             $table->rememberToken();

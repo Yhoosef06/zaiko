@@ -99,6 +99,8 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         Route::get('/items/search', [ItemsController::class, 'searchItem'])->name('items.search');
         Route::get('/items/sort/{order}', [ItemsController::class, 'sortItems'])->name('sort_items');
         Route::get('/get-filtered-items', [ItemsController::class, 'getFilteredItems'])->name('get_filtered_items');
+        Route::get('/get-part-numbers', [ItemsController::class, 'getPartNumber']);
+
     });
 
     Route::middleware(['permission:manage-inventory,add-items'])->group(function () {
@@ -135,6 +137,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
         Route::get('list-of-users-filtered', [UserController::class, 'searchUser'])->name('filtered_view_users');
         Route::get('view-user-{id_number}', [UserController::class, 'viewUserInfo'])->name('view_user_info');
+        Route::get('/users/search', [UserController::class, 'searchUser'])->name('users.search');
     });
 
     Route::middleware(['permission:manage-user,add-users'])->group(function () {
