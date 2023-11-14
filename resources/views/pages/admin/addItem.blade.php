@@ -234,7 +234,7 @@
                                         <input type="number" id="penalty_fee" name="penalty_fee"
                                             value="{{ old('penalty_fee', 0.0) }}"
                                             class="form-control @error('penalty_fee') border-danger @enderror"
-                                            style="width: 100px;" step="0.01" min="0.00">
+                                            style="width: 100px;" step="0.01" min="0.00" required>
 
                                         <div class="row">
                                             <div class="col">

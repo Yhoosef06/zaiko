@@ -41,7 +41,7 @@ class UserController extends Controller
                 $query->where('college_id', $userCollegeId);
             })
                 ->orderBy('id_number', 'DESC')
-                ->get();
+                ->paginate(10);
             $departments = Department::all();
             return view('pages.admin.listOfUsers')->with(compact('users', 'departments'));
         }
@@ -65,63 +65,6 @@ class UserController extends Controller
 
         return view('pages.admin.listOfUsers', compact('users'));
     }
-
-    // public function searchItem(Request $request)
-    // {
-    //     $search_text = $request->input('search');
-    //     $sortOrder = 'asc';
-
-    //     if (Auth::user()->roles->contains('name', 'admin')) {
-    //         $filterItems = Item::all();
-    //         $items = Item::with('brand', 'model', 'category', 'room')
-    //             ->where(function ($query) use ($search_text) {
-    //                 $query->where('description', 'LIKE', '%' . $search_text . '%')
-    //                     ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
-    //                     ->orWhere('part_number', 'LIKE', '%' . $search_text . '%')
-    //                     ->orWhereHas('brand', function ($query) use ($search_text) {
-    //                         $query->where('brand_name', 'LIKE', '%' . $search_text . '%');
-    //                     })
-    //                     ->orWhereHas('model', function ($query) use ($search_text) {
-    //                         $query->where('model_name', 'LIKE', '%' . $search_text . '%');
-    //                     })
-    //                     ->orWhereHas('category', function ($query) use ($search_text) {
-    //                         $query->where('category_name', 'LIKE', '%' . $search_text . '%');
-    //                     })
-    //                     ->orWhereHas('room', function ($query) use ($search_text) {
-    //                         $query->where('room_name', 'LIKE', '%' . $search_text . '%');
-    //                     });
-    //             })
-    //             ->paginate(20);
-    //     } else {
-    //         $userId = auth()->user()->id_number;
-    //         $user = User::find($userId);
-    //         $departmentIds = $user->departments->pluck('id');
-    //         $rooms = Room::whereIn('department_id', $departmentIds)->get();
-    //         $roomIds = $rooms->pluck('id');
-    //         $items = Item::whereIn('location', $roomIds)->with('brand', 'model', 'category', 'room')
-    //             ->where(function ($query) use ($search_text) {
-    //                 $query->where('description', 'LIKE', '%' . $search_text . '%')
-    //                     ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
-    //                     ->orWhere('part_number', 'LIKE', '%' . $search_text . '%')
-    //                     ->orWhereHas('brand', function ($query) use ($search_text) {
-    //                         $query->where('brand_name', 'LIKE', '%' . $search_text . '%');
-    //                     })
-    //                     ->orWhereHas('model', function ($query) use ($search_text) {
-    //                         $query->where('model_name', 'LIKE', '%' . $search_text . '%');
-    //                     })
-    //                     ->orWhereHas('category', function ($query) use ($search_text) {
-    //                         $query->where('category_name', 'LIKE', '%' . $search_text . '%');
-    //                     })
-    //                     ->orWhereHas('room', function ($query) use ($search_text) {
-    //                         $query->where('room_name', 'LIKE', '%' . $search_text . '%');
-    //                     });
-    //             })
-    //             ->paginate(20);
-    //         $filterItems = Item::whereIn('location', $roomIds)->get();
-    //     }
-
-    //     return view('pages.admin.listOfItems', compact('items', 'sortOrder', 'filterItems'));
-    // }
 
     public function viewUserInfo($id_number)
     {
@@ -191,9 +134,9 @@ class UserController extends Controller
 
     public function saveNewUser(Request $request)
     {
-        $role_ids = $request->input('role_ids', []);
+        $role_ids = $request->input('role_id');
         $department_ids = $request->input('department_ids', []);
-
+        
         $this->validate(
             $request,
             [
@@ -213,6 +156,7 @@ class UserController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'account_status' => 'approved',
+                'account_type' => $request->account_type,
                 'password' => Hash::make($request->id_number),
                 'password_updated' => 0,
             ]);

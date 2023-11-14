@@ -54,10 +54,9 @@
                             <input type="checkbox" value="remember-me"> Remember me
                         </label>
                     </div>
-                    <button class="w-100 btn btn-lg btn-success" type="submit">Sign In</button>
                     <hr>
-                    {{-- <a href="{{ route('select_registration_type') }}" class="w-100 btn btn-lg btn-outline-success">Register</a> --}}
-                    <a href="{{ route('student_registration') }}" class="w-100 btn btn-lg btn-outline-success">Register</a>
+                    <button class="w-100 btn btn-lg btn-success" type="submit">Sign In</button>
+    
                 </form>
             </div>
         </div>

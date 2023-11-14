@@ -58,35 +58,25 @@
                                             </div>
                                         @enderror
 
-                                        <label for="last name">Last Name:</label>
-                                        <input type="text" id="last_name" name="last_name"
-                                            class="form-control @error('last_name')
-                                        border-danger @enderror"
-                                            value="{{ old('last_name') }}" placeholder="Last Name">
-                                        @error('last_name')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-
-                                        <label for="Item name">Select a School/Program(s):</label>
-                                        {{-- @if (isset($departments)) --}}
-                                        {{-- <select id="department_id" name="department_id"
-                                            class="form-control @error('department_id') border-danger @enderror">
-                                            <option value="" disabled selected>Select a Program/Department
-                                            </option>
+                                        <label for="Item name">Select a department(s):</label>
+                                        <div class="scrollable-container">
                                             @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                                                <optgroup label="{{ $collegeName }}">
+                                                <h5 class="text-decoration-underline">
+                                                    <input type="checkbox" class="college-checkbox"
+                                                        data-college="{{ $collegeName }}">
+                                                    {{ $collegeName }}
+                                                </h5>
+                                                <div class="department-container">
                                                     @foreach ($departmentsGroup as $department)
-                                                        <option value="{{ $department->id }}"
-                                                            {{ old('department_id') == $department->id ? 'selected' : '' }}>
-                                                            {{ $department->department_name }}
-                                                        </option>
+                                                        <input type="checkbox" class="department-checkbox"
+                                                            name="department_ids[]" data-college="{{ $collegeName }}"
+                                                            value="{{ $department->id }}">
+                                                        {{ $department->department_name }}<br>
                                                     @endforeach
-                                                </optgroup>
+                                                </div>
                                             @endforeach
-                                        </select> --}}
-
+                                        </div>
+{{-- 
                                         @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
                                             <h5 class="text-decoration-underline">
                                                 <input type="checkbox" class="college-checkbox"
@@ -95,14 +85,13 @@
                                             </h5>
                                             <div class="container">
                                                 @foreach ($departmentsGroup as $department)
-                                                    <input type="checkbox" class="department-checkbox" name="department_ids[]"
-                                                        data-college="{{ $collegeName }}" value="{{ $department->id }}">
+                                                    <input type="checkbox" class="department-checkbox"
+                                                        name="department_ids[]" data-college="{{ $collegeName }}"
+                                                        value="{{ $department->id }}">
                                                     {{ $department->department_name }}<br>
                                                 @endforeach
                                             </div>
-                                        @endforeach
-
-                                        {{-- @endif --}}
+                                        @endforeach --}}
 
                                         @error('department_id')
                                             <div class="text-danger">
@@ -114,29 +103,31 @@
                                     <div class="col">
                                         <label for="account type">Account Type:</label>
                                         <select id="account_type" name="account_type" class="form-control">
-                                            <option value="student" selected>student</option>
-                                            @if (Auth::user()->account_type == 'admin')
-                                                <option value="admin">admin</option>
-                                            @endif
+                                            <option selected disabled>Select an account type</option>
+                                            <option value="student">student</option>
                                             <option value="faculty">faculty</option>
                                             {{-- <option value="reads">reads</option> --}}
                                         </select>
 
-                                        <label for="account status">Account Status:</label>
-                                        <select id="account_status" name="account_status" class="form-control">
-                                            <option value="approved" selected>approved</option>
-                                            <option value="pending">pending</option>
-                                        </select>
+                                        <label for="last name">Last Name:</label>
+                                        <input type="text" id="last_name" name="last_name"
+                                            class="form-control @error('last_name')
+                                        border-danger @enderror"
+                                            value="{{ old('last_name') }}" placeholder="Last Name">
+                                        @error('last_name')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
 
                                         <label for="account status">Role:</label>
-                                        <div class=" form-group">
+                                        <select name="role_id[]" class="form-control">
+                                            <option selected disabled>Select a role</option>
                                             @foreach ($roles as $role)
-                                                <div class="container">
-                                                    <input type="checkbox" name="role_ids[]" value="{{ $role->id }}">
-                                                    {{ $role->name }}
-                                                </div>
+                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
                                             @endforeach
-                                        </div>
+                                        </select>
+
                                         <hr>
                                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
                                         <Button type="submit" class="btn btn-success"
@@ -176,4 +167,21 @@
             });
         });
     </script>
+    <style>
+        .scrollable-container {
+            border: 1px solid #ccc;
+            /* Border style */
+            max-height: 200px;
+            /* Set the maximum height for the scrollable container */
+            overflow-y: auto;
+            /* Enable vertical scroll when content exceeds the container height */
+            padding: 10px;
+            /* Optional padding for better appearance */
+        }
+
+        .department-container {
+            /* If you want to add some space between college groups, you can add margin-bottom here */
+            margin-bottom: 10px;
+        }
+    </style>
 @endsection

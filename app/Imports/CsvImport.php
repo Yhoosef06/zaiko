@@ -40,6 +40,7 @@ class CsvImport implements ToModel
             'account_type' => $accountType,
             'account_status' => $accountStatus,
             'email' => $email,
+            'password_updated' => 0,
         ]);
         try {
             $user->save();
