@@ -164,7 +164,22 @@ class UserController extends Controller
 
     public function uploadCSVFile()
     {
-        return view('pages.admin.uploadCSV');
+        if (Auth::user()->roles->contains('name', 'manager')) {
+            $department = Auth::user()->departments->first();
+            $user_college_id = $department->college_id;
+
+            $departments = Department::with('college')->where('college_id', $user_college_id)->get();
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
+        } else if ((Auth::user()->roles->contains('name', 'admin'))) {
+            $departments = Department::with('college')->get();
+
+            $departments->each(function ($department) {
+                $department->college_name = $department->college->college_name;
+            });
+        }
+        return view('pages.admin.uploadCSV')->with(compact('departments'));
     }
 
     public function storeCSVFile(Request $request)

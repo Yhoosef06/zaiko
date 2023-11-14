@@ -22,9 +22,11 @@ class CsvImportJob implements ShouldQueue
      */
 
     protected $filePath;
-    public function __construct($filePath)
+    protected $departmentIds;
+    public function __construct($filePath, $departmentIds)
     {
         $this->filePath = $filePath;
+        $this->departmentIds = $departmentIds;
     }
 
     /**
@@ -35,6 +37,6 @@ class CsvImportJob implements ShouldQueue
     public function handle()
     {
         set_time_limit(180);
-        Excel::import(new CsvImport, $this->filePath);
+        Excel::import(new CsvImport($this->departmentIds), $this->filePath);
     }
 }
