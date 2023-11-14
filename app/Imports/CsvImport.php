@@ -20,11 +20,12 @@ class CsvImport implements ToModel
         // }
 
         $role = Role::find(3);
+        $password = Str::random(7);
 
         $idNumber = isset($row[0]) ? $row[0] : null;
         $firstName = isset($row[1]) ? $row[1] : null;
         $lastName = isset($row[2]) ? $row[2] : null;
-        $password = isset($row[3]) ? Str::random(7) : null;
+        // $password = isset($row[3]) ? Str::random(7) : null;
         $accountType = isset($row[4]) ? $row[4] : null;
         $accountStatus = isset($row[5]) ? $row[5] : null;
         $email = isset($row[6]) ? $row[6] : null;

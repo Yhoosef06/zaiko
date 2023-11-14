@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CsvImport;
+use App\Jobs\CsvImportJob;
+use Illuminate\Http\Request;
 use App\Mail\TemporaryPasswordEmail;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CsvController extends Controller
 {
@@ -18,8 +19,9 @@ class CsvController extends Controller
             ]);
 
             $file = $request->file('csv_file');
-
-            Excel::import(new CsvImport, $file);
+            $filePath = $file->getRealPath();
+            // Excel::import(new CsvImport, $file);
+            dispatch(new CsvImportJob($filePath));
 
             return redirect()->back()->with('success', 'CSV file uploaded successfully!');
         } catch (\Throwable $th) {
