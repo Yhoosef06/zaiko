@@ -54,6 +54,7 @@ class UserController extends Controller
 
         if (Auth::user()->roles->contains('name', 'admin')) {
             $filterUsers = user::all();
+            $users = User::where('id_number', 'LIKE', '%' . $search_text . '%')
                 ->orWhere('first_name', 'LIKE', '%' . $search_text . '%')
                 ->orWhere('last_name', 'LIKE', '%' . $search_text . '%')
                 ->orWhere('account_type', 'LIKE', '%' . $search_text . '%')
