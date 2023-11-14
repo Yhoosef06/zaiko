@@ -2,22 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\ItemCategory;
-use App\Models\User;
-use App\Models\Room;
-use App\Models\Department;
-use App\Models\College;
 use App\Models\ItemLog;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\View;
 
-class StudentController extends Controller
+class BorrowerController extends Controller
 {
     public function index()
     {
@@ -183,5 +178,4 @@ class StudentController extends Controller
     
         return view('pages.admin.overdue')->with(compact('overdueItems'));
     }
-
 }

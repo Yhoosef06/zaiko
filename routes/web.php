@@ -17,7 +17,7 @@ use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ModelsController;
 use App\Http\Controllers\CollegeController;
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\BorrowerController;
 use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PermissionController;
@@ -288,14 +288,9 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 //student
 Route::middleware(['auth', 'role:borrower'])->group(function () {
     //student
-
-    Route::middleware(['account_status:pending'])->group(function () {
-        Route::get('/approve', [PagesController::class, 'approve'])->name('approval');
-    });
-
     Route::middleware(['account_status:approved', 'permission:borrow-items'])->group(function () {
 
-        Route::controller(StudentController::class)->group(function () {
+        Route::controller(BorrowerController::class)->group(function () {
             Route::get('/student-dashboard', 'index')->name('student.dashboard');
             Route::get('/student-items', 'items')->name('student.items');
             Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
@@ -313,8 +308,8 @@ Route::middleware(['auth', 'role:borrower'])->group(function () {
 
 
         //agreement
-        Route::get('/agreement', [StudentController::class, 'agreement'])->name('agreement');
-        Route::get('agreement-approve/{id}', [StudentController::class, 'agreement_approve'])->name('agreement.approve');
+        Route::get('/agreement', [BorrowerController::class, 'agreement'])->name('agreement');
+        Route::get('agreement-approve/{id}', [BorrowerController::class, 'agreement_approve'])->name('agreement.approve');
         // Route::get('/test',[PagesController::class,'test'])->name('test');
 
         Route::post('/store-selected-category', 'App\Http\Controllers\CategoryController@storeSelectedCategory')->name('storeSelectedCategory');
