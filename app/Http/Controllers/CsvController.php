@@ -6,6 +6,7 @@ use App\Imports\CsvImport;
 use App\Jobs\CsvImportJob;
 use Illuminate\Http\Request;
 use App\Mail\TemporaryPasswordEmail;
+use App\Models\UserDepartment;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
