@@ -39,6 +39,7 @@ class CsvImport implements ToModel
             'account_status' => $accountStatus,
             'email' => $email,
         ]);
+        
         $user->save();
         $user->roles()->attach($role);
 
