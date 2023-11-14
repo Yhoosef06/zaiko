@@ -251,6 +251,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
         // Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
         // Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');
         Route::get('remove-borrow/{id}', [BorrowController::class, 'removeBorrow'])->name('remove-borrow');
+        Route::get('/order-user-remove/{id}', [BorrowController::class, 'orderUserRemove'])->name('order-user-remove');
         Route::get('complete-transaction/{id}', [BorrowController::class, 'completeTransaction'])->name('complete-transaction');
         Route::get('order-admin-remove/{id}', [BorrowController::class, 'orderAdminRemove'])->name('order-admin-remove');
         Route::get('/searchUser', [BorrowController::class, 'searchUser'])->name('searchUser');
@@ -281,6 +282,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
         Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
         Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
         Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
+        
     });
 
 });

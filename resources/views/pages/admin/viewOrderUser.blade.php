@@ -138,7 +138,7 @@
                                             <input type="hidden" name="quantity[]" value="1">1
                                           </td>
                                           <td>
-                                            <a href="#" data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
+                                            <a data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
                                           </td>
                                         </tr>
                                     @endfor
@@ -194,7 +194,7 @@
                                       </select>
                                     </td>
                                     <td>
-                                      <a href="#" data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
+                                      <a  data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
                                     </td>
                                   </tr>
                               @else
@@ -221,7 +221,7 @@
                                   <input type="hidden" name="quantity[]" value="1">1
                                 </td>
                                 <td>
-                                  <a href="#" data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
+                                  <a  data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
                                 </td>
                               </tr>
 

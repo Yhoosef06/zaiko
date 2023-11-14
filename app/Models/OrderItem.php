@@ -33,7 +33,7 @@ class OrderItem extends Model
     public function order(): BelongsTo {
         return $this->belongsTo(Order::class);
     }
-    public function items()
+    public function item()
     {
         return $this->belongsToMany(Item::class);
     }

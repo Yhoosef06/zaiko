@@ -226,27 +226,6 @@
 
     });
 
-    $(document).ready(function() {
-    for (let i = 1; i <= counter; i++) {
-        attachChangeHandler(i);
-    }
-
-    function attachChangeHandler(i) {
-        $("#payment_per_day_" + i).on('change', function() {
-            console.log(i); // Use 'i' instead of 'counter'
-
-            var days = $("#number_of_day_overdue_" + i).val();
-            var amount = $(this).val();
-
-            console.log('Days: ' + days);
-            console.log('Amount: ' + amount);
-
-            var totalAmount = amount * days;
-
-            $("#total_amount_" +i).val(totalAmount); // Use 'i' instead of '1'
-        });
-    }
-});
 
 
 
@@ -381,6 +360,7 @@
                     if (!ui.item.serialNumber || ui.item.serialNumber === 'N/A') {
                         var userID = $("#student_id").val();
                         var itemId = ui.item.id;
+                    
 
 
                         var url = '/add-item/' + itemId;
@@ -395,6 +375,8 @@
                                 $('<td class="d-none">').text(userID).appendTo(
                                     tableRow);
                                 $('<td class="d-none">').text(response.item.id).appendTo(
+                                    tableRow);
+                                $('<td class="d-none">').text(response.item.duration).appendTo(
                                     tableRow);
                                 $('<td>').text(response.item.brand).appendTo(tableRow);
                                 $('<td>').text(response.item.model).appendTo(tableRow);
@@ -436,14 +418,16 @@
                                         'td:nth-child(1)').text();
                                     var itemId = $(this).closest('tr').find(
                                         'td:nth-child(2)').text();
-                                    var brand = $(this).closest('tr').find(
+                                        var duration = $(this).closest('tr').find(
                                         'td:nth-child(3)').text();
-                                    var model = $(this).closest('tr').find(
+                                    var brand = $(this).closest('tr').find(
                                         'td:nth-child(4)').text();
+                                    var model = $(this).closest('tr').find(
+                                        'td:nth-child(5)').text();
                                     var description = $(this).closest('tr')
-                                        .find('td:nth-child(5)').text();
+                                        .find('td:nth-child(6)').text();
                                     var serial = $(this).closest('tr').find(
-                                        'td:nth-child(6)').text();
+                                        'td:nth-child(7)').text();
                                     var order_quantity = $(this).closest('tr')
                                         .find('input').val();
 
@@ -455,6 +439,7 @@
                                         model: model,
                                         description: description,
                                         serial: serial,
+                                        duration:duration,
                                         quantity: order_quantity
                                     };
                                     console.log(requestData)
@@ -508,6 +493,7 @@
                         var userID = $("#student_id").val();
                         var itemId = ui.item.id;
                         var serialNumber = ui.item.serialNumber;
+                        var duration = ui.item.duration;
 
 
                         $.ajax({
@@ -519,6 +505,7 @@
                             data: {
                                 userID: userID,
                                 itemId: itemId,
+                                duration:duration,
                                 serialNumber: serialNumber
                             },
                             success: function(response) {
@@ -1447,6 +1434,7 @@
         $(".order-user-remove").click(function(e) {
             var orderId = $(this).data("id");
             var currentOrderId = $("#order-user-id").val().trim();
+            console.log(orderId);
             var url = '/order-user-remove/' + orderId;
             Swal.fire({
                 title: 'Are you sure?',

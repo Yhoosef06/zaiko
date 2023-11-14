@@ -86,17 +86,34 @@ class BorrowController extends Controller
     {
         $department = Auth::user()->departments->first();
        
-     
+        //  dd($department);
 
-        $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+        // $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+        // ->join('users', 'orders.user_id', '=', 'users.id_number')
+        // ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
+        // ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+        // ->where('user_departments.department_id', $department->id)
+        // ->whereNull('orders.approval_date')
+        // ->whereNull('orders.approved_by')
+        // ->groupBy('orders.id')
+        // ->get();
+        $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
         ->join('users', 'orders.user_id', '=', 'users.id_number')
-        ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
-        ->join('departments', 'user_departments.department_id', '=', 'departments.id')
-        ->where('departments.college_id', $department->college_id)
-        ->whereNotNull('orders.date_submitted')
+        ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+        ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+        ->join('rooms', 'items.location', '=', 'rooms.id')
+        ->where('rooms.department_id', $department->id)
+        ->whereNull('orders.approval_date')
         ->whereNull('orders.approved_by')
         ->groupBy('orders.id')
         ->get();
+    
+       
+
+        // echo '<pre>';
+        // print_r($userPendings);
+        // echo '</pre>';
+        // exit;
 
         return view('pages.admin.pending')->with(compact('userPendings'));
         
@@ -142,6 +159,7 @@ class BorrowController extends Controller
         return response()->json(['success' => true]);
     }
 
+
     public function completeTransaction($id) {
         $orderItemCount = OrderItem::where('order_id', $id)->where('status', 'borrowed')->count();
     
@@ -175,14 +193,10 @@ class BorrowController extends Controller
     {
         $item = OrderItemTemp::where('id',$id)->first();
 
-        if( $item->quantity > 1){
-            $newQty = $item->quantity - 1;
-            OrderItemTemp::where('id',$id)->update(['quantity' => $newQty]);
-            return response()->json(['success' => true]);
-        }else{
+        
             $item->delete();
             return response()->json(['success' => true]);
-        }
+        
 
     }
 
@@ -627,13 +641,15 @@ class BorrowController extends Controller
         $userID = $request->userID;
         $itemId = $request->itemId;
         $serialNumber = $request->serialNumber;
+        $duration = $request->duration;
 
-        $dataOrder = Order::where('user_id', $userID)
-            ->whereNotNull('date_submitted')
-            ->whereNull('date_returned')
-            ->get();
+        $dataOrder = Order::join('order_items', 'order_items.order_id', '=', 'orders.id')
+        ->where('orders.user_id', $userID)
+        ->whereNotNull('orders.date_submitted')
+        ->whereNull('orders.approved_by')
+        ->count();
 
-        if ($dataOrder->isEmpty()) {
+        if ($dataOrder === 0) {
             $insertOrder = Order::create([
                 'user_id' => $userID,
                 'created_by' => 'admin',
@@ -642,12 +658,11 @@ class BorrowController extends Controller
             if ($insertOrder) {
                 $orderId = $insertOrder->id;
                 Item::where('serial_number', '=', $serialNumber)->update(['borrowed' => 'yes']);
-                $data = OrderItem::create([
-                    'user_id' => $userID,
+                OrderItemTemp::create([
                     'order_id' => $orderId,
                     'item_id' => $itemId,
-                    'order_quantity' => 1,
-                    'status' => 'pending',
+                    'quantity' => 1,
+                    'temp_duration' => $duration,
                     'order_serial_number' => $serialNumber
                 ]);
             }
@@ -655,13 +670,12 @@ class BorrowController extends Controller
             $order = $dataOrder->first();
             $orderId = $order->id;
             Item::where('serial_number', '=', $serialNumber)->update(['borrowed' => 'yes']);
-            $data = OrderItem::create([
-                'user_id' => $userID,
+            OrderItemTemp::create([
                 'order_id' => $orderId,
                 'item_id' => $itemId,
-                'order_quantity' => 1,
-                'status' => 'pending',
-                'order_serial_number' => $serialNumber
+                'quantity' => 1,
+                'temp_duration' => $duration,
+                'temp_serial_number' => $serialNumber
             ]);
         }
         return response()->json(['success' => true]);
@@ -700,15 +714,19 @@ class BorrowController extends Controller
         $description = $request->description;
         $serial = $request->serial;
         $orderQuantity = $request->quantity;
+        $duration = $request->duration;
 
-        $dataOrder = Order::where('user_id', $userId)
-            ->whereNotNull('date_submitted')
-            ->whereNull('date_returned')
-            ->get();
+        // dd($request->all());
 
+        $dataOrder = Order::join('order_items', 'order_items.order_id', '=', 'orders.id')
+            ->where('orders.user_id', $userId)
+            ->whereNotNull('orders.date_submitted')
+            ->whereNull('orders.approved_by')
+            ->count();
 
+ 
 
-        if ($dataOrder->isEmpty()) {
+        if ($dataOrder == 0) {
             $insertOrder = Order::create([
                 'user_id' => $userId,
                 'created_by' => 'admin',
@@ -717,24 +735,22 @@ class BorrowController extends Controller
 
             if ($insertOrder) {
                 $orderId = $insertOrder->id;
-                OrderItem::create([
+                OrderItemTemp::create([
                     'order_id' => $orderId,
-                    'user_id' => $userId,
                     'item_id' => $itemId,
-                    'order_quantity' => $orderQuantity,
-                    'status' => 'pending',
-                    'order_serial_number' => $serial
+                    'quantity' => $orderQuantity,
+                    'temp_duration' => $duration,
+                    'temp_serial_number' => $serial
                 ]);
             }
         } else {
             $orderId = $dataOrder->first()->id;
-            OrderItem::create([
+            OrderItemTemp::create([
                 'order_id' => $orderId,
-                'user_id' => $userId,
                 'item_id' => $itemId,
-                'order_quantity' => $orderQuantity,
-                'status' => 'pending',
-                'order_serial_number' => $serial
+                'quantity' => $orderQuantity,
+                'temp_duration' => $duration,
+                'temp_serial_number' => $serial
             ]);
         }
         return response()->json(['success' => true]);
