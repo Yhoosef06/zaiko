@@ -5,20 +5,22 @@ namespace App\Imports;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Str;
+use App\Models\UserDepartment;
 use App\Mail\TemporaryPasswordEmail;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class CsvImport implements ToModel
-{
+{   
+    protected $departmentIds;
+
+    public function __construct($departmentIds)
+    {
+        $this->departmentIds = $departmentIds;
+    }
     public static $user; // Add this property
     public function model(array $row)
     {
-        // if ($row[1] === null) {
-
-        //     return null;
-        // }
-
         $role = Role::find(3);
         $password = Str::random(7);
 
@@ -39,11 +41,29 @@ class CsvImport implements ToModel
             'account_status' => $accountStatus,
             'email' => $email,
         ]);
-        $user->save();
-        $user->roles()->attach($role);
+        try {
+            $user->save();
+            $user->roles()->attach($role);
 
-        Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
-        self::$user = $user;
-        return $user;
+            foreach ($this->departmentIds as $departmentId) {
+                UserDepartment::create([
+                    'user_id_number' => $user->id_number,
+                    'department_id' => $departmentId,
+                ]);
+            }
+
+            Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
+
+            return $user;
+        } catch (\Exception $e) {
+            // Handle any exceptions (e.g., log the error)
+            // \Log::error($e);
+            dd($e);
+            // Optionally, you might want to throw the exception again to let the job fail and retry
+            // throw $e;
+
+            return null; // or handle the error in a way that suits your application
+        }
     }
+
 }
