@@ -291,10 +291,12 @@ Route::middleware(['auth', 'role:borrower'])->group(function () {
     Route::middleware(['account_status:approved', 'permission:borrow-items'])->group(function () {
 
         Route::controller(BorrowerController::class)->group(function () {
-            Route::get('/student-dashboard', 'index')->name('student.dashboard');
-            Route::get('/student-items', 'items')->name('student.items');
+            Route::get('/borrower-dashboard', 'index')->name('borrower.dashboard');
+            Route::get('/borrower-items', 'department_selected')->name('borrower.items');
+            Route::post('/department', 'department_selected')->name('department');
             Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
         });
+        
 
         //cart
         Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');

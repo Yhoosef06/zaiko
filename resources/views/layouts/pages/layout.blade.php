@@ -81,7 +81,7 @@
 <!-- jQuery -->
 
 
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->

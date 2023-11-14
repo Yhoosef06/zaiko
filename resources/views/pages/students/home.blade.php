@@ -4,20 +4,6 @@
     <div class="borrower-bg borrower-page-height">
         <div class="content-header">
             <div class="container-fluid">
-                {{-- <div class="row mb-2">
-                    @if (session('success'))
-                        <div class="alert alert-success alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                        </div>
-                    @elseif (session('danger'))
-                        <div class="alert alert-danger alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                        </div>
-                    @endif
-                    
-                </div><!-- /.row --> --}}
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content-header -->
@@ -203,7 +189,7 @@
                                 
                                     <div class="container mb-2">
                                         <div class="text-center">
-                                            <a href="{{ route('student.items') }}" class="btn btn-lg btn-warning">Start Borrowing</a>
+                                            <a href="{{ route('borrower.items') }}" class="btn btn-lg btn-warning">Start Borrowing</a>
                                         </div>
                                     </div>
                                 

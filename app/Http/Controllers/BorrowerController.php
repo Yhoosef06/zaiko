@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\ItemLog;
@@ -46,62 +47,51 @@ class BorrowerController extends Controller
         return view('pages.students.home')->with(compact('overdueItems'));
     }
 
-    public function items()
-    {
+    // public function items()
+    // {
+    //     $categories = ItemCategory::all();
+    //     $itemlogs = ItemLog::all();
+    //     $borrowedList = OrderItem::where('status', 'borrowed')->get();
+    //     $missingList = ItemLog::where('mode', 'missing')->get();
+    //     $departments = Department::all();
+
+    //     return view('pages.students.items')->with(compact('departments','categories', 'itemlogs', 'borrowedList', 'missingList', 'departments'));
+    // }
+
+    public function department_selected(Request $request){
 
         $categories = ItemCategory::all();
-        // $user_dept_id = Auth::user()->department_id;
         $itemlogs = ItemLog::all();
-        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+        $borrowedList = OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
-        // $departments = Department::with('college')->get();
-        $department = Auth::user()->departments->first();
-        // $department = Department::where('id', Auth::user()->department_id)->first();
-        // dd($department);
-
-
-        // $rooms = Room::with('departments')->get();
-        // $items = Item::with('room')->get();
-
-        // $departments->each(function ($department) {
-        //     $department->college_name = $department->college->college_name;
-        // });
-
-        // foreach($items as $item){
-        //     foreach($rooms as $room){
-        //         foreach($departments as $department){
-        //             if ($department->id == $user_dept_id){ 
-        //                 $college =  $department->college->id;
-        //                 dd($college);
-        //             }
-        //         }
-        //     }
-        // }   
-        
-
-        
-         $collegeId = $department->college_id;   
-        //  dd($collegeId);
-        // foreach ($departments as $department) {
-        //     if ($department->id == $user_dept_id) {
-        //         $collegeId =  $department->college->id;
-        //         break;
-        //     }
-        // }
-        // if($collegeId != null){
-        //     $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
-        //         $query->where('id', $collegeId);
-        //     })->get();
-        // }
-        
-
-        $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
-            $query->where('id', $collegeId);
+        $departments = Department::all();
+        $departmentId = $request->department;
+        // Fetch items based on the selected department
+        $items = Item::whereHas('room.department', function ($query) use ($departmentId) {
+            $query->where('id', $departmentId);
         })->get();
+        
 
-        // dd($items);
-        return view('pages.students.items')->with(compact('items','categories','itemlogs','borrowedList','missingList'));
+
+        // Pass the data to the view
+        return view('pages.students.items')->with(compact('departments','departmentId', 'categories', 'itemlogs', 'borrowedList', 'missingList', 'items'));
     }
+
+    // return view('pages.students.items')->with(compact('items', 'categories', 'itemlogs', 'borrowedList', 'missingList', 'departments'));
+
+    // public function filterItems(Request $request, $departmentId)
+    // {
+    //     $categories = ItemCategory::all();
+    //     $itemlogs = ItemLog::all();
+    //     $borrowedList = OrderItem::where('status', 'borrowed')->get();
+    //     $missingList = ItemLog::where('mode', 'missing')->get();
+    //     $items = Item::whereHas('room.department', function ($query) use ($departmentId) {
+    //         $query->where('id', $departmentId)->get();
+    //     });
+
+    //     // You can create a partial view for the item list and return it
+    //     return view('students.filteritems')->with(compact('items','categories','itemLogs','borrowedList','missingList'));
+    // }
 
 
     public function borrow()

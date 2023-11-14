@@ -9,7 +9,7 @@
     <!-- Brand Logo -->
     <a @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null) href="#"
     @elseif (Auth::user()->role == 'borrower')
-        href="{{ route('student.dashboard') }}"
+        href="{{ route('borrower.dashboard') }}"
     @else
     href="{{ route('admin.dashboard') }}" @endif
         class="brand-link">
@@ -29,13 +29,13 @@
        with font-awesome or any other icon font library -->
                     @if (Auth::user()->roles->contains('name', 'borrower'))
                         <li class="nav-item">
-                            <a href="{{ route('student.dashboard') }}" class="nav-link">
+                            <a href="{{ route('borrower.dashboard') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('student.items') }}" class="nav-link">
+                            <a href="{{ route('borrower.items') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Browse Items</p>
                             </a>
