@@ -29,8 +29,10 @@ class UserController extends Controller
     {
         //admin
         if (Auth::user()->roles->contains('name', 'admin')) {
-            $users = User::all();
-            return view('pages.admin.listOfUsers')->with(compact('users'));
+            $sortOrder = 'asc';
+            $users = User::paginate(10);
+            $filterUsers = User::all();
+            return view('pages.admin.listOfUsers')->with(compact('users', 'filterUsers'));
         } else {
             $department = Auth::user()->departments->first();
             $userCollegeId = $department->college_id;
@@ -47,16 +49,78 @@ class UserController extends Controller
 
     public function searchUser(Request $request)
     {
-        $search_text = request('query');
+        $search_text = $request->input('search');
+        $sortOrder = 'asc';
 
-        $users = User::where('id_number', 'LIKE', '%' . $search_text . '%')
-            ->orWhere('first_name', 'LIKE', '%' . $search_text . '%')
-            ->orWhere('last_name', 'LIKE', '%' . $search_text . '%')
-            ->orWhere('account_type', 'LIKE', '%' . $search_text . '%')
-            ->orWhere('account_status', 'LIKE', '%' . $search_text . '%')->paginate(5);
+        if (Auth::user()->roles->contains('name', 'admin')) {
+            $filterUsers = user::all();
+                ->orWhere('first_name', 'LIKE', '%' . $search_text . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $search_text . '%')
+                ->orWhere('account_type', 'LIKE', '%' . $search_text . '%')
+                ->paginate(20);
+        } else {
+            dd('Hello');
+        }
 
         return view('pages.admin.listOfUsers', compact('users'));
     }
+
+    // public function searchItem(Request $request)
+    // {
+    //     $search_text = $request->input('search');
+    //     $sortOrder = 'asc';
+
+    //     if (Auth::user()->roles->contains('name', 'admin')) {
+    //         $filterItems = Item::all();
+    //         $items = Item::with('brand', 'model', 'category', 'room')
+    //             ->where(function ($query) use ($search_text) {
+    //                 $query->where('description', 'LIKE', '%' . $search_text . '%')
+    //                     ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
+    //                     ->orWhere('part_number', 'LIKE', '%' . $search_text . '%')
+    //                     ->orWhereHas('brand', function ($query) use ($search_text) {
+    //                         $query->where('brand_name', 'LIKE', '%' . $search_text . '%');
+    //                     })
+    //                     ->orWhereHas('model', function ($query) use ($search_text) {
+    //                         $query->where('model_name', 'LIKE', '%' . $search_text . '%');
+    //                     })
+    //                     ->orWhereHas('category', function ($query) use ($search_text) {
+    //                         $query->where('category_name', 'LIKE', '%' . $search_text . '%');
+    //                     })
+    //                     ->orWhereHas('room', function ($query) use ($search_text) {
+    //                         $query->where('room_name', 'LIKE', '%' . $search_text . '%');
+    //                     });
+    //             })
+    //             ->paginate(20);
+    //     } else {
+    //         $userId = auth()->user()->id_number;
+    //         $user = User::find($userId);
+    //         $departmentIds = $user->departments->pluck('id');
+    //         $rooms = Room::whereIn('department_id', $departmentIds)->get();
+    //         $roomIds = $rooms->pluck('id');
+    //         $items = Item::whereIn('location', $roomIds)->with('brand', 'model', 'category', 'room')
+    //             ->where(function ($query) use ($search_text) {
+    //                 $query->where('description', 'LIKE', '%' . $search_text . '%')
+    //                     ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
+    //                     ->orWhere('part_number', 'LIKE', '%' . $search_text . '%')
+    //                     ->orWhereHas('brand', function ($query) use ($search_text) {
+    //                         $query->where('brand_name', 'LIKE', '%' . $search_text . '%');
+    //                     })
+    //                     ->orWhereHas('model', function ($query) use ($search_text) {
+    //                         $query->where('model_name', 'LIKE', '%' . $search_text . '%');
+    //                     })
+    //                     ->orWhereHas('category', function ($query) use ($search_text) {
+    //                         $query->where('category_name', 'LIKE', '%' . $search_text . '%');
+    //                     })
+    //                     ->orWhereHas('room', function ($query) use ($search_text) {
+    //                         $query->where('room_name', 'LIKE', '%' . $search_text . '%');
+    //                     });
+    //             })
+    //             ->paginate(20);
+    //         $filterItems = Item::whereIn('location', $roomIds)->get();
+    //     }
+
+    //     return view('pages.admin.listOfItems', compact('items', 'sortOrder', 'filterItems'));
+    // }
 
     public function viewUserInfo($id_number)
     {
@@ -97,11 +161,13 @@ class UserController extends Controller
         }
     }
 
-    public function uploadCSVFile(){
+    public function uploadCSVFile()
+    {
         return view('pages.admin.uploadCSV');
     }
 
-    public function storeCSVFile(Request $request){
+    public function storeCSVFile(Request $request)
+    {
 
         dd($request->file('csv_file')->get());
         // return view('pages.admin.uploadCSV');
