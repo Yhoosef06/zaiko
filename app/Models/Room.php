@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
+
 class Room extends Model
 {
     use HasFactory;
@@ -24,7 +25,7 @@ class Room extends Model
         return $this->belongsTo(Department::class, 'department_id');
     }
 
-    public function items(): HasMany
+    public function item(): HasMany
     {
         return $this->hasMany(Item::class, 'location');
     }

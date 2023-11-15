@@ -50,16 +50,10 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                  @php
-                                                  $counter = 0;  
-                                                  @endphp
-                                                 
+                                              
 
                                                     @foreach ($overdueItems as $overdueItem)
 
-                                                    @php
-                                                    $counter++;  
-                                                    @endphp
                                                     <tr>
                                                         <td>{{ $overdueItem->order_id }}</td>
                                                        
@@ -171,17 +165,20 @@
                                                               <input type="hidden"  class="form-control" value="{{ $overdueItem->category_name }}" name="categoryName">
                                                             <div class="form-group">
                                                                   <label>Number Of Day Overdue</label>
-                                                                  <input type="number"  class="form-control" id="number_of_day_overdue_{{ $counter }}" name="number_of_day_overdue" value="{{ $overdueItem->days_overdue }}"readonly>
+                                                                  <input type="number"  class="form-control" id="number_of_day_overdue" name="number_of_day_overdue" value="{{ $overdueItem->days_overdue }}"readonly>
                                                                        
                                                             </div>
                                                             <div class="form-group">
                                                               <label>Payment Per Day</label>
-                                                              <input type="number"  class="form-control" id="payment_per_day_{{ $counter }}"  name="payment_per_day" required>
+                                                              <input type="number"  class="form-control" id="payment_per_day"  name="payment_per_day" value="{{ $overdueItem->penalty_fee }}" readonly>
                                                                    
                                                           </div>
+                                                          @php
+                                                            $total = $overdueItem->penalty_fee * $overdueItem->days_overdue;
+                                                        @endphp
                                                           <div class="form-group">
                                                             <label>Total</label>
-                                                            <input type="number"  class="form-control" id="total_amount_{{ $counter }}" name="total_amount" readonly required>
+                                                            <input type="number"  class="form-control" id="total_amoun" value="{{ $total }}" name="total_amount" readonly required>
                                                                  
                                                         </div>
                                                             <div class="form-group">
@@ -252,9 +249,7 @@
                                                     
                                                 
                                                         
-                                                      <script>
-                                                        var counter = {{ $counter }};
-                                                      </script>      
+                                                     
 
                                                     @endforeach
                                                 </tbody>
