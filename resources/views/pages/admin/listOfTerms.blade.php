@@ -24,57 +24,64 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
-                                </div>
-                            @elseif (session('danger'))
-                                <div class="alert alert-danger alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
-                                </div>
-                            @endif
-                            <table id="listofusers" class="table table-bordered table-hover dataTable dtr-inline collapsed">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Semester</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                        <th>Current</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($terms as $term)
-                                        <tr data-term-id="{{ $term->id }}">
-                                            <td>{{ $term->id }}</td>
-                                            <td>{{ $term->semester }}</td>
-                                            <td>{{ date('F j, Y', strtotime($term->start_date)) }}</td>
-                                            <td>{{ date('F j, Y', strtotime($term->end_date)) }}</td>
-                                            <td>
-                                                <input class="size-32 checkbox-toggle" type="checkbox" name="currentTerm"
-                                                    id="currentTerm{{ $term->id }}" data-term-id="{{ $term->id }}"
-                                                    {{ $term->isCurrent || $term->id == $currentTermId ? 'checked' : '' }} onclick="return confirm('Do you wish to continue changing current term?')">
-                                            </td>
-                                            <td>
-                                                @if ($term->id != $currentTermId)
-                                                    <form class="form_delete_btn" method="POST"
-                                                        action="{{ route('delete_term', $term->id) }}">
-                                                        @csrf
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'
-                                                            onclick="deleteButton({{ $term->id }})"><i
-                                                                class="fa fa-trash"></i></button>
-                                                    </form>
-                                                @endif
-                                            </td>
+                            <div class=" table-responsive">
+                                @if (session('success'))
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</p>
+                                    </div>
+                                @elseif (session('danger'))
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-hidden="true">×</button>
+                                        <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
+                                    </div>
+                                @endif
+                                <table id="listofusers"
+                                    class="table table-bordered table-hover dataTable dtr-inline collapsed">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Semester</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Current</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($terms as $term)
+                                            <tr data-term-id="{{ $term->id }}">
+                                                <td>{{ $term->id }}</td>
+                                                <td>{{ $term->semester }}</td>
+                                                <td>{{ date('F j, Y', strtotime($term->start_date)) }}</td>
+                                                <td>{{ date('F j, Y', strtotime($term->end_date)) }}</td>
+                                                <td>
+                                                    <input class="size-32 checkbox-toggle" type="checkbox"
+                                                        name="currentTerm" id="currentTerm{{ $term->id }}"
+                                                        data-term-id="{{ $term->id }}"
+                                                        {{ $term->isCurrent || $term->id == $currentTermId ? 'checked' : '' }}
+                                                        onclick="return confirm('Do you wish to continue changing current term?')">
+                                                </td>
+                                                <td>
+                                                    @if ($term->id != $currentTermId)
+                                                        <form class="form_delete_btn" method="POST"
+                                                            action="{{ route('delete_term', $term->id) }}">
+                                                            @csrf
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                data-toggle="tooltip" title='Delete'
+                                                                onclick="deleteButton({{ $term->id }})"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </form>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>

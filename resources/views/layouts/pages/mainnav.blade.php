@@ -58,7 +58,7 @@
         <li class="nav-item text-bold">
 
             <a class="btn nav-link border-right border-1 text-lg text-bold"
-                @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null) href="{{ url()->current() }}"
+                @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null) href="#"
             @else
                 href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}" @endif
                 tabindex="-1" aria-disabled="true">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }} </a>

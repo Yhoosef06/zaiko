@@ -36,7 +36,7 @@ class CsvImportJob implements ShouldQueue
      */
     public function handle()
     {
-        set_time_limit(180);
+        set_time_limit(120);
         Excel::import(new CsvImport($this->departmentIds), $this->filePath);
     }
 }
