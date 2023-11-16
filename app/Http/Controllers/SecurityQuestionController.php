@@ -98,8 +98,6 @@ class SecurityQuestionController extends Controller
 
         if ($userRole == 'borrower') {
             return redirect()->route('student.dashboard')->with('success', 'Security Settings Updated Successfully.');
-        } else if ($userRole == 'manager') {
-            return redirect()->route('dashboard');
         } else {
             return redirect()->route('admin.dashboard')->with('success', 'Security Settings Updated Successfully.');
         }
