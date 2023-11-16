@@ -30,7 +30,7 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
-                                <div class="ml-1 float-md-right">
+                                {{-- <div class="ml-1 float-md-right">
                                     <button name="searchFilter" class="btn bg-yellow" data-toggle="modal"
                                         data-target="#filterModal" data-toggle="tooltip" title="Filter Items"><i
                                             class="fa fa-filter" onclick="filterItems()"></i></button>
@@ -48,7 +48,7 @@
                                         title="Sort By Row # (Descending)">
                                         <i class="fa fa-chevron-down"></i>
                                     </a>
-                                </div>
+                                </div> --}}
 
                                 <div class="search-bar mb-2 float-md-right">
                                     <form action="{{ route('users.search') }}" method="GET">
@@ -68,11 +68,11 @@
                                             <th>ID #</th>
                                             <th>Name</th>
                                             {{-- <th>Type</th> --}}
-                                            <th>Status</th>
+                                            {{-- <th>Status</th> --}}
                                             @if (Auth::user()->roles->contains('name', 'admin'))
                                                 <th>Role</th>
                                             @endif
-                                            <th>Program(s)/Department(s)</th>
+                                            <th>Type</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -92,15 +92,7 @@
                                                     <td>{{ 'READS' }}</td>
                                                 @endif --}}
 
-                                                    @if ($user->account_status == 'pending')
-                                                        <td><span class="bg-warning p-1 m-1"
-                                                                style="padding:10px">{{ 'Pending' }}</span>
-                                                        </td>
-                                                    @else
-                                                        <td><span class="bg-success p-1 m-1"
-                                                                style="padding:10px">{{ 'Approved' }}</span>
-                                                        </td>
-                                                    @endif
+
                                                     @if (Auth::user()->roles->contains('name', 'admin'))
                                                         <td>
                                                             @foreach ($user->roles as $role)
@@ -109,9 +101,7 @@
                                                         </td>
                                                     @endif
                                                     <td>
-                                                        @foreach ($user->departments as $department)
-                                                            {{ $department->department_name }} <br>
-                                                        @endforeach
+                                                        {{ $user->account_type }}
                                                     </td>
                                                     <td>
                                                         <button class="btn btn-sm btn-primary" data-toggle="modal"
