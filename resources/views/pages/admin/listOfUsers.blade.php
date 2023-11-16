@@ -30,13 +30,13 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
-                                {{-- <div class="ml-1 float-md-right">
+                                <div class="ml-1 float-md-right">
                                     <button name="searchFilter" class="btn bg-yellow" data-toggle="modal"
                                         data-target="#filterModal" data-toggle="tooltip" title="Filter Items"><i
                                             class="fa fa-filter" onclick="filterItems()"></i></button>
                                 </div>
 
-                                <div class="ml-1 float-md-right">
+                                {{-- <div class="ml-1 float-md-right">
                                     <a href="#" class="btn bg-yellow" data-toggle="tooltip"
                                         title="Sort By Row # (Ascending)">
                                         <i class="fa fa-chevron-up"></i>
@@ -105,7 +105,7 @@
                                                         @if ($user->isActive)
                                                             <p class="bg-green text-center">Active</p>
                                                         @else
-                                                            <p class="bg-yellow text-center">Inactive</p>
+                                                            <p class="bg-gray text-center">Inactive</p>
                                                         @endif
                                                     </td>
                                                     <td>

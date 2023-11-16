@@ -26,8 +26,10 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->date('last_login_at')->nullable();
             $table->boolean('password_updated')->nullable();
+            $table->unsignedBigInteger('term_id')->nullable();
             $table->timestamps();
 
+            $table->foreign('term_id')->references('id')->on('terms');
             $table->foreign('security_question_id')->references('id')->on('security_questions')->onDelete('cascade');
         });
     }

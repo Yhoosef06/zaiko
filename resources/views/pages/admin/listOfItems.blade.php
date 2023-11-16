@@ -36,7 +36,7 @@
                                             class="fa fa-filter" onclick="filterItems()"></i></button>
                                 </div>
 
-                                <div class="ml-1 float-md-right">
+                                {{-- <div class="ml-1 float-md-right">
                                     <a href="{{ route('sort_items', ['order' => 'asc']) }}"
                                         class="btn bg-yellow {{ $sortOrder === 'asc' ? 'active' : '' }}"
                                         data-toggle="tooltip" title="Sort By Row # (Ascending)">
@@ -50,7 +50,7 @@
                                         data-toggle="tooltip" title="Sort By Row # (Descending)">
                                         <i class="fa fa-chevron-down"></i>
                                     </a>
-                                </div>
+                                </div> --}}
 
                                 <div class="search-bar mb-2 float-md-right">
                                     <form action="{{ route('items.search') }}" method="GET">

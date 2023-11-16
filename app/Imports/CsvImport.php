@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Role;
+use App\Models\Term;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Models\UserDepartment;
@@ -18,26 +19,14 @@ class CsvImport implements ToModel
     {
         $role = Role::find(3);
         $password = Str::random(7);
-
+        $activeTerm = Term::where('isCurrent', true)->first();
+        $termId = $activeTerm->id;
         $idNumber = isset($row[0]) ? $row[0] : null;
         $firstName = isset($row[1]) ? $row[1] : null;
         $lastName = isset($row[2]) ? $row[2] : null;
-        // $password = isset($row[3]) ? Str::random(7) : null;
         $accountType = isset($row[4]) ? $row[4] : null;
-        $accountStatus = isset($row[5]) ? $row[5] : null;
         $email = isset($row[6]) ? $row[6] : null;
 
-        $user = new User([
-            'id_number' => $idNumber,
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'password' => bcrypt($password),
-            'account_type' => $accountType,
-            'account_status' => $accountStatus,
-            'email' => $email,
-            'isActive' => true,
-            'password_updated' => false,
-        ]);
         try {
 
             $user = User::firstOrCreate(
@@ -47,15 +36,15 @@ class CsvImport implements ToModel
                     'last_name' => $lastName,
                     'password' => bcrypt($password),
                     'account_type' => $accountType,
-                    'account_status' => $accountStatus,
                     'email' => $email,
                     'isActive' => true,
                     'password_updated' => false,
+                    'term_id' => $termId
                 ]
             );
     
             if (!$user->wasRecentlyCreated) {
-                $user->update(['isActive' => true]);
+                $user->update(['isActive' => true, 'term_id' => $termId]);
             } else {
                 $user->save();
                 $user->roles()->attach($role);

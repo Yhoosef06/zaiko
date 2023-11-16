@@ -16,4 +16,8 @@ class Term extends Model
         'end_date',
         'isCurrent'
     ];
+
+    public function users() {
+        return $this->hasMany(User::class);
+    }
 }

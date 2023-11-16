@@ -40,7 +40,8 @@ class User extends Authenticatable
         'answer',
         'email',
         'last_login_at',
-        'password_updated'
+        'password_updated',
+        'term_id'
     ];
 
     /**
@@ -118,5 +119,17 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    public function terms() {
+        return $this->belongsTo(Term::class);
+    }
+
+    public function activeTerm()
+    {
+        return $this->terms()->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->orderBy('start_date')
+            ->first();
     }
 }
