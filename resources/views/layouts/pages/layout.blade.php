@@ -139,7 +139,13 @@
 
 <script>
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
+   
+    // Set up CSRF token for all Ajax requests
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
 
 
@@ -1635,6 +1641,101 @@
 
         });
     });
+
+    //BORROWER DISPLAY ITEMS
+
+    function getDepartment() {
+        event.preventDefault();
+        var selectedDepartment = $('#department').val();
+
+        console.log('Selected Department:', selectedDepartment); // Log the selected department value
+
+
+        // Send AJAX request to get the data based on the selected department
+        $.ajax({
+            type: 'GET',
+            url: '/department-items/' + selectedDepartment, // Replace with your actual endpoint
+            success: function (response) {
+
+                console.log('Received Data:', response.data); // Log the received data
+
+                // Update the displayData div with the received data
+                updateDisplay(response.data);
+
+                 // Set the selected option based on the received data
+                 $('#department').val(selectedDepartment);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+    function updateDisplay(data) {
+    var displayDataDiv = $('#displayData');
+
+    if (data.length > 0) {
+        // Render the data in the displayData div
+        var html = '';
+
+        data.forEach(function (item) {
+            html += '<div class="col mb-5">';
+            html += '<div class="card h-100">';
+            html += '<img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />';
+            html += '<div class="card-body p-4">';
+            html += '<div class="text-center">';
+            html += '<h5 class="fw-bolder">' + item.brand.brand_name + ' ' + item.model.model_name + '</h5>';
+            html += item.quantity;
+            html += '</div></div>';
+            html += '<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">';
+            html += '<div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>';
+            html += '</div></div></div>';
+        });
+
+        displayDataDiv.html(html);
+    } else {
+        // Display a message if no data is available
+        displayDataDiv.html('<div class="col"><p>No data available</p></div>');
+    }
+}
+
+
+
+        // $(document).ready(function() {
+        //     // Hide all department content initially
+        //     $('.tab-pane').hide();
+    
+        //     // Show the selected department content when the dropdown changes
+        //     $('select#department').change(function() { // Update the selector for the dropdown
+        //         var selectedDepartment = $(this).val();
+        //         $('.tab-pane').hide();
+        //         $('#' + selectedDepartment).show();
+    
+        //         // Remove the following lines related to AJAX as they are not necessary for your form submission
+                
+        //         // Optionally, you can submit the form when the dropdown changes
+        //         // $('form').submit(); 
+        //     });
+    
+        //     // Fetch the selected department from the session and show its corresponding items
+        //     var selectedDepartment = '{{ old('department') }}'; // Update to use old() method
+        //     if (selectedDepartment !== '') {
+        //         $('select#department').val(selectedDepartment);
+        //         $('#' + selectedDepartment).show();
+        //     }
+        // });
+
+        // function saveSelection() {
+        // var selectedDepartment = document.getElementById('department').value;
+        // localStorage.setItem('selectedDepartment', selectedDepartment);
+        // }
+
+        // // Retrieve the selected department from local storage and set it on page load
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var selectedDepartment = localStorage.getItem('selectedDepartment');
+        //     if (selectedDepartment) {
+        //         document.getElementById('department').value = selectedDepartment;
+        //     }
+        // });
 
 
 

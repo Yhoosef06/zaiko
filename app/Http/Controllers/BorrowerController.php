@@ -77,6 +77,29 @@ class BorrowerController extends Controller
         return view('pages.students.items')->with(compact('departments','departmentId', 'categories', 'itemlogs', 'borrowedList', 'missingList', 'items'));
     }
 
+    public function itemsPage(){
+        $categories = ItemCategory::all();
+        $departments = Department::all();
+
+        return view('pages.students.items')->with(compact('departments', 'categories'));
+    }
+
+    public function getData($department)
+{
+    // Retrieve data based on the selected department
+    $data = Item::with(['room.department', 'brand', 'model'])
+        ->whereHas('room.department', function ($query) use ($department) {
+            $query->where('id', $department);
+        })
+        ->get();
+
+    // $categories = ItemCategory::all();
+    // $departments = Department::all();
+
+    // Return the data as a view or in any other desired format
+    return response()->json(['data' => $data]);
+}
+
     // return view('pages.students.items')->with(compact('items', 'categories', 'itemlogs', 'borrowedList', 'missingList', 'departments'));
 
     // public function filterItems(Request $request, $departmentId)

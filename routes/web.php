@@ -288,12 +288,13 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 //student
 Route::middleware(['auth', 'role:borrower'])->group(function () {
     //student
-    Route::middleware(['account_status:approved', 'permission:borrow-items'])->group(function () {
 
         Route::controller(BorrowerController::class)->group(function () {
             Route::get('/borrower-dashboard', 'index')->name('borrower.dashboard');
-            Route::get('/borrower-items', 'department_selected')->name('borrower.items');
-            Route::post('/department', 'department_selected')->name('department');
+            Route::get('/borrower-items', 'itemsPage')->name('borrower.items');
+            // Route::post('/department', 'department_selected')->name('department');
+            Route::get('/department-items/{department}', 'getData');
+
             Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
         });
         
@@ -320,5 +321,4 @@ Route::middleware(['auth', 'role:borrower'])->group(function () {
         // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
         // Route::delete('/deleting-item-{serial_number}', [BorrowController::class,'remove'])->name('remove_item');
 
-    });
 });
