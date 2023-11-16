@@ -5,7 +5,6 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    {{-- <h1 class="text-decoration-underline">Adding New {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }}</h1> --}}
                     <h1 class="text-decoration-underline">Adding New User</h1>
                 </div>
             </div>
@@ -58,40 +57,13 @@
                                             </div>
                                         @enderror
 
-                                        <label for="Item name">Select a department(s):</label>
-                                        <div class="scrollable-container">
-                                            @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                                                <h5 class="text-decoration-underline">
-                                                    <input type="checkbox" class="college-checkbox"
-                                                        data-college="{{ $collegeName }}">
-                                                    {{ $collegeName }}
-                                                </h5>
-                                                <div class="department-container">
-                                                    @foreach ($departmentsGroup as $department)
-                                                        <input type="checkbox" class="department-checkbox"
-                                                            name="department_ids[]" data-college="{{ $collegeName }}"
-                                                            value="{{ $department->id }}">
-                                                        {{ $department->department_name }}<br>
-                                                    @endforeach
-                                                </div>
+                                        <label for="account status">Role:</label>
+                                        <select name="role_id[]" class="form-control">
+                                            <option selected disabled>Select a role</option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
                                             @endforeach
-                                        </div>
-{{-- 
-                                        @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                                            <h5 class="text-decoration-underline">
-                                                <input type="checkbox" class="college-checkbox"
-                                                    data-college="{{ $collegeName }}">
-                                                {{ $collegeName }}
-                                            </h5>
-                                            <div class="container">
-                                                @foreach ($departmentsGroup as $department)
-                                                    <input type="checkbox" class="department-checkbox"
-                                                        name="department_ids[]" data-college="{{ $collegeName }}"
-                                                        value="{{ $department->id }}">
-                                                    {{ $department->department_name }}<br>
-                                                @endforeach
-                                            </div>
-                                        @endforeach --}}
+                                        </select>
 
                                         @error('department_id')
                                             <div class="text-danger">
@@ -120,13 +92,24 @@
                                             </div>
                                         @enderror
 
-                                        <label for="account status">Role:</label>
-                                        <select name="role_id[]" class="form-control">
-                                            <option selected disabled>Select a role</option>
-                                            @foreach ($roles as $role)
-                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                        <label class="scrollable-container-label" for="Item name">Select a department(s) to manage:</label>
+                                        <div class="scrollable-container">
+                                            @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                                <h5 class="text-decoration-underline">
+                                                    <input type="checkbox" class="college-checkbox"
+                                                        data-college="{{ $collegeName }}">
+                                                    {{ $collegeName }}
+                                                </h5>
+                                                <div class="department-container">
+                                                    @foreach ($departmentsGroup as $department)
+                                                        <input type="checkbox" class="department-checkbox"
+                                                            name="department_ids[]" data-college="{{ $collegeName }}"
+                                                            value="{{ $department->id }}">
+                                                        {{ $department->department_name }}<br>
+                                                    @endforeach
+                                                </div>
                                             @endforeach
-                                        </select>
+                                        </div>
 
                                         <hr>
                                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
@@ -148,7 +131,50 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
+        // $(document).ready(function() {
+        //     $('.college-checkbox').change(function() {
+        //         var collegeName = $(this).data('college');
+        //         var isChecked = $(this).prop('checked');
+
+        //         $('.department-checkbox[data-college="' + collegeName + '"]').prop('checked', isChecked);
+        //     });
+
+        //     $('.department-checkbox').change(function() {
+        //         var collegeName = $(this).data('college');
+        //         var departmentCheckboxes = $('.department-checkbox[data-college="' + collegeName + '"]');
+        //         var collegeCheckbox = $('.college-checkbox[data-college="' + collegeName + '"]');
+
+        //         collegeCheckbox.prop('checked', departmentCheckboxes.length === departmentCheckboxes.filter(
+        //             ':checked').length);
+        //     });
+        // });
+
         $(document).ready(function() {
+            // Function to toggle department selection based on role
+            function toggleDepartmentSelection() {
+                var selectedRole = $('select[name="role_id[]"]').val();
+                var departmentSection = $('.scrollable-container');
+                var label = $('.scrollable-container-label')
+
+                if (selectedRole === '2' || selectedRole === 'manager') {
+                    departmentSection.show(); 
+                    label.show();// Show the department selection
+                } else {
+                    departmentSection.hide(); 
+                    label.hide();// Hide the department selection
+                }
+            }
+
+            // Initially hide the department selection
+            toggleDepartmentSelection();
+
+            // Listen for changes in the role select
+            $('select[name="role_id[]"]').change(function() {
+                toggleDepartmentSelection(); // Toggle department selection on role change
+            });
+
+            // Additional code for checkbox functionality...
+            // (Your existing checkbox functionality remains unchanged)
             $('.college-checkbox').change(function() {
                 var collegeName = $(this).data('college');
                 var isChecked = $(this).prop('checked');
@@ -156,7 +182,6 @@
                 $('.department-checkbox[data-college="' + collegeName + '"]').prop('checked', isChecked);
             });
 
-            // Update the college checkbox state based on department checkboxes
             $('.department-checkbox').change(function() {
                 var collegeName = $(this).data('college');
                 var departmentCheckboxes = $('.department-checkbox[data-college="' + collegeName + '"]');
@@ -169,18 +194,18 @@
     </script>
     <style>
         .scrollable-container {
-            border: 1px solid #ccc;
-            /* Border style */
+            display: none;
             max-height: 200px;
-            /* Set the maximum height for the scrollable container */
             overflow-y: auto;
-            /* Enable vertical scroll when content exceeds the container height */
+            border: 1px solid #ccc;
             padding: 10px;
-            /* Optional padding for better appearance */
+        }
+
+        .scrollable-container-label {
+            display: none;
         }
 
         .department-container {
-            /* If you want to add some space between college groups, you can add margin-bottom here */
             margin-bottom: 10px;
         }
     </style>

@@ -144,8 +144,6 @@ class UserController extends Controller
                 'first_name' => 'required',
                 'last_name' => 'required',
                 'account_type' => 'required',
-                // 'account_status' => 'required',
-                // 'department_id' => 'required',
             ]
         );
 

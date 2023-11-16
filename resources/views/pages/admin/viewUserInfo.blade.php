@@ -2,14 +2,16 @@
     <strong>I.D. Number:</strong> {{ $user->id_number }} <br>
     <strong>First Name:</strong> {{ $user->first_name }} <br>
     <strong>Last Name:</strong> {{ $user->last_name }} <br>
-    <strong>{{ $user->account_type === 'faculty' ? 'Department(s)' : 'Program' }}:</strong>
-    @foreach ($user->departments as $key => $department)
-        {{ $department->department_name }}
-        @if ($key < count($user->departments) - 1)
-            ,
-        @endif
-    @endforeach
-    <br>
+    @if ($user->departments->isNotEmpty())
+        <strong>Department(s) associated to:</strong>
+        @foreach ($user->departments as $key => $department)
+            {{ $department->department_name }}
+            @if ($key < count($user->departments) - 1)
+                ,
+            @endif
+        @endforeach
+        <br>
+    @endif
     <strong>Account Type:</strong>
     {{ $user->account_type === 'student' ? 'Student' : ($user->account_type === 'admin' ? 'Admin' : ($user->account_type === 'faculty' ? 'Faculty' : 'Faculty')) }}
     <br>
@@ -17,11 +19,8 @@
     {{ $user->isActive ? 'Active' : 'Inactive' }}
     <br>
     <strong>Role:</strong>
-    @foreach ($user->roles as $key => $role)
+    @foreach ($user->roles as $role)
         {{ $role->name === 'manager' ? 'Manager' : 'Borrower' }}
-        @if ($key < count($user->roles) - 1)
-            ,
-        @endif
     @endforeach
     <br>
     <hr>
