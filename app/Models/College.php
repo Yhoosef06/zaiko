@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class College extends Model
 {
+    
+    public $timestamps = true;
     use HasFactory;
     protected $fillable = [
         'id',

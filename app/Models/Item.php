@@ -13,6 +13,7 @@ class Item extends Model
 {
     use HasFactory;
 
+    public $timestamps = true;
     // protected $primaryKey = 'serial_number';
 
     // public $incrementing = false;

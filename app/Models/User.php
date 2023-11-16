@@ -21,6 +21,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    public $timestamps = true;
     protected $primaryKey = 'id_number';
     public $incrementing = false;
 
