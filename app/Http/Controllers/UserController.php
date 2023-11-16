@@ -155,7 +155,7 @@ class UserController extends Controller
                 'id_number' => $request->id_number,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
-                'account_status' => 'approved',
+                'isActive' => true,
                 'account_type' => $request->account_type,
                 'password' => Hash::make($request->id_number),
                 'password_updated' => 0,
