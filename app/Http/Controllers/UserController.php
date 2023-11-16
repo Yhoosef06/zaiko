@@ -224,7 +224,6 @@ class UserController extends Controller
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->account_type = $request->account_type;
-        $user->account_status = $request->account_status;
         // $user->department_id = $request->department_id;
         $user->update();
 

@@ -72,6 +72,7 @@
                                             @if (Auth::user()->roles->contains('name', 'admin'))
                                                 <th>Role</th>
                                             @endif
+                                            <th>Status</th>
                                             <th>Type</th>
                                             <th>Actions</th>
                                         </tr>
@@ -100,6 +101,13 @@
                                                             @endforeach
                                                         </td>
                                                     @endif
+                                                    <td>
+                                                        @if ($user->isActive)
+                                                            <p class="bg-green text-center">Active</p>
+                                                        @else
+                                                            <p class="bg-yellow text-center">Inactive</p>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         {{ $user->account_type }}
                                                     </td>

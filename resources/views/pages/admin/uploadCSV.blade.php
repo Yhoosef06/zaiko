@@ -40,9 +40,9 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 <label for="csv_file">Add your file here:</label><br>
-                                <input type="file" name="csv_file" id="csv_file"><br>
-                                <label for="Item name">Select a department(s):</label><br>
-                                <div class="scrollable-container">
+                                <input type="file" name="csv_file" id="csv_file">
+                                {{-- <label for="Item name">Select a department(s):</label><br> --}}
+                                {{-- <div class="scrollable-container">
                                     @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
                                         <h5 class="text-decoration-underline">
                                             <input type="checkbox" class="college-checkbox" data-college="{{ $collegeName }}">
@@ -56,7 +56,7 @@
                                             @endforeach
                                         </div>
                                     @endforeach
-                                </div>
+                                </div> --}}
                                 <button type="submit" id="uploadBtton" class="btn bg-olive mt-1">Upload</button>
                             </form>
                         </div>

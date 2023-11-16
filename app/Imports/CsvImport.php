@@ -9,16 +9,11 @@ use App\Models\UserDepartment;
 use App\Mail\TemporaryPasswordEmail;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Concerns\ToModel;
+use App\Jobs\SendTemporaryPasswordEmailJob;
 
 class CsvImport implements ToModel
-{   
-    protected $departmentIds;
-
-    public function __construct($departmentIds)
-    {
-        $this->departmentIds = $departmentIds;
-    }
-    public static $user; // Add this property
+{    
+    public static $user; 
     public function model(array $row)
     {
         $role = Role::find(3);
@@ -40,30 +35,49 @@ class CsvImport implements ToModel
             'account_type' => $accountType,
             'account_status' => $accountStatus,
             'email' => $email,
-            'password_updated' => 0,
+            'isActive' => true,
+            'password_updated' => false,
         ]);
         try {
-            $user->save();
-            $user->roles()->attach($role);
 
-            foreach ($this->departmentIds as $departmentId) {
-                UserDepartment::create([
-                    'user_id_number' => $user->id_number,
-                    'department_id' => $departmentId,
-                ]);
+            $user = User::firstOrCreate(
+                ['id_number' => $idNumber],
+                [
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
+                    'password' => bcrypt($password),
+                    'account_type' => $accountType,
+                    'account_status' => $accountStatus,
+                    'email' => $email,
+                    'isActive' => true,
+                    'password_updated' => false,
+                ]
+            );
+    
+            if (!$user->wasRecentlyCreated) {
+                $user->update(['isActive' => true]);
+            } else {
+                $user->save();
+                $user->roles()->attach($role);
+                // dispatch(new SendTemporaryPasswordEmailJob($user, $password));
             }
-
-            Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
-
+    
             return $user;
-        } catch (\Exception $e) {
-            // Handle any exceptions (e.g., log the error)
-            // \Log::error($e);
-            dd($e);
-            // Optionally, you might want to throw the exception again to let the job fail and retry
-            // throw $e;
 
-            return null; // or handle the error in a way that suits your application
+            // foreach ($this->departmentIds as $departmentId) {
+            //     UserDepartment::create([
+            //         'user_id_number' => $user->id_number,
+            //         'department_id' => $departmentId,
+            //     ]);
+            // }
+
+            // Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
+          
+        } catch (\Exception $e) {
+
+            dd($e);
+
+            return null;
         }
     }
 

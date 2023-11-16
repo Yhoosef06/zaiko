@@ -2,16 +2,17 @@
 
 namespace App\Jobs;
 
-use App\Imports\CsvImport;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Mail\TemporaryPasswordEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class CsvImportJob implements ShouldQueue
+class SendTemporaryPasswordEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -20,13 +21,12 @@ class CsvImportJob implements ShouldQueue
      *
      * @return void
      */
-
-    protected $filePath;
-    // protected $departmentIds;
-    public function __construct($filePath)
+    protected $user;
+    protected $password;
+    public function __construct(User $user, $password)
     {
-        $this->filePath = $filePath;
-        // $this->departmentIds = $departmentIds;
+        $this->user = $user;
+        $this->password = $password;
     }
 
     /**
@@ -36,7 +36,7 @@ class CsvImportJob implements ShouldQueue
      */
     public function handle()
     {
-        set_time_limit(180);
-        Excel::import(new CsvImport, $this->filePath);
+        set_time_limit(10);
+        Mail::to($this->user->email)->send(new TemporaryPasswordEmail($this->user, $this->password));
     }
 }

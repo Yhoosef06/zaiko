@@ -14,7 +14,7 @@
     {{ $user->account_type === 'student' ? 'Student' : ($user->account_type === 'admin' ? 'Admin' : ($user->account_type === 'faculty' ? 'Faculty' : 'Faculty')) }}
     <br>
     <strong>Status:</strong>
-    {{ $user->account_status === 'pending' ? 'Pending' : 'Approved' }}
+    {{ $user->isActive ? 'Active' : 'Inactive' }}
     <br>
     <strong>Role:</strong>
     @foreach ($user->roles as $key => $role)

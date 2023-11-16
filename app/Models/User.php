@@ -32,7 +32,7 @@ class User extends Authenticatable
         'front_of_id',
         'back_of_id',
         'account_type',
-        'account_status',
+        'isActive',
         'role',
         'department_id',
         'security_question_id',
