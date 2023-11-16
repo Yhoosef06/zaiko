@@ -51,7 +51,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($terms as $term)
+                                        @forelse ($terms as $term)
                                             <tr data-term-id="{{ $term->id }}">
                                                 <td>{{ $term->id }}</td>
                                                 <td>{{ $term->semester }}</td>
@@ -78,7 +78,11 @@
                                                     @endif
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center bg-white">No available data.</td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
