@@ -292,11 +292,11 @@ Route::middleware(['auth', 'role:borrower'])->group(function () {
     //student
     Route::middleware(['permission:borrow-items'])->group(function () {
 
-        // Route::controller(BorrowerController::class)->group(function () {
-        //     Route::get('/borrower-dashboard', 'index')->name('borrower.dashboard');
+        Route::controller(BorrowerController::class)->group(function () {
+            Route::get('/borrower-dashboard', 'index')->name('borrower.dashboard');
         //     Route::get('/borrower-items', 'items')->name('student.items');
-        //     Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
-        // });
+            Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
+        });
 
         //BROWSING
         Route::get('/browse-items', [BorrowerController::class, 'browse'])->name('browse.items');

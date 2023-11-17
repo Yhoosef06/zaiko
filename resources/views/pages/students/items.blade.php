@@ -66,7 +66,7 @@
                             <select class="form-select form-select-lg mb-5" aria-label="Default select example" name="selectedDepartment" onchange="this.form.submit()">
                                 <option selected value="" disabled>Choose Department</option>
                                 @foreach ($departments as $dept)
-                                    <option value=" {{ $dept->id}} " {{ Session::get('department') == $dept->id ? 'selected' : '' }}>
+                                    <option value="{{$dept->id}}" {{ Session::get('department') == $dept->id ? 'selected' : '' }}>
                                         {{ $dept->department_name }}
                                     </option>
                                 @endforeach
@@ -82,7 +82,7 @@
                         <form action="{{route('browse.category')}}" method="GET">
                             @csrf
                             @foreach($categories as $cat)
-                                    <div class="form-check">                                      
+                                    <div class="form-check pb-3">                                      
                                         <input type="radio" class="form-check-input" name="category" id="category" value="{{$cat->id}}" {{ Session::get('category') == $cat->id ? 'checked' : '' }}  onclick="this.form.submit()">
                                         <label for="category" class="form-check-label">
                                             {{ $cat->category_name }}
