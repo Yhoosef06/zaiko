@@ -3,7 +3,7 @@
 
 @section('content')
     {{-- <link rel="stylesheet" href="{{ asset('plugins/preloader.css') }}"> --}}
-    <div class="borrower-bg borrower-page-height container-fluid pl-5">
+    <div class="borrower-bg borrower-page-height container-fluid pl-5 pr-5">
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
@@ -82,52 +82,165 @@
                         <form action="{{route('browse.category')}}" method="GET">
                             @csrf
                             @foreach($categories as $cat)
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" name="category" id="category" value="{{$cat->id}}" {{ Session::get('category') == $cat->id ? 'checked' : '' }}  onclick="this.form.submit()">
-                                    <label for="category" class="form-check-label">
-                                        {{ $cat->category_name }}
-                                    </label>
-                                </div>
+                                    <div class="form-check">                                      
+                                        <input type="radio" class="form-check-input" name="category" id="category" value="{{$cat->id}}" {{ Session::get('category') == $cat->id ? 'checked' : '' }}  onclick="this.form.submit()">
+                                        <label for="category" class="form-check-label">
+                                            {{ $cat->category_name }}
+                                        </label>                            
+                                    </div>                           
                             @endforeach
                         </form>
                         @endisset
                     </div>
-                    <div class="col-9">
+                    <div class="col-10">
                         @isset($items)
+                        @php
+                            $groupedItems = $items->groupBy(function ($item) {
+                            return $item->brand_id. '-' . $item->model_id;
+                            });
+                        @endphp
                             <div class="row">
-                                @foreach($items as $item)
-                                
-                                        <div class="col-lg-4 col-md-6 mb-4">
+                                @foreach($groupedItems as $groupedItem)
+                                    @php                            
+                                        $totalquantity = 0;
+                                        if(count($groupedItem) != 0){
+                                            foreach ($groupedItem as $item) {                                            
+                                                    $totalquantity += $item->quantity;                                         
+                                            }
+                                            $item = $groupedItem->first();
+                                        }                                                                       
+                                        // echo $totalquantity;
+                                    @endphp                                    
+                                        <div class="col-lg-3 col-md-5 mb-4">
                                             <div class="card">
-                                            <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
-                                                data-mdb-ripple-color="light">
-                                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/img%20(4).webp"
-                                                class="w-100" />
-                                                <a href="#!">
-                                                <div class="mask">
-                                                    <div class="d-flex justify-content-start align-items-end h-100">
-                                                    <h5><span class="badge bg-success ms-2">Pcs</span></h5>
+                                                <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                                    data-mdb-ripple-color="light">
+                                                    <img src="https://cdn.stocksnap.io/img-thumbs/960w/office-work_KJKDM1OT2J.jpg"
+                                                    class="w-100" />
+                                                    <div class="mask">
+                                                        <div class="d-flex justify-content-start align-items-end h-100">
+                                                        <h5>
+                                                            <span class="badge bg-success ms-2">
+                                                                Available
+                                                            </span>
+                                                        </h5>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="hover-overlay">
-                                                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                                                <div class="card-body text-center">
+                                                    <div class="row mx-auto">
+                                                            <span class="card-title mb-3 font-weight-bold display-3">{{ $item->brand->brand_name }}</span>                             
+                                                            <h5 class="card-title mb-3">{{ $item->model->model_name }}</h5>      
+                                                        <p></p>                                                                                         
+                                                    </div>                                     
+                                                    <button type="button" class="btn btn-link text-success" data-toggle="modal"
+                                                        data-target="#itemModal{{ $item->id }}">
+                                                        More info <i class="bi bi-search"></i>
+                                                    </button>
                                                 </div>
-                                                </a>
                                             </div>
-                                            <div class="card-body">
-                                                <a href="" class="text-reset">
-                                                <h5 class="card-title mb-3">{{ $item->brand->brand_name}}</h5>
-                                                </a>
-                                                <a href="" class="text-reset">
-                                                    <h5 class="card-title mb-3">{{ $item->model->model_name}}</h5>
-                                                    </a>
-                                                <a href="" class="text-reset" >
-                                                <p>Category</p>
-                                                </a>
-                                                <h6 class="mb-3">$61.99</h6>
+                                        </div>
+                                        <div class="modal fade" id="itemModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="itemModalLabel">Item Information</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row text-lg">
+                                                            <div class="col">
+                                                                @if ($item->item_image == null)
+                                                                    <div
+                                                                        style="border: 1px solid #000; width: 200px; height: 200px; display: flex; justify-content: center; align-items: center;">
+                                                                        No Image
+                                                                    </div>
+                                                                @else
+                                                                    <img src="{{ asset('storage/' . $item->item_image) }}"
+                                                                        alt="" srcset="" width="200px"
+                                                                        height="200px">
+                                                                @endif
+                                                                <strong>Brand:</strong> {{ $item->brand->brand_name }}
+                                                                <br>
+                                                                <strong>Model:</strong> {{ $item->model->model_name }}
+                                                                <br>
+                                                                    @php
+                                                                        $missingQty = 0;
+                                                                        $borrowedQty = 0;
+                                                                        $totalDeduct = 0;
+                                                                        foreach ($borrowedList as $borrowed) {
+                                                                            if ($borrowed->item_id == $item->id) {
+                                                                                $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                                            }
+                                                                        }
+                                                                        
+                                                                        foreach ($missingList as $missing) {
+                                                                            if ($missing->item_id == $item->id) {
+                                                                                $missingQty = $missingQty + $missing->quantity;
+                                                                            }
+                                                                        }
+                                                                        $totalDeduct = $missingQty + $borrowedQty;
+                                                                        
+                                                                    @endphp
+                                                                    <strong>Available:</strong>
+                                                                    {{ $item->quantity - $totalDeduct }} <br>
+                                                            </div>
+                                                            <div class="col">
+                                                                <strong>Description:</strong> {{ $item->description }}
+                                                                <br>
+                                                                <strong>Status:</strong> {{ $item->status }} {{ $item->serial_number}}
+                                                            </div>
+                                                        </div>
+                                                        <form action="{{ route('add.cart', $item->id) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to add this item to your cart?');">
+                                                            @csrf
+                                                            <label for="quantity">Quantity:</label>
+                                                            <div class="form-group col-2">
+                                                            
+                                                                    <select class="form-control" id="quantity" name="quantity">
+                                                                            @php
+                                                                            $missingQty = 0;
+                                                                            $borrowedQty = 0;
+                                                                            $totalDeduct = 0;
+                                                                            foreach ($borrowedList as $borrowed) {
+                                                                                if ($borrowed->item_id == $item->id) {
+                                                                                    $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                                                }
+                                                                            }
+                                                                            
+                                                                            foreach ($missingList as $missing) {
+                                                                                if ($missing->item_id == $item->id) {
+                                                                                    $missingQty = $missingQty + $missing->quantity;
+                                                                                }
+                                                                            }
+                                                                            $totalDeduct = $missingQty + $borrowedQty;
+                                                                            
+                                                                            @endphp
+                                                                            @for ($i = 1; $i <= $item->quantity - $totalDeduct; $i++)
+                                                                                <option value="{{ $i }}">
+                                                                                    {{ $i }}</option>
+                                                                            @endfor
+                                                                    </select>
+                                        
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <i class="fas fa-cart-plus"></i><input type="submit"
+                                                                    class="btn btn-success" value="Add to cart">
+                                                                <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </form>
+                                                        
+                                                        <!-- Add your item information here -->
+                                                        <!-- You can display item details or any other content here -->
+                                                    </div>
+                                                </div>
                                             </div>
-                                            </div>
-                                        </div>                                
+                                        </div>                       
+                                       
                                 @endforeach
                             </div>
                         @endisset
