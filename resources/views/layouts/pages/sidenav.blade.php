@@ -9,7 +9,7 @@
     <!-- Brand Logo -->
     <a @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null) href="#"
     @elseif (Auth::user()->role == 'borrower')
-        href="{{ route('student.dashboard') }}"
+        href="{{ route('borrower.dashboard') }}"
     @else
     href="{{ route('admin.dashboard') }}" @endif
         class="brand-link">
@@ -28,14 +28,14 @@
                     <li class="nav-item">
                         <a @if (Auth::user()->roles->contains('name', 'manager')) href="{{ route('admin.dashboard') }}" 
                         @else
-                            href="{{ route('student.dashboard') }}" @endif
+                            href="{{ route('borrower.dashboard') }}" @endif
                             class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('student.items') }}" class="nav-link">
+                        <a href="{{ route('browse.items') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>Browse Items</p>
                         </a>
