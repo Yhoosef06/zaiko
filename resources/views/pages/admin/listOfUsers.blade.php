@@ -189,15 +189,12 @@
                                 <label for="locationFilter">Status:</label>
                                 <div>
                                     <div>
-                                        <input type="checkbox" name="status[]" value="1"
-                                            {{ in_array('1', (array) request('status')) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="status[]" value="1" {{ in_array('1', (array)request('status')) ? 'checked' : '' }}>
                                         Active<br>
-
-                                        <input type="checkbox" name="status[]" value="0"
-                                            {{ in_array('0', (array) request('status')) ? 'checked' : '' }}>
+                                    
+                                        <input type="checkbox" name="status[]" value="0" {{ in_array('0', (array)request('status')) ? 'checked' : '' }}>
                                         Inactive<br>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="col-md-3">
