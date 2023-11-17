@@ -37,9 +37,9 @@
                                     <div class="col-12 col-sm-12 col-md-3">
                                         <div class="info-box">
                                             <span class="info-box-icon bg-warning elevation-1"><i
-                                                    class="fas fa-users"></i></span>
+                                                    class="fas fa-exclamation-triangle"></i></span>
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Pending Registrants</span>
+                                                <span class="info-box-text">Overdue</span>
                                                 <span class="info-box-number">
                                                     {{-- {{ $totalPendingRegistrants }} --}}
                                                 </span>
@@ -64,7 +64,7 @@
                                             <span class="info-box-icon bg-warning elevation-1"><i
                                                     class="fas fa-tag"></i></span>
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Pending Borrow Items </span>
+                                                <span class="info-box-text">Pending </span>
                                                 {{-- <span class="info-box-number">{{$totalBorrowPendings}}</span> --}}
                                             </div>
                                         </div>

@@ -28,11 +28,9 @@ class PagesController extends Controller
                 ->sum('quantity');
             $users = User::all();
             $totalUsers = $users->count();
-            $totalMissingItems = ItemLog::where('mode', 'missing')
-                ->sum('quantity');
-            $borrowedItems = OrderItem::where('status', 'borrowed')
-                ->sum('order_quantity');
-            return view('pages.admin.adminDashboard')->with(compact('totalItems', 'totalMissingItems', 'totalUsers', 'borrowedItems'));
+            $activeUsers = $users->where('isActive', true)->count();
+            $inactiveUsers = $users->where('isActive', false)->count();
+            return view('pages.admin.adminDashboard')->with(compact('totalItems', 'inactiveUsers', 'totalUsers', 'activeUsers'));
         } else if ($user->roles->contains('name', 'manager')) {
             $departmentIds = $user->departments->pluck('id');
             $college = $user->departments->first()->college;

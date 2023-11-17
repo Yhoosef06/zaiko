@@ -64,11 +64,11 @@
                                     <div class="col-12 col-sm-6 col-md-3">
                                         <div class="info-box mb-3">
                                             <span class="info-box-icon bg-warning elevation-1"><i
-                                                    class="fas fa-exclamation-circle"></i></span>
+                                                    class="fas fa-toggle-off"></i></span>
 
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Missing Items</span>
-                                                <span class="info-box-number">{{ $totalMissingItems }}</span>
+                                                <span class="info-box-text">Inactive Users</span>
+                                                <span class="info-box-number">{{ $inactiveUsers }}</span>
                                             </div>
                                             <!-- /.info-box-content -->
                                         </div>
@@ -82,11 +82,11 @@
                                     <div class="col-12 col-sm-6 col-md-3">
                                         <div class="info-box mb-3">
                                             <span class="info-box-icon bg-warning elevation-1"><i
-                                                    class="fas fa-tags"></i></span>
+                                                    class="fas fa-toggle-on"></i></span>
 
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Borrowed Items</span>
-                                                <span class="info-box-number">0</span>
+                                                <span class="info-box-text">Active Users</span>
+                                                <span class="info-box-number">{{$activeUsers}}</span>
                                             </div>
                                             <!-- /.info-box-content -->
                                         </div>
@@ -148,25 +148,6 @@
                         </div>
                     </div>
         </section>
-    </div>
-
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title danger" id="loginModalLabel">Welcome!</h5>
-                </div>
-                <div class="modal-body">
-                    <p class=" text-lg-center">
-                        Before you begin using Zaiko please <a
-                            href="{{ route('change_user_password', ['id_number' => Auth::user()->id_number]) }}">click this
-                            link</a> to setup your security
-                        settings. Thank you!
-                    </p>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>

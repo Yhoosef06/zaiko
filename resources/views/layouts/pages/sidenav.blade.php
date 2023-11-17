@@ -25,108 +25,119 @@
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
-                    <li class="nav-item">
-                        <a @if (Auth::user()->roles->contains('name', 'manager')) href="{{ route('admin.dashboard') }}" 
+                    @if (Auth::user()->roles->contains('name', 'manager') || Auth::user()->roles->contains('name', 'borrower'))
+                        <li class="nav-item">
+                            <a @if (Auth::user()->roles->contains('name', 'manager')) href="{{ route('admin.dashboard') }}" 
                         @else
                             href="{{ route('student.dashboard') }}" @endif
-                            class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Dashboard</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('student.items') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Browse Items</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('cart.list') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Cart</p>
-                            @if ($cartcount != 0)
-                                <span class="badge badge-danger right">{{ $cartcount }}</span>
-                            @endif
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('pending-order') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Pending</p>
-                            @if ($pendingcount != 0)
-                                <span class="badge badge-danger right">{{ $pendingcount }}</span>
-                            @endif
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('borrowed-items') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Borrowed Items</p>
-                            @if ($borrowedcount != 0)
-                                <span class="badge badge-danger right">{{ $borrowedcount }}</span>
-                            @endif
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('history') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>History</p>
-                            @if ($historycount != 0)
-                                <span class="badge badge-danger right">{{ $historycount }}</span>
-                            @endif
-                        </a>
-                    </li>
-                    @if (Auth::user()->roles->contains('name', 'manager'))
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                                class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>
-                                    Manage Borrowings
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
+                                <p>Dashboard</p>
                             </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('pending') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Pending</p>
-                                            {{-- @if ($itemcount != 0)
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('student.items') }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Browse Items</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('cart.list') }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Cart</p>
+                                @if ($cartcount != 0)
+                                    <span class="badge badge-danger right">{{ $cartcount }}</span>
+                                @endif
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('pending-order') }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Pending</p>
+                                @if ($pendingcount != 0)
+                                    <span class="badge badge-danger right">{{ $pendingcount }}</span>
+                                @endif
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('borrowed-items') }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Borrowed Items</p>
+                                @if ($borrowedcount != 0)
+                                    <span class="badge badge-danger right">{{ $borrowedcount }}</span>
+                                @endif
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('history') }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>History</p>
+                                @if ($historycount != 0)
+                                    <span class="badge badge-danger right">{{ $historycount }}</span>
+                                @endif
+                            </a>
+                        </li>
+                        @if (Auth::user()->roles->contains('name', 'manager'))
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>
+                                        Manage Borrowings
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="{{ route('pending') }}" class="nav-link">
+                                            <div class="ml-3">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Pending</p>
+                                                {{-- @if ($itemcount != 0)
                                             <span class="badge badge-warning right">{{ $itemcount }}</span>
                                         @endif --}}
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('borrowed') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Borrowed</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('overdue') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Overdue</p>
-                                            {{-- @if ($itemcount != 0)
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('borrowed') }}" class="nav-link">
+                                            <div class="ml-3">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Borrowed Items</p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('overdue') }}" class="nav-link">
+                                            <div class="ml-3">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Overdue</p>
+                                                {{-- @if ($itemcount != 0)
                                             <span class="badge badge-danger right">{{ $itemcount }}</span>
                                         @endif --}}
-                                        </div>
-                                    </a>
-                                </li>
+                                            </div>
+                                        </a>
+                                    </li>
 
-                                <li class="nav-item">
-                                    <a href="{{ route('returned') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Returned</p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('returned') }}" class="nav-link">
+                                            <div class="ml-3">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Returned</p>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="{{ route('returned') }}" class="nav-link">
+                                            <div class="ml-3">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Generate Report</p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
                     @endif
                     @if (Auth::user()->roles->contains('name', 'admin') || Auth::user()->roles->contains('name', 'manager'))
                         @if (Auth::user()->roles->contains('name', 'admin'))

@@ -27,8 +27,10 @@
     <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
         Close
     </button>
-    <a href="#" data-toggle="modal" data-target="#modal-edit-user-info"
-        onclick="openEditUserModal('{{ $user->id_number }}')" class="btn btn-primary">Edit</a>
+    @if (Auth::user()->roles->contains('name', 'admin'))
+        <a href="#" data-toggle="modal" data-target="#modal-edit-user-info"
+            onclick="openEditUserModal('{{ $user->id_number }}')" class="btn btn-primary">Edit</a>
+    @endif
 </div>
 
 <!-- Modal -->

@@ -22,10 +22,6 @@
               @csrf
               <div class="card">
                 <div class="card-header row">
-                  
-                  <div class="col md-4 text-right">
-                    <Button type="submit" class="btn btn-warning">Generate Report</Button>
-                  </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">

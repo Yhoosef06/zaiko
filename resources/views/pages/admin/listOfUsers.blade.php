@@ -30,11 +30,13 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
-                                <div class="ml-1 float-md-right">
-                                    <button name="searchFilter" class="btn bg-yellow" data-toggle="modal"
-                                        data-target="#filterModal" data-toggle="tooltip" title="Filter Items"><i
-                                            class="fa fa-filter" onclick="filterItems()"></i></button>
-                                </div>
+                                @if (Auth::user()->roles->contains('name', 'admin'))
+                                    <div class="ml-1 float-md-right">
+                                        <button name="searchFilter" class="btn bg-yellow" data-toggle="modal"
+                                            data-target="#filterModal" data-toggle="tooltip" title="Filter Items"><i
+                                                class="fa fa-filter" onclick="filterItems()"></i></button>
+                                    </div>
+                                @endif
 
                                 {{-- <div class="ml-1 float-md-right">
                                     <a href="#" class="btn bg-yellow" data-toggle="tooltip"
@@ -118,17 +120,18 @@
                                                             onclick="openViewUserModal('{{ $user->id_number }}')">
                                                             <i class="fa fa-eye"></i>
                                                         </button>
-
-                                                        <form class="form_delete_btn" method="POST"
-                                                            action="{{ route('delete_user', $user->id_number) }}">
-                                                            @csrf
-                                                            <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                            <button type="submit"
-                                                                class="btn btn-sm btn-danger show-alert-delete-item"
-                                                                data-toggle="tooltip" title='Delete'
-                                                                onclick="deleteButton({{ $user->id_number }})"><i
-                                                                    class="fa fa-trash"></i></button>
-                                                        </form>
+                                                        @if (Auth::user()->roles->contains('name', 'admin'))
+                                                            <form class="form_delete_btn" method="POST"
+                                                                action="{{ route('delete_user', $user->id_number) }}">
+                                                                @csrf
+                                                                <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                    data-toggle="tooltip" title='Delete'
+                                                                    onclick="deleteButton({{ $user->id_number }})"><i
+                                                                        class="fa fa-trash"></i></button>
+                                                            </form>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endif
@@ -157,7 +160,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="modal-user-info">
-                        {{-- {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }} Information --}}
                         User Information
                     </h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
