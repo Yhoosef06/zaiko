@@ -127,9 +127,7 @@
                                           <td>{{ $item->model_name }}</td>
                                           <td>{{ $item->description }} </td>
                                           <td>
-                                            <script>
-                                              var itemData = @json($item);
-                                          </script>
+                                        
                                             <div id="user_serial_{{ $counter }}">
                                               <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $counter }}" class="form-control serial-input" required>
                                             </div>

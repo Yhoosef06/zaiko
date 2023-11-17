@@ -22,6 +22,8 @@ class PagesController extends Controller
     public function index()
     {
         $userId = auth()->user()->id_number;
+        $department = Auth::user()->departments->first();
+
         $user = User::find($userId);
         if ($user->roles->contains('name', 'admin')) {
             $totalItems = Item::where('parent_item', null)
@@ -42,32 +44,23 @@ class PagesController extends Controller
                     ->where('parent_item', null);
             })->get();
 
-            // $borrowedItems = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
-            //     ->join('users', 'orders.user_id', '=', 'users.id_number')
-            //     ->join('departments', 'users.department_id', '=', 'departments.id')
-            //     ->join('colleges', 'departments.college_id', '=', 'colleges.id')
-            //     ->where('colleges.id', $college->id)
-            //     ->WhereNull('orders.order_status')
-            //     ->whereNotNull('orders.approval_date')
-            //     ->whereNotNull('orders.approved_by')
-            //     ->groupBy('orders.id')
-            //     ->get();
-            // $borrowPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
-            //     ->join('users', 'orders.user_id', '=', 'users.id_number')
-            //     ->join('departments', 'users.department_id', '=', 'departments.id')
-            //     ->join('colleges', 'departments.college_id', '=', 'colleges.id')
-            //     ->where('colleges.id', $college->id)
-            //     ->whereNotNull('orders.date_submitted')
-            //     ->whereNull('orders.approved_by')
-            //     ->groupBy('orders.id')
-            //     ->get();
-
-            // $totalborrowedItems = $borrowedItems->count();
-            // $totalBorrowPendings = $borrowPendings->count();
+            $userpendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.department_id', $department->id)
+            ->whereNull('orders.approval_date')
+            ->whereNull('orders.approved_by')
+            ->groupBy('orders.id')
+            ->get();
+            $pendings =  $userpendings->count();
+            session(['pending_count' => $pendings]);
+           
 
             $totalItems = $items->count();
 
-            return view('pages.admin.managerDashboard')->with(compact('totalItems'));
+            return view('pages.admin.managerDashboard')->with(compact('totalItems','pendings'));
         }
     }
 

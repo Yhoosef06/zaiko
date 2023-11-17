@@ -65,7 +65,7 @@
                                                     class="fas fa-tag"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Pending </span>
-                                                {{-- <span class="info-box-number">{{$totalBorrowPendings}}</span> --}}
+                                                <span class="info-box-number">{{ $pendings }}</span>
                                             </div>
                                         </div>
                                     </div>

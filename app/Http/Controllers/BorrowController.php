@@ -85,18 +85,7 @@ class BorrowController extends Controller
     public function pending()
     {
         $department = Auth::user()->departments->first();
-       
-        //  dd($department);
-
-        // $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
-        // ->join('users', 'orders.user_id', '=', 'users.id_number')
-        // ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
-        // ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
-        // ->where('user_departments.department_id', $department->id)
-        // ->whereNull('orders.approval_date')
-        // ->whereNull('orders.approved_by')
-        // ->groupBy('orders.id')
-        // ->get();
+     
         $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
         ->join('users', 'orders.user_id', '=', 'users.id_number')
         ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
@@ -107,8 +96,8 @@ class BorrowController extends Controller
         ->whereNull('orders.approved_by')
         ->groupBy('orders.id')
         ->get();
-    
-       
+
+      
 
         // echo '<pre>';
         // print_r($userPendings);
@@ -276,10 +265,12 @@ class BorrowController extends Controller
 
     public function searchForSerial(Request $request)
     {
-
+        $department = Auth::user()->departments->first();
         $query = $request->input('query');
 
-        $items = Item::where('borrowed', 'no')
+        $items = Item::join('rooms', 'items.location', '=', 'rooms.id')
+        ->where('rooms.department_id', $department->id)
+        ->where('borrowed', 'no')
             ->where(function ($queryBuilder) use ($query) {
                 $queryBuilder->where('serial_number', 'LIKE', $query . '%')
                     ->orWhere('description', 'LIKE', $query . '%');
@@ -333,14 +324,22 @@ class BorrowController extends Controller
 
     public function searchItemForUser(Request $request)
     {
+        $department = Auth::user()->departments->first();
+    
 
         $query = $request->input('query');
 
-        $items = Item::where('borrowed', 'no')
-            ->where(function ($queryBuilder) use ($query) {
-                $queryBuilder->where('serial_number', 'LIKE', $query . '%')
-                    ->orWhere('description', 'LIKE', $query . '%');
-            })->take(10)->get();
+        $items = Item::join('rooms', 'items.location', '=', 'rooms.id')
+        ->where('rooms.department_id', $department->id)
+        ->where('borrowed', 'no')
+        ->where(function ($queryBuilder) use ($query) {
+            $queryBuilder->where('serial_number', 'LIKE', $query . '%')
+                ->orWhere('description', 'LIKE', $query . '%');
+        })
+        
+        ->take(10)
+        ->get();
+    
 
 
         $response = $items->map(function ($item) {

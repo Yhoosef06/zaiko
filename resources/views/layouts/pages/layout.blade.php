@@ -758,10 +758,10 @@
     });
 
     $(document).ready(function() {
-        console.log(itemData.item_quantity);
-        for (let i = 1; i <= 10; i++) {
-
+        var count = {{ $counter }};
+        for (let i = 1; i <= count; i++) {
             $("#search_for_serial_" + i).autocomplete({
+                
                 minLength: 2,
                 source: function(request, response) {
                     $.ajax({
@@ -780,7 +780,7 @@
                 open: function(event, ui) {
                     $("#user_serial_" + i + " .ui-autocomplete").css("top", "auto");
                 },
-                // Custom rendering of autocomplete items
+               
                 response: function(event, ui) {
                     if (!ui.content.length) {
                         var noResult = {
@@ -801,7 +801,6 @@
                         $('#search_for_serial_' + i).val(ui.item.serialNumber);
                         $('#itemID_' + i).val(ui.item.itemID);
                         $('#duration_' + i).val(ui.item.duration);
-                        console.log(itemData.temp_quantity);
                     }
                 }
             }).autocomplete("instance")._renderItem = function(ul, item) {
