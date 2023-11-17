@@ -78,6 +78,7 @@
 
                 <div class="row">
                     <div class="col-3">
+                        {{-- I VERTICAL LIST NI SIYA SA LEFT SIDE RADIO BUTTON OKAY --}}
                         <form action="">
                             <select class="form-select form-select-lg mb-5" aria-label="Default select example" name="selectedCategory">
                                 <option selected value="" disabled>Choose Category</option>
