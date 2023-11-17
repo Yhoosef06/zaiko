@@ -53,8 +53,9 @@ class BorrowerController extends Controller
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
         $departments = Department::all();
+        $categories = ItemCategory::all();
 
-        return view('pages.students.items')->with(compact('departments'));
+        return view('pages.students.items')->with(compact('departments','categories'));
     }
 
     public function browseDepartment(Request $request){
