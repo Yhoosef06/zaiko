@@ -290,7 +290,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 //student
 Route::middleware(['auth', 'role:borrower'])->group(function () {
     //student
-    Route::middleware(['account_status:approved', 'permission:borrow-items'])->group(function () {
+    Route::middleware(['permission:borrow-items'])->group(function () {
 
         Route::controller(BorrowerController::class)->group(function () {
             Route::get('/student-dashboard', 'index')->name('student.dashboard');
