@@ -33,9 +33,9 @@
                         </thead>
                         @if($cartItems != null)
                         <tbody>
-                        
+     
                                 @foreach($cartItems as $cart)
-                                    
+                                    {{-- @dd($cart->item->serial_number); --}}
                                         <tr style="background-color: rgba(255, 255, 255, 0.8);">
                                         
                                             <td class="text-wrap">{{ $cart->item->category->category_name }}</td>
@@ -70,7 +70,7 @@
 
                                                             {{-- ___________________ --}}
                                                             <select class="form-control" id="quantity" name="quantity" onchange="this.form.submit()">
-                                                                @if($cart->item->serial_number == null || $cart->item->serial_number =='N/A')
+                                                                @if($cart->item->serial_number == null || $cart->item->serial_number === 'N/A')
                                                                     @php
                                                                     $missingQty = 0;
                                                                     $borrowedQty = 0;
@@ -96,9 +96,8 @@
                                                                             <option value="{{$i}}">{{$i}}</option>
                                                                         @endif
                                                                     @endfor
-                                                                @endif
-
-                                                                @if($cart->item->serial_number != null || $cart->item->serial_number !='N/A')
+                                                                @elseif($cart->item->serial_number != null || $cart->item->serial_number !='N/A')
+                                                                
                                                                     @for($i = 1; $i <= count($catItem); $i++)
                                                                     @if($i == $cart->quantity)
                                                                         <option value="{{$i}}" selected>{{$i}}</option>
