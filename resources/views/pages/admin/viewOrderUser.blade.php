@@ -110,6 +110,7 @@
                                 @php
                                 $counter++;
                                 @endphp
+                               
                                         <tr>
                                           <td class="d-none">
                                             <input type="text" name="orderItemTemp" value="{{ $item->orderItempId }}">
@@ -127,7 +128,10 @@
                                           <td>{{ $item->model_name }}</td>
                                           <td>{{ $item->description }} </td>
                                           <td>
-                                        
+                                            {{-- <script>
+                                              var counter = {{ $counter}}
+                                              </script> --}}
+                                              
                                             <div id="user_serial_{{ $counter }}">
                                               <input type="text" name="user_serial_number[]" id="search_for_serial_{{ $counter }}" class="form-control serial-input" required>
                                             </div>
@@ -139,7 +143,9 @@
                                             <a data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
                                           </td>
                                         </tr>
+                                        
                                     @endfor
+                                    <div id="counterValue" data-counter="{{ $counter }}"></div>
                                 
                           
                                   

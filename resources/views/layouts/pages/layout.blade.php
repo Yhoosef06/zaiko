@@ -758,8 +758,9 @@
     });
 
     $(document).ready(function() {
-        var count = {{ $counter }};
-        for (let i = 1; i <= count; i++) {
+        var counterValue = $('#counterValue').data('counter');
+
+        for (let i = 1; i <= counterValue; i++) {
             $("#search_for_serial_" + i).autocomplete({
                 
                 minLength: 2,
@@ -801,6 +802,7 @@
                         $('#search_for_serial_' + i).val(ui.item.serialNumber);
                         $('#itemID_' + i).val(ui.item.itemID);
                         $('#duration_' + i).val(ui.item.duration);
+                        console.log(counterValue);
                     }
                 }
             }).autocomplete("instance")._renderItem = function(ul, item) {
