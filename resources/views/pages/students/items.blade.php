@@ -186,9 +186,6 @@
                                                                     @endphp
                                                                     <strong>Available:</strong>
                                                                     {{ $totalquantity - $totalDeduct }} <br>
-                                                                       @php
-                                                                           echo  $totalquantity;
-                                                                       @endphp 
                                                             </div>
                                                             <div class="col">
                                                                 <strong>Description:</strong> {{ $item->description }}
