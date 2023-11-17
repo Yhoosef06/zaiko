@@ -35,47 +35,56 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <table id="listofrooms" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Room Name</th>
-                                        <th>Departments</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($rooms as $room)
-                                        <tr data-room-id="{{ $room->id }}">
-                                            <td>{{ $room->id }}</td>
-                                            <td>{{ $room->room_name }}</td>
-                                            <td>{{ $room->department->department_name }}</td>
-                                            <td>
-                                                <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-toggle="tooltip" title='Edit' data-target="#editRoomModal"
-                                                    data-route="{{ route('edit_room', ['id' => $room->id]) }}"
-                                                    onclick="openEditRoomModal({{ $room->id }}, $(this).data('route'))">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-
-                                                @if ($room->items_count == 0)
-                                                    <form class="form_delete_btn" method="POST"
-                                                        action="{{ route('delete_room', $room->id) }}">
-                                                        @csrf
-                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'
-                                                            onclick="deleteButton({{ $room->id }})"><i
-                                                                class="fa fa-trash"></i></button>
-                                                    </form>
-                                                @endif
-                                            </td>
+                            <div class="table-responsive">
+                                <table id="listofrooms" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Room Name</th>
+                                            <th>Departments</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($rooms as $room)
+                                            <tr data-room-id="{{ $room->id }}">
+                                                <td>{{ $room->id }}</td>
+                                                <td>{{ $room->room_name }}</td>
+                                                <td>{{ $room->department->department_name }}</td>
+                                                <td>
+                                                    <button href="#" class="btn btn-sm btn-primary"
+                                                        data-toggle="modal" data-toggle="tooltip" title='Edit'
+                                                        data-target="#editRoomModal"
+                                                        data-route="{{ route('edit_room', ['id' => $room->id]) }}"
+                                                        onclick="openEditRoomModal({{ $room->id }}, $(this).data('route'))">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
 
-                            </table>
+                                                    @if ($room->items_count == 0)
+                                                        <form class="form_delete_btn" method="POST"
+                                                            action="{{ route('delete_room', $room->id) }}">
+                                                            @csrf
+                                                            <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                data-toggle="tooltip" title='Delete'
+                                                                onclick="deleteButton({{ $room->id }})"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </form>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center bg-white">No available data.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="float-md-right">
+                                {{ $rooms->links() }}
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>

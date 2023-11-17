@@ -12,7 +12,7 @@ class CollegeController extends Controller
 {
     public function index()
     {
-        $colleges = College::withCount('departments')->get();
+        $colleges = College::withCount('departments')->paginate(10);
 
         return view('pages.admin.listOfColleges')->with(compact('colleges'));
     }

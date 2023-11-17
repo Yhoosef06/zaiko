@@ -35,45 +35,54 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <table id="listofcolleges" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>College Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($colleges as $college)
-                                        <tr data-college-id="{{ $college->id }}">
-                                            <td>{{ $college->id }}</td>
-                                            <td>{{ $college->college_name }}</td>
-                                            <td>
-                                                <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-toggle="tooltip" title='Edit' data-target="#editCollegeModal"
-                                                    data-route="{{ route('edit_college', ['id' => $college->id]) }}"
-                                                    onclick="openEditCollegeModal({{ $college->id }}, $(this).data('route'))">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                                @if ($college->departments_count == 0)
-                                                    <form class="form_delete_btn" method="POST"
-                                                        action="{{ route('delete_college', $college->id) }}">
-                                                        @csrf
-                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'
-                                                            onclick="deleteButton({{ $college->id }})"><i
-                                                                class="fa fa-trash"></i></button>
-                                                    </form>
-                                                @endif
-                                            </td>
+                            <div class="table-responsive">
+                                <table id="listofcolleges" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>College Name</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($colleges as $college)
+                                            <tr data-college-id="{{ $college->id }}">
+                                                <td>{{ $college->id }}</td>
+                                                <td>{{ $college->college_name }}</td>
+                                                <td>
+                                                    <button href="#" class="btn btn-sm btn-primary"
+                                                        data-toggle="modal" data-toggle="tooltip" title='Edit'
+                                                        data-target="#editCollegeModal"
+                                                        data-route="{{ route('edit_college', ['id' => $college->id]) }}"
+                                                        onclick="openEditCollegeModal({{ $college->id }}, $(this).data('route'))">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                    @if ($college->departments_count == 0)
+                                                        <form class="form_delete_btn" method="POST"
+                                                            action="{{ route('delete_college', $college->id) }}">
+                                                            @csrf
+                                                            <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                data-toggle="tooltip" title='Delete'
+                                                                onclick="deleteButton({{ $college->id }})"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </form>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center bg-white">No available data.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="float-md-right">
+                                {{ $colleges->links() }}
+                            </div>
                         </div>
-                        <!-- /.card-body -->
                     </div>
                 </div><!-- /.container-fluid -->
             </div>

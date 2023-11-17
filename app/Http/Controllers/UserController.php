@@ -32,7 +32,10 @@ class UserController extends Controller
             $sortOrder = 'asc';
             $users = User::paginate(15);
             $filterUsers = User::all();
-            return view('pages.admin.listOfUsers')->with(compact('users', 'filterUsers'));
+            $uniqueRoles = $filterUsers->flatMap(function ($user) {
+                return $user->roles;
+            })->unique('id');
+            return view('pages.admin.listOfUsers')->with(compact('users', 'filterUsers', 'uniqueRoles'));
         } else {
             // $department = Auth::user()->departments->first();
             // $userCollegeId = $department->college_id;
@@ -50,23 +53,64 @@ class UserController extends Controller
         }
     }
 
+    public function getFilteredUsers(Request $request)
+    {
+        $roleIds = $request->input('role_ids', []);
+        $status = $request->input('status');
+        $account_type = $request->input('account_type');
+        $sortOrder = 'asc';
+
+        // Fetch all users to prepare unique roles (can be optimized)
+        $filterUsers = User::all();
+        $uniqueRoles = $filterUsers->flatMap(function ($user) {
+            return $user->roles;
+        })->unique('id');
+
+        // Start with base query
+        $filteredUsers = User::query();
+
+        // Apply filters if they exist
+        if (!empty($roleIds)) {
+            // Ensure $roleIds is an array before using it in whereIn
+            if (!is_array($roleIds)) {
+                $roleIds = [$roleIds];
+            }
+            $filteredUsers->whereHas('roles', function ($query) use ($roleIds) {
+                $query->whereIn('role_id', $roleIds);
+            });
+        }
+
+        if (!empty($status)) {
+            $filteredUsers->where('isActive', $status);
+        }
+
+        if (!empty($account_type)) {
+            $filteredUsers->where('account_type', '=', $account_type);
+        }
+
+        // Pagination
+        $users = $filteredUsers->paginate(20);
+
+        return view('pages.admin.listOfUsers', compact('users', 'uniqueRoles', 'filterUsers'));
+    }
+
     public function searchUser(Request $request)
     {
         $search_text = $request->input('search');
         $sortOrder = 'asc';
+        $filterUsers = User::all();
+        $uniqueRoles = $filterUsers->flatMap(function ($user) {
+            return $user->roles;
+        })->unique('id');
 
-        if (Auth::user()->roles->contains('name', 'admin')) {
-            $filterUsers = user::all();
-            $users = User::where('id_number', 'LIKE', '%' . $search_text . '%')
-                ->orWhere('first_name', 'LIKE', '%' . $search_text . '%')
-                ->orWhere('last_name', 'LIKE', '%' . $search_text . '%')
-                ->orWhere('account_type', 'LIKE', '%' . $search_text . '%')
-                ->paginate(20);
-        } else {
-            dd('Hello');
-        }
+        $filterUsers = user::all();
+        $users = User::where('id_number', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('first_name', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('last_name', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('account_type', 'LIKE', '%' . $search_text . '%')
+            ->paginate(20);
 
-        return view('pages.admin.listOfUsers', compact('users'));
+        return view('pages.admin.listOfUsers', compact('users', 'uniqueRoles', 'filterUsers'));
     }
 
     public function viewUserInfo($id_number)

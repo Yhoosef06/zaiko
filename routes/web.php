@@ -157,6 +157,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
 
     Route::get('upload-csvfile', [UserController::class, 'uploadCSVFile'])->name('upload_csv_file');
     Route::post('/upload-csv', [CsvController::class, 'store'])->name('store_csv_file');
+    Route::get('/get-filtered-users', [UserController::class, 'getFilteredUsers'])->name('get_filtered_users');
 
     //storing references
     Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');

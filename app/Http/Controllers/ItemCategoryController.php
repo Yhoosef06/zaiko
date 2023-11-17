@@ -15,7 +15,7 @@ class ItemCategoryController extends Controller
     public function index()
     {
         $dateTime = Carbon::now();
-        $categories = ItemCategory::withCount('items')->get();
+        $categories = ItemCategory::withCount('items')->paginate(10);
 
         return view('pages.admin.listOfItemCategories')->with(compact('categories', 'dateTime'));
     }

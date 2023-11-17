@@ -33,7 +33,7 @@
                                 <div class="ml-1 float-md-right">
                                     <button name="searchFilter" class="btn bg-yellow" data-toggle="modal"
                                         data-target="#filterModal" data-toggle="tooltip" title="Filter Items"><i
-                                            class="fa fa-filter" onclick="filterItems()"></i></button>
+                                            class="fa fa-filter"></i></button>
                                 </div>
 
                                 {{-- <div class="ml-1 float-md-right">

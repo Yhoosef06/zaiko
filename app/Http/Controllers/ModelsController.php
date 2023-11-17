@@ -15,7 +15,7 @@ class ModelsController extends Controller
     public function index()
     {
         $dateTime = Carbon::now();
-        $models = Models::with('brand')->get();
+        $models = Models::with('brand')->paginate(10);
 
         $models->each(function ($models) {
             $models->brand_name = $models->brand->brand_name;

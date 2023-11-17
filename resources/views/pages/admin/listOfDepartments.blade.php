@@ -35,45 +35,55 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <table id="listofdepartments" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Departments/Programs Name</th>
-                                        <th>College</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($departments as $department)
-                                        <tr data-department-id="{{ $department->id }}">
-                                            <td>{{ $department->id }}</td>
-                                            <td>{{ $department->department_name }}</td>
-                                            <td>{{ $department->college->college_name }}</td>
-                                            <td>
-                                                <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-toggle="tooltip" title='Edit' data-target="#editDepartmentModal"
-                                                    data-route="{{ route('edit_department', ['id' => $department->id]) }}"
-                                                    onclick="openEditDepartmentModal({{ $department->id }}, $(this).data('route'))">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                                @if ($department->users_count == 0)
-                                                    <form class="form_delete_btn" method="POST"
-                                                        action="{{ route('delete_department', $department->id) }}">
-                                                        @csrf
-                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'
-                                                            onclick="deleteButton({{ $department->id }})"><i
-                                                                class="fa fa-trash"></i></button>
-                                                    </form>
-                                                @endif
-                                            </td>
+                            <div class="table-responsive">
+                                <table id="listofdepartments" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Departments/Programs Name</th>
+                                            <th>College</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($departments as $department)
+                                            <tr data-department-id="{{ $department->id }}">
+                                                <td>{{ $department->id }}</td>
+                                                <td>{{ $department->department_name }}</td>
+                                                <td>{{ $department->college->college_name }}</td>
+                                                <td>
+                                                    <button href="#" class="btn btn-sm btn-primary"
+                                                        data-toggle="modal" data-toggle="tooltip" title='Edit'
+                                                        data-target="#editDepartmentModal"
+                                                        data-route="{{ route('edit_department', ['id' => $department->id]) }}"
+                                                        onclick="openEditDepartmentModal({{ $department->id }}, $(this).data('route'))">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                    @if ($department->users_count == 0)
+                                                        <form class="form_delete_btn" method="POST"
+                                                            action="{{ route('delete_department', $department->id) }}">
+                                                            @csrf
+                                                            <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                data-toggle="tooltip" title='Delete'
+                                                                onclick="deleteButton({{ $department->id }})"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </form>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center bg-white">No available data.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="float-md-right">
+                                {{ $departments->links() }}
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>

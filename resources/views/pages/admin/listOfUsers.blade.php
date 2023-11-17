@@ -33,8 +33,8 @@
                                 @if (Auth::user()->roles->contains('name', 'admin'))
                                     <div class="ml-1 float-md-right">
                                         <button name="searchFilter" class="btn bg-yellow" data-toggle="modal"
-                                            data-target="#filterModal" data-toggle="tooltip" title="Filter Items"><i
-                                                class="fa fa-filter" onclick="filterItems()"></i></button>
+                                            data-target="#filterModal" data-toggle="tooltip" title="Filter Users"><i
+                                                class="fa fa-filter"></i></button>
                                     </div>
                                 @endif
 
@@ -69,13 +69,13 @@
                                         <tr>
                                             <th>ID #</th>
                                             <th>Name</th>
-                                            {{-- <th>Type</th> --}}
-                                            {{-- <th>Status</th> --}}
                                             @if (Auth::user()->roles->contains('name', 'admin'))
                                                 <th>Role</th>
                                             @endif
                                             <th>Status</th>
-                                            <th>Type</th>
+                                            @if (Auth::user()->roles->contains('name', 'admin'))
+                                                <th>Type</th>
+                                            @endif
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -85,17 +85,6 @@
                                                 <tr data-user-id="{{ $user->id_number }}">
                                                     <td>{{ $user->id_number }}</td>
                                                     <td>{{ $user->first_name }} {{ $user->last_name }}</td>
-                                                    {{-- @if ($user->account_type == 'student')
-                                                    <td>{{ 'Student' }}</td>
-                                                @elseif ($user->account_type == 'admin')
-                                                    <td>{{ 'Admin' }}</td>
-                                                @elseif($user->account_type == 'faculty')
-                                                    <td>{{ 'Faculty' }}</td>
-                                                @else
-                                                    <td>{{ 'READS' }}</td>
-                                                @endif --}}
-
-
                                                     @if (Auth::user()->roles->contains('name', 'admin'))
                                                         <td>
                                                             @foreach ($user->roles as $role)
@@ -110,9 +99,11 @@
                                                             <p class="bg-gray text-center">Inactive</p>
                                                         @endif
                                                     </td>
-                                                    <td>
-                                                        {{ $user->account_type }}
-                                                    </td>
+                                                    @if (Auth::user()->roles->contains('name', 'admin'))
+                                                        <td>
+                                                            {{ $user->account_type }}
+                                                        </td>
+                                                    @endif
                                                     <td>
                                                         <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                             data-target="#modal-user-info" data-toggle="tooltip"
@@ -140,7 +131,6 @@
                                                 <td colspan="8" class="text-center bg-white">No available data.</td>
                                             </tr>
                                         @endforelse
-
                                     </tbody>
                                 </table>
                             </div>
@@ -168,6 +158,66 @@
                 </div>
                 <div class="modal-body">
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Filter Items</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="filterForm" method="GET" action="{{ route('get_filtered_users') }}">
+                    <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="brandFilter">Role:</label>
+                                <div>
+                                    @foreach ($uniqueRoles as $role)
+                                        <input type="checkbox" name="role_ids[]" value="{{ $role->id }}"
+                                            @if (in_array($role->id, request('role_ids', []))) checked @endif>
+                                        {{ $role->name }}<br>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="locationFilter">Status:</label>
+                                <div>
+                                    <div>
+                                        <input type="checkbox" name="status[]" value="1"
+                                            {{ in_array('1', (array) request('status')) ? 'checked' : '' }}>
+                                        Active<br>
+
+                                        <input type="checkbox" name="status[]" value="0"
+                                            {{ in_array('0', (array) request('status')) ? 'checked' : '' }}>
+                                        Inactive<br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="categoryFilter">Type:</label>
+                                <div>
+                                    @foreach ($filterUsers->unique('account_type') as $user)
+                                        <input type="checkbox" name="account_type" value="{{ $user->account_type }}"
+                                            @if ($user->account_type == request('account_type')) checked @endif>
+                                        {{ $user->account_type }}<br>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn bg-olive" id="applyFilter">Apply</button>
+                        <a href="#" type="button" id="clearFilters">Clear</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -210,5 +260,21 @@
                 modal.find('.modal-body').html(data);
             });
         }
+
+
+        $(document).ready(function() {
+            // Listen for the "Clear" button click
+            $('#clearFilters').click(function() {
+
+                // Uncheck all checkboxes with names starting with "brand_ids[]"
+                $('input[name^="role_ids[]"]').prop('checked', false);
+
+                // Uncheck all checkboxes with names starting with "model_ids[]"
+                $('input[name^="status"]').prop('checked', false);
+
+                // Uncheck all checkboxes with names starting with "category_ids[]"
+                $('input[name^="account_type"]').prop('checked', false);
+            });
+        });
     </script>
 @endsection

@@ -187,41 +187,41 @@
         //     "lengthChange": false,
         //     "autoWidth": false
         // });
-        $("#listofcolleges").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false
-        });
-        $("#listofdepartments").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false
-        });
-        $("#listofcategories").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false
-        });
-        $("#listofbrands").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false
-        });
-        $("#listofmodels").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false
-        });
-        $("#listofterms").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false
-        });
-        $("#listofrooms").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false
-        });
+        // $("#listofcolleges").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false
+        // });
+        // $("#listofdepartments").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false
+        // });
+        // $("#listofcategories").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false
+        // });
+        // $("#listofbrands").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false
+        // });
+        // $("#listofmodels").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false
+        // });
+        // $("#listofterms").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false
+        // });
+        // $("#listofrooms").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false
+        // });
 
 
     });

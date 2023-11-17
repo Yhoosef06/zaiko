@@ -35,75 +35,52 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <table id="listofcategories" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Category Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($categories as $category)
-                                        @if ($category->created_at)
-                                            @if ($category->created_at->format('Y-m-d H:i:s') == $dateTime->format('Y-m-d H:i:s'))
-                                                <tr
-                                                    style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); background-color:lightgreen">
-                                                    <td>{{ $category->id }}</td>
-                                                    <td> {{ $category->category_name }}</td>
-                                                    <td>
-                                                        <button href="#" class="btn btn-sm btn-primary"
-                                                            data-toggle="modal" data-toggle="tooltip" title='Edit'
-                                                            data-target="#editItemCategoryModal"
-                                                            onclick="openEditItemCategoryModal('{{ $category->id }}')">
-                                                            <i class="fa fa-edit"></i>
-                                                        </button>
-                                                        @if ($category->items_count == 0)
-                                                            <form class="form_delete_btn" method="POST"
-                                                                action="{{ route('delete_category', $category->id) }}">
-                                                                @csrf
-                                                                <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                                <button type="submit"
-                                                                    class="btn btn-sm btn-danger show-alert-delete-item"
-                                                                    data-toggle="tooltip" title='Delete'
-                                                                    onclick="deleteButton({{ $category->id }})"><i
-                                                                        class="fa fa-trash"></i></button>
-                                                            </form>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                    @foreach ($categories as $category)
-                                        <tr data-category-id="{{ $category->id }}">
-                                            <td>{{ $category->id }}</td>
-                                            <td>{{ $category->category_name }}</td>
-                                            <td>
-                                                <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-toggle="tooltip" title='Edit'
-                                                    data-target="#editItemCategoryModal"
-                                                    onclick="openEditItemCategoryModal('{{ $category->id }}')">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                                @if ($category->items_count == 0)
-                                                    <form class="form_delete_btn" method="POST"
-                                                        action="{{ route('delete_category', $category->id) }}">
-                                                        @csrf
-                                                        <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-danger show-alert-delete-item"
-                                                            data-toggle="tooltip" title='Delete'
-                                                            onclick="deleteButton({{ $category->id }})"><i
-                                                                class="fa fa-trash"></i></button>
-                                                    </form>
-                                                @endif
-                                            </td>
+                            <div class="table-responsive">
+                                <table id="listofcategories" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Category Name</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($categories as $category)
+                                            <tr data-category-id="{{ $category->id }}">
+                                                <td>{{ $category->id }}</td>
+                                                <td>{{ $category->category_name }}</td>
+                                                <td>
+                                                    <button href="#" class="btn btn-sm btn-primary"
+                                                        data-toggle="modal" data-toggle="tooltip" title='Edit'
+                                                        data-target="#editItemCategoryModal"
+                                                        onclick="openEditItemCategoryModal('{{ $category->id }}')">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                    @if ($category->items_count == 0)
+                                                        <form class="form_delete_btn" method="POST"
+                                                            action="{{ route('delete_category', $category->id) }}">
+                                                            @csrf
+                                                            <!-- <input name="_method" type="hidden" value="DELETE">  -->
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                data-toggle="tooltip" title='Delete'
+                                                                onclick="deleteButton({{ $category->id }})"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </form>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center bg-white">No available data.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="float-md-right">
+                                {{ $categories->links() }}
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
