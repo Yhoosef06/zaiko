@@ -185,7 +185,10 @@
                                                                         
                                                                     @endphp
                                                                     <strong>Available:</strong>
-                                                                    {{ $item->quantity - $totalDeduct }} <br>
+                                                                    {{ $totalquantity - $totalDeduct }} <br>
+                                                                       @php
+                                                                           echo  $totalquantity;
+                                                                       @endphp 
                                                             </div>
                                                             <div class="col">
                                                                 <strong>Description:</strong> {{ $item->description }}
@@ -219,7 +222,7 @@
                                                                             $totalDeduct = $missingQty + $borrowedQty;
                                                                             
                                                                             @endphp
-                                                                            @for ($i = 1; $i <= $item->quantity - $totalDeduct; $i++)
+                                                                            @for ($i = 1; $i <= $totalquantity - $totalDeduct; $i++)
                                                                                 <option value="{{ $i }}">
                                                                                     {{ $i }}</option>
                                                                             @endfor
