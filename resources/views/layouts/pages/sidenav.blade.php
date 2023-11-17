@@ -9,7 +9,7 @@
     <!-- Brand Logo -->
     <a @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null) href="#"
     @elseif (Auth::user()->role == 'borrower')
-        href="{{ route('student.dashboard') }}"
+        href="{{ route('borrower.dashboard') }}"
     @else
     href="{{ route('admin.dashboard') }}" @endif
         class="brand-link">
@@ -29,8 +29,72 @@
                         <li class="nav-item">
                             <a @if (Auth::user()->roles->contains('name', 'manager')) href="{{ route('admin.dashboard') }}" 
                         @else
-                            href="{{ route('student.dashboard') }}" @endif
-                                class="nav-link">
+                            href="{{ route('borrower.dashboard') }}" @endif
+                            class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        @if(Session::has('department') && Session::has('category')){
+                            <a href="{{ route('browse.category', ['_token' => csrf_token(), 'category' => Session::get('category')]) }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Browse Items</p>
+                            </a>
+                        }
+                        @elseif(Session::has('department')){
+                            <a href="{{ route('browse.department', ['_token' => csrf_token(), 'selectedDepartment' => Session::get('department')]) }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Browse Items</p>
+                            </a>
+                        }
+                        @else{
+                            <a href="{{ route('browse.items') }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Browse Items</p>
+                            </a>
+                        }
+                        @endif
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('cart.list') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Cart</p>
+                            @if ($cartcount != 0)
+                                <span class="badge badge-danger right">{{ $cartcount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('pending-order') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Pending</p>
+                            @if ($pendingcount != 0)
+                                <span class="badge badge-danger right">{{ $pendingcount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('borrowed-items') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>Borrowed Items</p>
+                            @if ($borrowedcount != 0)
+                                <span class="badge badge-danger right">{{ $borrowedcount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('history') }}" class="nav-link">
+                            <i class="fas fa-circle nav-icon"></i>
+                            <p>History</p>
+                            @if ($historycount != 0)
+                                <span class="badge badge-danger right">{{ $historycount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @if (Auth::user()->roles->contains('name', 'manager'))
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Dashboard</p>
                             </a>

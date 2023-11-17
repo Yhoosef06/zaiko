@@ -290,13 +290,18 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 //student
 Route::middleware(['auth', 'role:borrower'])->group(function () {
     //student
-    Route::middleware(['account_status:approved', 'permission:borrow-items'])->group(function () {
+    Route::middleware(['permission:borrow-items'])->group(function () {
 
         Route::controller(BorrowerController::class)->group(function () {
-            Route::get('/student-dashboard', 'index')->name('student.dashboard');
-            Route::get('/student-items', 'items')->name('student.items');
+            Route::get('/borrower-dashboard', 'index')->name('borrower.dashboard');
+            Route::get('/borrower-items', 'items')->name('student.items');
             Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
         });
+
+        //BROWSING
+        Route::get('/browse-items', [BorrowerController::class, 'browse'])->name('browse.items');
+        Route::get('/browse-items/department', [BorrowerController::class, 'browseDepartment'])->name('browse.department');
+        Route::get('/browse-items/department/category', [BorrowerController::class, 'browseCategory'])->name('browse.category');
 
         //cart
         Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
@@ -315,6 +320,7 @@ Route::middleware(['auth', 'role:borrower'])->group(function () {
         // Route::get('/test',[PagesController::class,'test'])->name('test');
 
         Route::post('/store-selected-category', 'App\Http\Controllers\CategoryController@storeSelectedCategory')->name('storeSelectedCategory');
+        Route::post('/store-selected-department', 'App\Http\Controllers\CategoryController@storeSelectedDepartment')->name('storeSelectedDepartment');
 
         // Route::get('/student-cart-list',[BorrowController::class,'cartList'])->name('student.cart.list');
         // Route::delete('/remove-from-cart',[BorrowController::class,'remove'])->name('remove.from.cart');
