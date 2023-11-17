@@ -2,43 +2,48 @@
 
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('plugins/preloader.css') }}">
-    <div class="borrower-bg borrower-page-height">
+    {{-- <link rel="stylesheet" href="{{ asset('plugins/preloader.css') }}"> --}}
+    <div class="borrower-bg borrower-page-height container-fluid pl-5 pr-5">
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Borrowing</h1>
+                        <h1 class="m-0">Browse Items</h1>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="preloader" class="d-flex align-items-center justify-content-center">
-            <div class="spinner-grow text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+
+        {{-- <div id="preloader" class="d-flex align-items-center justify-content-center">
+            <div id="preloader" class="d-flex align-items-center justify-content-center">
+                <div class="spinner-grow text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="spinner-grow text-secondary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="spinner-grow text-success" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="spinner-grow text-danger" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="spinner-grow text-warning" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="spinner-grow text-info" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="spinner-grow text-dark" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="spinner-grow text-light" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
-            <div class="spinner-grow text-secondary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-success" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-danger" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-warning" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-info" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-dark" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="spinner-grow text-light" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
+    
         </div>
+     
 
         <script>
             $(window).on('load', function() {
@@ -48,90 +53,155 @@
                     $('.content').fadeIn('slow');
                 });
             });
-        </script>
+        </script> --}}
 
  
         <section class="content">
-            <div id="categoryContainer">
-                <div class="col-3">
-                    <select class="form-select form-select-lg mb-5" aria-label="Default select example"
-                        name="selectedCategory">
-                        <option selected>Choose a Category</option>
-                        @foreach ($categories as $category)
-                            <option value="category{{ $category->id }}"
-                                {{ old('selectedCategory', session('selectedCategory')) === 'category' . $category->id ? 'selected' : '' }}>
-                                {{ $category->category_name }}
-                            </option>
-                        @endforeach
-                    </select>
+        {{-- IF NO CATEGORY SELECTED SHOW ALL ITEMS. --}}
+            <div class="">
+                <div class="row">
+                    <div class="col-3">
+                        <form action=" {{route('browse.department') }}" method="GET">
+                            @csrf
+                            <select class="form-select form-select-lg mb-5" aria-label="Default select example" name="selectedDepartment" onchange="this.form.submit()">
+                                <option selected value="" disabled>Choose Department</option>
+                                @foreach ($departments as $dept)
+                                    <option value="{{$dept->id}}" {{ Session::get('department') == $dept->id ? 'selected' : '' }}>
+                                        {{ $dept->department_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
                 </div>
-                <div class="mt-20 ml-2">
-                    @foreach ($categories as $category)
-                        <div class="tab-pane" id="category{{ $category->id }}">
-                            <div class="row">
-                                @php
-                                    $catItem = $items->where('category_id', $category->id)->where('borrowed', 'no');
-                                    $groupedItems = $catItem->groupBy(function ($item){
-                                        return $item->brand . " " . $item->model;
-                                    });
-                                    // echo '<pre>';
-                                    // print_r($groupedItems);
-                                    // echo '</pre>';
-                                @endphp
 
-                                @foreach ($groupedItems as $groupedItem)
-                                    @php
-                                        $item = $groupedItem->first();
-                                        if($item->serial_number != 'N/A' || $item->serial_number != null){
-                                            $serialquantity = $groupedItem->count();
-                                        }
-                                        // echo $serialquantity;
-                                    @endphp
-                                    <div class="col-lg-2 col-6">
-                                        <div class="small-box bg-warning bg-gradient">
-                                            <div class="inner">
-                                                <h3>{{ $item->brand->brand_name }}</h3>
-                                                <p>{{ Str::limit($item->model->model_name, 20, '...') }}</p>
-                                            </div>
-                                            <div class="small-box-footer d-grid gap-2">
-                                                <button type="button" class="btn btn-link text-dark" data-toggle="modal"
-                                                    data-target="#itemModal{{ $item->id }}">
-                                                    More info <i class="fas fa-arrow-circle-right"></i>
-                                                </button>
-                                            </div>
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="itemModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="itemModalLabel">Item Information</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
+                <div class="row">
+                    <div class="col-2">
+                        @isset($categories)
+                        {{-- I VERTICAL LIST NI SIYA SA LEFT SIDE RADIO BUTTON OKAY --}}
+                        <form action="{{route('browse.category')}}" method="GET">
+                            @csrf
+                            @foreach($categories as $cat)
+                                    <div class="form-check pb-3">                                      
+                                        <input type="radio" class="form-check-input" name="category" id="category" value="{{$cat->id}}" {{ Session::get('category') == $cat->id ? 'checked' : '' }}  onclick="this.form.submit()">
+                                        <label for="category" class="form-check-label">
+                                            {{ $cat->category_name }}
+                                        </label>                            
+                                    </div>                           
+                            @endforeach
+                        </form>
+                        @endisset
+                    </div>
+                    <div class="col-10">
+                        @isset($items)
+                        @php
+                            $groupedItems = $items->groupBy(function ($item) {
+                            return $item->brand_id. '-' . $item->model_id;
+                            });
+                        @endphp
+                            <div class="row">
+                                @foreach($groupedItems as $groupedItem)
+                                    @php                            
+                                        $totalquantity = 0;
+                                        if(count($groupedItem) != 0){
+                                            foreach ($groupedItem as $item) {                                            
+                                                    $totalquantity += $item->quantity;                                         
+                                            }
+                                            $item = $groupedItem->first();
+                                        }                                                                       
+                                        // echo $totalquantity;
+                                    @endphp                                    
+                                        <div class="col-lg-3 col-md-5 mb-4">
+                                            <div class="card">
+                                                <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                                    data-mdb-ripple-color="light">
+                                                    <img src="https://cdn.stocksnap.io/img-thumbs/960w/office-work_KJKDM1OT2J.jpg"
+                                                    class="w-100" />
+                                                    <div class="mask">
+                                                        <div class="d-flex justify-content-start align-items-end h-100">
+                                                        <h5>
+                                                            <span class="badge bg-success ms-2">
+                                                                Available
+                                                            </span>
+                                                        </h5>
                                                         </div>
-                                                        <div class="modal-body">
-                                                            <div class="row text-lg">
-                                                                <div class="col">
-                                                                    @if ($item->item_image == null)
-                                                                        <div
-                                                                            style="border: 1px solid #000; width: 200px; height: 200px; display: flex; justify-content: center; align-items: center;">
-                                                                            No Image
-                                                                        </div>
-                                                                    @else
-                                                                        <img src="{{ asset('storage/' . $item->item_image) }}"
-                                                                            alt="" srcset="" width="200px"
-                                                                            height="200px">
-                                                                    @endif
-                                                                    <strong>Brand:</strong> {{ $item->brand->brand_name }}
-                                                                    <br>
-                                                                    <strong>Model:</strong> {{ $item->model->model_name }}
-                                                                    <br>
-                                                                    @if ($item->serial_number != 'N/A' || $item->serial_number != null)
-                                                                        <strong>Available:</strong>{{ $serialquantity }}
-                                                                        <br>
-                                                                    @endif
-                                                                    @if($item->serial_number == 'N/A' || $item->serial_number == null)
-                                                                        @php
+                                                    </div>
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <div class="row mx-auto">
+                                                            <span class="card-title mb-3 font-weight-bold display-3">{{ $item->brand->brand_name }}</span>                             
+                                                            <h5 class="card-title mb-3">{{ $item->model->model_name }}</h5>      
+                                                        <p></p>                                                                                         
+                                                    </div>                                     
+                                                    <button type="button" class="btn btn-link text-success" data-toggle="modal"
+                                                        data-target="#itemModal{{ $item->id }}">
+                                                        More info <i class="bi bi-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="itemModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="itemModalLabel">Item Information</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row text-lg">
+                                                            <div class="col">
+                                                                @if ($item->item_image == null)
+                                                                    <div
+                                                                        style="border: 1px solid #000; width: 200px; height: 200px; display: flex; justify-content: center; align-items: center;">
+                                                                        No Image
+                                                                    </div>
+                                                                @else
+                                                                    <img src="{{ asset('storage/' . $item->item_image) }}"
+                                                                        alt="" srcset="" width="200px"
+                                                                        height="200px">
+                                                                @endif
+                                                                <strong>Brand:</strong> {{ $item->brand->brand_name }}
+                                                                <br>
+                                                                <strong>Model:</strong> {{ $item->model->model_name }}
+                                                                <br>
+                                                                    @php
+                                                                        $missingQty = 0;
+                                                                        $borrowedQty = 0;
+                                                                        $totalDeduct = 0;
+                                                                        foreach ($borrowedList as $borrowed) {
+                                                                            if ($borrowed->item_id == $item->id) {
+                                                                                $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                                            }
+                                                                        }
+                                                                        
+                                                                        foreach ($missingList as $missing) {
+                                                                            if ($missing->item_id == $item->id) {
+                                                                                $missingQty = $missingQty + $missing->quantity;
+                                                                            }
+                                                                        }
+                                                                        $totalDeduct = $missingQty + $borrowedQty;
+                                                                        
+                                                                    @endphp
+                                                                    <strong>Available:</strong>
+                                                                    {{ $item->quantity - $totalDeduct }} <br>
+                                                            </div>
+                                                            <div class="col">
+                                                                <strong>Description:</strong> {{ $item->description }}
+                                                                <br>
+                                                                <strong>Status:</strong> {{ $item->status }} {{ $item->serial_number}}
+                                                            </div>
+                                                        </div>
+                                                        <form action="{{ route('add.cart', $item->id) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to add this item to your cart?');">
+                                                            @csrf
+                                                            <label for="quantity">Quantity:</label>
+                                                            <div class="form-group col-2">
+                                                            
+                                                                    <select class="form-control" id="quantity" name="quantity">
+                                                                            @php
                                                                             $missingQty = 0;
                                                                             $borrowedQty = 0;
                                                                             $totalDeduct = 0;
@@ -148,269 +218,39 @@
                                                                             }
                                                                             $totalDeduct = $missingQty + $borrowedQty;
                                                                             
-                                                                        @endphp
-                                                                        <strong>Available:</strong>
-                                                                        {{ $item->quantity - $totalDeduct }} <br>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col">
-                                                                    <strong>Description:</strong> {{ $item->description }}
-                                                                    <br>
-                                                                    <strong>Status:</strong> {{ $item->status }} {{ $item->serial_number}}
-                                                                </div>
+                                                                            @endphp
+                                                                            @for ($i = 1; $i <= $item->quantity - $totalDeduct; $i++)
+                                                                                <option value="{{ $i }}">
+                                                                                    {{ $i }}</option>
+                                                                            @endfor
+                                                                    </select>
+                                        
                                                             </div>
-                                                            <form action="{{ route('add.cart', $item->id) }}"
-                                                                method="POST"
-                                                                onsubmit="return confirm('Are you sure you want to add this item to your cart?');">
-                                                                @csrf
-                                                                <label for="quantity">Quantity:</label>
-                                                                <div class="form-group col-2">
-                                                               
-                                                                        <select class="form-control" id="quantity"
-                                                                            name="quantity">
-                                                                            @if ($item->serial_number != 'N/A' || $item->serial_number != null)
-                                                                                @for ($i = 1; $i <= $serialquantity; $i++)
-                                                                                    <option value="{{ $i }}">
-                                                                                        {{ $i }}</option>
-                                                                                @endfor
-                                                                            @endif
-
-                                                                            @if ($item->serial_number == 'N/A' || $item->serial_number == null)
-                                                                                @php
-                                                                                $missingQty = 0;
-                                                                                $borrowedQty = 0;
-                                                                                $totalDeduct = 0;
-                                                                                foreach ($borrowedList as $borrowed) {
-                                                                                    if ($borrowed->item_id == $item->id) {
-                                                                                        $borrowedQty = $borrowedQty + $borrowed->order_quantity;
-                                                                                    }
-                                                                                }
-                                                                                
-                                                                                foreach ($missingList as $missing) {
-                                                                                    if ($missing->item_id == $item->id) {
-                                                                                        $missingQty = $missingQty + $missing->quantity;
-                                                                                    }
-                                                                                }
-                                                                                $totalDeduct = $missingQty + $borrowedQty;
-                                                                                
-                                                                                @endphp
-                                                                                @for ($i = 1; $i <= $item->quantity - $totalDeduct; $i++)
-                                                                                    <option value="{{ $i }}">
-                                                                                        {{ $i }}</option>
-                                                                                @endfor
-                                                                            @endif
-                                                                        </select>
-         
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <i class="fas fa-cart-plus"></i><input type="submit"
-                                                                        class="btn btn-outline-dark" value="Add to cart">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        data-dismiss="modal">Close</button>
-                                                                </div>
-                                                            </form>
-                                                            
-                                                            <!-- Add your item information here -->
-                                                            <!-- You can display item details or any other content here -->
-                                                        </div>
+                                                            <div class="modal-footer">
+                                                                <i class="fas fa-cart-plus"></i><input type="submit"
+                                                                    class="btn btn-success" value="Add to cart">
+                                                                <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </form>
+                                                        
+                                                        <!-- Add your item information here -->
+                                                        <!-- You can display item details or any other content here -->
                                                     </div>
                                                 </div>
-                                            </div>                                            
-                                            
-                                        </div>
-                                    </div>
+                                            </div>
+                                        </div>                       
+                                       
                                 @endforeach
                             </div>
-                        </div>
-                    @endforeach
+                        @endisset
+                    </div>
                 </div>
+    
+
             </div>
         </section>
 
     </div>
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Hide all category content initially
-            $('.tab-pane').hide();
-
-            // Show the selected category content when the dropdown changes
-            $('select.form-select').change(function() {
-                var selectedCategory = $(this).val();
-                $('.tab-pane').hide();
-                $('#' + selectedCategory).show();
-
-                // Store the selected option value in the session
-                $.ajax({
-                    url: '{{ route('storeSelectedCategory') }}',
-                    type: 'POST',
-                    data: {
-                        selectedCategory: selectedCategory,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        // Session value stored successfully
-                    }
-                });
-            });
-
-            // Fetch the selected category from the session and show its corresponding items
-            var selectedCategory = '{{ session('selectedCategory') }}';
-            if (selectedCategory !== '') {
-                $('select.form-select').val(selectedCategory);
-                $('#' + selectedCategory).show();
-            }
-        });
-    </script>
+    
 @endsection
-
-
-
-{{-- @if ($item->serial_number == null)
-@php
-    $missingQty = 0;
-    $borrowedQty = 0;
-    $totalDeduct = 0;
-    foreach ($borrowedList as $borrowed) {
-        if ($borrowed->item_id == $item->id) {
-            $borrowedQty = $borrowedQty + $borrowed->order_quantity;
-        }
-    }
-    
-    foreach ($missingList as $missing) {
-        if ($missing->item_id == $item->id) {
-            $missingQty = $missingQty + $missing->quantity;
-        }
-    }
-    $totalDeduct = $missingQty + $borrowedQty;
-    
-@endphp
-<select class="form-control" id="quantity"
-    name="quantity">
-    @for ($i = 1; $i <= $item->quantity - $totalDeduct; $i++)
-        <option value="{{ $i }}">
-            {{ $i }}</option>
-    @endfor
-</select>
-@endif --}}
-
-
-{{-- MODAL  --}}
-{{-- <div class="modal fade" id="itemModal{{ $item->id }}" tabindex="-1"
-    role="dialog" aria-labelledby="itemModal{{ $item->id }}Label"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header text-dark">
-                <h5 class="modal-title" id="itemModal{{ $item->id }}Label">
-                    {{ $category->category_name }}</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-dark">
-                <div class="row text-lg">
-                    <div class="col">
-                        @if ($item->item_image == null)
-                            <div
-                                style="border: 1px solid #000; width: 200px; height: 200px; display: flex; justify-content: center; align-items: center;">
-                                No Image
-                            </div>
-                        @else
-                            <img src="{{ asset('storage/' . $item->item_image) }}"
-                                alt="" srcset="" width="200px"
-                                height="200px">
-                        @endif
-                        <strong>Brand:</strong> {{ $item->brand->brand_name }}
-                        <br>
-                        <strong>Model:</strong> {{ $item->model->model_name }}
-                        <br>
-                        @if ($item->category_id != 5 && $item->category_id != 6 && $item->category_id != 7)
-                            <strong>Available:</strong>{{ $serialquantity }}
-                            <br>
-                        @elseif($item->serial_number == null || ($item->category_id = 5 || ($item->category_id = 6 || ($item->category_id = 7))))
-                            @php
-                                $missingQty = 0;
-                                $borrowedQty = 0;
-                                $totalDeduct = 0;
-                                foreach ($borrowedList as $borrowed) {
-                                    if ($borrowed->item_id == $item->id) {
-                                        $borrowedQty = $borrowedQty + $borrowed->order_quantity;
-                                    }
-                                }
-                                
-                                foreach ($missingList as $missing) {
-                                    if ($missing->item_id == $item->id) {
-                                        $missingQty = $missingQty + $missing->quantity;
-                                    }
-                                }
-                                $totalDeduct = $missingQty + $borrowedQty;
-                                
-                            @endphp
-                            <strong>Available:</strong>
-                            {{ $item->quantity - $totalDeduct }} <br>
-                        @endif
-                    </div>
-                    <div class="col">
-                        <strong>Description:</strong> {{ $item->description }}
-                        <br>
-                        <strong>Status:</strong> {{ $item->status }}
-                    </div>
-                </div>
-                <form action="{{ route('add.cart', $item->id) }}"
-                    method="POST"
-                    onsubmit="return confirm('Are you sure you want to add this item to your cart?');">
-                    @csrf
-                    <label for="quantity">Quantity:</label>
-                    <div class="form-group col-2">
-                        @if ($item->category_id != 5 && $item->category_id != 6 && $item->category_id != 7)
-                            <select class="form-control" id="quantity"
-                                name="quantity">
-                                @for ($i = 1; $i <= $serialquantity; $i++)
-                                    <option value="{{ $i }}">
-                                        {{ $i }}</option>
-                                @endfor
-                            </select>
-                        @endif
-                        @if ($item->category_id == 5 || $item->category_id == 6 || $item->category_id == 7 )
-                            @php
-                                $missingQty = 0;
-                                $borrowedQty = 0;
-                                $totalDeduct = 0;
-                                foreach ($borrowedList as $borrowed) {
-                                    if ($borrowed->item_id == $item->id) {
-                                        $borrowedQty = $borrowedQty + $borrowed->order_quantity;
-                                    }
-                                }
-                                
-                                foreach ($missingList as $missing) {
-                                    if ($missing->item_id == $item->id) {
-                                        $missingQty = $missingQty + $missing->quantity;
-                                    }
-                                }
-                                $totalDeduct = $missingQty + $borrowedQty;
-                                
-                            @endphp
-                            <select class="form-control" id="quantity"
-                                name="quantity">
-                                @for ($i = 1; $i <= $item->quantity - $totalDeduct; $i++)
-                                    <option value="{{ $i }}">
-                                        {{ $i }}</option>
-                                @endfor
-                            </select>
-                        @endif
-                    </div>
-                    <div class="modal-footer">
-                        <i class="fas fa-cart-plus"></i><input type="submit"
-                            class="btn btn-outline-dark" value="Add to cart">
-                        <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> --}}

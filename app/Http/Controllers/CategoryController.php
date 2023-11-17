@@ -13,4 +13,12 @@ class CategoryController extends Controller
         Session::put('selectedCategory', $selectedCategory);
         return response()->json(['success' => true]);
     }
+
+    public function storeSelectedDepartment(Request $request)
+    {
+        $selectedDepartment = $request->input('selectedDepartment');
+        Session::put('selectedDepartment', $selectedDepartment);
+        return response()->json(['success' => true]);
+    }
+
 }

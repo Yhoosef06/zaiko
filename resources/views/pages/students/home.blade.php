@@ -203,7 +203,7 @@
                                 
                                     <div class="container mb-2">
                                         <div class="text-center">
-                                            <a href="{{ route('student.items') }}" class="btn btn-lg btn-warning">Start Borrowing</a>
+                                            <a href="{{ route('browse.items') }}" class="btn btn-lg btn-warning">Start Borrowing</a>
                                         </div>
                                     </div>
                                 

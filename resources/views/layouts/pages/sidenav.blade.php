@@ -9,7 +9,7 @@
     <!-- Brand Logo -->
     <a @if (Auth::user()->password_updated == false || Auth::user()->security_question_id == null) href="#"
     @elseif (Auth::user()->role == 'borrower')
-        href="{{ route('student.dashboard') }}"
+        href="{{ route('browse.items') }}"
     @else
     href="{{ route('admin.dashboard') }}" @endif
         class="brand-link">
@@ -29,19 +29,41 @@
                         <li class="nav-item">
                             <a @if (Auth::user()->roles->contains('name', 'manager')) href="{{ route('admin.dashboard') }}" 
                         @else
-                            href="{{ route('student.dashboard') }}" @endif
+                            href="{{ route('borrower.dashboard') }}" @endif
                                 class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
                         @if (Auth::user()->hasPermission('borrow-items'))
+
+
+
+                            @if(Session::has('department') && Session::has('category'))
                             <li class="nav-item">
-                                <a href="{{ route('student.items') }}" class="nav-link">
+                                <a href="{{ route('browse.category', ['_token' => csrf_token(), 'category' => Session::get('category')]) }}" class="nav-link">
                                     <i class="fas fa-circle nav-icon"></i>
                                     <p>Browse Items</p>
                                 </a>
                             </li>
+                            @elseif(Session::has('department'))
+                            <li class="nav-item">
+                                <a href="{{ route('browse.department', ['_token' => csrf_token(), 'selectedDepartment' => Session::get('department')]) }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Browse Items</p>
+                                </a>
+                            </li>
+                            @else
+                            <li class="nav-item">
+                                <a href="{{ route('browse.items') }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Browse Items</p>
+                                </a>
+                            </li>
+                            @endif
+
+
+
                             <li class="nav-item">
                                 <a href="{{ route('cart.list') }}" class="nav-link">
                                     <i class="fas fa-circle nav-icon"></i>
