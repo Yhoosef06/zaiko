@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\ItemLog;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class BorrowerController extends Controller
 {
@@ -46,62 +48,58 @@ class BorrowerController extends Controller
         return view('pages.students.home')->with(compact('overdueItems'));
     }
 
-    public function items()
-    {
+    public function browse(){
 
-        $categories = ItemCategory::all();
-        // $user_dept_id = Auth::user()->department_id;
+        $departments = Department::all();
+
+        return view('pages.students.items')->with(compact('departments'));
+    }
+
+    public function browseDepartment(Request $request){
+
         $itemlogs = ItemLog::all();
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
-        // $departments = Department::with('college')->get();
-        $department = Auth::user()->departments->first();
-        // $department = Department::where('id', Auth::user()->department_id)->first();
-        // dd($department);
+        $selectedDepartment = $request->query('selectedDepartment');
+        $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+            $query->where('id', $selectedDepartment);
+        })->where('borrowed','no')->get();
 
-
-        // $rooms = Room::with('departments')->get();
-        // $items = Item::with('room')->get();
-
-        // $departments->each(function ($department) {
-        //     $department->college_name = $department->college->college_name;
-        // });
-
-        // foreach($items as $item){
-        //     foreach($rooms as $room){
-        //         foreach($departments as $department){
-        //             if ($department->id == $user_dept_id){ 
-        //                 $college =  $department->college->id;
-        //                 dd($college);
-        //             }
-        //         }
-        //     }
-        // }   
+        $categories = ItemCategory::all();
+        $departments = Department::all();
+        Session::put('department',$selectedDepartment);
         
 
-        
-         $collegeId = $department->college_id;   
-        //  dd($collegeId);
-        // foreach ($departments as $department) {
-        //     if ($department->id == $user_dept_id) {
-        //         $collegeId =  $department->college->id;
-        //         break;
-        //     }
-        // }
-        // if($collegeId != null){
-        //     $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
-        //         $query->where('id', $collegeId);
-        //     })->get();
-        // }
-        
-
-        $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
-            $query->where('id', $collegeId);
-        })->get();
-
-        // dd($items);
-        return view('pages.students.items')->with(compact('items','categories','itemlogs','borrowedList','missingList'));
+        return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
     }
+
+    public function browseCategory(Request $request){
+
+        $itemlogs = ItemLog::all();
+        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+        $missingList = ItemLog::where('mode', 'missing')->get();
+        $selectedCategory = $request->category;
+        $selectedDepartment = Session::get('department');
+        $categories = ItemCategory::all();
+        $departments = Department::all();
+        Session::put('category',$selectedCategory);
+        $sessionCat = Session::get('category',$selectedCategory);
+
+        if(isset($selectedDepartment,$sessionCat)){
+            $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                $query->where('id', $selectedDepartment);
+            })->where('category_id', $sessionCat)->where('borrowed','no')->get();
+        }else{
+            $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                $query->where('id', $selectedDepartment);
+            })->where('category_id', $selectedCategory)->where('borrowed','no')->get();
+        }   
+
+        return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
+    }
+
+
+
 
 
     public function borrow()
