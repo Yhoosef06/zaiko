@@ -38,7 +38,7 @@
                         <li class="nav-item">
                             <a href="{{ route('student.items') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>Browse Items</p>
+                                <p>Released Items</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -62,7 +62,7 @@
                         <li class="nav-item">
                             <a href="{{ route('borrowed-items') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>Borrowed Items</p>
+                                <p>Released Items</p>
                                 @if ($borrowedcount != 0)
                                     <span class="badge badge-danger right">{{ $borrowedcount }}</span>
                                 @endif
@@ -92,9 +92,11 @@
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Pending</p>
-                                                {{-- @if ($itemcount != 0)
-                                            <span class="badge badge-warning right">{{ $itemcount }}</span>
-                                        @endif --}}
+                                                @if(session()->has('pending_count'))
+                                                <span class="badge badge-danger right">{{ session('pending_count') }}</span>
+                                         @else
+                                                
+                                            @endif
                                             </div>
                                         </a>
                                     </li>
@@ -102,7 +104,8 @@
                                         <a href="{{ route('borrowed') }}" class="nav-link">
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>Borrowed Items</p>
+                                                <p>Released Items</p>
+                                             
                                             </div>
                                         </a>
                                     </li>
