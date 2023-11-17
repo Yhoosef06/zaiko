@@ -301,7 +301,7 @@ Route::middleware(['auth', 'role:borrower'])->group(function () {
         //BROWSING
         Route::get('/browse-items', [BorrowerController::class, 'items'])->name('browse.items');
         Route::get('/browse-items/department', [BorrowerController::class, 'browseDepartment'])->name('browse.department');
-        Route::get('/browse-items/{department}/{category}', [BorrowerController::class, 'browseCategory'])->name('browse.category');
+        Route::get('/browse-items/department/category', [BorrowerController::class, 'browseCategory'])->name('browse.category');
 
         //cart
         Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');

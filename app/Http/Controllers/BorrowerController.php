@@ -12,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class BorrowerController extends Controller
 {
@@ -53,9 +54,8 @@ class BorrowerController extends Controller
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
         $departments = Department::all();
-        $categories = ItemCategory::all();
 
-        return view('pages.students.items')->with(compact('departments','categories'));
+        return view('pages.students.items')->with(compact('departments'));
     }
 
     public function browseDepartment(Request $request){
@@ -66,6 +66,30 @@ class BorrowerController extends Controller
         })->get();
         $categories = ItemCategory::all();
         $departments = Department::all();
+        Session::put('department',$selectedDepartment);
+        
+
+        return view('pages.students.items')->with(compact('departments','categories','items'));
+    }
+
+    public function browseCategory(Request $request){
+
+        $selectedCategory = $request->category;
+        $selectedDepartment = Session::get('department');
+        $categories = ItemCategory::all();
+        $departments = Department::all();
+        Session::put('category',$selectedCategory);
+        $sessionCat = Session::get('category',$selectedCategory);
+
+        if(isset($selectedDepartment,$sessionCat)){
+            $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                $query->where('id', $selectedDepartment);
+            })->where('category_id', $sessionCat)->get();
+        }else{
+            $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                $query->where('id', $selectedDepartment);
+            })->where('category_id', $selectedCategory)->get();
+        }   
 
         return view('pages.students.items')->with(compact('departments','categories','items'));
     }

@@ -35,10 +35,25 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('browse.items') }}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>Browse Items</p>
-                        </a>
+                        @if(Session::has('department') && Session::has('category')){
+                            <a href="{{ route('browse.category', ['_token' => csrf_token(), 'category' => Session::get('category')]) }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Browse Items</p>
+                            </a>
+                        }
+                        @elseif(Session::has('department')){
+                            <a href="{{ route('browse.department', ['_token' => csrf_token(), 'selectedDepartment' => Session::get('department')]) }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Browse Items</p>
+                            </a>
+                        }
+                        @else{
+                            <a href="{{ route('browse.items') }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Browse Items</p>
+                            </a>
+                        }
+                        @endif
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('cart.list') }}" class="nav-link">
