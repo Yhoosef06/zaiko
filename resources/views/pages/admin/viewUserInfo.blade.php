@@ -27,7 +27,7 @@
     <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
         Close
     </button>
-    @if (Auth::user()->roles->contains('name', 'admin'))
+    @if (Auth::user()->hasPermission('update-users'))
         <a href="#" data-toggle="modal" data-target="#modal-edit-user-info"
             onclick="openEditUserModal('{{ $user->id_number }}')" class="btn btn-primary">Edit</a>
     @endif

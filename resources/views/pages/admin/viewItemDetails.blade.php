@@ -83,8 +83,10 @@
     <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
         Close
     </button>
-    <button href="#" data-toggle="modal" data-target="#modal-edit-item"
-        onclick="openEditItemModal('{{ $item->id }}')" class="btn btn-primary">Edit</button>
+    @if (Auth::user()->hasPermission('update-items'))
+        <button href="#" data-toggle="modal" data-target="#modal-edit-item"
+            onclick="openEditItemModal('{{ $item->id }}')" class="btn btn-primary">Edit</button>
+    @endif
 
     <div class="modal fade" id="modal-edit-item" tabindex="-1" role="dialog" aria-labelledby="modal-edit-item">
         <div class="modal-dialog modal-xl" role="document">

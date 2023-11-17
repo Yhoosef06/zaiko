@@ -56,8 +56,7 @@
                                     <form action="{{ route('items.search') }}" method="GET">
                                         <div class="input-group">
                                             <input type="text" name="search" class="form-control"
-                                                placeholder="Search..."
-                                                value="{{ old('search', request('search')) }}">
+                                                placeholder="Search..." value="{{ old('search', request('search')) }}">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn bg-yellow" data-toggle="tooltip"
                                                     title="Search">Search</button>
@@ -99,42 +98,51 @@
                                                         <i class="fa fa-eye"></i>
                                                     </button>
 
-                                                    <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                        data-target="#addSubItemModal" data-toggle="tooltip"
-                                                        title='Add Sub Item'
-                                                        data-route="{{ route('add_sub_item', ['id' => $item->id]) }}"
-                                                        onclick="openAddSubItemModal({{ $item->id }}, $(this).data('route'))">
-                                                        <i class="fa fa-plus-square"></i>
-                                                    </button>
+                                                    @if (Auth::user()->hasPermission('add-sub-items'))
+                                                        <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                            data-target="#addSubItemModal" data-toggle="tooltip"
+                                                            title='Add Sub Item'
+                                                            data-route="{{ route('add_sub_item', ['id' => $item->id]) }}"
+                                                            onclick="openAddSubItemModal({{ $item->id }}, $(this).data('route'))">
+                                                            <i class="fa fa-plus-square"></i>
+                                                        </button>
+                                                    @endif
 
-                                                    <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                        data-target="#modal-transfer-item" data-toggle="tooltip"
-                                                        title='Transfer Item'
-                                                        data-route="{{ route('transfer_item', ['id' => $item->id]) }}"
-                                                        onclick="openTransferItemModal({{ $item->id }}, $(this).data('route'))">
-                                                        <i class="fa fa-arrow-alt-circle-right"></i>
-                                                    </button>
+                                                    @if (Auth::user()->hasPermission('transfer-items'))
+                                                        <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                            data-target="#modal-transfer-item" data-toggle="tooltip"
+                                                            title='Transfer Item'
+                                                            data-route="{{ route('transfer_item', ['id' => $item->id]) }}"
+                                                            onclick="openTransferItemModal({{ $item->id }}, $(this).data('route'))">
+                                                            <i class="fa fa-arrow-alt-circle-right"></i>
+                                                        </button>
+                                                    @endif
 
-                                                    <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                        data-target="#modal-replace-item" data-toggle="tooltip"
-                                                        title='Replace Item'
-                                                        data-route="{{ route('replace_item', ['id' => $item->id]) }}"
-                                                        onclick="openReplaceItemModal({{ $item->id }}, $(this).data('route'))">
-                                                        <i class="fa fa-exchange-alt"></i>
-                                                    </button>
+                                                    @if (Auth::user()->hasPermission('replace-items'))
+                                                        <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                            data-target="#modal-replace-item" data-toggle="tooltip"
+                                                            title='Replace Item'
+                                                            data-route="{{ route('replace_item', ['id' => $item->id]) }}"
+                                                            onclick="openReplaceItemModal({{ $item->id }}, $(this).data('route'))">
+                                                            <i class="fa fa-exchange-alt"></i>
+                                                        </button>
+                                                    @endif
 
-                                                    @if ($item->borrowed == 'no')
-                                                        <form class="form_delete_btn" method="POST"
-                                                            action="{{ route('delete_item', $item->id) }}">
-                                                            @csrf
-                                                            <button type="submit"
-                                                                class="btn btn-sm btn-danger show-alert-delete-item"
-                                                                data-toggle="modal" data-target="#show-alert-delete-item"
-                                                                data-toggle="tooltip" title='Delete'
-                                                                onclick="deleteButton({{ $item->id }})">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </form>
+                                                    @if (Auth::user()->hasPermission('delete-items'))
+                                                        @if ($item->borrowed == 'no')
+                                                            <form class="form_delete_btn" method="POST"
+                                                                action="{{ route('delete_item', $item->id) }}">
+                                                                @csrf
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-danger show-alert-delete-item"
+                                                                    data-toggle="modal"
+                                                                    data-target="#show-alert-delete-item"
+                                                                    data-toggle="tooltip" title='Delete'
+                                                                    onclick="deleteButton({{ $item->id }})">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
                                                     @endif
                                                 </td>
                                             </tr>

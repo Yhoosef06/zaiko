@@ -235,9 +235,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     //Roles
     Route::get('roles', [RoleController::class, 'index'])->name('view_roles');
-
-    //Permissions
-    Route::get('permissions', [PermissionController::class, 'index'])->name('view_permissions');
+    Route::post('adding-permission', [RoleController::class, 'store'])->name('store_permission');
+    Route::delete('removing-permission-{id}', [RoleController::class, 'delete'])->name('delete_permission');
 });
 
 //MANAGER

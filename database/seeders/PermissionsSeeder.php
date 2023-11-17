@@ -19,7 +19,7 @@ class PermissionsSeeder extends Seeder
                 'name' => 'manage-inventory',
             ],
             [
-                'name' => 'manage-user',
+                'name' => 'manage-users',
             ],
             [
                 'name' => 'generate-report',
@@ -65,6 +65,9 @@ class PermissionsSeeder extends Seeder
             ],
             [
                 'name' => 'view-users',
+            ],
+            [
+                'name' => 'upload-csv-file',
             ],
         ];
         DB::table('permissions')->insert($permission); 

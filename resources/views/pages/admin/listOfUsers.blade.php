@@ -111,7 +111,7 @@
                                                             onclick="openViewUserModal('{{ $user->id_number }}')">
                                                             <i class="fa fa-eye"></i>
                                                         </button>
-                                                        @if (Auth::user()->roles->contains('name', 'admin'))
+                                                        @if (Auth::user()->hasPermission('delete-users'))
                                                             <form class="form_delete_btn" method="POST"
                                                                 action="{{ route('delete_user', $user->id_number) }}">
                                                                 @csrf

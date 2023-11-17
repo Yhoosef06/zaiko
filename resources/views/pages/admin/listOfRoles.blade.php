@@ -8,11 +8,11 @@
                     <h1 class="text-decoration-underline">Roles</h1>
                 </div>
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
+                    {{-- <ol class="breadcrumb float-sm-right">
                         <button href="#" class="btn btn-default" data-toggle="modal" data-target="#addRoomModal">
-                            <i class="fa fa-plus"></i> Add a Role
+                            <i class="fa fa-plus"></i> Setup a role & permission
                         </button>
-                    </ol>
+                    </ol> --}}
                 </div>
             </div>
         </div><!-- /.container-fluid -->
@@ -35,42 +35,60 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <table id="listofrooms" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Role</th>
-                                        {{-- <th>Actions</th> --}}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($roles as $role)
-                                        <tr data-room-id="{{ $role->id }}">
-                                            <td>{{ $role->id }}</td>
-                                            <td>{{ $role->name }}</td>
-                                            {{-- <td>
-                                                <button href="#" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                    data-toggle="tooltip" title='Edit' data-target="#editRoomModal"
-                                                    data-route="{{ route('edit_room', ['id' => $room->id]) }}"
-                                                    onclick="openEditRoomModal({{ $room->id }}, $(this).data('route'))">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-
-                                                <form class="form_delete_btn" method="POST"
-                                                    action="{{ route('delete_room', $role->id) }}">
-                                                    @csrf
-                                                    <!-- <input name="_method" type="hidden" value="DELETE">  -->
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger show-alert-delete-item"
-                                                        data-toggle="tooltip" title='Delete'
-                                                        onclick="deleteButton({{ $role->id }})"><i
-                                                            class="fa fa-trash"></i></button>
-                                                </form>
-                                            </td> --}}
+                            <table id="listofroles" class="table table-bordered">
+                                <label for="">Setup a role and permission:</label>
+                                <form action="{{route('store_permission')}}" method="POST">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <select class="form-control" name="role_id" id="role_id" required>
+                                                <option value="" disabled selected>Select a role</option>
+                                                @foreach ($roles as $role)
+                                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-control" name="permission_id" id="permission_id" required>
+                                                <option value="" disabled selected>Select a permission</option>
+                                                @foreach ($permissions as $permission)
+                                                    <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="submit" class="btn bg-olive">Add</button>
+                                        </div>
+                                    </div>
+                                </form><br>
+                                @foreach ($groupedRolePermissions as $roleName => $permissions)
+                                    <thead>
+                                        <tr>
+                                            <th class="text-lg">{{ $roleName }} : permissions</th>
+                                            <th></th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($permissions as $permission)
+                                            <tr data-role-permission-id="{{ $permission['id'] }}">
+                                                <td>
+                                                    {{ $permission['name'] }}
+                                                </td>
+                                                <td>
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_permission', $permission['id']) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger show-alert-delete-item"
+                                                            data-toggle="tooltip"
+                                                            title='Delete'onclick="deleteButton('{{ $permission['id'] }}')">Remove</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                @endforeach
                             </table>
                         </div>
                         <!-- /.card-body -->
@@ -83,87 +101,18 @@
         </div>
         <!-- /.container-fluid -->
     </section>
-
-    <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addRoomModalLabel">Adding a Room</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Content will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="editRoomModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editRoomModalLabel">Editing a Room</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Content will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
     <script>
-        $(document).ready(function() {
-            $('#addRoomModal').on('show.bs.modal', function(event) {
-                var modal = $(this);
-
-                $.get("{{ route('add_room') }}", function(data) {
-                    modal.find('.modal-body').html(data);
-                });
-            });
-        });
-
-        function deleteButton(roomId) {
+        function deleteButton(rolePermissionId) {
             // Remove previous highlighting
-            $('#listofrooms tbody tr').css({
+            $('#listofroles tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
             // Add the highlighted class to the clicked row
-            $('#listofrooms tbody tr[data-room-id="' + roomId + '"]').css({
+            $('#listofroles tbody tr[data-role-permission-id="' + rolePermissionId + '"]').css({
                 'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
                 'background-color': '#A9F5F2' // Adjust the color as needed
-            });
-        }
-
-        function openEditRoomModal(roomId, route) {
-            var modal = $('#editRoomModal');
-
-            // Remove previous highlighting
-            $('#listofrooms tbody tr').css({
-                'box-shadow': 'none',
-                'background-color': 'transparent'
-            });
-
-            // Add the highlighted class to the clicked row
-            $('#listofrooms tbody tr[data-room-id="' + roomId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
-            });
-
-            // Clear previous content from the modal
-            modal.find('.modal-body').html('');
-
-            // Send an AJAX request to fetch the edit view content
-            // for the specific college
-            $.get(route, {
-                room_id: roomId
-            }, function(data) {
-                modal.find('.modal-body').html(data);
             });
         }
     </script>

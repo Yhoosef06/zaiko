@@ -17,7 +17,7 @@ class RoomController extends Controller
     public function index()
     {
         if (Auth::user()->roles->contains('name', 'admin')) {
-            $rooms = Room::with('department')->withCount('items')->get();
+            $rooms = Room::paginate(10);
             return view('pages.admin.listOfRooms')->with(compact('rooms'));
         } else {
             $user = Auth::user();

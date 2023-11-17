@@ -35,21 +35,23 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('student.items') }}" class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
-                                <p>Released Items</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('cart.list') }}" class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
-                                <p>Cart</p>
-                                @if ($cartcount != 0)
-                                    <span class="badge badge-danger right">{{ $cartcount }}</span>
-                                @endif
-                            </a>
-                        </li>
+                        @if (Auth::user()->hasPermission('borrow-items'))
+                            <li class="nav-item">
+                                <a href="{{ route('student.items') }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Browse Items</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('cart.list') }}" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>Cart</p>
+                                    @if ($cartcount != 0)
+                                        <span class="badge badge-danger right">{{ $cartcount }}</span>
+                                    @endif
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route('pending-order') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
@@ -78,68 +80,70 @@
                             </a>
                         </li>
                         @if (Auth::user()->roles->contains('name', 'manager'))
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
-                                    <p>
-                                        Manage Borrowings
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="{{ route('pending') }}" class="nav-link">
-                                            <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Pending</p>
-                                                @if(session()->has('pending_count'))
-                                                <span class="badge badge-danger right">{{ session('pending_count') }}</span>
-                                         @else
-                                                
-                                            @endif
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('borrowed') }}" class="nav-link">
-                                            <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Released Items</p>
-                                             
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('overdue') }}" class="nav-link">
-                                            <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Overdue</p>
-                                                {{-- @if ($itemcount != 0)
+                            @if (Auth::user()->hasPermission('manage-borrowings'))
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-circle nav-icon"></i>
+                                        <p>
+                                            Manage Borrowings
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href="{{ route('pending') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Pending</p>
+                                                    @if (session()->has('pending_count'))
+                                                        <span
+                                                            class="badge badge-danger right">{{ session('pending_count') }}</span>
+                                                    @else
+                                                    @endif
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('borrowed') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Released Items</p>
+
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('overdue') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Overdue</p>
+                                                    {{-- @if ($itemcount != 0)
                                             <span class="badge badge-danger right">{{ $itemcount }}</span>
                                         @endif --}}
-                                            </div>
-                                        </a>
-                                    </li>
+                                                </div>
+                                            </a>
+                                        </li>
 
-                                    <li class="nav-item">
-                                        <a href="{{ route('returned') }}" class="nav-link">
-                                            <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Returned</p>
-                                            </div>
-                                        </a>
-                                    </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('returned') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Returned</p>
+                                                </div>
+                                            </a>
+                                        </li>
 
-                                    <li class="nav-item">
-                                        <a href="{{ route('returned') }}" class="nav-link">
-                                            <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Generate Report</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('returned') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Generate Report</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
                         @endif
                     @endif
                     @if (Auth::user()->roles->contains('name', 'admin') || Auth::user()->roles->contains('name', 'manager'))
@@ -151,81 +155,97 @@
                                 </a>
                             </li>
                         @endif
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-circle"></i>
-                                <p>
-                                    Inventory
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('add_item') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            Add New Item
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('view_items') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>View All Items</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('generate_report') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Generate Report</p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-circle"></i>
-                                <p>
-                                    Manage Users
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                @if (Auth::user()->roles->contains('name', 'admin'))
-                                    <li class="nav-item">
-                                        <a href="{{ route('add_user') }}" class="nav-link">
-                                            <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Add New User</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                @endif
-                                <li class="nav-item">
-                                    <a href="{{ route('view_users') }}" class="nav-link">
-                                        <div class="ml-3">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>View All Users</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                @if (Auth::user()->roles->contains('name', 'admin'))
-                                    <li class="nav-item">
-                                        <a href="{{ route('upload_csv_file') }}" class="nav-link">
-                                            <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Upload a CSV File</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                @endif
-                            </ul>
-                        </li>
-                        @if (Auth::user()->roles->contains('name', 'admin'))
+                        {{-- INVENTORY --}}
+                        @if (Auth::user()->hasPermission('manage-inventory'))
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-circle"></i>
+                                    <p>
+                                        Inventory
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    @if (Auth::user()->hasPermission('add-items'))
+                                        <li class="nav-item">
+                                            <a href="{{ route('add_item') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    Add New Item
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (Auth::user()->hasPermission('view-items'))
+                                        <li class="nav-item">
+                                            <a href="{{ route('view_items') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>View All Items</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (Auth::user()->hasPermission('generate-report'))
+                                        <li class="nav-item">
+                                            <a href="{{ route('generate_report') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Generate Report</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </li>
+                        @endif
+                        {{-- MANAGE USERS --}}
+                        @if (Auth::user()->hasPermission('manage-users'))
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-circle"></i>
+                                    <p>
+                                        Manage Users
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    @if (Auth::user()->hasPermission('add-users'))
+                                        <li class="nav-item">
+                                            <a href="{{ route('add_user') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Add New User</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (Auth::user()->hasPermission('view-users'))
+                                        <li class="nav-item">
+                                            <a href="{{ route('view_users') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>View All Users</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endif
+
+                                    @if (Auth::user()->hasPermission('upload-csv-file'))
+                                        <li class="nav-item">
+                                            <a href="{{ route('upload_csv_file') }}" class="nav-link">
+                                                <div class="ml-3">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Upload a CSV File</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </li>
+                        @endif
+
+                        @if (Auth::user()->hasPermission('manage-settings'))
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="fas fa-circle nav-icon"></i>
@@ -296,22 +316,13 @@
                                         <a href="{{ route('view_roles') }}" class="nav-link">
                                             <div class="ml-3">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>Roles</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('view_permissions') }}" class="nav-link">
-                                            <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Permissions</p>
+                                                <p>Roles & Permissions</p>
                                             </div>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
                         @endif
-
                     @endif
                 </ul>
             </nav>

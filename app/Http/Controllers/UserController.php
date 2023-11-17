@@ -27,30 +27,13 @@ class UserController extends Controller
 
     public function index()
     {
-        //admin
-        if (Auth::user()->roles->contains('name', 'admin')) {
-            $sortOrder = 'asc';
-            $users = User::paginate(15);
-            $filterUsers = User::all();
-            $uniqueRoles = $filterUsers->flatMap(function ($user) {
-                return $user->roles;
-            })->unique('id');
-            return view('pages.admin.listOfUsers')->with(compact('users', 'filterUsers', 'uniqueRoles'));
-        } else {
-            // $department = Auth::user()->departments->first();
-            // $userCollegeId = $department->college_id;
-
-            // $users = User::whereHas('departments', function ($query) use ($userCollegeId) {
-            //     $query->where('college_id', $userCollegeId);
-            // })
-            //     ->orderBy('id_number', 'DESC')
-            //     ->paginate(10);
-
-            $users = User::where('account_type', 'student')->orderBy('id_number', 'DESC')
-                ->paginate(15);
-
-            return view('pages.admin.listOfUsers')->with(compact('users'));
-        }
+        $sortOrder = 'asc';
+        $users = User::paginate(15);
+        $filterUsers = User::all();
+        $uniqueRoles = $filterUsers->flatMap(function ($user) {
+            return $user->roles;
+        })->unique('id');
+        return view('pages.admin.listOfUsers')->with(compact('users', 'filterUsers', 'uniqueRoles'));
     }
 
     public function getFilteredUsers(Request $request)
