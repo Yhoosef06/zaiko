@@ -17,10 +17,12 @@
                         <label for="">Model:</label> {{ $item->model->model_name }}
                     </div>
                     <div>
-                        <label for="">Part Number:</label> {{ $item->part_number === null ? 'N/A' : $item->part_number }}
+                        <label for="">Part Number:</label>
+                        {{ $item->part_number === null ? 'N/A' : $item->part_number }}
                     </div>
                     <div>
-                        <label for="">Serial Number:</label> {{ $item->serial_number === null ? 'N/A' : $item->serial_number}}
+                        <label for="">Serial Number:</label>
+                        {{ $item->serial_number === null ? 'N/A' : $item->serial_number }}
                     </div>
                     <div>
                         <label for="">Aquisition Date:</label> {{ $item->aquisition_date }}
@@ -35,22 +37,32 @@
             </div>
         </div>
         <div class="col">
-            <form class="form-signin" action="{{route('save_transfer_item', ['id' => $item->id])}}" method="POST" enctype="multipart/form-data">
+            <form class="form-signin" action="{{ route('save_transfer_item', ['id' => $item->id]) }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 <label for="">From:</label>
                 <input type="text" class="form-control" name="room_from" id="room_from"
                     value="{{ $item->room->room_name }}" readonly>
+
                 <label for="">To:</label>
-                <select id="room_to" name="room_to"
-                    class="form-control @error('location')
-                                                            border-danger @enderror">
-                    <option value="option_select" disabled selected>Choose a room</option>
+                <select id="room_to" name="room_to" class="form-control @error('room_to') border-danger @enderror"
+                    required>
+                    <option value="" selected>Select a room</option>
                     @foreach ($rooms as $room)
-                        <option value="{{ $room->id }}" {{ old('location') == $room->id ? 'selected' : '' }}>
-                            {{ $room->room_name }}
-                        </option>
+                        @if ($room->id != $item->room->id)
+                            <option value="{{ $room->id }}" {{ old('location') == $room->id ? 'selected' : '' }}>
+                                {{ $room->room_name }}
+                            </option>
+                        @endif
                     @endforeach
                 </select>
+                @if ($item->quantity !== null && $item->quantity !== 1)
+                    <label for="">Quantity:</label>
+                    <input type="number" min="1" max="{{ $item->quantity }}" id="quantity" name="quantity"
+                        class="form-control @error('quantity') border-danger @enderror" value="{{ old('quantity') }}"
+                        @if (session('invalidSerialNumbers')) value="{{ old('quantity') }}" @endif
+                        placeholder="Enter quantity to move" required>
+                @endif
                 <hr>
                 <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
                     Close

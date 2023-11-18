@@ -234,7 +234,7 @@ class UserController extends Controller
     public function editUserInfo($id_number)
     {
         $user = User::find($id_number);
-
+        $roles = Role::all();
         $departments = Department::with('college')->get();
 
         $departments->each(function ($department) {
@@ -242,7 +242,7 @@ class UserController extends Controller
         });
 
 
-        return view('pages.admin.editUserInfo')->with(compact('user', 'departments'));
+        return view('pages.admin.editUserInfo')->with(compact('user', 'departments', 'roles'));
     }
 
     public function saveEditedUserInfo(Request $request, $id_number)

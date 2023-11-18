@@ -39,6 +39,12 @@
                 <div>
                     <label for="">Description:</label> {{ $item->description }}
                 </div>
+                <div>
+                    <label for="">Maximum Borrowing Days:</label> {{ $item->duration }}
+                </div>
+                <div>
+                    <label for="">Overdue Penalty Fee:</label> {{ $item->penalty_fee }}
+                </div>
             </div>
 
             <div class="col">
@@ -54,8 +60,8 @@
                     @endif
                 </div>
             </div>
+            <label for="">Logs:</label>
             <div class="card">
-                <div class="card-title">Logs:</div>
                 <div class="card-body" style="max-height:100px; overflow-y: auto;">
                     @forelse ($itemLogs as $itemLog)
                         Date & Time: {{ date('F j, Y H:i:s', strtotime($itemLog->created_at)) }}<br>

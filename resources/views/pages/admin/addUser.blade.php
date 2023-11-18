@@ -131,24 +131,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        // $(document).ready(function() {
-        //     $('.college-checkbox').change(function() {
-        //         var collegeName = $(this).data('college');
-        //         var isChecked = $(this).prop('checked');
-
-        //         $('.department-checkbox[data-college="' + collegeName + '"]').prop('checked', isChecked);
-        //     });
-
-        //     $('.department-checkbox').change(function() {
-        //         var collegeName = $(this).data('college');
-        //         var departmentCheckboxes = $('.department-checkbox[data-college="' + collegeName + '"]');
-        //         var collegeCheckbox = $('.college-checkbox[data-college="' + collegeName + '"]');
-
-        //         collegeCheckbox.prop('checked', departmentCheckboxes.length === departmentCheckboxes.filter(
-        //             ':checked').length);
-        //     });
-        // });
-
         $(document).ready(function() {
             // Function to toggle department selection based on role
             function toggleDepartmentSelection() {

@@ -21,6 +21,7 @@ use App\Models\OrderItemTemp;
 use App\Rules\ExistsInDatabase;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
@@ -33,7 +34,6 @@ class ItemsController extends Controller
 {
     public function index()
     {
-        //admin
         if (Auth::user()->roles->contains('name', 'admin')) {
             $role = Role::where('name', 'admin')->first();
             $sortOrder = 'asc';
@@ -55,7 +55,7 @@ class ItemsController extends Controller
                 $departmentIds = $user->departments->pluck('id');
                 $rooms = Room::whereIn('department_id', $departmentIds)->get();
                 $roomIds = $rooms->pluck('id');
-                $items = Item::whereIn('location', $roomIds)->paginate(10);
+                $items = Item::whereIn('location', $roomIds)->paginate(20);
                 $filterItems = Item::whereIn('location', $roomIds)->get();
                 return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder', 'filterItems'));
             } else {
@@ -63,8 +63,6 @@ class ItemsController extends Controller
             }
         }
     }
-
-    // dd($itemLogs);
     public function viewItemDetails($id)
     {
         $item = Item::find($id);
@@ -162,7 +160,7 @@ class ItemsController extends Controller
         $itemLog->item_id = $item->id;
         $itemLog->quantity = $item->quantity;
         $itemLog->encoded_by = Auth::user()->id_number;
-        $itemLog->mode = 'edited item details';
+        $itemLog->mode = 'edited';
         $itemLog->date = now();
         $itemLog->save();
 
@@ -551,24 +549,24 @@ class ItemsController extends Controller
             $rooms = Room::whereIn('department_id', $departmentIds)->get();
             $roomIds = $rooms->pluck('id');
             $items = Item::whereIn('location', $roomIds)->with('brand', 'model', 'category', 'room')
-            ->where(function ($query) use ($search_text) {
-                $query->where('description', 'LIKE', '%' . $search_text . '%')
-                    ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
-                    ->orWhere('part_number', 'LIKE', '%' . $search_text . '%')
-                    ->orWhereHas('brand', function ($query) use ($search_text) {
-                        $query->where('brand_name', 'LIKE', '%' . $search_text . '%');
-                    })
-                    ->orWhereHas('model', function ($query) use ($search_text) {
-                        $query->where('model_name', 'LIKE', '%' . $search_text . '%');
-                    })
-                    ->orWhereHas('category', function ($query) use ($search_text) {
-                        $query->where('category_name', 'LIKE', '%' . $search_text . '%');
-                    })
-                    ->orWhereHas('room', function ($query) use ($search_text) {
-                        $query->where('room_name', 'LIKE', '%' . $search_text . '%');
-                    });
-            })
-            ->paginate(20);
+                ->where(function ($query) use ($search_text) {
+                    $query->where('description', 'LIKE', '%' . $search_text . '%')
+                        ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
+                        ->orWhere('part_number', 'LIKE', '%' . $search_text . '%')
+                        ->orWhereHas('brand', function ($query) use ($search_text) {
+                            $query->where('brand_name', 'LIKE', '%' . $search_text . '%');
+                        })
+                        ->orWhereHas('model', function ($query) use ($search_text) {
+                            $query->where('model_name', 'LIKE', '%' . $search_text . '%');
+                        })
+                        ->orWhereHas('category', function ($query) use ($search_text) {
+                            $query->where('category_name', 'LIKE', '%' . $search_text . '%');
+                        })
+                        ->orWhereHas('room', function ($query) use ($search_text) {
+                            $query->where('room_name', 'LIKE', '%' . $search_text . '%');
+                        });
+                })
+                ->paginate(20);
             $filterItems = Item::whereIn('location', $roomIds)->get();
         }
 
@@ -576,7 +574,7 @@ class ItemsController extends Controller
     }
 
     public function sortItems($order)
-    {   
+    {
         $sortOrder = $order;
         if (Auth::user()->roles->contains('name', 'admin')) {
             $items = Item::orderBy('id', $order)->paginate(20);
@@ -665,22 +663,99 @@ class ItemsController extends Controller
     public function transferItem($id)
     {
         $item = Item::find($id);
-        if (Auth::user()->roles->contains('name', 'admin')) {
-            $rooms = Room::all();
-        } else {
-            $dept_id = auth::user()->department_id;
-            $rooms = Room::where('department_id', $dept_id)->get();
+        $user = Auth::user();
+        $departmentIds = [];
+
+        if ($user->departments()->exists()) {
+            $departmentIds = $user->departments()->pluck('departments.id')->toArray();
         }
-        return view('pages.admin.transferItem')->with(compact('item', 'rooms'));
+        try {
+            if ($user->hasRole('admin')) {
+                $rooms = Room::all();
+            } elseif ($user->hasRole('manager')) {
+                $rooms = Room::whereIn('department_id', $departmentIds)->get();
+            }
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+
+        return view('pages.admin.transferItem', compact('item', 'rooms'));
     }
+
+    // public function saveTransferItem(Request $request, $id)
+    // {
+    //     $item = Item::find($id);
+    //     $quantity = $request->quantity !== null && $request->quantity !== '' ? $request->quantity : $item->quantity;
+
+    //     $itemLog = new ItemLog();
+    //     $itemLog->item_id = $item->id;
+    //     $itemLog->quantity = $quantity; // Log the transferred quantity
+    //     $itemLog->encoded_by = Auth::user()->id_number;
+    //     $itemLog->mode = 'transferred';
+    //     $itemLog->room_from = $item->location;
+    //     $itemLog->room_to = $request->room_to;
+    //     $itemLog->date = now();
+    //     $itemLog->save();
+
+    //     if ($quantity) {
+    //         $existingItemTo = Item::where('serial_number', $item->serial_number)
+    //             ->where('location', $request->room_to)
+    //             ->where('part_number', $item->part_number)
+    //             ->first();
+
+    //         if ($existingItemTo) {
+    //             $existingItemTo->update([
+    //                 'quantity' => $existingItemTo->quantity + $quantity, // Add the transferred quantity
+    //             ]);
+    //         } else {
+    //             $newItem = Item::create([
+    //                 'serial_number' => $item->serial_number ? $item->serial_number : 'N/A',
+    //                 'location' => $request->room_to,
+    //                 'category_id' => $item->category_id,
+    //                 'brand_id' => $item->brand_id ? $item->brand_id : 1,
+    //                 'model_id' => $item->model_id ? $item->model_id : 1,
+    //                 'part_number' => $item->part_number ? $item->part_number : 'N/A',
+    //                 'description' => $item->description,
+    //                 'aquisition_date' => $item->aquisition_date,
+    //                 'inventory_tag' => $item->inventory_tag,
+    //                 'penalty_fee' => $item->penalty_fee,
+    //                 'quantity' => $quantity,
+    //                 'status' => $item->status,
+    //                 'duration_type' => $item->duration_type,
+    //                 'duration' => $item->duration,
+    //                 'borrowed' => 'no',
+    //                 'item_image' => $item->item_image,
+    //             ]);
+    //         }
+
+    //         $item->update([
+    //             'quantity' => $item->quantity - $quantity, // Deduct transferred quantity from original item
+    //         ]);
+
+    //         // If transferred back to the original room, add the quantity back to the original item
+    //         if ($request->room_to === $item->location) {
+    //             if ($existingItemTo) {
+    //                 $existingItemTo->update([
+    //                     'quantity' => $existingItemTo->quantity - $quantity, // Deduct the transferred quantity
+    //                 ]);
+    //             }
+    //         }
+    //     } else {
+    //         $item->update([
+    //             'location' => $request->room_to,
+    //         ]);
+    //     }
+    //     return back()->with('success', 'Item #' . $id . ' transferred successfully.');
+    // }
 
     public function saveTransferItem(Request $request, $id)
     {
         $item = Item::find($id);
+        $quantity = $request->quantity !== null && $request->quantity !== '' ? $request->quantity : $item->quantity;
 
         $itemLog = new ItemLog();
         $itemLog->item_id = $item->id;
-        $itemLog->quantity = $item->quantity;
+        $itemLog->quantity = $quantity; // Log the transferred quantity
         $itemLog->encoded_by = Auth::user()->id_number;
         $itemLog->mode = 'transferred';
         $itemLog->room_from = $item->location;
@@ -688,12 +763,56 @@ class ItemsController extends Controller
         $itemLog->date = now();
         $itemLog->save();
 
-        $item->update([
-            'location' => $request->room_to,
+        if ($quantity) {
+            $existingItemTo = Item::where('serial_number', $item->serial_number)
+                ->where('location', $request->room_to)
+                ->where('part_number', $item->part_number)
+                ->first();
 
-        ]);
+            if ($existingItemTo) {
+                $existingItemTo->update([
+                    'quantity' => $existingItemTo->quantity + $quantity, // Add the transferred quantity
+                ]);
+            } else {
+                $newItem = Item::create([
+                    'serial_number' => $item->serial_number ? $item->serial_number : 'N/A',
+                    'location' => $request->room_to,
+                    'category_id' => $item->category_id,
+                    'brand_id' => $item->brand_id ? $item->brand_id : 1,
+                    'model_id' => $item->model_id ? $item->model_id : 1,
+                    'part_number' => $item->part_number ? $item->part_number : 'N/A',
+                    'description' => $item->description,
+                    'aquisition_date' => $item->aquisition_date,
+                    'inventory_tag' => $item->inventory_tag,
+                    'penalty_fee' => $item->penalty_fee,
+                    'quantity' => $quantity,
+                    'status' => $item->status,
+                    'duration_type' => $item->duration_type,
+                    'duration' => $item->duration,
+                    'borrowed' => 'no',
+                    'item_image' => $item->item_image,
+                ]);
+            }
 
-        return redirect()->route('view_items')->with('success', 'Item transferred successfully');
+            $item->update([
+                'quantity' => $item->quantity - $quantity, // Deduct transferred quantity from original item
+            ]);
+
+            // Delete item from room_from if its quantity becomes zero or negative
+            $existingItemFrom = Item::where('serial_number', $item->serial_number)
+                ->where('location', $item->location)
+                ->where('part_number', $item->part_number)
+                ->first();
+
+            if ($existingItemFrom && $existingItemFrom->quantity <= 0) {
+                $existingItemFrom->delete(); // Delete item with zero or negative quantity
+            }
+        } else {
+            $item->update([
+                'location' => $request->room_to,
+            ]);
+        }
+        return back()->with('success', 'Item #' . $id . ' transferred successfully.');
     }
 
     public function addSubItem($id)
@@ -764,7 +883,8 @@ class ItemsController extends Controller
             'borrowed' => 'no',
             'replaced_item' => $id,
             'duration' => $replacedItem->duration,
-            'duration_type' => $replacedItem->duration_type
+            'duration_type' => $replacedItem->duration_type,
+            'penalty_fee' => $replacedItem->penalty_fee,
         ]);
 
         $itemLog = new ItemLog();

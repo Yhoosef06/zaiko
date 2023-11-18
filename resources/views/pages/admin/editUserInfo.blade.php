@@ -21,7 +21,7 @@
                                                 border-danger @enderror"
                     value="{{ $user->last_name }}">
 
-                    
+
                 <label for="last name">Change Password:</label>
                 <a href="#" data-toggle="modal" data-target="#modal-change-user-password"
                     onclick="openEditUserPasswordModal('{{ $user->id_number }}')" class="form-control btn btn-default"
@@ -41,7 +41,7 @@
                 </select>
 
                 <label for="account status">Role:</label>
-                <select id="role" name="role" class="form-control">
+                <select id="role_id" name="role_id[]" class="form-control">
                     @foreach ($user->roles as $role)
                         <option value="{{ $role->id }}" selected>{{ $role->name }}</option>
                     @endforeach
@@ -53,6 +53,22 @@
                     @endif
                 </select>
                 <br>
+                <label class="scrollable-container-label" for="Item name">Select a department(s) to manage:</label>
+                <div class="scrollable-container">
+                    @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                        <h5 class="text-decoration-underline">
+                            <input type="checkbox" class="college-checkbox" data-college="{{ $collegeName }}">
+                            {{ $collegeName }}
+                        </h5>
+                        <div class="department-container">
+                            @foreach ($departmentsGroup as $department)
+                                <input type="checkbox" class="department-checkbox" name="department_ids[]"
+                                    data-college="{{ $collegeName }}" value="{{ $department->id }}">
+                                {{ $department->department_name }}<br>
+                            @endforeach
+                        </div>
+                    @endforeach
+                </div>
                 <hr>
                 <button type="button" class="btn btn-dark" data-dismiss="modal">
                     Close
@@ -101,4 +117,64 @@
             modal.find('.modal-body').html(data);
         });
     }
+
+    $(document).ready(function() {
+        // Function to toggle department selection based on role
+        function toggleDepartmentSelection() {
+            var selectedRole = $('select[name="role_id[]"]').val();
+            var departmentSection = $('.scrollable-container');
+            var label = $('.scrollable-container-label')
+
+            if (selectedRole === '2' || selectedRole === 'manager') {
+                departmentSection.show();
+                label.show(); // Show the department selection
+            } else {
+                departmentSection.hide();
+                label.hide(); // Hide the department selection
+            }
+        }
+
+        // Initially hide the department selection
+        toggleDepartmentSelection();
+
+        // Listen for changes in the role select
+        $('select[name="role_id[]"]').change(function() {
+            toggleDepartmentSelection(); // Toggle department selection on role change
+        });
+
+        // Additional code for checkbox functionality...
+        // (Your existing checkbox functionality remains unchanged)
+        $('.college-checkbox').change(function() {
+            var collegeName = $(this).data('college');
+            var isChecked = $(this).prop('checked');
+
+            $('.department-checkbox[data-college="' + collegeName + '"]').prop('checked', isChecked);
+        });
+
+        $('.department-checkbox').change(function() {
+            var collegeName = $(this).data('college');
+            var departmentCheckboxes = $('.department-checkbox[data-college="' + collegeName + '"]');
+            var collegeCheckbox = $('.college-checkbox[data-college="' + collegeName + '"]');
+
+            collegeCheckbox.prop('checked', departmentCheckboxes.length === departmentCheckboxes.filter(
+                ':checked').length);
+        });
+    });
 </script>
+<style>
+    .scrollable-container {
+        display: none;
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
+    .scrollable-container-label {
+        display: none;
+    }
+
+    .department-container {
+        margin-bottom: 10px;
+    }
+</style>

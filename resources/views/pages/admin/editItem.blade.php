@@ -145,12 +145,22 @@
                         </div>
                     </div>
                 </div>
-
-                <label for="quantity">Quantity:</label>
-                <div style="display: flex">
-                    <input type="text" id="quantity" name="quantity" style="max-width: 50px"
-                        class="form-control @error('quantity') border-danger @enderror"
-                        value="{{ $item->quantity }}" placeholder="Enter a quantity">
+                <div class="row">
+                    <div class="col">
+                        <label for="quantity">Quantity:</label>
+                        <div style="display: flex">
+                            <input type="text" id="quantity" name="quantity" style="max-width: 50px"
+                                class="form-control @error('quantity') border-danger @enderror"
+                                value="{{ $item->quantity }}" placeholder="Enter a quantity">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="duration">Set Penalty Fee (in PHP):</label>
+                        <input type="number" id="penalty_fee" name="penalty_fee"
+                            value="{{ $item->penalty_fee }}"
+                            class="form-control @error('penalty_fee') border-danger @enderror" style="width: 100px;"
+                            step="0.01" min="0.00" required>
+                    </div>
                 </div>
 
                 <label for="duration">Set Borrowing Period For This Item:</label>
@@ -221,8 +231,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
-   
-
     $(document).ready(function() {
         $('#addRoomModal').on('show.bs.modal', function(event) {
             var modal = $(this);
