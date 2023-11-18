@@ -804,7 +804,7 @@
                         $('#search_for_serial_' + i).val(ui.item.serialNumber);
                         $('#itemID_' + i).val(ui.item.itemID);
                         $('#duration_' + i).val(ui.item.duration);
-                        console.log(counterValue);
+                        console.log(ui.item.itemID);
                     }
                 }
             }).autocomplete("instance")._renderItem = function(ul, item) {
