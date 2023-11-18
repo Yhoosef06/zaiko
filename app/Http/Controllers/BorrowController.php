@@ -28,13 +28,16 @@ class BorrowController extends Controller
 
     public function borrowed()
     {
+        
+
         $department = Auth::user()->departments->first();
 
-        $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*')
+        $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
-            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
-            ->where('departments.college_id', $department->college_id)
+            ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.department_id', $department->id)
             ->WhereNull('orders.order_status')
             ->whereNotNull('orders.approval_date')
             ->whereNotNull('orders.approved_by')
@@ -268,7 +271,8 @@ class BorrowController extends Controller
         $department = Auth::user()->departments->first();
         $query = $request->input('query');
 
-        $items = Item::join('rooms', 'items.location', '=', 'rooms.id')
+        $items = Item::select('items.id as itemID', 'items.*')
+        ->join('rooms', 'items.location', '=', 'rooms.id')
         ->where('rooms.department_id', $department->id)
         ->where('borrowed', 'no')
             ->where(function ($queryBuilder) use ($query) {
@@ -282,13 +286,12 @@ class BorrowController extends Controller
             return [
                 'value' => $item->serial_number . ' - ' . $item->description,
                 'item_category' => $category ? $category->category_name : null,
-                'id' => $item->id,
                 'serialNumber' => $item->serial_number,
                 'duration' => $item->duration,
                 'brand' => $item->brand,
                 'model' => $item->model,
                 'description' => $item->description,
-                'itemID' => $item->id
+                'itemID' => $item->itemID
             ];
         });
 
@@ -329,7 +332,7 @@ class BorrowController extends Controller
 
         $query = $request->input('query');
 
-        $items = Item::join('rooms', 'items.location', '=', 'rooms.id')
+        $items = Item::select('items.id as itemID', 'items.*')->join('rooms', 'items.location', '=', 'rooms.id')
         ->where('rooms.department_id', $department->id)
         ->where('borrowed', 'no')
         ->where(function ($queryBuilder) use ($query) {
@@ -347,13 +350,13 @@ class BorrowController extends Controller
             return [
                 'value' => $item->serial_number . ' - ' . $item->description,
                 'item_category' => $category ? $category->category_name : null,
-                'id' => $item->id,
+                'id' => $item->itemID,
                 'serialNumber' => $item->serial_number,
                 'brand' => $item->brand,
                 'model' => $item->model,
                 'description' => $item->description,
                 'duration' => $item->duration,
-                'itemID' => $item->id
+                'itemID' => $item->itemID
             ];
         });
 
@@ -856,6 +859,7 @@ class BorrowController extends Controller
         $orderId = $request->input('order_id');
         $student_id_added_user = $request->input('student_id_added_user');
         $serialNumbers = $request->input('user_serial_number');
+        $description = $request->input('description');
         $quantity = $request->input('quantity');
         $itemId = $request->input('itemId');
         $duration = $request->input('duration');
@@ -863,8 +867,7 @@ class BorrowController extends Controller
         $uniqueSerialNumbers = [];
         $currentDate = Carbon::now();
 
-
-
+           
         $validator = Validator::make($request->all(), [
             'user_serial_number.*' => [
                 'required',
@@ -889,14 +892,19 @@ class BorrowController extends Controller
         }
 
 
-        $existingItems = Item::whereIn('serial_number', $serialNumbers)->where('borrowed', 'no')->get();
-
-
+        $existingItems = Item::whereIn('serial_number', $serialNumbers)
+            ->whereIn('description', $description)
+            ->where('borrowed', 'no')
+            ->get();
+    
         foreach ($serialNumbers as $serialNumber) {
-            if (!$existingItems->contains('serial_number', $serialNumber)) {
-                return response()->json(['error' => "Serial number '$serialNumber' does not exist in the item table."]);
+                if ($serialNumber !== 'N/A') { 
+                    $item = $existingItems->where('serial_number', $serialNumber)->first();
+                    if (!$item) {
+                        return response()->json(['error' => "Serial number '$serialNumber' does not exist in the item table or does not match the provided description."]);
+                    }
+                }
             }
-        }
         
        
         if ($user) {
@@ -912,19 +920,16 @@ class BorrowController extends Controller
                
                 
                 $item = Item::find($itemId[$index]);
-               
+              
                 if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serialNumbers[$index])) {
                     $order = $orderId[$index];
                     $durationDay = $duration[$index];
 
                 
                     $dateReturn = $currentDate->copy()->addDays($durationDay);
-                  
-                    // if ($currentDate->copy()->addDays($durationDay)->dayOfWeek === Carbon::SUNDAY) {
-                    //     $dateReturn->addDay();
-                        
-                    // }
-                    if ($item->quantity > 1) {
+                   
+                    
+                    if ($item->serial_number === 'N/A') {
                             OrderItem::create([
                                 'order_id' => $order,
                                 'user_id' => $student_id_added_user,
@@ -949,10 +954,7 @@ class BorrowController extends Controller
                             ]);
                                         
                     }
-                //  echo '<pre>';
-                // echo print_r($duration);
-                // echo '</pre>';
-                // exit;
+              
 
                 }
             

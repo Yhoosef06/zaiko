@@ -126,7 +126,7 @@
                                           </td>
                                           <td>{{ $item->brand_name }} </td>
                                           <td>{{ $item->model_name }}</td>
-                                          <td>{{ $item->description }} </td>
+                                          <td> <input type="text" class="d-none" name="description[]" value="{{ $item->description }}">{{ $item->description }} </td>
                                           <td>
                                             {{-- <script>
                                               var counter = {{ $counter}}
@@ -165,7 +165,7 @@
                                     </td>
                                     <td>{{ $item->brand_name }}</td>
                                     <td>{{ $item->model_name }}</td>
-                                    <td>{{ $item->description }}</td>
+                                    <td>  <input type="text" class="d-none" name="description[]" value="{{ $item->description }}">{{ $item->description }}</td>
                                     <td>
                                       <input type="hidden" name="user_serial_number[]" value="{{ $item->serial_number}}">{{ $item->serial_number }}
                                     </td>
@@ -217,7 +217,7 @@
                                 </td>
                                 <td>{{ $item->brand_name }}</td>
                                 <td>{{ $item->model_name }}</td>
-                                <td>{{ $item->description }}</td>
+                                <td> <input type="text" class="d-none" name="description[]" value="{{ $item->description }}">{{ $item->description }}</td>
                                 <td>
                                   <input type="hidden" name="user_serial_number[]" value="{{ $item->temp_serial_number}}">{{ $item->temp_serial_number }}
                                 </td>
