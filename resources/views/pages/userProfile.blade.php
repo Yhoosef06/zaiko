@@ -57,16 +57,17 @@
                                             <Label>Last Name:</Label>
                                             {{ $user->last_name }}
                                         </div>
-                                        <div class="container">
-                                            <Label>
-                                                {{ Auth::user()->account_type == 'student' || Auth::user()->account_type == 'reads' ? 'Program:' : 'Department(s):' }}</Label>
-                                            @foreach ($user->departments as $key => $department)
-                                                {{ $department->department_name }}
-                                                @if ($key < count($user->departments) - 1)
-                                                    ,
-                                                @endif
-                                            @endforeach
-                                        </div>
+                                        @if (Auth::user()->roles->contains('name', 'manager'))
+                                            <div class="container">
+                                                <Label>Department(s) to manage:</Label>
+                                                @foreach ($user->departments as $key => $department)
+                                                    {{ $department->department_name }}
+                                                    @if ($key < count($user->departments) - 1)
+                                                        ,
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        @endif
                                         <hr>
                                         <div class="text-right">
                                             <a href="{{ route('edit_profile', ['id_number' => Auth::user()->id_number]) }}"

@@ -5,17 +5,6 @@
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    {{-- @if (session('success'))
-                        <div class="alert alert-success alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <H4><i class="icon fas fa-exclamation-triangle"></i>{{ session('success') }}</H4>
-                        </div>
-                    @elseif (session('danger'))
-                        <div class="alert alert-danger alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <h4><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</h4>
-                        </div>
-                    @endif --}}
                 </div>
             </div>
         </section>
@@ -76,9 +65,6 @@
                                     </div>
                                     <!-- /.col -->
 
-                                    {{-- <!-- fix for small devices only -->
-                                    <div class="clearfix hidden-md-up"></div> --}}
-
                                     <div class="col-12 col-sm-6 col-md-3">
                                         <div class="info-box mb-3">
                                             <span class="info-box-icon bg-warning elevation-1"><i
@@ -108,7 +94,7 @@
                                     </div>
                                     <!-- /.col -->
 
-                                    <div class="container">
+                                    {{-- <div class="container">
                                         <div class="card">
                                             <div class="card-header bg-warning">
                                                 <h3 class="card-title">
@@ -118,19 +104,6 @@
                                             <!-- /.card-header -->
                                             <div class="card-body p-0" style="max-height:200px; overflow-y: auto;">
                                                 <ul class="products-list product-list-in-card pl-2 pr-2">
-                                                    {{-- <li class="item">
-                                                    <div class="product-img">
-                                                        <img src="dist/img/default-150x150.png" alt="Product Image"
-                                                            class="img-size-50">
-                                                    </div>
-                                                    <div class="product-info">
-                                                        <a href="javascript:void(0)" class="product-title">Samsung TV
-                                                            <span class="badge badge-warning float-right">$1800</span></a>
-                                                        <span class="product-description">
-                                                            Samsung 32" 1080p 60Hz LED Smart HDTV.
-                                                        </span>
-                                                    </div>
-                                                </li> --}}
                                                     <li class="item">
                                                         <div class="container">
                                                             <div class="text-center">
@@ -142,7 +115,7 @@
                                             </div>
                                             <!-- /.card-body -->
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div><!-- /.container-fluid -->
                         </div>

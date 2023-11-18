@@ -37,7 +37,7 @@
                             @endif
                             <table id="listofroles" class="table table-bordered">
                                 <label for="">Setup a role and permission:</label>
-                                <form action="{{route('store_permission')}}" method="POST">
+                                <form action="{{ route('store_permission') }}" method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-4">
@@ -71,7 +71,7 @@
                                     <tbody>
                                         @foreach ($permissions as $permission)
                                             <tr data-role-permission-id="{{ $permission['id'] }}">
-                                                <td>
+                                                <td> 
                                                     {{ $permission['name'] }}
                                                 </td>
                                                 <td>
@@ -91,13 +91,14 @@
                                 @endforeach
                             </table>
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
+                    <!-- /.card-body -->
                 </div>
-                <!-- /.col -->
+                <!-- /.card -->
             </div>
-            <!-- /.row -->
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
     </section>

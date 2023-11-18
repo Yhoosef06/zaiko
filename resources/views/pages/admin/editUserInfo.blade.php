@@ -21,24 +21,11 @@
                                                 border-danger @enderror"
                     value="{{ $user->last_name }}">
 
-                {{-- <label>Program/Department:</label>
-                @if (isset($departments))
-                    <select id="department_id" name="department_id"
-                        class="form-control @error('department_id') border-danger @enderror">
-                        <option value="{{ $user->department_id }}" selected>
-                            {{ $user->departments->department_name }}</option>
-                        @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                            <optgroup label="{{ $collegeName }}">
-                                @foreach ($departmentsGroup as $department)
-                                    <option value="{{ $department->id }}"
-                                        {{ old('department_id') == $department->id ? 'selected' : '' }}>
-                                        {{ $department->department_name }}
-                                    </option>
-                                @endforeach
-                            </optgroup>
-                        @endforeach
-                    </select>
-                @endif --}}
+                    
+                <label for="last name">Change Password:</label>
+                <a href="#" data-toggle="modal" data-target="#modal-change-user-password"
+                    onclick="openEditUserPasswordModal('{{ $user->id_number }}')" class="form-control btn btn-default"
+                    target="_blank">Click here</a>
             </div>
 
             <div class="col">
@@ -50,17 +37,6 @@
                     @elseif ($user->account_type == 'faculty')
                         <option value="faculty" selected>faculty</option>
                         <option value="student">student</option>
-                    @endif
-                </select>
-
-                <label for="account status">Account Status:</label>
-                <select id="account_status" name="account_status" class="form-control">
-                    @if ($user->account_status == 'pending')
-                        <option value="pending" selected>pending</option>
-                        <option value="approved">approved</option>
-                    @else
-                        <option value="approved" selected>approved</option>
-                        <option value="pending">pending</option>
                     @endif
                 </select>
 
@@ -77,9 +53,6 @@
                     @endif
                 </select>
                 <br>
-                <a href="#" data-toggle="modal" data-target="#modal-change-user-password"
-                    onclick="openEditUserPasswordModal('{{ $user->id_number }}')" class="form-control btn btn-default"
-                    target="_blank">Change Password</a>
                 <hr>
                 <button type="button" class="btn btn-dark" data-dismiss="modal">
                     Close
