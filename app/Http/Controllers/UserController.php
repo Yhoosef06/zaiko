@@ -252,24 +252,38 @@ class UserController extends Controller
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->account_type = $request->account_type;
-        // $user->department_id = $request->department_id;
         $user->update();
 
-        $userRole = UserRole::where('user_id_number', $id_number)->first();
+        $new_role_ids = $request->input('role_id', []);
+        $new_role_id = isset($new_role_ids[0]) ? $new_role_ids[0] : null;
+        $current_user_role = UserRole::where('user_id_number', $id_number)->first();
 
-        $role_id = $request->role;
-
-        if ($userRole) {
-            $userRole->update(['role_id' => $role_id]);
-        } else {
+        if (!$current_user_role) {
+            // If no user role exists, create a new one for the user with the selected role
             UserRole::create([
                 'user_id_number' => $request->id_number,
-                'role_id' => $role_id,
+                'role_id' => $new_role_id,
             ]);
+        } else {
+            // If the user role exists, update it only if the role has changed
+            if ($current_user_role->role_id !== $new_role_id) {
+                $current_user_role->update(['role_id' => $new_role_id]);
+            }
+        }
+
+        if ($new_role_id == 3) { // Role ID for 'borrower'
+            // Detach associated departments for the user
+            $user->departments()->detach();
+        } elseif ($new_role_id == 2) { // Role ID for 'manager'
+            $department_ids = $request->input('department_ids', []);
+
+            // Sync user's departments
+            $user->departments()->sync($department_ids);
         }
 
         Session::flash('success', 'User ' . $id_number . ' has been updated.');
         return redirect('list-of-users');
+
     }
 
     public function changeUserPassword($id_number)

@@ -55,15 +55,17 @@
                 <br>
                 <label class="scrollable-container-label" for="Item name">Select a department(s) to manage:</label>
                 <div class="scrollable-container">
-                    @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                    @foreach ($departments->groupBy('college.college_name') as $collegeName => $departmentsGroup)
                         <h5 class="text-decoration-underline">
-                            <input type="checkbox" class="college-checkbox" data-college="{{ $collegeName }}">
                             {{ $collegeName }}
                         </h5>
                         <div class="department-container">
                             @foreach ($departmentsGroup as $department)
+                                @php
+                                    $isChecked = $user->departments->contains('id', $department->id);
+                                @endphp
                                 <input type="checkbox" class="department-checkbox" name="department_ids[]"
-                                    data-college="{{ $collegeName }}" value="{{ $department->id }}">
+                                    value="{{ $department->id }}" {{ $isChecked ? 'checked' : '' }}>
                                 {{ $department->department_name }}<br>
                             @endforeach
                         </div>
