@@ -52,6 +52,11 @@
                         <option value="2">manager</option>
                     @endif
                 </select>
+                <label for="first name">Status:</label>
+                <select id="isActive" name="isActive" class="form-control">
+                    <option value="0" {{ $user->isActive == 0 ? 'selected' : '' }}>Inactive</option>
+                    <option value="1" {{ $user->isActive == 1 ? 'selected' : '' }}>Active</option>
+                </select>
                 <br>
                 <label class="scrollable-container-label" for="Item name">Select a department(s) to manage:</label>
                 <div class="scrollable-container">

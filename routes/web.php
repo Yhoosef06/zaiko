@@ -84,7 +84,6 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::get('/dashboard', [PagesController::class, 'index'])->name('admin.dashboard');
     // Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');
-    ;
 
     // FOR ITEMS
     Route::middleware(['permission:manage-inventory,view-items'])->group(function () {
@@ -288,7 +287,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 });
 
 //student
-Route::middleware(['auth', 'role:borrower'])->group(function () {
+Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
     //student
     Route::middleware(['permission:borrow-items'])->group(function () {
 
