@@ -28,6 +28,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 use Database\Seeders\OrderItemTempSeeder;
 use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
 class ItemsController extends Controller
@@ -901,5 +902,15 @@ class ItemsController extends Controller
         $itemLog->save();
 
         return redirect()->route('view_items')->with('success', 'Item # ' . $id . ' Replaced Successfully');
+    }
+
+    public function downloadQRCode($itemId)
+    {
+        $qrCode = QrCode::format('png')->size(300)->generate($itemId);
+
+        $response = response($qrCode)->header('Content-type', 'image/png');
+        $downloadFileName = 'item_' . $itemId . '_qr.png';
+
+        return $response->header('Content-Disposition', 'attachment; filename="' . $downloadFileName . '"');
     }
 }

@@ -39,9 +39,13 @@ use App\Http\Controllers\SecurityQuestionController;
 
 Route::get('edit_college', [CollegeController::class, 'editCollege'])->name('modify_college');
 
-Route::get('/qr-reader', function () {
-    return view('qr-reader');
-});
+Route::get('/download-qr-code/{itemId}', function ($itemId) {
+    $qrCode = QrCode::size(200)->generate($itemId);
+    $file = public_path('qr_codes/item_' . $itemId . '.png');
+    file_put_contents($file, base64_decode($qrCode));
+
+    return response()->download($file)->deleteFileAfterSend(true);
+})->name('download_qr_code');
 
 Route::get('/select-registration-type', [RegisterController::class, 'selectRegistrationType'])->name('select_registration_type');
 
@@ -177,6 +181,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::get('add-brand', [BrandController::class, 'addBrand'])->name('add_brand');
     Route::get('/get-models/{brandId}', [ModelsController::class, 'getModels'])->name('get_models');
     Route::get('add-model', [ModelsController::class, 'addModel'])->name('add_model');
+    Route::get('/download-qr-code/{itemId}', [ItemsController::class, 'downloadQRCode'])->name('download_qr_code');
 
 });
 
@@ -293,7 +298,7 @@ Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
 
         Route::controller(BorrowerController::class)->group(function () {
             Route::get('/borrower-dashboard', 'index')->name('borrower.dashboard');
-        //     Route::get('/borrower-items', 'items')->name('student.items');
+            //     Route::get('/borrower-items', 'items')->name('student.items');
             Route::get('/view-item-{serial_number}', 'viewItemDetails')->name('student.view.item');
         });
 

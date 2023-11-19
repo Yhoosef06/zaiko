@@ -5,7 +5,7 @@
         <div class="container p-3">
             <div class="row text-lg">
                 <div class="col">
-                    <strong>Serial Number:</strong> {{ $item->serial_number }} <br>
+                    <strong>Serial Number1:</strong> {{ $item->serial_number }} <br>
                     <strong>Item Name:</strong> {{ $item->item_name }} <br>
                     <strong>Unit Number:</strong> {{ $item->unit_number }} <br>
                 </div>
@@ -14,6 +14,9 @@
                     <strong>Location:</strong> {{ $item->location }} <br>
                     <strong>Item Description:</strong> {{ $item->item_description }} <br>
                     <strong>Status:</strong> {{ $item->status }}
+                    <div>
+                        {!! QrCode::size(200)->generate($item->id) !!}
+                    </div>
                 </div>
             </div>
             <hr>
