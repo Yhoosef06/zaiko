@@ -45,11 +45,6 @@ class Item extends Model
         return $this->HasOne(Room::class, 'id', 'location');
     }
 
-    // public function ItemLog(): HasOne
-    // {
-    //     return $this->HasOne(ItemLog::class, 'item_id', 'id');
-    // }
-
     public function category()
     {
         return $this->belongsTo(ItemCategory::class, 'category_id', 'id');

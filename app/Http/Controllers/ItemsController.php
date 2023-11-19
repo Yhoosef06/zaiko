@@ -239,7 +239,6 @@ class ItemsController extends Controller
         ]);
 
         if ($serial_numbers != null) {
-
             if ($this->hasDuplicateSerialNumbers($serial_numbers)) {
                 return response()->json(['duplicate' => 'Duplicate serial number(s) detected. Please review your entries']);
             }
@@ -279,47 +278,53 @@ class ItemsController extends Controller
                 $itemLog->date = now();
                 $itemLog->save();
             }
-            // if (!empty($invalidSerialNumbers) && empty($validSerialNumbers)) {
-            //     session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-            // Session::flash('error', 'The following serial number(s) are already found the database: ');
-            // return response()->json(['error' => 'Serial number already exists in the database']);
-            // return redirect('/adding-new-item')->with('error', 'Failed to add item(s). The following serial numbers are already taken:',);
-            // } 
-            // else
-            // if (!empty($invalidSerialNumbers) && !empty($validSerialNumbers)) {
-            //     session()->put('invalidSerialNumbers', $invalidSerialNumbers);
-            //     return redirect('/adding-new-item')->with('warning', 'Item(s) added successfully, but some serial numbers are invalid. Please check the following serial numbers: ');
-            // } else {
-            // dd('2');
+
             Session::flash('success', 'Do you want to add another one?');
             return response()->json(['success' => 'Item(s) added successfully']);
-            // }
-        } else {
-            $item = Item::create([
-                'serial_number' => 'N/A',
-                'location' => $request->location,
-                'category_id' => $request->item_category,
-                'brand_id' => $request->brand ? $request->brand : 1,
-                'model_id' => $request->model ? $request->model : 1,
-                'part_number' => $request->part_number ? $request->part_number : 'N/A',
-                'description' => $request->item_description,
-                'aquisition_date' => $request->aquisition_date,
-                'inventory_tag' => $request->inventory_tag,
-                'quantity' => $quantity,
-                'status' => $request->status,
-                'duration_type' => $request->duration_type,
-                'duration' => $request->duration,
-                'borrowed' => 'no',
-                'item_image' => $imagePath,
-            ]);
 
-            $itemLog = new ItemLog();
-            $itemLog->item_id = $item->id;
-            $itemLog->quantity = $item->quantity;
-            $itemLog->encoded_by = Auth::user()->id_number;
-            $itemLog->mode = 'added';
-            $itemLog->date = now();
-            $itemLog->save();
+        } else {
+            $existingItem = Item::where('part_number', $request->part_number)
+                ->where('location', $request->location)
+                ->first();
+
+            if ($existingItem) {
+                $existingItem->quantity += $quantity;
+                $existingItem->save();
+
+                $itemLog = new ItemLog();
+                $itemLog->item_id = $existingItem->id;
+                $itemLog->quantity = $quantity;
+                $itemLog->encoded_by = Auth::user()->id_number;
+                $itemLog->mode = 'quantity_updated';
+                $itemLog->date = now();
+                $itemLog->save();
+            } else {
+                $item = Item::create([
+                    'serial_number' => 'N/A',
+                    'location' => $request->location,
+                    'category_id' => $request->item_category,
+                    'brand_id' => $request->brand ? $request->brand : 1,
+                    'model_id' => $request->model ? $request->model : 1,
+                    'part_number' => $request->part_number ? $request->part_number : 'N/A',
+                    'description' => $request->item_description,
+                    'aquisition_date' => $request->aquisition_date,
+                    'inventory_tag' => $request->inventory_tag,
+                    'quantity' => $quantity,
+                    'status' => $request->status,
+                    'duration_type' => $request->duration_type,
+                    'duration' => $request->duration,
+                    'borrowed' => 'no',
+                    'item_image' => $imagePath,
+                ]);
+
+                $itemLog = new ItemLog();
+                $itemLog->item_id = $item->id;
+                $itemLog->quantity = $item->quantity;
+                $itemLog->encoded_by = Auth::user()->id_number;
+                $itemLog->mode = 'added';
+                $itemLog->date = now();
+                $itemLog->save();
+            }
 
             Session::flash('success', 'Do you want to add another one?');
             return response()->json(['success' => 'Item(s) added successfully']);
