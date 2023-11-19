@@ -61,8 +61,7 @@
 
             <div class="col">
                 <label for="Item description">Description:</label>
-                <input type="text" id="description" name="description"
-                    value="{{ old('description') }}"
+                <input type="text" id="description" name="description" value="{{ old('description') }}"
                     class="form-control @error('description')
                                         border-danger
                                         @enderror"
@@ -87,8 +86,7 @@
 
                 <label for="quantity">Quantity:</label>
                 <input type="text" id="quantity" name="quantity" style="max-width: 50px"
-                    class="form-control @error('quantity') border-danger @enderror"
-                    placeholder="0" required>
+                    class="form-control @error('quantity') border-danger @enderror" placeholder="0" required>
 
                 @error('quantity')
                     <div class="text-danger">
@@ -128,44 +126,6 @@
     </div>
 </form>
 
-{{-- FOR ADDING A ROOM --}}
-
-<div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addRoomModalLabel">Adding a Room</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Content will be loaded here -->
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- FOR ADDING AN ITEM CATEGORY --}}
-<div class="modal fade" id="addItemCategoryModal" tabindex="-1" aria-labelledby="addCollegeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCollegeModalLabel">Adding a Item Category</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Content will be loaded here -->
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- /.modal -->
-
 {{-- FOR ADDING A BRAND --}}
 <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addCollegeModalLabel"
     aria-hidden="true">
@@ -178,7 +138,19 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Content will be loaded here -->
+                <form class="form-signin" action="{{ route('save_new_brand') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <label for="">Brand Name:</label>
+                    <input type="text" name="brand_name" id="brand_name" placeholder="Enter a brand name"
+                        class="form-control @error('brand_name') border-danger @enderror" required>
+                    <hr>
+                    <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
+                        Close
+                    </button>
+                    <Button type="submit" class="btn btn-success"
+                        onclick="return confirm('You are about to add a new brand name. Do you wish to continue?')">Save</Button>
+                </form>
             </div>
         </div>
     </div>
@@ -196,7 +168,28 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Content will be loaded here -->
+                <form class="form-signin" action="{{ route('save_new_model') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <label for="">Brand Name:</label>
+                    <select class="form-control @error('brand_id') border-danger @enderror" name="brand_id"
+                        id="brand_id" required>
+                        <option value="" disabled selected>Select a brand for the model</option>
+                        @foreach ($brands as $brand)
+                            <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
+                        @endforeach
+                    </select>
+                    <label for="">Model Name:</label>
+                    <input type="text" name="model_name" id="model_name" placeholder="Enter a model name"
+                        class="form-control @error('model_name') border-danger @enderror" required>
+                    <hr>
+                    <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
+                        Close
+                    </button>
+                    <Button type="submit" class="btn btn-success"
+                        onclick="return confirm('You are about to add a new room name. Do you wish to continue?')">Save</Button>
+                </form>
+
             </div>
         </div>
     </div>
