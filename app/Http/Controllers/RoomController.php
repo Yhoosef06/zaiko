@@ -22,31 +22,28 @@ class RoomController extends Controller
         } else {
             $user = Auth::user();
             $departments = $user->departments;
-            $rooms = Room::where('department_id',$departments->pluck('id'))->with('department')->withCount('items')->get();
+            $rooms = Room::where('department_id', $departments->pluck('id'))->with('department')->withCount('items')->get();
             return view('pages.admin.listOfRooms')->with(compact('rooms'));
         }
     }
 
     public function addRoom()
     {
-        if (Auth::user()->roles->contains('name', 'admin')) {
-            $colleges = College::all();
+        $user = Auth::user();
+
+        if ($user->hasRole('admin')) {
+            $colleges = College::with('departments')->get();
             $departments = Department::with('college')->get();
-            $departments->each(function ($department) {
-                $department->college_name = $department->college->college_name;
-            });
+            return view('pages.admin.addRoom')->with(compact('departments', 'colleges'));
+        } elseif ($user->hasRole('manager')) {
+            $departments = $user->departments()->with('college')->get();
+            $collegeIds = $departments->pluck('college.id')->unique();
+            $colleges = College::whereIn('id', $collegeIds)->get();
+
             return view('pages.admin.addRoom')->with(compact('departments', 'colleges'));
         } else {
-            $user = Auth::user();
-            $department = $user->departments->first();
-            $user_college_id =  $department->college_id;
-            $colleges = College::where('id', $user_college_id)->get();
-            
-            $departments = Department::with('college')->get();
-            $departments->each(function ($department) {
-                $department->college_name = $department->college->college_name;
-            });
-            return view('pages.admin.addRoom')->with(compact('departments', 'colleges'));
+            // For other roles or unauthorized access
+            abort(403, 'Unauthorized action.');
         }
     }
 

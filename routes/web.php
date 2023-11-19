@@ -172,6 +172,13 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         Route::get('/report-test', [ItemsController::class, 'reportTest']);
     });
 
+    Route::get('add-room', [RoomController::class, 'addRoom'])->name('add_room');
+    Route::get('/get-departments/{college_id}', [DepartmentController::class, 'getDepartments'])->name('get_departments');
+    Route::get('add-item-category', [ItemCategoryController::class, 'addItemCategory'])->name('add_item_category');
+    Route::get('add-brand', [BrandController::class, 'addBrand'])->name('add_brand');
+    Route::get('/get-models/{brandId}', [ModelsController::class, 'getModels'])->name('get_models');
+    Route::get('add-model', [ModelsController::class, 'addModel'])->name('add_model');
+
 });
 
 //ADMIN
@@ -194,16 +201,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // FOR ROOM - ADMIN
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
-    Route::get('add-room', [RoomController::class, 'addRoom'])->name('add_room');
     Route::post('save-new-room', [RoomController::class, 'saveNewRoom'])->name('save_new_room');
     Route::get('edit/room/{id}', [RoomController::class, 'editRoom'])->name('edit_room');
     Route::post('save-edited-room/{id}', [RoomController::class, 'saveEditedRoom'])->name('save_edited_room');
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
-    Route::get('/get-departments/{college_id}', [DepartmentController::class, 'getDepartments'])->name('get_departments');
 
     // FOR Item Category -ADMIN
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
-    Route::get('add-item-category', [ItemCategoryController::class, 'addItemCategory'])->name('add_item_category');
     Route::get('edit/item-category/{id}', [ItemCategoryController::class, 'editItemCategory'])->name('edit_item_category');
     Route::post('saving-new-category', [ItemCategoryController::class, 'saveNewCategory'])->name('save_new_category');
     Route::post('save-edited-item-category/{id}', [ItemCategoryController::class, 'saveEditedItemCategory'])->name('save_edited_item_category');
@@ -211,7 +215,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     //FOR BRAND - ADMIN
     Route::get('brands', [BrandController::class, 'index'])->name('view_brands');
-    Route::get('add-brand', [BrandController::class, 'addBrand'])->name('add_brand');
     Route::post('save-new-brand', [BrandController::class, 'saveNewBrand'])->name('save_new_brand');
     Route::get('edit/brand/{id}', [BrandController::class, 'editBrand'])->name('edit_brand');
     Route::post('save-edited-brand/{id}', [BrandController::class, 'saveEditedBrand'])->name('save_edited_brand');
@@ -219,8 +222,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     //FOR MODELS - ADMIN
     Route::get('models', [ModelsController::class, 'index'])->name('view_models');
-    Route::get('/get-models/{brandId}', [ModelsController::class, 'getModels'])->name('get_models');
-    Route::get('add-model', [ModelsController::class, 'addModel'])->name('add_model');
     Route::post('save-new-model', [ModelsController::class, 'saveNewModel'])->name('save_new_model');
     Route::get('edit/model/{id}', [ModelsController::class, 'editModel'])->name('edit_model');
     Route::post('save-edited-model/{id}', [ModelsController::class, 'saveEditedModel'])->name('save_edited_model');
@@ -282,7 +283,6 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
         Route::post('/admin-new-order', [BorrowController::class, 'adminNewOrder'])->name('adminNewOrder');
         Route::post('/user-new-order', [BorrowController::class, 'userNewOrder'])->name('userNewOrder');
         Route::get('/removeBorrow/{order_item_id}/{serial_number}/{description}', [BorrowController::class, 'removeBorrow'])->name('removeBorrow');
-        
     });
 
 });
