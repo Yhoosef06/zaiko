@@ -26,43 +26,44 @@ class SignInController extends Controller
         if (auth()->attempt(['id_number' => $input['id_number'], 'password' => $input['password']])) {
             $userId = auth()->user()->id_number;
             $user = User::find($userId);
-            
-            if ($user->roles->contains('name', 'admin')) {
-                $userRole = Auth::user()->roles-> contains('name', 'admin');
-                // dd($userRole);
-                return redirect()->route('admin.dashboard');
-            } else if ($user->roles->contains('name', 'manager')) {
-
-                if ($user) {
-                    $user->update([
-                        'last_login_at' => now()
-                    ]);
-                }
-                if (auth()->user()->password_updated == false) {
-                    return redirect()->route('change_user_password', ['id_number' => auth()->user()->id_number]);
-                } elseif (auth()->user()->security_question_id == null) {
-                    return redirect()->route('setup_security_question', ['id_number' => auth()->user()->id_number]);
-                } else {
+            if ($user->isActive) {
+                if ($user->roles->contains('name', 'admin')) {
                     return redirect()->route('admin.dashboard');
-                }
-            } else if($user->roles->contains('name', 'borrower')) {
-                $userId = auth()->user()->id_number;
-                $user = User::find($userId);
-                if ($user) {
-                    $user->update([
-                        'last_login_at' => now()
-                    ]);
-                }
-                if (auth()->user()->password_updated == false) {
-                    return redirect()->route('change_user_password', ['id_number' => auth()->user()->id_number]);
-                } elseif (auth()->user()->security_question_id == null) {
-                    return redirect()->route('setup_security_question', ['id_number' => auth()->user()->id_number]);
-                } else {
-                    return redirect()->route('borrower.dashboard');
-                }
-            }
-        };
+                } else if ($user->roles->contains('name', 'manager')) {
 
-        return back()->with('status', 'Invalid I.D. Number or Password');
+                    if ($user) {
+                        $user->update([
+                            'last_login_at' => now()
+                        ]);
+                    }
+                    if (auth()->user()->password_updated == false) {
+                        return redirect()->route('change_user_password', ['id_number' => auth()->user()->id_number]);
+                    } elseif (auth()->user()->security_question_id == null) {
+                        return redirect()->route('setup_security_question', ['id_number' => auth()->user()->id_number]);
+                    } else {
+                        return redirect()->route('admin.dashboard');
+                    }
+                } else if ($user->roles->contains('name', 'borrower')) {
+                    $userId = auth()->user()->id_number;
+                    $user = User::find($userId);
+                    if ($user) {
+                        $user->update([
+                            'last_login_at' => now()
+                        ]);
+                    }
+                    if (auth()->user()->password_updated == false) {
+                        return redirect()->route('change_user_password', ['id_number' => auth()->user()->id_number]);
+                    } elseif (auth()->user()->security_question_id == null) {
+                        return redirect()->route('setup_security_question', ['id_number' => auth()->user()->id_number]);
+                    } else {
+                        return redirect()->route('borrower.dashboard');
+                    }
+                }
+            }else{
+                return back()->with('status', 'Your account has been deactivated.');
+            }
+        } else {
+            return back()->with('status', 'Invalid I.D. Number or Password');
+        }
     }
 }
