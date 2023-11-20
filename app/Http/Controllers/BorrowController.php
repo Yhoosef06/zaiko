@@ -66,6 +66,7 @@ class BorrowController extends Controller
         ->where('order_items.date_returned', '<', $currentDate->toDateString())
         ->where('rooms.department_id', $department->id)
         ->get();
+        
 
 
         foreach ($overdueItems as $item) {
@@ -93,6 +94,7 @@ class BorrowController extends Controller
         ->join('items', 'order_item_temps.item_id', '=', 'items.id')
         ->join('rooms', 'items.location', '=', 'rooms.id')
         ->where('rooms.department_id', $department->id)
+        ->whereNotNull('orders.date_submitted')
         ->whereNull('orders.approval_date')
         ->whereNull('orders.approved_by')
         ->groupBy('orders.id')

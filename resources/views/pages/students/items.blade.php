@@ -238,6 +238,8 @@
                                                                 class="btn btn-success" value="Add to cart">
                                                             <button type="button" class="btn btn-danger"
                                                                 data-dismiss="modal">Close</button>
+                                                             
+                                                              
                                                         </div>
                                                     </form>
 
@@ -259,4 +261,9 @@
 
     </div>
 
+ 
+   
+
 @endsection
+
+

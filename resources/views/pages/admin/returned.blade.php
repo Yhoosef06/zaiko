@@ -48,7 +48,7 @@
                       <td>{{ $forReturn->released_by }}</td>
                       <td>{{ $forReturn->returndate }}</td>
                       <td>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#showReturn{{$forReturn->id}}"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#showReturn{{$forReturn->id}}"><i class="fa fa-eye"></i></button>
                     
                       </td>
                     </tr>
