@@ -365,6 +365,7 @@ class UserController extends Controller
         User::find($id_number)->update([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
+            'email' => $request->email,
             'departmen_id' => $request->department
         ]);
 

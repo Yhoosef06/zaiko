@@ -57,6 +57,10 @@
                                             <Label>Last Name:</Label>
                                             {{ $user->last_name }}
                                         </div>
+                                        <div class="container">
+                                            <Label>Email Address:</Label>
+                                            {{ $user->email ? $user->email : 'None' }}
+                                        </div>
                                         @if (Auth::user()->roles->contains('name', 'manager'))
                                             <div class="container">
                                                 <Label>Department(s) to manage:</Label>
