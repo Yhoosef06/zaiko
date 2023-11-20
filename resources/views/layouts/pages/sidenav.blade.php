@@ -61,7 +61,7 @@
                         @endif
 
                         <li class="nav-item">
-                            <a href="{{ route('cart.list') }}" class="nav-link">
+                            <a href="{{ route('browse.cart') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>Cart</p>
                                 @if ($cartcount != 0)

@@ -130,37 +130,19 @@ class CartController extends Controller
     public function browse(){
 
         $user = Auth::user(); 
-        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
-        $borrowedList= OrderItem::where('status', 'borrowed')->get();
-        $missingList = ItemLog::where('mode', 'missing')->get();
+        $orders = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
+        $itemTemps = OrderItemTemp::all();
 
-        if($order != null){
-            $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
-        }else{
-            $cartItems = null;
+        $allOrderItems = collect(); // Create an empty collection
 
+        foreach ($orders as $order) {
+            $itemTemps = OrderItemTemp::where('order_id', $order->id)->get();
+            $allOrderItems = $allOrderItems->merge($itemTemps);
         }
+        dd($allOrderItems);
         
-
-        $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
-        // dd($user_department->department_id);
-
-        $user_dept_id = $user_department->department_id;
-        $departments = Department::with('college')->get();
-    
-        $collegeId = null;
-        foreach ($departments as $department) {
-            if ($department->id == $user_dept_id) {
-                $collegeId =  $department->college->id;
-                break;
-            }
-        }
        
-        $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
-            $query->where('id', $collegeId);
-        })->get();
-       
-        return view('pages.students.cartList')->with(compact('cartItems','items','borrowedList','missingList'));
+        return view('pages.students.cartList')->with(compact('orders'));
 
     }   
 
