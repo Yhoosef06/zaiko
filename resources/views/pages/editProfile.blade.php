@@ -34,12 +34,17 @@
                             <Label>Last Name:</Label>
                             <input class="form-control" type="text" name="last_name" id="last_name"
                                 value="{{ $user->last_name }}">
+
+                            <Label>Email Address:</Label>
+                            <input class="form-control" type="text" name="email" id="email"
+                                value="{{ $user->email }}" placeholder="Enter an email address">
                             <hr>
                             <div>
                                 <a href="{{ route('view_profile', ['id_number' => Auth::user()->id_number]) }}"
                                     class="btn btn-outline-dark">Back</a>
                                 <Button type="submit" class="btn btn-success"
-                                    onclick="return confirm('You are about to save your edited profile information. Do you wish to continue?')">Save Changes</Button>
+                                    onclick="return confirm('You are about to save your edited profile information. Do you wish to continue?')">Save
+                                    Changes</Button>
                             </div>
                         </form>
                     </div>
