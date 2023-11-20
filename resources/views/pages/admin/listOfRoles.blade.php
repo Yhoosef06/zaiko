@@ -44,7 +44,9 @@
                                             <select class="form-control" name="role_id" id="role_id" required>
                                                 <option value="" disabled selected>Select a role</option>
                                                 @foreach ($roles as $role)
-                                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                    @if ($role->name != 'admin')
+                                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                         </div>
@@ -62,32 +64,34 @@
                                     </div>
                                 </form><br>
                                 @foreach ($groupedRolePermissions as $roleName => $permissions)
-                                    <thead>
-                                        <tr>
-                                            <th class="text-lg">{{ $roleName }} : permissions</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($permissions as $permission)
-                                            <tr data-role-permission-id="{{ $permission['id'] }}">
-                                                <td> 
-                                                    {{ $permission['name'] }}
-                                                </td>
-                                                <td>
-                                                    <form class="form_delete_btn" method="POST"
-                                                        action="{{ route('delete_permission', $permission['id']) }}">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-outline-danger show-alert-delete-item"
-                                                            data-toggle="tooltip"
-                                                            title='Delete'onclick="deleteButton('{{ $permission['id'] }}')">Remove</button>
-                                                    </form>
-                                                </td>
+                                    @if ($roleName !== 'admin' || !$isAdmin)
+                                        <thead>
+                                            <tr>
+                                                <th class="text-lg">{{ $roleName }} : permissions</th>
+                                                <th></th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($permissions as $permission)
+                                                <tr data-role-permission-id="{{ $permission['id'] }}">
+                                                    <td>
+                                                        {{ $permission['name'] }}
+                                                    </td>
+                                                    <td>
+                                                        <form class="form_delete_btn" method="POST"
+                                                            action="{{ route('delete_permission', $permission['id']) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-outline-danger show-alert-delete-item"
+                                                                data-toggle="tooltip"
+                                                                title='Delete'onclick="deleteButton('{{ $permission['id'] }}')">Remove</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    @endif
                                 @endforeach
                             </table>
                         </div>
