@@ -85,11 +85,21 @@ class PagesController extends Controller
             $countBorrow = $borrows->count();
             $pendings =  $userpendings->count();
             $overdue = $overdueItems->count();
-            session([
+            if( $pendings > 0 ){
+                session([
                     'pending_count' => $pendings,
                     'borrow_count' => $countBorrow,
                     'overdue_count' => $overdue
                     ]);
+
+            }else{
+                session([
+                    'pending_count' => $pendings,
+                    'borrow_count' => $countBorrow,
+                    'overdue_count' => $overdue
+                    ]);
+            }
+            
            
 
             $totalItems = $items->count();
