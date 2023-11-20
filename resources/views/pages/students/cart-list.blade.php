@@ -167,7 +167,7 @@
                             @else
                             <tr>
                                 <td colspan="12" class="text-center">
-                                    <a href="{{ route('student.items') }}" class="btn btn-danger"><i class="bi bi-cart-x"></i> No items in cart</a>
+                                    <a href="{{ route('browse.items') }}" class="btn btn-danger"><i class="bi bi-cart-x"></i> No items in cart</a>
                                     
                                 </td>
                             </tr>

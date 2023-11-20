@@ -57,7 +57,6 @@
 
 
         <section class="content">
-            {{-- IF NO CATEGORY SELECTED SHOW ALL ITEMS. --}}
             <div class="">
                 <div class="row">
                     <div class="col-3">
@@ -80,7 +79,6 @@
                 <div class="row">
                     <div class="col-2">
                         @isset($categories)
-                            {{-- I VERTICAL LIST NI SIYA SA LEFT SIDE RADIO BUTTON OKAY --}}
                             <form action="{{ route('browse.category') }}" method="GET">
                                 @csrf
                                 @foreach ($categories as $cat)
@@ -114,7 +112,6 @@
                                             }
                                             $item = $groupedItem->first();
                                         }
-                                        // echo $totalquantity;
                                     @endphp
                                     <div class="col-lg-3 col-md-5 mb-4">
                                         <div class="card">
