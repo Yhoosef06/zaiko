@@ -96,7 +96,19 @@
                                             <li class="item">
                                                 <div class="container">
                                                     <div class="text-center">
-                                                        No Messeages.
+                                                    @php
+                                                        if( $pendings > 0 ){
+                                                            echo '<h5>There are <span class="h4" style="color: red;">' . $pendings . '</span> pending items waiting for approval.</h5>';
+                                                            if( $overdue > 0 ){
+                                                                echo '<h5>There are <span class="h4" style="color: red;">' . $overdue . '</span> overdue items that need to be returned.</h5>';
+                                                                
+                                                            }
+
+                                                        }else{
+                                                            echo 'No Messeages.';
+                                                        }
+                                                    @endphp
+                                                     
                                                     </div>
                                                 </div>
                                             </li>

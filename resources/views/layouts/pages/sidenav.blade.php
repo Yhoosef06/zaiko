@@ -130,11 +130,11 @@
                                                 <div class="ml-3">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Released Items</p>
-                                                    @if (session()->has('borrow_count'))
+                                                    {{-- @if (session()->has('borrow_count'))
                                                     <span
                                                         class="badge badge-danger right">{{ session('borrow_count') }}</span>
                                                     @else
-                                                    @endif
+                                                    @endif --}}
 
                                                 </div>
                                             </a>
