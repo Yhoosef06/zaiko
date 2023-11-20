@@ -46,6 +46,7 @@ class CartController extends Controller
         }else{
             $orderchecker = 0;
             foreach($orders as $order){
+
                 $itemModel = $item->model->model_name;
                 $itemTemps = OrderItemTemp::where('order_id', $order->id)->get();
 
@@ -54,7 +55,7 @@ class CartController extends Controller
                 });
                 
                 //check the department of the item
-                if($order->orderItemTemp->item->room->department->id == $department){
+                if($order->orderItemTemp->first()->item->room->department->id == $department){
                     $orderchecker ++;
                     if($filteredItems->isEmpty()){
                         //added item not in order yet
@@ -107,7 +108,7 @@ class CartController extends Controller
 
             }
             //item is not in any order yet or no existing department order
-            if($orderchecker != 0){
+            if($orderchecker == 0){
                 $order_cart = new Order;
 
                 $order_cart->user_id = $user->id_number;
