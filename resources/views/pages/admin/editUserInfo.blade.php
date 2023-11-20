@@ -21,6 +21,12 @@
                                                 border-danger @enderror"
                     value="{{ $user->last_name }}">
 
+                <label for="email">Email Address:</label>
+                <input type="text" id="email" name="email"
+                    class="form-control @error('email')
+                                                    border-danger @enderror"
+                    value="{{ $user->email }}" placeholder="Enter an email address">
+
 
                 <label for="last name">Change Password:</label>
                 <a href="#" data-toggle="modal" data-target="#modal-change-user-password"

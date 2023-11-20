@@ -253,6 +253,7 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->account_type = $request->account_type;
         $user->isActive = $request->isActive;
+        $user->email= $request->email;
         $user->update();
 
         $new_role_ids = $request->input('role_id', []);

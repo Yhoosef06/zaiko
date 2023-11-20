@@ -2,6 +2,7 @@
     <strong>I.D. Number:</strong> {{ $user->id_number }} <br>
     <strong>First Name:</strong> {{ $user->first_name }} <br>
     <strong>Last Name:</strong> {{ $user->last_name }} <br>
+    <strong>Email Address:</strong> {{ $user->email ? $user->email : 'None' }} <br>
     @if ($user->departments->isNotEmpty())
         <strong>Department(s) associated to:</strong>
         @foreach ($user->departments as $key => $department)

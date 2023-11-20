@@ -24,8 +24,8 @@ class CsvController extends Controller
             $filePath = $file->getRealPath();
 
             // dispatch(new CsvImportJob($filePath, $request->input('department_ids')));
-            // dispatch(new CsvImportJob, $filePath);
-            Excel::import(new CsvImport, $filePath);
+            dispatch(new CsvImportJob($filePath));
+            // Excel::import(new CsvImport, $filePath);
 
             return redirect()->back()->with('success', 'CSV file uploaded successfully!');
         } catch (\Throwable $th) {
