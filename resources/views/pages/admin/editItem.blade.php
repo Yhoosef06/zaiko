@@ -151,7 +151,7 @@
                         <div style="display: flex">
                             <input type="text" id="quantity" name="quantity" style="max-width: 50px"
                                 class="form-control @error('quantity') border-danger @enderror"
-                                value="{{ $item->quantity }}" placeholder="Enter a quantity">
+                                value="{{ $item->quantity }}" placeholder="Enter a quantity" readonly>
                         </div>
                     </div>
                     <div class="col">

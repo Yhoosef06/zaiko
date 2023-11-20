@@ -71,10 +71,11 @@
             </div>
             <label for="">Logs:</label>
             <div class="card">
-                <div class="card-body" style="max-height:100px; overflow-y: auto;">
+                <div class="card-body" style="max-height:150px; overflow-y: auto;">
                     @forelse ($itemLogs as $itemLog)
                         Date & Time: {{ date('F j, Y H:i:s', strtotime($itemLog->created_at)) }}<br>
                         Mode: {{ $itemLog->mode }} <br>
+                        Quantity: {{ $itemLog->quantity }} <br>
                         @if ($itemLog->mode == 'transferred')
                             Room From: {{ $itemLog->roomFrom->room_name }} <br>
                             Room To: {{ $itemLog->roomTo->room_name }} <br>
