@@ -139,10 +139,10 @@ class CartController extends Controller
             $itemTemps = OrderItemTemp::where('order_id', $order->id)->get();
             $allOrderItems = $allOrderItems->merge($itemTemps);
         }
-        dd($allOrderItems);
+        // dd($allOrderItems);
         
        
-        return view('pages.students.cartList')->with(compact('orders'));
+        return view('pages.students.cartList')->with(compact('orders','allOrderItems'));
 
     }   
 

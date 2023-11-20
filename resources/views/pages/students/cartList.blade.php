@@ -67,12 +67,13 @@
                                                         </thead>
                                                         
                                                         @php
-                                                            $items = OrderItemTemp::where('order_id',$order->id)->get();
-                                                            // dd($items);
+                                                           
+                                                            
                                                         @endphp
                                                         @if($items != null)
                                                             <tbody>
-                                                                @foreach($items as $item)
+                                                                @foreach($allOrderItems as $item)
+                                                                {{-- condition kung mao ang order id --}}
                                                                     <tr style="background-color: rgba(255, 255, 255, 0.8);">
                                                                             
                                                                         <td class="text-wrap">{{ $item->item->category->category_name }}</td>
