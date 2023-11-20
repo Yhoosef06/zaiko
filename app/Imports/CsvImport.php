@@ -13,8 +13,8 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use App\Jobs\SendTemporaryPasswordEmailJob;
 
 class CsvImport implements ToModel
-{    
-    public static $user; 
+{
+    public static $user;
     public function model(array $row)
     {
         $role = Role::find(3);
@@ -42,15 +42,16 @@ class CsvImport implements ToModel
                     'term_id' => $termId
                 ]
             );
-    
+
             if (!$user->wasRecentlyCreated) {
                 $user->update(['isActive' => true, 'term_id' => $termId]);
             } else {
                 $user->save();
                 $user->roles()->attach($role);
                 // dispatch(new SendTemporaryPasswordEmailJob($user, $password));
+                Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
             }
-    
+            
             return $user;
 
             // foreach ($this->departmentIds as $departmentId) {
@@ -59,9 +60,13 @@ class CsvImport implements ToModel
             //         'department_id' => $departmentId,
             //     ]);
             // }
-
+            
             // Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
-          
+
+            // Mail::send(new TemporaryPasswordEmail($user, $password), [], function ($message) use ($user) {
+            //     $message->to($user->email);
+            // });
+
         } catch (\Exception $e) {
 
             dd($e);

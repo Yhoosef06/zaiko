@@ -91,7 +91,7 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
-
+                                        
                                         <label class="scrollable-container-label" for="Item name">Select a department(s) to manage:</label>
                                         <div class="scrollable-container">
                                             @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
