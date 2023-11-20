@@ -67,7 +67,7 @@ class ItemsController extends Controller
     public function viewItemDetails($id)
     {
         $item = Item::find($id);
-        $itemLogs = ItemLog::where('item_id', '=', $id)->orderBy('date', 'desc')->get();
+        $itemLogs = ItemLog::where('item_id', '=', $id)->orderBy('created_at', 'desc')->get();
 
         return view('pages.admin.viewItemDetails')->with(compact('item', 'itemLogs'));
     }
@@ -289,7 +289,9 @@ class ItemsController extends Controller
                 ->first();
 
             if ($existingItem) {
-                $existingItem->quantity += $quantity;
+                $existingItem->update([
+                    'quantity' =>  $existingItem->quantity + $quantity,
+                ]);
                 $existingItem->save();
 
                 $itemLog = new ItemLog();
@@ -315,6 +317,7 @@ class ItemsController extends Controller
                     'duration_type' => $request->duration_type,
                     'duration' => $request->duration,
                     'borrowed' => 'no',
+                    'penalty_fee' => $request->penalty_fee,
                     'item_image' => $imagePath,
                 ]);
 
@@ -326,12 +329,21 @@ class ItemsController extends Controller
                 $itemLog->date = now();
                 $itemLog->save();
             }
-
+          
             Session::flash('success', 'Do you want to add another one?');
             return response()->json(['success' => 'Item(s) added successfully']);
         }
     }
 
+    private function findExistingItem($request)
+{
+    return Item::where('part_number', $request->part_number)
+        ->where('location', $request->location)
+        ->where('brand_id', $request->brand)
+        ->where('model_id', $request->model)
+        ->where('category_id', $request->item_category)
+        ->first();
+}
     private function hasDuplicateSerialNumbers($serial_numbers)
     {
         return count($serial_numbers) !== count(array_unique($serial_numbers));
@@ -688,32 +700,143 @@ class ItemsController extends Controller
         return view('pages.admin.transferItem', compact('item', 'rooms'));
     }
 
+    // public function saveTransferItem(Request $request, $id)
+    // {
+    //     $item = Item::find($id);
+    //     $quantity = $request->quantity !== null && $request->quantity !== '' ? $request->quantity : $item->quantity;
+
+    //     $item->update([
+    //         'location' => $request->room_to,
+    //     ]);
+
+    //     $itemLog = new ItemLog();
+    //     $itemLog->item_id = $item->id;
+    //     $itemLog->quantity = $quantity;
+    //     $itemLog->encoded_by = Auth::user()->id_number;
+    //     $itemLog->mode = 'transferred';
+    //     $itemLog->room_from = $request->room_from;
+    //     $itemLog->room_to = $request->room_to;
+    //     $itemLog->date = now();
+    //     $itemLog->save();
+
+    //     if ($quantity) {
+    //         $existingItemTo = Item::where('serial_number', $item->serial_number)
+    //             ->where('location', $request->room_to)
+    //             ->where('part_number', $item->part_number)
+    //             ->first();
+
+    //         if ($existingItemTo) {
+    //             $existingItemTo->update([
+    //                 'quantity' => $existingItemTo->quantity + $quantity,
+    //             ]);
+    //         } else {
+    //             $newItem = Item::create([
+    //                 'serial_number' => $item->serial_number ? $item->serial_number : 'N/A',
+    //                 'location' => $request->room_to,
+    //                 'category_id' => $item->category_id,
+    //                 'brand_id' => $item->brand_id ? $item->brand_id : 1,
+    //                 'model_id' => $item->model_id ? $item->model_id : 1,
+    //                 'part_number' => $item->part_number ? $item->part_number : 'N/A',
+    //                 'description' => $item->description,
+    //                 'aquisition_date' => $item->aquisition_date,
+    //                 'inventory_tag' => $item->inventory_tag,
+    //                 'penalty_fee' => $item->penalty_fee,
+    //                 'quantity' => $quantity,
+    //                 'status' => $item->status,
+    //                 'duration_type' => $item->duration_type,
+    //                 'duration' => $item->duration,
+    //                 'borrowed' => 'no',
+    //                 'item_image' => $item->item_image,
+    //             ]);
+    //         }
+
+    //         $item->update([
+    //             'quantity' => $item->quantity - $quantity, 
+    //         ]);
+
+    //         // Delete item from room_from if its quantity becomes zero or negative
+    //         $existingItemFrom = Item::where('serial_number', $item->serial_number)
+    //             ->where('location', $item->location)
+    //             ->where('part_number', $item->part_number)
+    //             ->first();
+
+    //         if ($existingItemFrom && $existingItemFrom->quantity <= 0) {
+    //             $existingItemFrom->delete(); 
+    //         }
+    //     } else {
+
+    //     }
+
+    //     return back()->with('success', 'Item #' . $id . ' transferred successfully.');
+    // }
+
     public function saveTransferItem(Request $request, $id)
     {
         $item = Item::find($id);
         $quantity = $request->quantity !== null && $request->quantity !== '' ? $request->quantity : $item->quantity;
 
-        $itemLog = new ItemLog();
-        $itemLog->item_id = $item->id;
-        $itemLog->quantity = $quantity; // Log the transferred quantity
-        $itemLog->encoded_by = Auth::user()->id_number;
-        $itemLog->mode = 'transferred';
-        $itemLog->room_from = $item->location;
-        $itemLog->room_to = $request->room_to;
-        $itemLog->date = now();
-        $itemLog->save();
+        if ($item->serial_number != 'N/A') {
+            $item->update([
+                'location' => $request->room_to,
+            ]);
 
-        if ($quantity) {
-            $existingItemTo = Item::where('serial_number', $item->serial_number)
-                ->where('location', $request->room_to)
+            $itemLog = new ItemLog();
+            $itemLog->item_id = $item->id;
+            $itemLog->quantity = $quantity;
+            $itemLog->encoded_by = Auth::user()->id_number;
+            $itemLog->mode = 'transferred';
+            $itemLog->room_from = $request->room_from;
+            $itemLog->room_to = $request->room_to;
+            $itemLog->date = now();
+            $itemLog->save();
+
+            return back()->with('success', 'Item #' . $id . ' transferred successfully.');
+        } else {
+            $existingItemTo = Item::where('location', $request->room_to)
                 ->where('part_number', $item->part_number)
                 ->first();
 
             if ($existingItemTo) {
                 $existingItemTo->update([
-                    'quantity' => $existingItemTo->quantity + $quantity, // Add the transferred quantity
+                    'quantity' => $existingItemTo->quantity + $quantity,
                 ]);
+         
+                $itemLog = new ItemLog();
+                $itemLog->item_id =  $existingItemTo->id;
+                $itemLog->quantity = $quantity;
+                $itemLog->encoded_by = Auth::user()->id_number;
+                $itemLog->mode = 'transferred';
+                $itemLog->room_from = $request->room_from;
+                $itemLog->room_to = $request->room_to;
+                $itemLog->date = now();
+                $itemLog->save();
+                
+                $item->update([
+                    'quantity' => $item->quantity - $quantity,
+                ]);
+    
+                $itemLog = new ItemLog();
+                $itemLog->item_id = $item->id;
+                $itemLog->quantity = $quantity;
+                $itemLog->encoded_by = Auth::user()->id_number;
+                $itemLog->mode = 'transferred';
+                $itemLog->room_from = $request->room_from;
+                $itemLog->room_to = $request->room_to;
+                $itemLog->date = now();
+                $itemLog->save();
+
+                // Delete item from room_from if its quantity becomes zero or negative
+                $existingItemFrom = Item::where('location', $request->room_from)
+                    ->where('part_number', $item->part_number)
+                    ->first();
+
+                if ($existingItemFrom && $existingItemFrom->quantity <= 0) {
+                    $existingItemFrom->delete();
+                }
+
+                return back()->with('success', 'Item #' . $id . ' transferred successfully.');
             } else {
+                // Item doesn't exist in the destination room, create a new item
                 $newItem = Item::create([
                     'serial_number' => $item->serial_number ? $item->serial_number : 'N/A',
                     'location' => $request->room_to,
@@ -732,27 +855,44 @@ class ItemsController extends Controller
                     'borrowed' => 'no',
                     'item_image' => $item->item_image,
                 ]);
+
+                $itemLog = new ItemLog();
+                $itemLog->item_id = $newItem->id;
+                $itemLog->quantity = $quantity;
+                $itemLog->encoded_by = Auth::user()->id_number;
+                $itemLog->mode = 'transferred';
+                $itemLog->room_from = $request->room_from;
+                $itemLog->room_to = $request->room_to;
+                $itemLog->date = now();
+                $itemLog->save();
+
+                $itemLog = new ItemLog();
+                $itemLog->item_id = $item->id;
+                $itemLog->quantity = $quantity;
+                $itemLog->encoded_by = Auth::user()->id_number;
+                $itemLog->mode = 'transferred';
+                $itemLog->room_from = $request->room_from;
+                $itemLog->room_to = $request->room_to;
+                $itemLog->date = now();
+                $itemLog->save();
+
+                // Update the original item's quantity and delete if needed
+                $item->update([
+                    'quantity' => $item->quantity - $quantity,
+                ]);
+
+                // Delete item from room_from if its quantity becomes zero or negative
+                $existingItemFrom = Item::where('serial_number', $item->serial_number)
+                    ->where('location', $request->room_from)
+                    ->where('part_number', $item->part_number)
+                    ->first();
+
+                if ($existingItemFrom && $existingItemFrom->quantity <= 0) {
+                    $existingItemFrom->delete();
+                }
+                return back()->with('success', 'Item #' . $id . ' transferred successfully.');
             }
-
-            $item->update([
-                'quantity' => $item->quantity - $quantity, // Deduct transferred quantity from original item
-            ]);
-
-            // Delete item from room_from if its quantity becomes zero or negative
-            $existingItemFrom = Item::where('serial_number', $item->serial_number)
-                ->where('location', $item->location)
-                ->where('part_number', $item->part_number)
-                ->first();
-
-            if ($existingItemFrom && $existingItemFrom->quantity <= 0) {
-                $existingItemFrom->delete(); // Delete item with zero or negative quantity
-            }
-        } else {
-            $item->update([
-                'location' => $request->room_to,
-            ]);
         }
-        return back()->with('success', 'Item #' . $id . ' transferred successfully.');
     }
 
     public function addSubItem($id)

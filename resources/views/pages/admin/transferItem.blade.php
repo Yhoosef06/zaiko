@@ -41,9 +41,15 @@
                 enctype="multipart/form-data">
                 @csrf
                 <label for="">From:</label>
-                <input type="text" class="form-control" name="room_from" id="room_from"
-                    value="{{ $item->room->room_name }}" readonly>
-
+                {{-- <input type="text" class="form-control" name="room_from" id="room_from"
+                    value="{{ $item->room->id }}" placeholder="{{ $item->room->room_name }}" readonly> --}}
+                <select name="room_from" id="room_from"
+                    class="form-control @error('room_from') border-danger @enderror">
+                    <option value="{{ $item->room->id }}">
+                        {{ $item->room->room_name }}
+                    </option>
+                </select>
+                
                 <label for="">To:</label>
                 <select id="room_to" name="room_to" class="form-control @error('room_to') border-danger @enderror"
                     required>
