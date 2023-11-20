@@ -25,6 +25,7 @@ use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\SecurityQuestionController;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /*
 |--------------------------------------------------------------------------
@@ -294,6 +295,8 @@ Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
         Route::get('/browse-items/department/category', [BorrowerController::class, 'browseCategory'])->name('browse.category');
 
         //cart
+        Route::get('/browse-cart', [CartController::class, 'browse'])->name('browse.cart');
+        Route::get('/browse-cart/{id}', [CartController::class, 'browse-cart'])->name('browse.cart-id');
         Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
         Route::get('/student-cart-list', [CartController::class, 'cart_list'])->name('cart.list');
         Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('remove.cart');

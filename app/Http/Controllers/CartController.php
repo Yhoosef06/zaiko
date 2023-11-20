@@ -16,25 +16,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Console\Input\Input;
 
+use function PHPUnit\Framework\isEmpty;
+
 class CartController extends Controller
 {
     public function add_cart(Request $request, $id){
         
-        // dd($id);
         $user = Auth::user(); 
         $item = Item::find($id);
+        $department = $item->room->department->id;
 
-        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
+        $orders = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
 
-        // dd($order);
-
-        if($order == null){
+        if($orders->isEmpty()){
+            //no order id yet
             $order_cart = new Order;
 
             $order_cart->user_id = $user->id_number;
             $order_cart->save();
-
-            // dd($order_cart->id);
 
             $item_temp = new OrderItemTemp;
 
@@ -45,127 +44,126 @@ class CartController extends Controller
             $item_temp->save();
 
         }else{
-            $itemModel = $item->model->model_name;
-            // dd($itemModel);
+            $orderchecker = 0;
+            foreach($orders as $order){
+                $itemModel = $item->model->model_name;
+                $itemTemps = OrderItemTemp::where('order_id', $order->id)->get();
 
-            $itemTemps = OrderItemTemp::where('order_id', $order->id)->get();
+                $filteredItems = $itemTemps->filter(function ($itemTemp) use ($itemModel) {
+                    return $itemTemp->item->model->model_name === $itemModel;
+                });
+                
+                //check the department of the item
+                if($order->orderItemTemp->item->room->department->id == $department){
+                    $orderchecker ++;
+                    if($filteredItems->isEmpty()){
+                        //added item not in order yet
+                        $item_temp = new OrderItemTemp;
 
-            $filteredItems = $itemTemps->filter(function ($itemTemp) use ($itemModel) {
-                return $itemTemp->item->model->model_name === $itemModel;
-            });
-            
-            $exists = $filteredItems->isNotEmpty();
+                        $item_temp->order_id = $order->id;
+                        $item_temp->item_id = $item->id;
+                        $item_temp->quantity = $request->quantity;
 
-            // dd($exists);
+                        $item_temp->save();
+                    }else{
+                        //added item not yet in order
+                        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+                        $missingList = ItemLog::where('mode', 'missing')->get();
 
-            if($exists == false){
+                        foreach($itemTemps as $itemTemp){
+                            //if item is the same with the current looped item
+                            if($itemTemp->item->model->model_name == $itemModel){
+
+                                $missingQty = 0;
+                                $borrowedQty = 0;
+                                $totalDeduct = 0;
+                                foreach ($borrowedList as $borrowed) {
+                                    if ($borrowed->item_id == $item->id) {
+                                        $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                    }
+                                }
+
+                                foreach ($missingList as $missing) {
+                                    if ($missing->item_id == $item->id) {
+                                        $missingQty = $missingQty + $missing->quantity;
+                                    }
+                                }
+                                $totalDeduct = $missingQty + $borrowedQty;
+
+                                //check if quantity does not exceed the available quantity
+                                if($itemTemp->quantity + $request->quantity <= $itemTemp->item->quantity - $totalDeduct){
+                                    $itemTemp->quantity = $itemTemp->quantity + $request->quantity;
+                                    $itemTemp->save();
+                                }       
+                            }
+                        }
+
+
+                    }
+                    
+
+
+                }
+
+            }
+            //item is not in any order yet or no existing department order
+            if($orderchecker != 0){
+                $order_cart = new Order;
+
+                $order_cart->user_id = $user->id_number;
+                $order_cart->save();
+
                 $item_temp = new OrderItemTemp;
 
-                $item_temp->order_id = $order->id;
+                $item_temp->order_id = $order_cart->id;
                 $item_temp->item_id = $item->id;
                 $item_temp->quantity = $request->quantity;
 
                 $item_temp->save();
-            }else{
-                $borrowedList= OrderItem::where('status', 'borrowed')->get();
-                $missingList = ItemLog::where('mode', 'missing')->get();
-
-                foreach($itemTemps as $itemTemp){
-                    if($itemTemp->item->model->model_name == $itemModel){ 
-                        // dd($itemTemp->item->model->model_name);
-                        if($itemTemp->item->category_id == 5 || $itemTemp->item->category_id == 6 || $itemTemp->item->category_id == 7){
-                            // dd($itemTemp->item->quantity);
-
-                            $missingQty = 0;
-                            $borrowedQty = 0;
-                            $totalDeduct = 0;
-                            foreach($borrowedList as $borrowed){                                                        
-                                if($borrowed->item_id == $item->id){
-                                    $borrowedQty = $borrowedQty + $borrowed->order_quantity;
-                                }    
-                            }
-                
-                            foreach ($missingList as $missing) {
-                                if($missing->item_id == $itemModel->id){
-                                    $missingQty = $missingQty + $missing->quantity;
-                                }
-                            }
-                                    
-                
-                            $totalDeduct = $missingQty + $borrowedQty;
-                
-                            // dd($totalDeduct);
-                            if($itemTemp->quantity + $request->quantity <= $itemTemp->item->quantity - $totalDeduct){
-                                $itemTemp->quantity = $itemTemp->quantity + $request->quantity;
-                                // dd($itemTemp->quantity);
-                                $itemTemp->save();
-                            }        
-
-                        }else{
-                            // dd($itemTemp->item);
-                            $catItem = $itemTemp->item->where('category_id',$itemTemp->item->category->id)->where('brand_id',$itemTemp->item->brand_id)->where('model_id',$itemTemp->item->model_id)->where('borrowed','no')->count();
-                            
-                            // dd($catItem);
-                            if($itemTemp->quantity + $request->quantity <= $catItem){
-                                $itemTemp->quantity = $itemTemp->quantity + $request->quantity;
-                                // dd($itemTemp->quantity);
-                                $itemTemp->save();
-                            }
-                        }
-                    }else{
-                        
-                        if($itemTemps == null){
-                            $item_temp = new OrderItemTemp;
-
-                            $item_temp->order_id = $order->id;
-                            $item_temp->item_id = $item->id;
-                            $item_temp->quantity = $request->quantity;
-
-                            $item_temp->save();
-                        }
-                    }
-                    
-                }
-            }
-
-           
-            
-
-            // dd($order);
-            // $item_temp = new OrderItemTemp;
-
-            // $item_temp->order_id = $order->id;
-            // $item_temp->item_id = $item->id;
-            // $item_temp->quantity = $request->quantity;
-
-            // $item_temp->save();
-
-            // dd($item_temp);
-
+            }         
         }       
-
-
-        
-        // dd($order_cart);
-
-        // $cart = new Cart;
-
-        // $categoryName = ItemCategory::where('id', $item->category_id)->value('category_name');
-
-        // $cart->id_number = $user->id_number;
-        // $cart->category = $categoryName;
-        // $cart->brand = $item->brand;
-        // $cart->model = $item->model;
-        // $cart->item_description = $item->description; 
-        // $cart->quantity = $request->quantity;
-        // $cart->ordered = 'no';
-
-        // $cart->save();
-
-        // session()->flash('success','Item suceessfully added to cart.');
 
         return redirect()->back();      
     }
+
+    public function browse(){
+
+        $user = Auth::user(); 
+        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
+        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+        $missingList = ItemLog::where('mode', 'missing')->get();
+
+        if($order != null){
+            $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
+        }else{
+            $cartItems = null;
+
+        }
+        
+
+        $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
+        // dd($user_department->department_id);
+
+        $user_dept_id = $user_department->department_id;
+        $departments = Department::with('college')->get();
+    
+        $collegeId = null;
+        foreach ($departments as $department) {
+            if ($department->id == $user_dept_id) {
+                $collegeId =  $department->college->id;
+                break;
+            }
+        }
+       
+        $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
+            $query->where('id', $collegeId);
+        })->get();
+       
+        return view('pages.students.cartList')->with(compact('cartItems','items','borrowedList','missingList'));
+
+    }   
+
+
 
     public function cart_list(){
 
