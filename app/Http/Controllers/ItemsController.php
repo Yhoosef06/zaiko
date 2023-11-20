@@ -298,7 +298,7 @@ class ItemsController extends Controller
                 $itemLog->item_id = $existingItem->id;
                 $itemLog->quantity = $quantity;
                 $itemLog->encoded_by = Auth::user()->id_number;
-                $itemLog->mode = 'quantity_updated';
+                $itemLog->mode = 'added';
                 $itemLog->date = now();
                 $itemLog->save();
             } else {
