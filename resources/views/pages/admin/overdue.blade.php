@@ -42,7 +42,6 @@
                                                 <thead>
                                                     <tr>                                         
                                                         <th>Transaction ID</th>
-                                                     
                                                         <th>Description</th>
                                                         <th>Student Name</th>
                                                         <th>Date Borrowed</th>
@@ -64,9 +63,9 @@
                                                        
                                                         <td> {{ \Carbon\Carbon::parse($overdueItem->date_submitted)->format('F d, Y') }}</td>
                                                         <td>
-                                                            <button type="button" class="btn btn-primary show-borrow" data-bs-toggle="modal" data-bs-target="#showOverdue{{$overdueItem->order_item_id}}">View</button>
-                                                            <button type="button" class="btn btn-success" id="btn-return-overdue" data-id="{{ $overdueItem->order_item_id }}" data-item="{{ $overdueItem->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#returnOverdue{{$overdueItem->order_item_id}}">Return</button>
-                                                            <button type="button" class="btn btn-danger" id="btn-lost-overdue" data-id="{{ $overdueItem->order_item_id }}" data-item="{{ $overdueItem->item_id_borrow }}" data-bs-toggle="modal" data-bs-target="#lostOverdue{{$overdueItem->order_item_id}}">Lost</button>
+                                                            <button type="button" class="btn btn-primary show-borrow" data-toggle="modal" data-target="#showOverdue{{$overdueItem->order_item_id}}">View</button>
+                                                            <button type="button" class="btn btn-success" id="btn-return-overdue" data-id="{{ $overdueItem->order_item_id }}" data-item="{{ $overdueItem->item_id_borrow }}" data-toggle="modal" data-target="#returnOverdue{{$overdueItem->order_item_id}}">Return</button>
+                                                            <button type="button" class="btn btn-danger" id="btn-lost-overdue" data-id="{{ $overdueItem->order_item_id }}" data-item="{{ $overdueItem->item_id_borrow }}" data-toggle="modal" data-target="#lostOverdue{{$overdueItem->order_item_id}}">Lost</button>
                                                         </td>
                                                     </tr>
 

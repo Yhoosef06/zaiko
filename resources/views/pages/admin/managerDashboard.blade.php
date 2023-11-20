@@ -41,7 +41,7 @@
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Overdue</span>
                                                 <span class="info-box-number">
-                                                    {{-- {{ $totalPendingRegistrants }} --}}
+                                                    {{ $overdue }}
                                                 </span>
                                             </div>
                                         </div>
@@ -54,7 +54,7 @@
                                                     class="fa fa-arrow-alt-circle-up"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Borrowed Items </span>
-                                                {{-- <span class="info-box-number">{{$totalborrowedItems}}</span> --}}
+                                                <span class="info-box-number">{{$countBorrow}}</span>
                                             </div>
                                         </div>
                                     </div>

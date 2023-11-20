@@ -13,6 +13,7 @@ use App\Models\OrderItem;
 use App\Models\Department;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use function GuzzleHttp\Promise\all;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,7 @@ class PagesController extends Controller
     {
         $userId = auth()->user()->id_number;
         $department = Auth::user()->departments->first();
+        $currentDate = Carbon::now();
 
         $user = User::find($userId);
         if ($user->roles->contains('name', 'admin')) {
@@ -54,13 +56,45 @@ class PagesController extends Controller
             ->whereNull('orders.approved_by')
             ->groupBy('orders.id')
             ->get();
+
+            $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.department_id', $department->id)
+            ->WhereNull('orders.order_status')
+            ->whereNotNull('orders.approval_date')
+            ->whereNotNull('orders.approved_by')
+            ->groupBy('orders.id')
+            ->get();
+
+            $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->where('order_items.status', 'borrowed')
+            ->where('order_items.date_returned', '<', $currentDate->toDateString())
+            ->where('rooms.department_id', $department->id)
+            ->get();
+
+            $countBorrow = $borrows->count();
             $pendings =  $userpendings->count();
-            session(['pending_count' => $pendings]);
+            $overdue = $overdueItems->count();
+            session([
+                    'pending_count' => $pendings,
+                    'borrow_count' => $countBorrow,
+                    'overdue_count' => $overdue
+                    ]);
            
 
             $totalItems = $items->count();
 
-            return view('pages.admin.managerDashboard')->with(compact('totalItems','pendings'));
+            return view('pages.admin.managerDashboard')->with(compact('totalItems','pendings','countBorrow', 'overdue'));
         }
     }
 
