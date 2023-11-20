@@ -6,11 +6,13 @@ use App\Models\Role;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Models\RolePermission;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
     public function index()
     {
+        $isAdmin = Auth::user()->roles->contains('name', 'admin') ? true : false;
         $rolePermissions = RolePermission::with('role', 'permission')->get();
         $groupedRolePermissions = [];
 
@@ -30,7 +32,7 @@ class RoleController extends Controller
         }
         $roles = Role::all();
         $permissions = Permission::all();
-        return view('pages.admin.listOfRoles')->with(compact('groupedRolePermissions', 'roles', 'permissions'));
+        return view('pages.admin.listOfRoles')->with(compact('groupedRolePermissions', 'roles', 'permissions', 'isAdmin'));
     }
 
     public function store(Request $request)

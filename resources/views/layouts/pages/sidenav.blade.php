@@ -35,45 +35,41 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        @if (Auth::user()->hasPermission('borrow-items'))
-
-
-
-                            @if(Session::has('department') && Session::has('category'))
+                        @if (Session::has('department') && Session::has('category'))
                             <li class="nav-item">
-                                <a href="{{ route('browse.category', ['_token' => csrf_token(), 'category' => Session::get('category')]) }}" class="nav-link">
+                                <a href="{{ route('browse.category', ['_token' => csrf_token(), 'category' => Session::get('category')]) }}"
+                                    class="nav-link">
                                     <i class="fas fa-circle nav-icon"></i>
                                     <p>Browse Items</p>
                                 </a>
                             </li>
-                            @elseif(Session::has('department'))
+                        @elseif(Session::has('department'))
                             <li class="nav-item">
-                                <a href="{{ route('browse.department', ['_token' => csrf_token(), 'selectedDepartment' => Session::get('department')]) }}" class="nav-link">
+                                <a href="{{ route('browse.department', ['_token' => csrf_token(), 'selectedDepartment' => Session::get('department')]) }}"
+                                    class="nav-link">
                                     <i class="fas fa-circle nav-icon"></i>
                                     <p>Browse Items</p>
                                 </a>
                             </li>
-                            @else
+                        @else
                             <li class="nav-item">
                                 <a href="{{ route('browse.items') }}" class="nav-link">
                                     <i class="fas fa-circle nav-icon"></i>
                                     <p>Browse Items</p>
                                 </a>
                             </li>
-                            @endif
-
-
-
-                            <li class="nav-item">
-                                <a href="{{ route('cart.list') }}" class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
-                                    <p>Cart</p>
-                                    @if ($cartcount != 0)
-                                        <span class="badge badge-danger right">{{ $cartcount }}</span>
-                                    @endif
-                                </a>
-                            </li>
                         @endif
+
+                        <li class="nav-item">
+                            <a href="{{ route('cart.list') }}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Cart</p>
+                                @if ($cartcount != 0)
+                                    <span class="badge badge-danger right">{{ $cartcount }}</span>
+                                @endif
+                            </a>
+                        </li>
+
                         <li class="nav-item">
                             <a href="{{ route('pending-order') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
@@ -145,8 +141,8 @@
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Overdue</p>
                                                     @if (session()->has('overdue_count'))
-                                                    <span
-                                                        class="badge badge-danger right">{{ session('overdue_count') }}</span>
+                                                        <span
+                                                            class="badge badge-danger right">{{ session('overdue_count') }}</span>
                                                     @else
                                                     @endif
                                                 </div>

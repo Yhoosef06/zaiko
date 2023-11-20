@@ -29,9 +29,6 @@ class CsvController extends Controller
 
             return redirect()->back()->with('success', 'CSV file uploaded successfully!');
         } catch (\Throwable $th) {
-
-            dd($th);
-
             return redirect()->back()->with('danger', 'Error during CSV file upload.');
         }
 

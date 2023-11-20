@@ -49,7 +49,7 @@ class CsvImport implements ToModel
                 $user->save();
                 $user->roles()->attach($role);
                 // dispatch(new SendTemporaryPasswordEmailJob($user, $password));
-                Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
+                // Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
             }
             
             return $user;
@@ -68,10 +68,7 @@ class CsvImport implements ToModel
             // });
 
         } catch (\Exception $e) {
-
-            dd($e);
-
-            return null;
+            return view('pages.admin.uploadCSV')->with('danger', 'No school term is selected.');
         }
     }
 

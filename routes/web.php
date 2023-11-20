@@ -37,8 +37,6 @@ use App\Http\Controllers\SecurityQuestionController;
 |
 */
 
-Route::get('edit_college', [CollegeController::class, 'editCollege'])->name('modify_college');
-
 Route::get('/download-qr-code/{itemId}', function ($itemId) {
     $qrCode = QrCode::size(200)->generate($itemId);
     $file = public_path('qr_codes/item_' . $itemId . '.png');
@@ -46,16 +44,6 @@ Route::get('/download-qr-code/{itemId}', function ($itemId) {
 
     return response()->download($file)->deleteFileAfterSend(true);
 })->name('download_qr_code');
-
-Route::get('/select-registration-type', [RegisterController::class, 'selectRegistrationType'])->name('select_registration_type');
-
-//for student
-Route::get('/student-registration', [RegisterController::class, 'studentRegistration'])->name('student_registration');
-Route::post('/student-registration', [RegisterController::class, 'storeStudent']);
-
-//for faculty
-Route::get('/faculty-registration', [RegisterController::class, 'facultyRegistration'])->name('faculty_registration');
-Route::post('/faculty-registration', [RegisterController::class, 'storeFaculty']);
 
 Route::get('/', [SignInController::class, 'index'])->name('signin.page');
 Route::post('/signin', [SignInController::class, 'store'])->name('signin');
@@ -90,72 +78,79 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');
 
     // FOR ITEMS
-    Route::middleware(['permission:manage-inventory,view-items'])->group(function () {
-        Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
-        Route::get('view-item-details-{id}', [ItemsController::class, 'viewItemDetails'])->name('view_item_details');
-        Route::get('list-of-items-filtered', [ItemsController::class, 'searchItem'])->name('filtered_view');
-        Route::get('get-item-{id}-details', [ItemsController::class, 'getItemDetails'])->name('get_item_details');
-        Route::get('/get-brand', [ItemsController::class, 'getBrand']);
-        Route::get('/get-model', [ItemsController::class, 'getModel']);
-        Route::get('/get-part-number', [ItemsController::class, 'getPartNumber']);
-        Route::get('/check-serial-number/{serial_number}', [ItemsController::class, 'checkSerialNumber'])->name('check_serial_number');
-        Route::get('/items/search', [ItemsController::class, 'searchItem'])->name('items.search');
-        Route::get('/items/sort/{order}', [ItemsController::class, 'sortItems'])->name('sort_items');
-        Route::get('/get-filtered-items', [ItemsController::class, 'getFilteredItems'])->name('get_filtered_items');
-        Route::get('/get-part-numbers', [ItemsController::class, 'getPartNumber']);
-
+    Route::middleware(['permission:manage-inventory'])->group(function () {
+        Route::middleware(['permission:view-items'])->group(function () {
+            Route::get('list-of-items', [ItemsController::class, 'index'])->name('view_items');
+            Route::get('view-item-details-{id}', [ItemsController::class, 'viewItemDetails'])->name('view_item_details');
+            Route::get('list-of-items-filtered', [ItemsController::class, 'searchItem'])->name('filtered_view');
+            Route::get('get-item-{id}-details', [ItemsController::class, 'getItemDetails'])->name('get_item_details');
+            Route::get('/get-brand', [ItemsController::class, 'getBrand']);
+            Route::get('/get-model', [ItemsController::class, 'getModel']);
+            Route::get('/get-part-number', [ItemsController::class, 'getPartNumber']);
+            Route::get('/check-serial-number/{serial_number}', [ItemsController::class, 'checkSerialNumber'])->name('check_serial_number');
+            Route::get('/items/search', [ItemsController::class, 'searchItem'])->name('items.search');
+            Route::get('/items/sort/{order}', [ItemsController::class, 'sortItems'])->name('sort_items');
+            Route::get('/get-filtered-items', [ItemsController::class, 'getFilteredItems'])->name('get_filtered_items');
+            Route::get('/get-part-numbers', [ItemsController::class, 'getPartNumber']);
+        });
     });
 
-    Route::middleware(['permission:manage-inventory,add-items'])->group(function () {
-        Route::get('adding-new-item', [ItemsController::class, 'addItem'])->name('add_item');
-        Route::post('saving-new-item', [ItemsController::class, 'saveNewItem'])->name('save_new_item');
-    });
+    Route::middleware(['permission:manage-inventory'])->group(function () {
+        Route::middleware(['permission:add-items'])->group(function () {
+            Route::get('adding-new-item', [ItemsController::class, 'addItem'])->name('add_item');
+            Route::post('saving-new-item', [ItemsController::class, 'saveNewItem'])->name('save_new_item');
+        });
+        Route::middleware(['permission:update-items'])->group(function () {
+            Route::get('edit-item-{id}', [ItemsController::class, 'editItemPage'])->name('edit_item_details');
+            Route::put('updating-item-{id}-details', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
+        });
+        Route::middleware(['permission:delete-items'])->group(function () {
+            Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
+        });
+        Route::middleware(['permission:transfer-items'])->group(function () {
+            Route::get('/transfer-item-{id}', [ItemsController::class, 'transferItem'])->name('transfer_item');
+            Route::post('/save-transfer-item-{id}', [ItemsController::class, 'saveTransferItem'])->name('save_transfer_item');
+        });
+        Route::middleware(['permission:add-sub-items'])->group(function () {
+            Route::get('/add-sub-item-{id}', [ItemsController::class, 'addSubItem'])->name('add_sub_item');
+            Route::post('/save-sub-item-{id}', [ItemsController::class, 'saveSubItem'])->name('save_sub_item');
+        });
 
-    Route::middleware(['permission:manage-inventory,update-items'])->group(function () {
-        Route::get('edit-item-{id}', [ItemsController::class, 'editItemPage'])->name('edit_item_details');
-        Route::put('updating-item-{id}-details', [ItemsController::class, 'saveEditedItemDetails'])->name('update_item_details');
-    });
-
-    Route::middleware(['permission:manage-inventory,delete-items'])->group(function () {
-        Route::post('deleting-item-{id}', [ItemsController::class, 'deleteItem'])->name('delete_item');
-    });
-
-    Route::middleware(['permission:manage-inventory,transfer-items'])->group(function () {
-        Route::get('/transfer-item-{id}', [ItemsController::class, 'transferItem'])->name('transfer_item');
-        Route::post('/save-transfer-item-{id}', [ItemsController::class, 'saveTransferItem'])->name('save_transfer_item');
-    });
-
-    Route::middleware(['permission:manage-inventory,add-sub-items'])->group(function () {
-        Route::get('/add-sub-item-{id}', [ItemsController::class, 'addSubItem'])->name('add_sub_item');
-        Route::post('/save-sub-item-{id}', [ItemsController::class, 'saveSubItem'])->name('save_sub_item');
-    });
-
-    Route::middleware(['permission:manage-inventory,replace-items'])->group(function () {
-        Route::get('/replace-item-{id}', [ItemsController::class, 'replaceItem'])->name('replace_item');
-        Route::post('/save-replaced-item-{id}', [ItemsController::class, 'saveReplacedItem'])->name('save_replaced_item');
+        Route::middleware(['permission:replace-items'])->group(function () {
+            Route::get('/replace-item-{id}', [ItemsController::class, 'replaceItem'])->name('replace_item');
+            Route::post('/save-replaced-item-{id}', [ItemsController::class, 'saveReplacedItem'])->name('save_replaced_item');
+        });
     });
 
     // FOR USERS
-    Route::middleware(['permission:manage-user,view-users'])->group(function () {
-        Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
-        Route::get('list-of-users-filtered', [UserController::class, 'searchUser'])->name('filtered_view_users');
-        Route::get('view-user-{id_number}', [UserController::class, 'viewUserInfo'])->name('view_user_info');
-        Route::get('/users/search', [UserController::class, 'searchUser'])->name('users.search');
+    Route::middleware(['permission:manage-users'])->group(function () {
+        Route::middleware(['permission:view-users'])->group(function () {
+            Route::get('list-of-users', [UserController::class, 'index'])->name('view_users');
+            Route::get('list-of-users-filtered', [UserController::class, 'searchUser'])->name('filtered_view_users');
+            Route::get('view-user-{id_number}', [UserController::class, 'viewUserInfo'])->name('view_user_info');
+            Route::get('/users/search', [UserController::class, 'searchUser'])->name('users.search');
+        });
+        Route::middleware(['permission:add-users'])->group(function () {
+            Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
+            Route::post('saving-new-user', [UserController::class, 'saveNewUser'])->name('save_new_user');
+        });
+        Route::middleware(['permission:update-users'])->group(function () {
+            Route::get('edit-user-{id_number}', [UserController::class, 'editUserInfo'])->name('edit_user_info');
+            Route::put('updating-user-{id_number}', [UserController::class, 'saveEditedUserInfo'])->name('update_user_info');
+        });
+        Route::middleware(['permission:delete-users'])->group(function () {
+            Route::post('deleting-user-{id_number}', [UserController::class, 'deleteUser'])->name('delete_user');
+        });
+        Route::middleware(['permission:generate-report'])->group(function () {
+            Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
+            Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
+            Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
+            Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
+            Route::get('/report-test', [ItemsController::class, 'reportTest']);
+        });
     });
 
-    Route::middleware(['permission:manage-user,add-users'])->group(function () {
-        Route::get('add-new-user', [UserController::class, 'addUser'])->name('add_user');
-        Route::post('saving-new-user', [UserController::class, 'saveNewUser'])->name('save_new_user');
-    });
 
-    Route::middleware(['permission:manage-user,update-users'])->group(function () {
-        Route::get('edit-user-{id_number}', [UserController::class, 'editUserInfo'])->name('edit_user_info');
-        Route::put('updating-user-{id_number}', [UserController::class, 'saveEditedUserInfo'])->name('update_user_info');
-    });
-
-    Route::middleware(['permission:manage-user,delete-users'])->group(function () {
-        Route::post('deleting-user-{id_number}', [UserController::class, 'deleteUser'])->name('delete_user');
-    });
 
 
     Route::get('upload-csvfile', [UserController::class, 'uploadCSVFile'])->name('upload_csv_file');
@@ -165,15 +160,6 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     //storing references
     Route::post('store-references', [ReferenceController::class, 'storeReferences'])->name('store_references');
     Route::get('get-references', [ReferenceController::class, 'getReferences'])->name('get_references');
-
-    //reports
-    Route::middleware(['permission:generate-report'])->group(function () {
-        Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
-        Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
-        Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
-        Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
-        Route::get('/report-test', [ItemsController::class, 'reportTest']);
-    });
 
     Route::get('add-room', [RoomController::class, 'addRoom'])->name('add_room');
     Route::get('/get-departments/{college_id}', [DepartmentController::class, 'getDepartments'])->name('get_departments');
