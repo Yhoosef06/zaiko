@@ -56,17 +56,15 @@ class BorrowController extends Controller
 
         $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
         ->join('users', 'orders.user_id', '=', 'users.id_number')
-        ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
-        ->join('departments', 'user_departments.department_id', '=', 'departments.id')
         ->join('order_items', 'orders.id', '=', 'order_items.order_id')
         ->join('items', 'order_items.item_id', '=', 'items.id')
+        ->join('rooms', 'items.location', '=', 'rooms.id')
         ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
         ->join('models', 'items.model_id', '=', 'models.id')
         ->join('brands', 'models.brand_id', '=', 'brands.id')
         ->where('order_items.status', 'borrowed')
         ->where('order_items.date_returned', '<', $currentDate->toDateString())
-        ->where('departments.college_id', $department->college_id)
-        ->groupBy('order_item_id') // Group by order ID or any other unique identifier
+        ->where('rooms.department_id', $department->id)
         ->get();
 
 
@@ -116,14 +114,13 @@ class BorrowController extends Controller
         $department = Auth::user()->departments->first();
         $forReturns = OrderItem::select('order_items.date_returned as returndate', 'items.*', 'users.*', 'brands.*', 'models.*', 'item_categories.*', 'orders.*', 'order_items.*')
             ->join('users', 'order_items.user_id', '=', 'users.id_number')
-            ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
-            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
             ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->where('departments.college_id', $department->college_id)
+            ->where('rooms.department_id', $department->id)
             ->where('order_items.status','returned')
             ->get();
      

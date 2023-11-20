@@ -130,6 +130,11 @@
                                                 <div class="ml-3">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Released Items</p>
+                                                    @if (session()->has('borrow_count'))
+                                                    <span
+                                                        class="badge badge-danger right">{{ session('borrow_count') }}</span>
+                                                    @else
+                                                    @endif
 
                                                 </div>
                                             </a>
@@ -139,9 +144,11 @@
                                                 <div class="ml-3">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Overdue</p>
-                                                    {{-- @if ($itemcount != 0)
-                                            <span class="badge badge-danger right">{{ $itemcount }}</span>
-                                        @endif --}}
+                                                    @if (session()->has('overdue_count'))
+                                                    <span
+                                                        class="badge badge-danger right">{{ session('overdue_count') }}</span>
+                                                    @else
+                                                    @endif
                                                 </div>
                                             </a>
                                         </li>
