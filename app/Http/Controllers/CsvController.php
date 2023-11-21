@@ -17,15 +17,13 @@ class CsvController extends Controller
         try {
             $request->validate([
                 'csv_file' => 'required|file|mimes:csv,txt|max:2048',
-                // 'department_ids' => 'required|array',
+               
             ]);
 
             $file = $request->file('csv_file');
             $filePath = $file->getRealPath();
 
-            // dispatch(new CsvImportJob($filePath, $request->input('department_ids')));
             dispatch(new CsvImportJob($filePath));
-            // Excel::import(new CsvImport, $filePath);
 
             return redirect()->back()->with('success', 'CSV file uploaded successfully!');
         } catch (\Throwable $th) {
@@ -34,3 +32,11 @@ class CsvController extends Controller
 
     }
 }
+ 
+
+
+
+
+
+// dispatch(new CsvImportJob($filePath, $request->input('department_ids')));
+ // Excel::import(new CsvImport, $filePath); // 'department_ids' => 'required|array',

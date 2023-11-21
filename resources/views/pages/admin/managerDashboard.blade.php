@@ -53,7 +53,7 @@
                                             <span class="info-box-icon bg-warning elevation-1"><i
                                                     class="fa fa-arrow-alt-circle-up"></i></span>
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Borrowed Items </span>
+                                                <span class="info-box-text">Outgoing Items </span>
                                                 <span class="info-box-number">{{$countBorrow}}</span>
                                             </div>
                                         </div>

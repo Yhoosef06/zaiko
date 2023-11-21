@@ -48,13 +48,19 @@ class CsvImport implements ToModel
             } else {
                 $user->save();
                 $user->roles()->attach($role);
-                // dispatch(new SendTemporaryPasswordEmailJob($user, $password));
-                // Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
+                Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
             }
             
             return $user;
+        } catch (\Exception $e) {
+            return view('pages.admin.uploadCSV')->with('danger', 'No school term is selected.');
+        }
+    }
 
-            // foreach ($this->departmentIds as $departmentId) {
+}
+
+
+          // foreach ($this->departmentIds as $departmentId) {
             //     UserDepartment::create([
             //         'user_id_number' => $user->id_number,
             //         'department_id' => $departmentId,
@@ -66,10 +72,4 @@ class CsvImport implements ToModel
             // Mail::send(new TemporaryPasswordEmail($user, $password), [], function ($message) use ($user) {
             //     $message->to($user->email);
             // });
-
-        } catch (\Exception $e) {
-            return view('pages.admin.uploadCSV')->with('danger', 'No school term is selected.');
-        }
-    }
-
-}
+             // dispatch(new SendTemporaryPasswordEmailJob($user, $password));
