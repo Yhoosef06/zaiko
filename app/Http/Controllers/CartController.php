@@ -130,39 +130,35 @@ class CartController extends Controller
     public function browse(){
 
         $user = Auth::user(); 
-        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
+        $orders = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
+        $itemTemps = OrderItemTemp::all();
+              
+        return view('pages.students.cartList')->with(compact('orders'));
+
+    }   
+
+    public function browse_cart($id){
+
+        $user = Auth::user(); 
+        // $order = Order::where('id',$id)->first();
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
 
-        if($order != null){
-            $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
-        }else{
-            $cartItems = null;
-
-        }
+        $cartItems = OrderItemTemp::where('order_id',$id)->get();
         
-
         $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
         // dd($user_department->department_id);
 
         $user_dept_id = $user_department->department_id;
         $departments = Department::with('college')->get();
-    
-        $collegeId = null;
-        foreach ($departments as $department) {
-            if ($department->id == $user_dept_id) {
-                $collegeId =  $department->college->id;
-                break;
-            }
-        }
-       
-        $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
-            $query->where('id', $collegeId);
-        })->get();
-       
-        return view('pages.students.cartList')->with(compact('cartItems','items','borrowedList','missingList'));
+        $departmentID = $cartItems->first()->item->room->department->id;
 
-    }   
+        $items = Item::whereHas('room.department', function ($query) use ($departmentID) {
+            $query->where('id', $departmentID)->where('borrowed','no');
+        })->get();
+        return view('pages.students.cart-list')->with(compact('cartItems','items','borrowedList','missingList'));
+
+    }
 
 
 

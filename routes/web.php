@@ -296,7 +296,7 @@ Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
 
         //cart
         Route::get('/browse-cart', [CartController::class, 'browse'])->name('browse.cart');
-        Route::get('/browse-cart/{id}', [CartController::class, 'browse-cart'])->name('browse.cart-id');
+        Route::get('/browse-cart/{id}', [CartController::class, 'browse_cart'])->name('browse.cart-id');
         Route::post('/student-add-cart/{id}', [CartController::class, 'add_cart'])->name('add.cart');
         Route::get('/student-cart-list', [CartController::class, 'cart_list'])->name('cart.list');
         Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('remove.cart');
