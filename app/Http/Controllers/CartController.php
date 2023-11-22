@@ -132,19 +132,33 @@ class CartController extends Controller
         $user = Auth::user(); 
         $orders = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
         $itemTemps = OrderItemTemp::all();
-
-        $allOrderItems = collect(); // Create an empty collection
-
-        foreach ($orders as $order) {
-            $itemTemps = OrderItemTemp::where('order_id', $order->id)->get();
-            $allOrderItems = $allOrderItems->merge($itemTemps);
-        }
-        // dd($allOrderItems);
-        
-       
-        return view('pages.students.cartList')->with(compact('orders','allOrderItems'));
+              
+        return view('pages.students.cartList')->with(compact('orders'));
 
     }   
+
+    public function browse_cart($id){
+
+        $user = Auth::user(); 
+        // $order = Order::where('id',$id)->first();
+        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+        $missingList = ItemLog::where('mode', 'missing')->get();
+
+        $cartItems = OrderItemTemp::where('order_id',$id)->get();
+        
+        $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
+        // dd($user_department->department_id);
+
+        $user_dept_id = $user_department->department_id;
+        $departments = Department::with('college')->get();
+        $departmentID = $cartItems->first()->item->room->department->id;
+
+        $items = Item::whereHas('room.department', function ($query) use ($departmentID) {
+            $query->where('id', $departmentID)->where('borrowed','no');
+        })->get();
+        return view('pages.students.cart-list')->with(compact('cartItems','items','borrowedList','missingList'));
+
+    }
 
 
 
