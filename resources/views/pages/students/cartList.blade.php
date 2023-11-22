@@ -70,7 +70,7 @@
                                                            
                                                             
                                                         @endphp
-                                                        @if($items != null)
+                                                        @if($allOrderItems != null)
                                                             <tbody>
                                                                 @foreach($allOrderItems as $item)
                                                                 {{-- condition kung mao ang order id --}}
@@ -87,7 +87,7 @@
                                                                         </td> --}}
                                                                         <td class="text-center position-relative">
                                                                             @php 
-                                                                                $catItem = $items->where('category_id',$item->item->category->id)
+                                                                                $catItem = $allOrderItems->where('category_id',$item->item->category->id)
                                                                                 ->where('brand',$item->item->brand)
                                                                                 ->where('model',$item->item->model)
                                                                                 ->where('borrowed','no')
@@ -163,7 +163,7 @@
                                             
                                             </div>
                                             <div class="modal-footer">
-                                                @if($items != null)
+                                                @if($allOrderItems != null)
                                                     <tr>
                                                         <td colspan="10" class="text-left">
                                                             <a href="{{ route('browse.items') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Continue Browsing Items</a>
