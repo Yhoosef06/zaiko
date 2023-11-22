@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="text-decoration-underline">Roles</h1>
+                    <h1 class="text-decoration-underline">Roles & Permissions</h1>
                 </div>
                 <div class="col-sm-6">
                     {{-- <ol class="breadcrumb float-sm-right">
@@ -35,8 +35,8 @@
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                 </div>
                             @endif
-                            <table id="listofroles" class="table table-bordered">
-                                <label for="">Setup a role and permission:</label>
+                            <div id="listofroles">
+                                <label for="">Setup role and permissions:</label>
                                 <form action="{{ route('store_permission') }}" method="POST">
                                     @csrf
                                     <div class="row">
@@ -59,41 +59,40 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <button type="submit" class="btn bg-olive">Add</button>
+                                            <button type="submit" class="btn bg-olive"
+                                                onclick="return confirm('Applying changes.Do you wish to continue?')">Apply</button>
                                         </div>
                                     </div>
                                 </form><br>
-                                @foreach ($groupedRolePermissions as $roleName => $permissions)
-                                    @if ($roleName !== 'admin' || !$isAdmin)
-                                        <thead>
-                                            <tr>
-                                                <th class="text-lg">{{ $roleName }} : permissions</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($permissions as $permission)
-                                                <tr data-role-permission-id="{{ $permission['id'] }}">
-                                                    <td>
-                                                        {{ $permission['name'] }}
-                                                    </td>
-                                                    <td>
-                                                        <form class="form_delete_btn" method="POST"
-                                                            action="{{ route('delete_permission', $permission['id']) }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                class="btn btn-sm btn-outline-danger show-alert-delete-item"
-                                                                data-toggle="tooltip"
-                                                                title='Delete'onclick="deleteButton('{{ $permission['id'] }}')">Remove</button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    @endif
-                                @endforeach
-                            </table>
+                                <div class="row">
+                                    @foreach ($groupedRolePermissions as $roleName => $permissions)
+                                        @if ($roleName !== 'admin' || !$isAdmin)
+                                            <div class="col-md-6">
+                                                <label for="role label"
+                                                    class="text-decoration-underline">{{ $roleName }} :
+                                                    permissions</label>
+                                                <div class="border border-3 p-2 bg-gray-light">
+                                                    @foreach ($permissions as $permission)
+                                                        <div
+                                                            class="permission-container d-flex align-items-center justify-content-between border border-1">
+                                                            <p>{{ $permission['name'] }}</p>
+                                                            <form class="form_delete_btn" method="POST"
+                                                                action="{{ route('delete_permission', $permission['id']) }}">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="btn btn-default show-alert-delete-item"
+                                                                    data-toggle="tooltip" title='Delete'
+                                                                    onclick="deleteButton('{{ $permission['id'] }}')">Remove</button>
+                                                            </form>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- /.card-body -->
@@ -109,15 +108,15 @@
     <script>
         function deleteButton(rolePermissionId) {
             // Remove previous highlighting
-            $('#listofroles tbody tr').css({
+            $('.border-1').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
-            // Add the highlighted class to the clicked row
-            $('#listofroles tbody tr[data-role-permission-id="' + rolePermissionId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
+            // Add the highlighted class to the clicked permission container
+            $('.permission-container[data-role-permission-id="' + rolePermissionId + '"]').css({
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)',
+                'background-color': '#A9F5F2'
             });
         }
     </script>

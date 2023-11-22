@@ -17,9 +17,9 @@ class RoleController extends Controller
         $groupedRolePermissions = [];
 
         foreach ($rolePermissions as $rolePermission) {
-            $roleName = $rolePermission->role->name; // Update this with the actual attribute holding the role name
+            $roleName = $rolePermission->role->name;
             $permissionName = $rolePermission->permission->name;
-            $permissionId = $rolePermission->id; // Assuming this holds the ID of the permission
+            $permissionId = $rolePermission->id;
 
             if (!isset($groupedRolePermissions[$roleName])) {
                 $groupedRolePermissions[$roleName] = [];
@@ -46,7 +46,7 @@ class RoleController extends Controller
                 ->exists();
 
             if ($existingPermission) {
-                return back()->with('danger', 'Permission is already assigned to '. $role->name .'.');
+                return back()->with('danger', 'Permission is already assigned to ' . $role->name . '.');
             }
 
             RolePermission::create([
