@@ -103,6 +103,9 @@
         <button href="#" data-toggle="modal" data-target="#modal-edit-item"
             onclick="openEditItemModal('{{ $item->id }}')" class="btn btn-primary">Edit</button>
     @endif
+    <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+        Report Missing
+    </button>
 
     <div class="modal fade" id="modal-edit-item" tabindex="-1" role="dialog" aria-labelledby="modal-edit-item">
         <div class="modal-dialog modal-xl" role="document">
