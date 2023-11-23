@@ -12,14 +12,14 @@
                 <div class="col-sm-6">
                     <h1 class="text-decoration-underline">Pendings</h1>
                 </div>
-                <div class="col-sm-6">
+                {{-- <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <a href="{{ route('borrowItem') }}" class="btn btn-default">
                             <i class="fa fa-plus"> </i>
                             Add to Borrow
                         </a>
                     </ol>
-                </div>
+                </div> --}}
             </div>
         </div><!-- /.container-fluid -->
     </section>

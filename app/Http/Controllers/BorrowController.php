@@ -32,73 +32,144 @@ class BorrowController extends Controller
 
         $department = Auth::user()->departments->first();
 
-        $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
+        if($department->college_id === 5){
+            $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
             ->join('items', 'order_item_temps.item_id', '=', 'items.id')
             ->join('rooms', 'items.location', '=', 'rooms.id')
-            ->where('rooms.department_id', $department->id)
+            ->where('rooms.college_id', $department->college_id)
             ->WhereNull('orders.order_status')
             ->whereNotNull('orders.approval_date')
             ->whereNotNull('orders.approved_by')
             ->groupBy('orders.id')
             ->get();
+
+            return view('pages.admin.borrowed')->with(compact('borrows'));
+
+        }else{
+
+            $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
+                ->join('users', 'orders.user_id', '=', 'users.id_number')
+                ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+                ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+                ->join('rooms', 'items.location', '=', 'rooms.id')
+                ->where('rooms.department_id', $department->id)
+                ->WhereNull('orders.order_status')
+                ->whereNotNull('orders.approval_date')
+                ->whereNotNull('orders.approved_by')
+                ->groupBy('orders.id')
+                ->get();
+
+            return view('pages.admin.borrowed')->with(compact('borrows'));
+        }
             
        
 
 
-        return view('pages.admin.borrowed')->with(compact('borrows'));
+      
     }
     public function overdue()
     {
         $currentDate = Carbon::now();
         $department = Auth::user()->departments->first();
 
-        $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
-        ->join('users', 'orders.user_id', '=', 'users.id_number')
-        ->join('order_items', 'orders.id', '=', 'order_items.order_id')
-        ->join('items', 'order_items.item_id', '=', 'items.id')
-        ->join('rooms', 'items.location', '=', 'rooms.id')
-        ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-        ->join('models', 'items.model_id', '=', 'models.id')
-        ->join('brands', 'models.brand_id', '=', 'brands.id')
-        ->where('order_items.status', 'borrowed')
-        ->where('order_items.date_returned', '<', $currentDate->toDateString())
-        ->where('rooms.department_id', $department->id)
-        ->get();
-        
+        if($department->college_id === 5){
+            $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->where('order_items.status', 'borrowed')
+            ->where('order_items.date_returned', '<', $currentDate->toDateString())
+            ->where('rooms.college_id', $department->college_id)
+            ->get();
 
+            foreach ($overdueItems as $item) {
+                $dateReturned = Carbon::parse($item->date_returned); 
+                $daysOverdue = $dateReturned->diffInDays($currentDate);
+                $item->days_overdue = $daysOverdue;
+            }
+            return view('pages.admin.overdue')->with(compact('overdueItems'));
+            
+        }else{
+            $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->where('order_items.status', 'borrowed')
+            ->where('order_items.date_returned', '<', $currentDate->toDateString())
+            ->where('rooms.department_id', $department->id)
+            ->get();
+            
+    
+    
+            foreach ($overdueItems as $item) {
+                $dateReturned = Carbon::parse($item->date_returned); 
+                $daysOverdue = $dateReturned->diffInDays($currentDate);
+                $item->days_overdue = $daysOverdue;
+            }
 
-        foreach ($overdueItems as $item) {
-            $dateReturned = Carbon::parse($item->date_returned); 
-            $daysOverdue = $dateReturned->diffInDays($currentDate);
-            $item->days_overdue = $daysOverdue;
+            return view('pages.admin.overdue')->with(compact('overdueItems'));
         }
+
+      
         
     // echo '<pre>';
     // print_r($overdueItems);
     // echo '</pre>';
     // exit;
 
-        return view('pages.admin.overdue')->with(compact('overdueItems'));
+       
     }
     
 
     public function pending()
     {
         $department = Auth::user()->departments->first();
+
+        // dd($department);
+
+        if($department->college_id === 5){
+            $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.college_id', $department->college_id)
+            ->whereNotNull('orders.date_submitted')
+            ->whereNull('orders.approval_date')
+            ->whereNull('orders.approved_by')
+            ->groupBy('orders.id')
+            ->get();
+
+            return view('pages.admin.pending')->with(compact('userPendings'));
+
+        }else{
+            $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.department_id', $department->id)
+            ->whereNotNull('orders.date_submitted')
+            ->whereNull('orders.approval_date')
+            ->whereNull('orders.approved_by')
+            ->groupBy('orders.id')
+            ->get();
+
+            return view('pages.admin.pending')->with(compact('userPendings'));
+
+        }
      
-        $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
-        ->join('users', 'orders.user_id', '=', 'users.id_number')
-        ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
-        ->join('items', 'order_item_temps.item_id', '=', 'items.id')
-        ->join('rooms', 'items.location', '=', 'rooms.id')
-        ->where('rooms.department_id', $department->id)
-        ->whereNotNull('orders.date_submitted')
-        ->whereNull('orders.approval_date')
-        ->whereNull('orders.approved_by')
-        ->groupBy('orders.id')
-        ->get();
+     
 
       
 
@@ -107,27 +178,49 @@ class BorrowController extends Controller
         // echo '</pre>';
         // exit;
 
-        return view('pages.admin.pending')->with(compact('userPendings'));
+      
         
     }
 
     public function returned()
     {
         $department = Auth::user()->departments->first();
-        $forReturns = OrderItem::select('order_items.date_returned as returndate', 'items.*', 'users.*', 'brands.*', 'models.*', 'item_categories.*', 'orders.*', 'order_items.*')
-            ->join('users', 'order_items.user_id', '=', 'users.id_number')
-            ->join('items', 'order_items.item_id', '=', 'items.id')
-            ->join('rooms', 'items.location', '=', 'rooms.id')
-            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-            ->join('models', 'items.model_id', '=', 'models.id')
-            ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->where('rooms.department_id', $department->id)
-            ->where('order_items.status','returned')
-            ->get();
-     
 
-        return view('pages.admin.returned', compact('forReturns'));
+        if($department->college_id === 5){
+
+                $forReturns = OrderItem::select('order_items.date_returned as returndate', 'items.*', 'users.*', 'brands.*', 'models.*', 'item_categories.*', 'orders.*', 'order_items.*')
+                ->join('users', 'order_items.user_id', '=', 'users.id_number')
+                ->join('items', 'order_items.item_id', '=', 'items.id')
+                ->join('rooms', 'items.location', '=', 'rooms.id')
+                ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+                ->join('models', 'items.model_id', '=', 'models.id')
+                ->join('brands', 'models.brand_id', '=', 'brands.id')
+                ->join('orders', 'order_items.order_id', '=', 'orders.id')
+                ->where('rooms.college_id', $department->college_id)
+                ->where('order_items.status','returned')
+                ->get();
+        
+
+                  return view('pages.admin.returned', compact('forReturns'));
+
+        }else{
+
+                $forReturns = OrderItem::select('order_items.date_returned as returndate', 'items.*', 'users.*', 'brands.*', 'models.*', 'item_categories.*', 'orders.*', 'order_items.*')
+                ->join('users', 'order_items.user_id', '=', 'users.id_number')
+                ->join('items', 'order_items.item_id', '=', 'items.id')
+                ->join('rooms', 'items.location', '=', 'rooms.id')
+                ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+                ->join('models', 'items.model_id', '=', 'models.id')
+                ->join('brands', 'models.brand_id', '=', 'brands.id')
+                ->join('orders', 'order_items.order_id', '=', 'orders.id')
+                ->where('rooms.department_id', $department->id)
+                ->where('order_items.status','returned')
+                ->get();
+        
+
+                return view('pages.admin.returned', compact('forReturns'));
+        }
+       
     }
 
 
@@ -268,33 +361,69 @@ class BorrowController extends Controller
     public function searchForSerial(Request $request)
     {
         $department = Auth::user()->departments->first();
-        $query = $request->input('query');
+        // dd($department);
+        if($department->college_id === 5){
 
-        $items = Item::select('items.id as itemID', 'items.*')
-        ->join('rooms', 'items.location', '=', 'rooms.id')
-        ->where('rooms.department_id', $department->id)
-        ->where('borrowed', 'no')
-            ->where(function ($queryBuilder) use ($query) {
-                $queryBuilder->where('serial_number', 'LIKE', $query . '%')
-                    ->orWhere('description', 'LIKE', $query . '%');
-            })->take(10)->get();
+            $query = $request->input('query');
 
+            $items = Item::select('items.id as itemID', 'items.*')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.college_id', $department->college_id)
+            ->where('borrowed', 'no')
+                ->where(function ($queryBuilder) use ($query) {
+                    $queryBuilder->where('serial_number', 'LIKE', $query . '%')
+                        ->orWhere('description', 'LIKE', $query . '%');
+                })->take(10)->get();
+    
+    
+            $response = $items->map(function ($item) {
+                $category = ItemCategory::find($item->category_id);
+                return [
+                    'value' => $item->serial_number . ' - ' . $item->description,
+                    'item_category' => $category ? $category->category_name : null,
+                    'serialNumber' => $item->serial_number,
+                    'duration' => $item->duration,
+                    'brand' => $item->brand,
+                    'model' => $item->model,
+                    'description' => $item->description,
+                    'itemID' => $item->itemID
+                ];
+            });
+    
+            return response()->json($response);
 
-        $response = $items->map(function ($item) {
-            $category = ItemCategory::find($item->category_id);
-            return [
-                'value' => $item->serial_number . ' - ' . $item->description,
-                'item_category' => $category ? $category->category_name : null,
-                'serialNumber' => $item->serial_number,
-                'duration' => $item->duration,
-                'brand' => $item->brand,
-                'model' => $item->model,
-                'description' => $item->description,
-                'itemID' => $item->itemID
-            ];
-        });
+        }else{
 
-        return response()->json($response);
+            $query = $request->input('query');
+
+            $items = Item::select('items.id as itemID', 'items.*')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.department_id', $department->id)
+            ->where('borrowed', 'no')
+                ->where(function ($queryBuilder) use ($query) {
+                    $queryBuilder->where('serial_number', 'LIKE', $query . '%')
+                        ->orWhere('description', 'LIKE', $query . '%');
+                })->take(10)->get();
+    
+    
+            $response = $items->map(function ($item) {
+                $category = ItemCategory::find($item->category_id);
+                return [
+                    'value' => $item->serial_number . ' - ' . $item->description,
+                    'item_category' => $category ? $category->category_name : null,
+                    'serialNumber' => $item->serial_number,
+                    'duration' => $item->duration,
+                    'brand' => $item->brand,
+                    'model' => $item->model,
+                    'description' => $item->description,
+                    'itemID' => $item->itemID
+                ];
+            });
+    
+            return response()->json($response);
+
+        }
+      
     }
 
     public function searchItemForAdmin(Request $request)
@@ -327,39 +456,79 @@ class BorrowController extends Controller
     public function searchItemForUser(Request $request)
     {
         $department = Auth::user()->departments->first();
-    
 
-        $query = $request->input('query');
+        if($department->college_id === 5){
 
-        $items = Item::select('items.id as itemID', 'items.*')->join('rooms', 'items.location', '=', 'rooms.id')
-        ->where('rooms.department_id', $department->id)
-        ->where('borrowed', 'no')
-        ->where(function ($queryBuilder) use ($query) {
-            $queryBuilder->where('serial_number', 'LIKE', $query . '%')
-                ->orWhere('description', 'LIKE', $query . '%');
-        })
+            $query = $request->input('query');
+
+            $items = Item::select('items.id as itemID', 'items.*')->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.college_id', $department->college_id)
+            ->where('borrowed', 'no')
+            ->where(function ($queryBuilder) use ($query) {
+                $queryBuilder->where('serial_number', 'LIKE', $query . '%')
+                    ->orWhere('description', 'LIKE', $query . '%');
+            })
+            
+            ->take(10)
+            ->get();
         
-        ->take(10)
-        ->get();
+    
+    
+            $response = $items->map(function ($item) {
+                $category = ItemCategory::find($item->category_id);
+                return [
+                    'value' => $item->serial_number . ' - ' . $item->description,
+                    'item_category' => $category ? $category->category_name : null,
+                    'id' => $item->itemID,
+                    'serialNumber' => $item->serial_number,
+                    'brand' => $item->brand,
+                    'model' => $item->model,
+                    'description' => $item->description,
+                    'duration' => $item->duration,
+                    'itemID' => $item->itemID
+                ];
+            });
+    
+            return response()->json($response);
+
+        }else{
+
+            $query = $request->input('query');
+
+            $items = Item::select('items.id as itemID', 'items.*')->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.department_id', $department->id)
+            ->where('borrowed', 'no')
+            ->where(function ($queryBuilder) use ($query) {
+                $queryBuilder->where('serial_number', 'LIKE', $query . '%')
+                    ->orWhere('description', 'LIKE', $query . '%');
+            })
+            
+            ->take(10)
+            ->get();
+        
+    
+    
+            $response = $items->map(function ($item) {
+                $category = ItemCategory::find($item->category_id);
+                return [
+                    'value' => $item->serial_number . ' - ' . $item->description,
+                    'item_category' => $category ? $category->category_name : null,
+                    'id' => $item->itemID,
+                    'serialNumber' => $item->serial_number,
+                    'brand' => $item->brand,
+                    'model' => $item->model,
+                    'description' => $item->description,
+                    'duration' => $item->duration,
+                    'itemID' => $item->itemID
+                ];
+            });
+    
+            return response()->json($response);
+
+        }
     
 
-
-        $response = $items->map(function ($item) {
-            $category = ItemCategory::find($item->category_id);
-            return [
-                'value' => $item->serial_number . ' - ' . $item->description,
-                'item_category' => $category ? $category->category_name : null,
-                'id' => $item->itemID,
-                'serialNumber' => $item->serial_number,
-                'brand' => $item->brand,
-                'model' => $item->model,
-                'description' => $item->description,
-                'duration' => $item->duration,
-                'itemID' => $item->itemID
-            ];
-        });
-
-        return response()->json($response);
+   
     }
     public function lostItem(Request $request)
     {
