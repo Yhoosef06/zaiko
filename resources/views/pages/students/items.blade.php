@@ -115,14 +115,13 @@
                                     @endphp
                                     <div class="col-lg-3 col-md-5 mb-4">
                                         <div class="card">
-                                            <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                            <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light text-center"
                                                 data-mdb-ripple-color="light">
                                                 @if ($item->item_image == null)
                                                     <img src="https://cdn.stocksnap.io/img-thumbs/960w/office-work_KJKDM1OT2J.jpg"
                                                         class="w-100" />
                                                 @else
-                                                    <img src="{{ asset('storage/' . $item->item_image) }}" alt=""
-                                                        srcset="" width="250px" height="250px">
+                                                    <img src="{{ asset('storage/' . $item->item_image) }}" width="250px" height="250px">
                                                 @endif
                                                 <div class="mask">
                                                     <div class="d-flex justify-content-start align-items-end h-100">
