@@ -255,7 +255,7 @@
                         {{$item->id_number}}
                     @endif
                 @endforeach" class="form-control" style="display:none;">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary btn-lg">Release</button>
                     </div>
                    
                   </div>
