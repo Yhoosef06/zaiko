@@ -29,7 +29,7 @@
                     <thead>
                     <tr>
                       <th class="d-none">ID #</th>
-                      <th>ID Number</th>
+                      <th>Borrower ID #</th>
                       <th>Serial #</th>
                       <th>Brand</th>
                       <th>Release BY</th>

@@ -195,10 +195,6 @@
                                                             <strong>Description:</strong> {{ $item->description }}
                                                             <br>
                                                             <strong>Status:</strong> {{ $item->status }}
-                                                            {{ $item->serial_number }}
-                                                            <div>
-                                                                {!! QrCode::size(200)->generate($item->id) !!}
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <form action="{{ route('add.cart', $item->id) }}" method="POST"

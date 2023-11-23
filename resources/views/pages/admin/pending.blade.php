@@ -40,7 +40,7 @@
                                                     {{-- <th class="d-none">UserID</th> --}}
                                                     <th>Transaction ID</th>
                                                     <th>Date Submitted</th>
-                                                    <th>Student Name</th>
+                                                    <th>Borrower Name</th>
                                                     <th>View</th>
                                                 </tr>
                                             </thead>

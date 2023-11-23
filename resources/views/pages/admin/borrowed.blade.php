@@ -42,7 +42,7 @@
                                                 <thead>
                                                     <tr>                                         
                                                         <th>Transaction ID</th>
-                                                        <th>Student Name</th>
+                                                        <th>Borrower Name</th>
                                                         <th>Date Borrowed</th>
                                                         <th>Option</th>
                                                     </tr>

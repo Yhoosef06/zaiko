@@ -28,8 +28,6 @@ class BorrowController extends Controller
 
     public function borrowed()
     {
-        
-
         $department = Auth::user()->departments->first();
 
         if($department->college_id === 5){
