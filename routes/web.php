@@ -94,6 +94,13 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
             Route::get('/get-filtered-items', [ItemsController::class, 'getFilteredItems'])->name('get_filtered_items');
             Route::get('/get-part-numbers', [ItemsController::class, 'getPartNumber']);
         });
+        Route::middleware(['permission:generate-report'])->group(function () {
+            Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
+            Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
+            Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
+            Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
+            Route::get('/report-test', [ItemsController::class, 'reportTest']);
+        });
     });
 
     Route::middleware(['permission:manage-inventory'])->group(function () {
@@ -141,13 +148,6 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         });
         Route::middleware(['permission:delete-users'])->group(function () {
             Route::post('deleting-user-{id_number}', [UserController::class, 'deleteUser'])->name('delete_user');
-        });
-        Route::middleware(['permission:generate-report'])->group(function () {
-            Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
-            Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
-            Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
-            Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
-            Route::get('/report-test', [ItemsController::class, 'reportTest']);
         });
     });
 
