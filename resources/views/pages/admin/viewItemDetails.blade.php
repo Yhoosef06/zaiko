@@ -60,14 +60,14 @@
                     @endif
                 </div>
                 <br>
-                <div class="pl-1">
+                {{-- <div class="pl-1">
                     <div>
                         {!! QrCode::size(200)->generate($item->id) !!}
                     </div>
                     <div>
                         <a href="{{ route('download_qr_code', $item->id) }}">Download QR Code</a>
                     </div>
-                </div>
+                </div> --}}
             </div>
             <label for="">Logs:</label>
             <div class="card">
