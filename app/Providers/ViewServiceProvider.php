@@ -38,15 +38,15 @@ class ViewServiceProvider extends ServiceProvider
             $borrowedItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->whereNull('date_returned')->get();
             $orderHistory = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('date_returned')->get();
 
-            $cartcount = null;
+            $cartcount = count(Order::where('user_id', $user->id_number)->where('date_submitted', null)->get());
 
-            if($order == null){
-                $cartcount = 0;
-            }else{
-                $items = OrderItemTemp::where('order_id', $order->id)->get();
+            // if($order == null){
+            //     $cartcount = 0;
+            // }else{
+            //     $items = OrderItemTemp::where('order_id', $order->id)->get();
 
-                $cartcount = count($items);
-            }
+            //     $cartcount = count($items);
+            // }
 
             //END OF BORROWER SIDE NAV
             
