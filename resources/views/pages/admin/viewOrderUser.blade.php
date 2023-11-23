@@ -143,9 +143,10 @@
                                             <a data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>
                                           </td>
                                         </tr>
+                                        {{-- <div id="counterValue" data-counter="{{ $counter }}">{{ $counter }}</div> --}}
                                         
                                     @endfor
-                                    <div id="counterValue" data-counter="{{ $counter }}"></div>
+                                   
                                 
                           
                                   

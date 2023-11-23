@@ -273,11 +273,24 @@ class BorrowController extends Controller
 
     public function orderUserRemove($id)
     {
+
+
         $item = OrderItemTemp::where('id',$id)->first();
 
-        
+        if($item->temp_serial_number === 'N/A'){
             $item->delete();
             return response()->json(['success' => true]);
+        }else{
+            if($item->quantity > 1){
+                $item->quantity -= 1;
+                return response()->json(['success' => true]);
+            }else{
+                $item->delete();
+                return response()->json(['success' => true]);
+            }
+        }
+       
+            
         
 
     }

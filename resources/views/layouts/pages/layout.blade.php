@@ -760,9 +760,9 @@
     });
 
     $(document).ready(function() {
-        var counterValue = $('#counterValue').data('counter');
-
-        for (let i = 1; i <= counterValue; i++) {
+//         var counterValue = $('#counterValue').data('counter');
+// console.log(counterValue);
+        for (let i = 1; i <= 20; i++) {
             $("#search_for_serial_" + i).autocomplete({
                 
                 minLength: 2,

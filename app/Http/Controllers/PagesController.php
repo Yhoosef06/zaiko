@@ -41,11 +41,71 @@ class PagesController extends Controller
 
             $room_dept_id = Room::whereIn('department_id', $departmentIds)->get();
 
+      
+
             $items = Item::whereHas('room', function ($query) use ($departmentIds) {
                 $query->whereIn('department_id', $departmentIds)
                     ->where('parent_item', null);
             })->get();
 
+            if($department->college_id === 5 ){
+
+                
+            $userpendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.college_id', $department->college_id)
+            ->whereNull('orders.approval_date')
+            ->whereNull('orders.approved_by')
+            ->groupBy('orders.id')
+            ->get();
+
+            $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->where('rooms.college_id', $department->college_id)
+            ->WhereNull('orders.order_status')
+            ->whereNotNull('orders.approval_date')
+            ->whereNotNull('orders.approved_by')
+            ->groupBy('orders.id')
+            ->get();
+
+            $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->where('order_items.status', 'borrowed')
+            ->where('order_items.date_returned', '<', $currentDate->toDateString())
+            ->where('rooms.college_id', $department->college_id)
+            ->get();
+
+            $countBorrow = $borrows->count();
+            $pendings =  $userpendings->count();
+            $overdue = $overdueItems->count();
+         
+                session([
+                    'pending_count' => $pendings,
+                    'borrow_count' => $countBorrow,
+                    'overdue_count' => $overdue
+                    ]);
+            
+            
+           
+
+            $totalItems = $items->count();
+
+            return view('pages.admin.managerDashboard')->with(compact('totalItems','pendings','countBorrow', 'overdue'));
+
+            }else{
+                
             $userpendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
@@ -98,6 +158,10 @@ class PagesController extends Controller
             $totalItems = $items->count();
 
             return view('pages.admin.managerDashboard')->with(compact('totalItems','pendings','countBorrow', 'overdue'));
+            }
+
+            
+
         }
     }
 
