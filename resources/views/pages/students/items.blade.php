@@ -118,10 +118,13 @@
                                             <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light text-center"
                                                 data-mdb-ripple-color="light">
                                                 @if ($item->item_image == null)
-                                                    <img src="https://cdn.stocksnap.io/img-thumbs/960w/office-work_KJKDM1OT2J.jpg"
-                                                        class="w-100" />
+                                                    <div class="container border border-2"
+                                                        style="width: 250px; height: 250px; display: flex; justify-content: center; align-items: center;">
+                                                        <p style="text-align: center;">No image found.</p>
+                                                    </div>
                                                 @else
-                                                    <img src="{{ asset('storage/' . $item->item_image) }}" width="250px" height="250px">
+                                                    <img src="{{ asset('storage/' . $item->item_image) }}" width="250px"
+                                                        height="250px">
                                                 @endif
                                                 <div class="mask">
                                                     <div class="d-flex justify-content-start align-items-end h-100">
@@ -164,7 +167,7 @@
                                                             @if ($item->item_image == null)
                                                                 <div
                                                                     style="border: 1px solid #000; width: 200px; height: 200px; display: flex; justify-content: center; align-items: center;">
-                                                                    No Image
+                                                                    <p>No image found.</p>
                                                                 </div>
                                                             @else
                                                                 <img src="{{ asset('storage/' . $item->item_image) }}"
