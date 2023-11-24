@@ -82,7 +82,7 @@
                         <li class="nav-item">
                             <a href="{{ route('borrowed-items') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>Released Items</p>
+                                <p>Borrowed Items</p>
                                 @if ($borrowedcount != 0)
                                     <span class="badge badge-danger right">{{ $borrowedcount }}</span>
                                 @endif
