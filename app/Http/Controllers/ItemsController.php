@@ -290,7 +290,7 @@ class ItemsController extends Controller
 
             if ($existingItem) {
                 $existingItem->update([
-                    'quantity' =>  $existingItem->quantity + $quantity,
+                    'quantity' => $existingItem->quantity + $quantity,
                 ]);
                 $existingItem->save();
 
@@ -329,37 +329,24 @@ class ItemsController extends Controller
                 $itemLog->date = now();
                 $itemLog->save();
             }
-          
+
             Session::flash('success', 'Do you want to add another one?');
             return response()->json(['success' => 'Item(s) added successfully']);
         }
     }
 
     private function findExistingItem($request)
-{
-    return Item::where('part_number', $request->part_number)
-        ->where('location', $request->location)
-        ->where('brand_id', $request->brand)
-        ->where('model_id', $request->model)
-        ->where('category_id', $request->item_category)
-        ->first();
-}
+    {
+        return Item::where('part_number', $request->part_number)
+            ->where('location', $request->location)
+            ->where('brand_id', $request->brand)
+            ->where('model_id', $request->model)
+            ->where('category_id', $request->item_category)
+            ->first();
+    }
     private function hasDuplicateSerialNumbers($serial_numbers)
     {
         return count($serial_numbers) !== count(array_unique($serial_numbers));
-    }
-
-    public function generateReportPage()
-    {
-        //admin
-        if (Auth::user()->roles->contains('name', 'admin')) {
-            $rooms = Room::all();
-            return view('pages.admin.report')->with(compact('rooms'));
-        } else {
-            $departmentIds = Auth::user()->departments->pluck('id');
-            $rooms = Room::whereIn('department_id', $departmentIds)->get();
-            return view('pages.admin.report')->with(compact('rooms'));
-        }
     }
 
     public function generateReturned()
@@ -424,115 +411,6 @@ class ItemsController extends Controller
             )
         );
     }
-
-
-    public function downloadReport(Request $request)
-    {
-        $this->validate(
-            $request,
-            [
-                'location' => 'required',
-                'prepared_by' => 'required',
-                'verified_by' => 'required',
-                'noted_by' => 'required',
-                'approved_by' => 'required',
-                'role_1' => 'required',
-                'role_2' => 'required',
-                'role_3' => 'required',
-                'role_4' => 'required'
-            ]
-        );
-
-        $location = $request->location;
-        $prepared_by = $request->prepared_by;
-        $verified_by = $request->verified_by;
-        $noted_by = $request->noted_by;
-        $approved_by = $request->approved_by;
-        $role_1 = $request->role_1;
-        $role_2 = $request->role_2;
-        $role_3 = $request->role_3;
-        $role_4 = $request->role_4;
-
-        $user_dept_id = Auth::user()->department_id;
-        if (Auth::user()->account_status == 'admin') {
-            $rooms = Room::all();
-
-            $items = Item::where('location', $location)->get();
-            $room = Room::where('id', '=', $location)->get();
-
-            foreach ($room as $index) {
-                $dept_id = $index->department_id;
-            }
-            $department = Department::find($dept_id);
-
-            $department = $department->department_name;
-        } else {
-            $rooms = Room::where('department_id', $user_dept_id)->get();
-            $rooms = Room::all();
-
-            $items = Item::where('location', $location)->get();
-            $room = Room::where('id', '=', $location)->get();
-
-            foreach ($room as $index) {
-                $dept_id = $index->department_id;
-            }
-            $department = Department::find($dept_id);
-
-            $department = $department->department_name;
-        }
-
-
-        if ($request->has('download')) {
-            $pdf = App::make('dompdf.wrapper');
-            $pdf->loadView(
-                'pages.pdfReport',
-                compact(
-                    'items',
-                    'location',
-                    'prepared_by',
-                    'verified_by',
-                    'noted_by',
-                    'approved_by',
-                    'department',
-                    'rooms',
-                    'role_1',
-                    'role_2',
-                    'role_3',
-                    'role_4'
-                )
-            )->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
-            Reference::create([
-                'location' => $request->location,
-                'prepared_by' => $request->prepared_by,
-                'verified_by' => $request->verified_by,
-                'noted_by' => $request->noted_by,
-                'approved_by' => $request->approved_by,
-                'role_1' => $request->role_1,
-                'role_2' => $request->role_2,
-                'role_3' => $request->role_3,
-                'role_4' => $request->role_4,
-            ]);
-            // return view('pages.pdfReport')->with(compact(
-            //     'items',
-            //     'location',
-            //     'prepared_by',
-            //     'verified_by',
-            //     'noted_by',
-            //     'approved_by',
-            //     'department',
-            //     'rooms',
-            //     'role_1',
-            //     'role_2',
-            //     'role_3',
-            //     'role_4'
-            // ));
-            foreach ($rooms as $room) {
-                if ($room->id == $location)
-                    return $pdf->download('InventoryReport' . $room->room_name . '.pdf');
-            }
-        }
-    }
-
 
     public function searchItem(Request $request)
     {
@@ -729,9 +607,9 @@ class ItemsController extends Controller
                 $existingItemTo->update([
                     'quantity' => $existingItemTo->quantity + $quantity,
                 ]);
-         
+
                 $itemLog = new ItemLog();
-                $itemLog->item_id =  $existingItemTo->id;
+                $itemLog->item_id = $existingItemTo->id;
                 $itemLog->quantity = $quantity;
                 $itemLog->encoded_by = Auth::user()->id_number;
                 $itemLog->mode = 'transferred';
@@ -739,11 +617,11 @@ class ItemsController extends Controller
                 $itemLog->room_to = $request->room_to;
                 $itemLog->date = now();
                 $itemLog->save();
-                
+
                 $item->update([
                     'quantity' => $item->quantity - $quantity,
                 ]);
-    
+
                 $itemLog = new ItemLog();
                 $itemLog->item_id = $item->id;
                 $itemLog->quantity = $quantity;

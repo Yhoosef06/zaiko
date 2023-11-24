@@ -30,13 +30,11 @@
                             @endif
                             <form action="{{ route('download_pdf', ['download' => 'pdf']) }}" method="POST">
                                 @csrf
-                                <label for="location">Room/Location: </label>
-                                <div style="display:flex">
-                                    <div>
-                                        <select id="location" name="location"
-                                            class="form-control @error('location')
-                                                    border-danger @enderror">
-                                            <option value="option_select" disabled selected>Select a room</option>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="location">Room/Location: </label>
+                                        <select id="location" name="location" class="form-control" required>
+                                            <option value="" disabled selected>Select a room</option>
                                             @foreach ($rooms as $room)
                                                 <option value="{{ $room->id }}"
                                                     {{ old('location') == $room->id ? 'selected' : '' }}>
@@ -44,17 +42,22 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @error('location')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
                                     </div>
-                                </div>
-                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="location">Status: </label>
+                                        <select id="status" name="status" class="form-control" required>
+                                            <option value="" disabled selected>Select status</option>
+                                            <option value="Active">Active</option>
+                                            <option value="For Repair">For Repair</option>
+                                            <option value="Obsolete">Obsolete</option>
+                                            <option value="Missing">Missing</option>
+                                            <option value="Transferred">Transferred</option>
+                                            <option value="Replacement">Replacement</option>
+                                        </select>
+                                    </div>
 
+                                    <h3 class="text-decoration-underline">Signatories</h3>
                                     <div class="col">
-
                                         <div class="form-group">
                                             <label for="prepared_by">Prepared By:</label>
                                             <input placeholder="" type="text" id="prepared_by" name="prepared_by"
@@ -165,16 +168,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="card-footer">
+                                    <hr>
+                                    <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
+                                    <Button type="submit" class="btn btn-dark">Generate</Button>
+                                    <Button type="button" id="saveReferencesBtn" class="btn btn-info">Save
+                                        References</Button>
+                                </div>
+                            </form>
                         </div>
                         <!-- /.card-body -->
-                        <div class="card-footer">
-                            <hr>
-                            <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                            <Button type="submit" class="btn btn-dark">Generate</Button>
-                            <Button type="button" id="saveReferencesBtn" class="btn btn-info">Save
-                                References</Button>
-                        </div>
-                        </form>
                     </div>
                 </div><!-- /.container-fluid -->
             </div>

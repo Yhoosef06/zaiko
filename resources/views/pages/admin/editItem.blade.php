@@ -126,8 +126,6 @@
                             </option>
                             <option value="Obsolete" @if ($item->status === 'Obsolete') selected @endif>Obsolete
                             </option>
-                            <option value="Lost" @if ($item->status === 'Lost') selected @endif>Lost
-                            </option>
                         </select>
                     </div>
 

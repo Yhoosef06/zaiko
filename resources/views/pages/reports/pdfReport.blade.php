@@ -58,12 +58,10 @@
         <div class="container" style="font-weight: 800; font-size:18pt; text-align:center">
             UNIVERSITY OF SAN JOSE-RECOLETOS <br>
             Inventory Report
-            {{-- <div class="container" id="purpose">
-                @if ($purpose == null)
-                @else
-                    ({{ $purpose }})
-                @endif
-            </div> --}}
+            <div class="container mt-2">
+                <strong style="font-family: sans-serif; font-size:16pt; text-align:center">List of {{ $status }}
+                    Items</strong>
+            </div>
         </div>
         <div class="container" id="intro_details">
             <strong>DATE PREPARED:</strong> {{ now()->format('F j, Y') }} <br>
@@ -84,15 +82,27 @@
                         <th scope="col">Model</th>
                         <th scope="col">Description</th>
                         <th scope="col">QTY</th>
-                        <th scope="col">Acquisition Date</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Property Sticker</th>
+                        <th scope="col">From</th>
+                        <th scope="col">To</th>
+                        <th scope="col">
+                            @if ($isLog)
+                                @if ($status == 'Missing')
+                                    Date Missing
+                                @elseif ($status == 'Transferred')
+                                    Date Transferred
+                                @endif
+                            @else
+                                Acquisition Date
+                            @endif
+                        </th>
+                        @if ($isStatus)
+                            <th scope="col">Property Sticker</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($items->groupBy('unit_number') as $item) --}}
-                    @foreach ($items as $item)
-                        @if ($item->location == $location)
+                    @if (!$items->isEmpty())
+                        @foreach ($items as $item)
                             <tr>
                                 <td>{{ $item->id }}</td>
                                 <td>{{ $item->brand->brand_name }}</td>
@@ -106,13 +116,27 @@
                                 <td>{{ $item->description }}</td>
                                 <td>{{ $item->quantity }}</td>
                                 <td>{{ $item->aquisition_date }}</td>
-                                <td style="font-size: 12px"><b>{{ $item->status }}</b></td>
-                                <td>{{ $item->inventory_tag }}
-                                </td>
+                                <td>{{ $item->inventory_tag }}</td>
                             </tr>
-                        @endif
-                    @endforeach
-                    {{-- @endforeach --}}
+                        @endforeach
+                    @else
+                        @foreach ($itemLog as $item)
+                            <tr>
+                                <td>{{ $item->id }}</td>
+                                <td>{{ $item->item->brand->brand_name }}</td>
+                                <td>
+                                    {{ $item->item->model->model_name }}
+                                </td>
+                                <td>{{ $item->item->description }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                @if ($status == 'Transferred')
+                                <td>{{ $item->roomFrom->room_name }}</td>
+                                <td>{{ $item->roomTo->room_name }}</td>
+                            @endif
+                                <td>{{ date('m-d-Y', strtotime($item->date)) }} </td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
 

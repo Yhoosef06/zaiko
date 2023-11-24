@@ -253,7 +253,6 @@
                                                     <option value="Active">Active</option>
                                                     <option value="For Repair">For Repair</option>
                                                     <option value="Obsolete">Obsolete</option>
-                                                    <option value="Lost">Lost</option>
                                                 </select>
                                             </div>
 

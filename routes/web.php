@@ -16,7 +16,9 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ModelsController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CollegeController;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\BorrowerController;
 use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\DepartmentController;
@@ -25,7 +27,6 @@ use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\SecurityQuestionController;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,11 +96,10 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
             Route::get('/get-part-numbers', [ItemsController::class, 'getPartNumber']);
         });
         Route::middleware(['permission:generate-report'])->group(function () {
-            Route::get('generate-report', [ItemsController::class, 'generateReportPage'])->name('generate_report');
-            Route::post('download-report', [ItemsController::class, 'downloadReport'])->name('download_pdf');
+            Route::get('generate-report', [ReportController::class, 'generateReportPage'])->name('generate_report');
+            Route::post('download-report', [ReportController::class, 'downloadReport'])->name('download_pdf');
             Route::post('/download-returned-items-report', [ItemsController::class, 'downloadReturnedReport'])->name('download_returned_pdf');
             Route::post('/download-borrowed-items-report', [ItemsController::class, 'downloadBorrowedReport'])->name('download_borrowed_pdf');
-            Route::get('/report-test', [ItemsController::class, 'reportTest']);
         });
     });
 
