@@ -32,9 +32,10 @@
                       <th>Borrower ID #</th>
                       <th>Serial #</th>
                       <th>Brand</th>
+                      <th>Model</th>
                       <th>Release BY</th>
                       <th>Return Date</th>
-                      <th>Actions</th>
+                      <th>View</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -45,8 +46,9 @@
                       <td>{{ $forReturn->user_id }}</td>
                       <td>{{ $forReturn->order_serial_number}}</td>
                       <td>{{ $forReturn->brand_name }}</td>
+                      <td>{{ $forReturn->model_name }}</td>
                       <td>{{ $forReturn->released_by }}</td>
-                      <td>{{ $forReturn->returndate }}</td>
+                      <td>{{ \Carbon\Carbon::parse($forReturn->returndate )->format('F d, Y') }}</td>
                       <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#showReturn{{$forReturn->id}}"><i class="fa fa-eye"></i></button>
                     
@@ -68,8 +70,8 @@
                               <div class="row">
                               <div class="col-sm-6">
                                 <div class="form-group">
-                                  <label>ID Number: </label>
-                                  {{ $forReturn->user_id }}
+                                  <label>Transaction ID: </label>
+                                  {{ $forReturn->order_id }}
                                 </div>
                               </div>
                               <div class="col-sm-6">
@@ -93,26 +95,17 @@
                               </div>
                               <div class="col-sm-6">
                                 <div class="form-group">
-                                  <label>Brand: </label>
-                                 {{ $forReturn->brand_name }}
+                                  <label>Description: </label>
+                                 
+                                            {{ $forReturn->description }}
+                                     
                                 </div>
                               </div>
+                            
+
                             </div>
 
-                            <div class="row">
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label>Model: </label>
-                                  {{ $forReturn->model_name }}
-                                </div>
-                              </div>
-                              <div class="col-sm-6">
-                                <div class="form-group">
-                                  <label>Serial Number: </label>
-                                 {{ $forReturn->order_serial_number }}
-                                </div>
-                              </div>
-                            </div>
+                    
 
                             <div class="row">
                               <div class="col-sm-6">
@@ -123,7 +116,7 @@
                               </div>
                               <div class="col-sm-6">
                                 <div class="form-group">
-                                  <label>Return TO: </label>
+                                  <label>Return To: </label>
                                  {{ $forReturn->returned_to }}
                                 </div>
                               </div>
