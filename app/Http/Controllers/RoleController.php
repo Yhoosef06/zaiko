@@ -14,25 +14,17 @@ class RoleController extends Controller
     {
         $isAdmin = Auth::user()->roles->contains('name', 'admin') ? true : false;
         $rolePermissions = RolePermission::with('role', 'permission')->get();
-        $groupedRolePermissions = [];
+        // Fetch manager and borrower roles specifically
+        $managerRole = Role::where('name', 'manager')->first();
+        $borrowerRole = Role::where('name', 'borrower')->first();
 
-        foreach ($rolePermissions as $rolePermission) {
-            $roleName = $rolePermission->role->name;
-            $permissionName = $rolePermission->permission->name;
-            $permissionId = $rolePermission->id;
+        // Get manager and borrower permissions
+        $managerPermissions = $managerRole ? $managerRole->permissions : [];
+        $borrowerPermissions = $borrowerRole ? $borrowerRole->permissions : [];
 
-            if (!isset($groupedRolePermissions[$roleName])) {
-                $groupedRolePermissions[$roleName] = [];
-            }
-
-            $groupedRolePermissions[$roleName][] = [
-                'name' => $permissionName,
-                'id' => $permissionId,
-            ];
-        }
         $roles = Role::all();
         $permissions = Permission::all();
-        return view('pages.admin.listOfRoles')->with(compact('groupedRolePermissions', 'roles', 'permissions', 'isAdmin'));
+        return view('pages.admin.listOfRoles')->with(compact('managerPermissions', 'borrowerPermissions', 'roles', 'permissions', 'isAdmin'));
     }
 
     public function store(Request $request)
@@ -62,14 +54,15 @@ class RoleController extends Controller
     }
     public function delete($id)
     {
-        $permission = RolePermission::find($id);
+        $permission = Permission::find($id);
 
         if (!$permission) {
             return back()->with('danger', 'Permission not found.');
         }
-
-        $permission->delete();
-
+        $permission->roles()->detach();
+        RolePermission::where('permission_id', $id)->delete();
         return back()->with('success', 'Permission removed successfully.');
     }
+
+
 }

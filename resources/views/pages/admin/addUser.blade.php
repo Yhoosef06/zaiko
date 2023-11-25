@@ -65,11 +65,25 @@
                                             @endforeach
                                         </select>
 
-                                        @error('department_id')
-                                            <div class="text-danger">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
+                                        <label class="scrollable-container-label" for="Item name">Select a department(s) to
+                                            manage:</label>
+                                        <div class="scrollable-container">
+                                            @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
+                                                <h5 class="text-decoration-underline">
+                                                    <input type="checkbox" class="college-checkbox"
+                                                        data-college="{{ $collegeName }}">
+                                                    {{ $collegeName }}
+                                                </h5>
+                                                <div class="department-container">
+                                                    @foreach ($departmentsGroup as $department)
+                                                        <input type="checkbox" class="department-checkbox"
+                                                            name="department_ids[]" data-college="{{ $collegeName }}"
+                                                            value="{{ $department->id }}">
+                                                        {{ $department->department_name }}<br>
+                                                    @endforeach
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
 
                                     <div class="col">
@@ -91,25 +105,19 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
-                                        
-                                        <label class="scrollable-container-label" for="Item name">Select a department(s) to manage:</label>
-                                        <div class="scrollable-container">
-                                            @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                                                <h5 class="text-decoration-underline">
-                                                    <input type="checkbox" class="college-checkbox"
-                                                        data-college="{{ $collegeName }}">
-                                                    {{ $collegeName }}
-                                                </h5>
-                                                <div class="department-container">
-                                                    @foreach ($departmentsGroup as $department)
-                                                        <input type="checkbox" class="department-checkbox"
-                                                            name="department_ids[]" data-college="{{ $collegeName }}"
-                                                            value="{{ $department->id }}">
-                                                        {{ $department->department_name }}<br>
-                                                    @endforeach
-                                                </div>
-                                            @endforeach
-                                        </div>
+
+                                        <label for="email address">Email Address:</label>
+                                        <input type="text" id="email" name="email"
+                                            class="form-control @error('email')
+                                        border-danger @enderror"
+                                            value="{{ old('email') }}" placeholder="Email Address">
+                                        @error('email')
+                                            <div class="text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+
 
                                         <hr>
                                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
@@ -139,11 +147,11 @@
                 var label = $('.scrollable-container-label')
 
                 if (selectedRole === '2' || selectedRole === 'manager') {
-                    departmentSection.show(); 
-                    label.show();// Show the department selection
+                    departmentSection.show();
+                    label.show(); // Show the department selection
                 } else {
-                    departmentSection.hide(); 
-                    label.hide();// Hide the department selection
+                    departmentSection.hide();
+                    label.hide(); // Hide the department selection
                 }
             }
 

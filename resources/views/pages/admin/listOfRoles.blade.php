@@ -65,43 +65,62 @@
                                     </div>
                                 </form><br>
                                 <div class="row">
-                                    @foreach ($groupedRolePermissions as $roleName => $permissions)
-                                        @if ($roleName !== 'admin' || !$isAdmin)
-                                            <div class="col-md-6">
-                                                <label for="role label"
-                                                    class="text-decoration-underline">{{ $roleName }} :
-                                                    permissions</label>
-                                                <div class="border border-3 p-2 bg-gray-light">
-                                                    @foreach ($permissions as $permission)
-                                                        <div
-                                                            class="permission-container d-flex align-items-center justify-content-between border border-1">
-                                                            <p>{{ $permission['name'] }}</p>
-                                                            <form class="form_delete_btn" method="POST"
-                                                                action="{{ route('delete_permission', $permission['id']) }}">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit"
-                                                                    class="btn btn-default show-alert-delete-item"
-                                                                    data-toggle="tooltip" title='Delete'
-                                                                    onclick="deleteButton('{{ $permission['id'] }}')">Remove</button>
-                                                            </form>
-                                                        </div>
-                                                    @endforeach
+                                    <div class="col-md-6">
+                                        <label for="role label" class="text-decoration-underline">Manager:
+                                            Permissions</label>
+                                        <div class="border border-3 p-2 bg-gray-light">
+                                            @forelse ($managerPermissions as $permission)
+                                                <div
+                                                    class="permission-container d-flex align-items-center justify-content-between border border-1">
+                                                    <p>{{ $permission->name }}</p>
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_permission', $permission->id) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="btn btn-default show-alert-delete-item"
+                                                            data-toggle="tooltip" title='Delete'
+                                                            onclick="deleteButton('{{ $permission->id }}')">Remove</button>
+                                                    </form>
                                                 </div>
-                                            </div>
-                                        @endif
-                                    @endforeach
+                                            @empty
+                                                <p>No assigned permissions.</p>
+                                            @endforelse
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="role label" class="text-decoration-underline">Borrower:
+                                            Permissions</label>
+                                        <div class="border border-3 p-2 bg-gray-light">
+                                            @forelse ($borrowerPermissions as $permission)
+                                                <div
+                                                    class="permission-container d-flex align-items-center justify-content-between border border-1">
+                                                    <p>{{ $permission->name }}</p>
+                                                    <form class="form_delete_btn" method="POST"
+                                                        action="{{ route('delete_permission', $permission->id) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="btn btn-default show-alert-delete-item"
+                                                            data-toggle="tooltip" title='Delete'
+                                                            onclick="deleteButton('{{ $permission->id }}')">Remove</button>
+                                                    </form>
+                                                </div>
+                                            @empty
+                                                <p>No assigned permissions.</p>
+                                            @endforelse
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card-body -->
+                    <!-- /.card -->
                 </div>
-                <!-- /.card -->
+                <!-- /.col -->
             </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
+            <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
     </section>

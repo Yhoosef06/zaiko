@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\College;
 use App\Models\UserRole;
 use App\Models\Department;
-use App\Models\Role;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\UserDepartment;
 use App\Rules\MatchOldPassword;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
+use App\Jobs\SendTemporaryPasswordEmailJob;
 use Symfony\Component\Console\Question\Question;
 
 class UserController extends Controller
@@ -164,6 +166,7 @@ class UserController extends Controller
 
     public function saveNewUser(Request $request)
     {
+        $password = Str::random(7);
         $role_ids = $request->input('role_id');
         $department_ids = $request->input('department_ids', []);
 
@@ -174,18 +177,20 @@ class UserController extends Controller
                 'first_name' => 'required',
                 'last_name' => 'required',
                 'account_type' => 'required',
+                'email' => 'required',
             ]
         );
 
         $user = User::where('id_number', '=', $request->input('id_number'))->first();
         if ($user === null) {
-            User::create([
+           $user = User::create([
                 'id_number' => $request->id_number,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
+                'email' => $request->email,
                 'isActive' => true,
                 'account_type' => $request->account_type,
-                'password' => Hash::make($request->id_number),
+                'password' => Hash::make($password),
                 'password_updated' => 0,
             ]);
 
@@ -203,6 +208,7 @@ class UserController extends Controller
                 ]);
             }
 
+            dispatch(new SendTemporaryPasswordEmailJob($user, $password));
             Session::flash('success', 'User Successfully Added. Do you want to add another user?');
             return redirect('add-new-user');
         } else {
@@ -253,7 +259,7 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->account_type = $request->account_type;
         $user->isActive = $request->isActive;
-        $user->email= $request->email;
+        $user->email = $request->email;
         $user->update();
 
         $new_role_ids = $request->input('role_id', []);
