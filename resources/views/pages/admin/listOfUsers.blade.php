@@ -157,38 +157,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <strong>I.D. Number:</strong> {{ $user->id_number }} <br>
-                    <strong>First Name:</strong> {{ $user->first_name }} <br>
-                    <strong>Last Name:</strong> {{ $user->last_name }} <br>
-                    @if ($user->departments->isNotEmpty())
-                        <strong>Department(s) associated to:</strong>
-                        @foreach ($user->departments as $key => $department)
-                            {{ $department->department_name }}
-                            @if ($key < count($user->departments) - 1)
-                                ,
-                            @endif
-                        @endforeach
-                        <br>
-                    @endif
-                    <strong>Account Type:</strong>
-                    {{ $user->account_type === 'student' ? 'Student' : ($user->account_type === 'admin' ? 'Admin' : ($user->account_type === 'faculty' ? 'Faculty' : 'Faculty')) }}
-                    <br>
-                    <strong>Status:</strong>
-                    {{ $user->isActive ? 'Active' : 'Inactive' }}
-                    <br>
-                    <strong>Role:</strong>
-                    @foreach ($user->roles as $role)
-                        {{ $role->name === 'manager' ? 'Manager' : 'Borrower' }}
-                    @endforeach
-                    <br>
-                    <hr>
-                    <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
-                        Close
-                    </button>
-                    @if (Auth::user()->hasPermission('update-users'))
-                        <a href="#" data-toggle="modal" data-target="#modal-edit-user-info"
-                            onclick="openEditUserModal('{{ $user->id_number }}')" class="btn btn-primary">Edit</a>
-                    @endif
                 </div>
             </div>
         </div>
