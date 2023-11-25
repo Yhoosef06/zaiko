@@ -50,7 +50,7 @@
                                                             <p><span class="text-muted"> {{ $item->item->description }} </span></p>
                                                         </div>
                                                         <div class="col-md-3 col-lg-3 col-xl-2 d-flex">                          
-                                                            <input id="form1" min="0" name="quantity" value="2" type="number"
+                                                            <input id="form1" min="0" name="quantity" value="{{ $item->quantity }}" type="number"
                                                             class="form-control form-control-sm text-center" disabled />                
                                                         </div>
                                                     </div>
@@ -58,11 +58,27 @@
                                             </div>
                                             @endif
                                         @endforeach
+                                        <div class="card">
+                                            <form action="{{route('remove.transaction', $order->id)}}" method="GET" onsubmit="return confirm('Are you sure you want to cancel the transaction? This will remove your transaction details.')">
+                                                @csrf
+                                                <div class="card-body">
+                                                <button type="submit" class="btn btn-warning btn-block btn-lg">Cancel this transaction.</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
-                    @endif  
+                    @else
+                        <div class="container h-100 py-5">
+                            <div class="row d-flex justify-content-center align-items-center h-100">
+                                <div class="text-center">
+                                    <p><span class="h3"> There are no pending transactions. </span></p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

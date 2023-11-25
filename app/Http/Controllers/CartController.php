@@ -205,6 +205,14 @@ class CartController extends Controller
         return redirect()->back();
     }
 
+    public function remove_transaction($id){
+        
+        Order::where('id',$id)->delete();
+
+        session()->flash('success','Transaction suceessfully cancelled.');
+        return redirect()->back();
+    }
+
     public function update_cart(Request $request,$id){
         // dd($id);
        
@@ -264,21 +272,24 @@ class CartController extends Controller
 
 
         $user = Auth::user(); 
-        $orders = Order::where('user_id',Auth::user()->id_number)->get();
+        $orders = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
         $items = collect();
         
         foreach($orders as $order){
-            $orderItems = OrderItemTemp::where('order_id', $order->id)->get();
-            $items = $items->merge($orderItems);
+
+            $orderItemTemps = OrderItemTemp::where('order_id', $order->id)->get();
+            $items = $items->merge($orderItemTemps);
         }
        
         return view('pages.students.pending')->with(compact('orders','items'));
     }
 
     public function borrowed(){
-        
+
         $borrowedItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->whereNull('date_returned')->get();
-        // dd($borrowedItems);
+        //take orderitems where it's not borrowed
+        //take items use foreach equals to item_id
+        //return orderitems and items
       
         return view('pages.students.borrowed')->with(compact('borrowedItems'));
     }
