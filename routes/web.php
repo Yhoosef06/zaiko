@@ -151,7 +151,8 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
         });
     });
 
-
+    Route::post('save-new-brand', [BrandController::class, 'saveNewBrand'])->name('save_new_brand');
+    Route::post('save-new-model', [ModelsController::class, 'saveNewModel'])->name('save_new_model');
 
 
     Route::get('upload-csvfile', [UserController::class, 'uploadCSVFile'])->name('upload_csv_file');
@@ -206,14 +207,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     //FOR BRAND - ADMIN
     Route::get('brands', [BrandController::class, 'index'])->name('view_brands');
-    Route::post('save-new-brand', [BrandController::class, 'saveNewBrand'])->name('save_new_brand');
     Route::get('edit/brand/{id}', [BrandController::class, 'editBrand'])->name('edit_brand');
     Route::post('save-edited-brand/{id}', [BrandController::class, 'saveEditedBrand'])->name('save_edited_brand');
     Route::post('delete-brand/{id}', [BrandController::class, 'deleteBrand'])->name('delete_brand');
 
     //FOR MODELS - ADMIN
     Route::get('models', [ModelsController::class, 'index'])->name('view_models');
-    Route::post('save-new-model', [ModelsController::class, 'saveNewModel'])->name('save_new_model');
     Route::get('edit/model/{id}', [ModelsController::class, 'editModel'])->name('edit_model');
     Route::post('save-edited-model/{id}', [ModelsController::class, 'saveEditedModel'])->name('save_edited_model');
     Route::post('delete-model/{id}', [ModelsController::class, 'deleteModel'])->name('delete_model');

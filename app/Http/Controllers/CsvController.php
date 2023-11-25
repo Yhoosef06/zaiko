@@ -23,10 +23,13 @@ class CsvController extends Controller
             $file = $request->file('csv_file');
             $filePath = $file->getRealPath();
 
-            dispatch(new CsvImportJob($filePath));
+            // dispatch(new CsvImportJob($filePath));
+            Excel::import(new CsvImport,  $filePath);
 
             return redirect()->back()->with('success', 'CSV file uploaded successfully!');
         } catch (\Throwable $th) {
+
+            dd($th);
             return redirect()->back()->with('danger', 'Error during CSV file upload.');
         }
 

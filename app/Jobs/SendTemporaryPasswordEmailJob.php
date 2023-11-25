@@ -36,7 +36,7 @@ class SendTemporaryPasswordEmailJob implements ShouldQueue
      */
     public function handle()
     {
-        set_time_limit(10);
+        set_time_limit(0);
         Mail::to($this->user->email)->send(new TemporaryPasswordEmail($this->user, $this->password));
     }
 }

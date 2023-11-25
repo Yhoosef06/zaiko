@@ -21,55 +21,51 @@ class CsvImport implements ToModel
         $password = Str::random(7);
         $activeTerm = Term::where('isCurrent', true)->first();
         $termId = $activeTerm->id;
+        $accountType = 'student';
+
         $idNumber = isset($row[0]) ? $row[0] : null;
         $firstName = isset($row[1]) ? $row[1] : null;
         $lastName = isset($row[2]) ? $row[2] : null;
-        $accountType = isset($row[4]) ? $row[4] : null;
-        $email = isset($row[6]) ? $row[6] : null;
+        $email = isset($row[3]) ? $row[3] : null;
 
-        try {
+        $user = User::firstOrCreate(
+            ['id_number' => $idNumber],
+            [
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'password' => bcrypt($password),
+                'account_type' => $accountType,
+                'email' => $email,
+                'isActive' => true,
+                'password_updated' => false,
+                'term_id' => $termId
+            ]
+        );
 
-            $user = User::firstOrCreate(
-                ['id_number' => $idNumber],
-                [
-                    'first_name' => $firstName,
-                    'last_name' => $lastName,
-                    'password' => bcrypt($password),
-                    'account_type' => $accountType,
-                    'email' => $email,
-                    'isActive' => true,
-                    'password_updated' => false,
-                    'term_id' => $termId
-                ]
-            );
-
-            if (!$user->wasRecentlyCreated) {
-                $user->update(['isActive' => true, 'term_id' => $termId]);
-            } else {
-                $user->save();
-                $user->roles()->attach($role);
-                Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
-            }
-            
-            return $user;
-        } catch (\Exception $e) {
-            return view('pages.admin.uploadCSV')->with('danger', 'No school term is selected.');
+        if (!$user->wasRecentlyCreated) {
+            $user->update(['isActive' => true, 'term_id' => $termId]);
+        } else {
+            $user->save();
+            $user->roles()->attach($role);
+           dispatch(new SendTemporaryPasswordEmailJob($user, $password));
         }
+
+        return $user;
     }
 
 }
 
 
-          // foreach ($this->departmentIds as $departmentId) {
-            //     UserDepartment::create([
-            //         'user_id_number' => $user->id_number,
-            //         'department_id' => $departmentId,
-            //     ]);
-            // }
-            
-            // Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
+// foreach ($this->departmentIds as $departmentId) {
+//     UserDepartment::create([
+//         'user_id_number' => $user->id_number,
+//         'department_id' => $departmentId,
+//     ]);
+// }
 
-            // Mail::send(new TemporaryPasswordEmail($user, $password), [], function ($message) use ($user) {
-            //     $message->to($user->email);
-            // });
-             // dispatch(new SendTemporaryPasswordEmailJob($user, $password));
+// Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
+
+// Mail::send(new TemporaryPasswordEmail($user, $password), [], function ($message) use ($user) {
+//     $message->to($user->email);
+// });
+// dispatch(new SendTemporaryPasswordEmailJob($user, $password));
