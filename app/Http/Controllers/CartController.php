@@ -140,14 +140,12 @@ class CartController extends Controller
     public function browse_cart($id){
 
         $user = Auth::user(); 
-        // $order = Order::where('id',$id)->first();
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
 
         $cartItems = OrderItemTemp::where('order_id',$id)->get();
         
         $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
-        // dd($user_department->department_id);
 
         $user_dept_id = $user_department->department_id;
         $departments = Department::with('college')->get();
@@ -259,10 +257,22 @@ class CartController extends Controller
     
     public function pending(){
         
-        $pendingOrder = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
+        // $pendingOrder = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
 
         // dd($pendingOrder);
-        return view('pages.students.pending')->with(compact('pendingOrder'));
+        // return view('pages.students.pending')->with(compact('pendingOrder'));
+
+
+        $user = Auth::user(); 
+        $orders = Order::where('user_id',Auth::user()->id_number)->get();
+        $items = collect();
+        
+        foreach($orders as $order){
+            $orderItems = OrderItemTemp::where('order_id', $order->id)->get();
+            $items = $items->merge($orderItems);
+        }
+       
+        return view('pages.students.pending')->with(compact('orders','items'));
     }
 
     public function borrowed(){
