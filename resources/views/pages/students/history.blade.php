@@ -49,7 +49,7 @@
                                                                             alt="" srcset="" class="img-fluid rounded-3">
                                                                     @endif
                                                                 </div>
-                                                                <div class="col-md-3 col-lg-3 col-xl-3">
+                                                                <div class="col-md-2 col-lg-2 col-xl-2">
                                                                     <p class="lead fw-normal mb-2">{{ $item->brand->brand_name }}</p>
                                                                     <p><span class="text-muted"> {{ $item->model->model_name }} </span></p>
                                                                 </div>
@@ -57,7 +57,10 @@
                                                                     <p><span class="text-muted"> {{ $item->description }} </span></p>
                                                                     <p><span>Serial:</span><span class="text-muted"> {{ $item->serial_number }} </span></p>
                                                                 </div>
-                                                                <div class="col-md-3 col-lg-3 col-xl-2 d-flex">                          
+                                                                <div class="col-md-2 col-lg-2 col-xl-2">
+                                                                    <p><span class="h4 text-danger">{{ strtoupper($orderItem->status) }}</span></p>    
+                                                                </div>
+                                                                <div class="col-md-3 col-lg-3 col-xl-2 d-flex">                 
                                                                     <input id="form1" min="0" name="quantity" value="{{ $orderItem->order_quantity }}" type="number"
                                                                     class="form-control form-control-sm text-center" disabled />                
                                                                 </div>

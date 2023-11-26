@@ -260,7 +260,7 @@ class CartController extends Controller
         $items = collect();
         
         foreach($releasedOrders as $order){
-            $orderItemsCollect = OrderItem::where('order_id',$order->id)->where('status','returned')->get();
+            $orderItemsCollect = OrderItem::where('order_id',$order->id)->whereIn('status',['returned','lost'])->get();
             $orderItems = $orderItems->merge($orderItemsCollect);
         }
 
