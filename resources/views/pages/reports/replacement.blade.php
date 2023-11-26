@@ -82,34 +82,44 @@
                         <th scope="col">Model</th>
                         <th scope="col">Description</th>
                         <th scope="col">QTY</th>
-                        <th scope="col">Acquisiion Date</th>
+                        <th scope="col">
+                            Acquisition Date
+                        </th>
                         <th scope="col">Property Sticker</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($items as $item)
-                        <tr>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->brand->brand_name }}</td>
-                            <td>
-                                @if ($item->model == null)
-                                    No Model
-                                @else
-                                    {{ $item->model->model_name }}
-                                @endif
-                            </td>
-                            <td>{{ $item->description }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>{{ $item->aquisition_date }}</td>
-                            <td>{{ $item->inventory_tag }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7">
-                                <strong>No data available.</strong>
-                            </td>
-                        </tr>
-                    @endforelse
+                    @if ($status == 'Replacement')
+                        @forelse ($items as $item)
+                            <tr>
+                                <td>{{ $item->id }}</td>
+                                <td>
+                                    @if ($item->brand == null)
+                                        No Brand
+                                    @else
+                                    {{ $item->brand->brand_name }}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->model == null)
+                                        No Model
+                                    @else
+                                        {{ $item->model->model_name }}
+                                    @endif
+                                </td>
+                                <td>{{ $item->description }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td>{{ date('m-d-Y', strtotime($item->itemLog->date)) }} </td>
+                                <td>{{ $item->inventory_tag }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7">
+                                    <strong>No data available.</strong>
+                                </td>
+                            </tr>
+                        @endforelse
+                    @endif
                 </tbody>
             </table>
 
