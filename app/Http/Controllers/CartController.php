@@ -286,12 +286,21 @@ class CartController extends Controller
 
     public function borrowed(){
 
-        $borrowedItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->whereNull('date_returned')->get();
-        //take orderitems where it's not borrowed
-        //take items use foreach equals to item_id
-        //return orderitems and items
-      
-        return view('pages.students.borrowed')->with(compact('borrowedItems'));
+        $releasedOrders = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->whereNull('date_returned')->get();
+        $orderItems =collect();
+        $items = collect();
+        
+        foreach($releasedOrders as $order){
+            $orderItemsCollect = OrderItem::where('order_id',$order->id)->where('status','borrowed')->get();
+            $orderItems = $orderItems->merge($orderItemsCollect);
+        }
+
+        foreach($orderItems as $orderItem){
+            $itemsCollect = Item::where('id',$orderItem->item_id)->get();
+            $items = $items->merge($itemsCollect);
+        }
+            
+        return view('pages.students.borrowed')->with(compact('releasedOrders','orderItems','items'));
     }
 
     
