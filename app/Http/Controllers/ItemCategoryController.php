@@ -14,10 +14,11 @@ class ItemCategoryController extends Controller
 
     public function index()
     {
-        $dateTime = Carbon::now();
-        $categories = ItemCategory::withCount('items')->paginate(10);
-
-        return view('pages.admin.listOfItemCategories')->with(compact('categories', 'dateTime'));
+        $categories = ItemCategory::withCount('items')
+            ->orderBy('category_name', 'asc')
+            ->paginate(10);
+            
+        return view('pages.admin.listOfItemCategories')->with(compact('categories'));
     }
 
     public function addItemCategory()

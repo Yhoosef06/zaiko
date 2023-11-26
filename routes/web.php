@@ -197,6 +197,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('edit/room/{id}', [RoomController::class, 'editRoom'])->name('edit_room');
     Route::post('save-edited-room/{id}', [RoomController::class, 'saveEditedRoom'])->name('save_edited_room');
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
+    Route::get('/get-filtered-rooms', [RoomController::class, 'getFilteredRooms'])->name('get_filtered_rooms');
+    Route::get('/rooms/search', [RoomController::class, 'searchRoom'])->name('rooms.search');
 
     // FOR Item Category -ADMIN
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');

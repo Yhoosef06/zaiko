@@ -36,6 +36,26 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
+                                @if (Auth::user()->roles->contains('name', 'admin'))
+                                    <div class="ml-1 float-md-right">
+                                        <button name="searchFilter" class="btn bg-yellow" data-toggle="modal"
+                                            data-target="#filterModal" data-toggle="tooltip" title="Filter Users"><i
+                                                class="fa fa-filter"></i></button>
+                                    </div>
+                                @endif
+
+                                <div class="search-bar mb-2 float-md-right">
+                                    <form action="{{ route('rooms.search') }}" method="GET">
+                                        <div class="input-group">
+                                            <input type="text" name="search" class="form-control"
+                                                placeholder="Search..." value="{{ old('search', request('search')) }}">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn bg-yellow" data-toggle="tooltip"
+                                                    title="Search">Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                                 <table id="listofrooms" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
@@ -128,6 +148,41 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Filter By Department</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="filterForm" method="GET" action="{{ route('get_filtered_rooms') }}">
+                    <div class="modal-body" style="max-height: 200px; overflow-y: auto;">
+                        <div class="row">
+                            <div class="">
+                                <label for="brandFilter">Departments:</label>
+                                <div>
+                                    @foreach ($departments as $department)
+                                        <input type="checkbox" name="department_ids[]" value="{{ $department->id }}"
+                                            @if (in_array($department->id, request('department_ids', []))) checked @endif>
+                                        {{ $department->department_name }}<br>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn bg-olive" id="applyFilter">Apply</button>
+                        <a href="#" type="button" id="clearFilters">Clear</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <script>
         $(document).ready(function() {
             $('#addRoomModal').on('show.bs.modal', function(event) {
@@ -140,44 +195,44 @@
         });
 
         function deleteButton(roomId) {
-            // Remove previous highlighting
             $('#listofrooms tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
-            // Add the highlighted class to the clicked row
+         
             $('#listofrooms tbody tr[data-room-id="' + roomId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', 
+                'background-color': '#A9F5F2' 
             });
         }
 
         function openEditRoomModal(roomId, route) {
             var modal = $('#editRoomModal');
 
-            // Remove previous highlighting
             $('#listofrooms tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
-            // Add the highlighted class to the clicked row
             $('#listofrooms tbody tr[data-room-id="' + roomId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)',
+                'background-color': '#A9F5F2' 
             });
 
-            // Clear previous content from the modal
             modal.find('.modal-body').html('');
 
-            // Send an AJAX request to fetch the edit view content
-            // for the specific college
             $.get(route, {
                 room_id: roomId
             }, function(data) {
                 modal.find('.modal-body').html(data);
             });
         }
+
+        $(document).ready(function() {
+            $('#clearFilters').click(function() {
+                $('input[name^="department_ids[]"]').prop('checked', false);
+            });
+        });
     </script>
 @endsection

@@ -167,7 +167,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="filterModalLabel">Filter Items</h5>
+                    <h5 class="modal-title" id="filterModalLabel">Filter By Brand</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -248,9 +248,6 @@
         $(document).ready(function() {
             $('#clearFilters').click(function() {
                 $('input[name^="brand_ids[]"]').prop('checked', false);
-                $('input[name^="model_ids[]"]').prop('checked', false);
-                $('input[name^="category_ids[]"]').prop('checked', false);
-                $('input[name^="room_ids[]"]').prop('checked', false);
             });
         });
     </script>

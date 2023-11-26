@@ -18,7 +18,8 @@ class RoomController extends Controller
     {
         if (Auth::user()->roles->contains('name', 'admin')) {
             $rooms = Room::paginate(10);
-            return view('pages.admin.listOfRooms')->with(compact('rooms'));
+            $departments = Department::all();
+            return view('pages.admin.listOfRooms')->with(compact('rooms', 'departments'));
         } else {
             $user = Auth::user();
             $departments = $user->departments;
@@ -129,5 +130,21 @@ class RoomController extends Controller
             }
             return redirect('rooms');
         }
+    }
+
+    public function getFilteredRooms(Request $request)
+    {
+        $departmentIds = $request->input('department_ids', []);
+        $rooms = Room::whereIn('department_id', $departmentIds)->paginate(10);
+        $departments = Department::all();
+
+        return view('pages.admin.listOfRooms', compact('rooms', 'departments'));
+    }
+    public function searchRoom(Request $request)
+    {
+        $departments = Department::all();
+        $searchText = $request->input('search');
+        $rooms = Room::where('room_name', 'like', '%' . $searchText . '%')->paginate(10);
+        return view('pages.admin.listOfRooms', compact('rooms','departments'));
     }
 }
