@@ -42,7 +42,6 @@ class RoomController extends Controller
 
             return view('pages.admin.addRoom')->with(compact('departments', 'colleges'));
         } else {
-            // For other roles or unauthorized access
             abort(403, 'Unauthorized action.');
         }
     }
@@ -106,7 +105,6 @@ class RoomController extends Controller
             $room->update([
                 'department_id' => $request->department_id,
                 'room_name' => $request->room_name,
-                // Add other fields you want to update here
             ]);
 
             return redirect('rooms')->with('success', 'Room edited successfully.');
@@ -124,7 +122,6 @@ class RoomController extends Controller
             Session::flash('success', 'Room Successfully Removed');
             return redirect('rooms');
         } catch (QueryException $e) {
-            // Check if the exception is due to a foreign key constraint violation
             if ($e->getCode() === '23000') {
                 Session::flash('danger', 'Cannot remove room because it is referenced by other records.');
             } else {

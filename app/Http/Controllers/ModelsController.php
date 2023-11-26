@@ -94,7 +94,6 @@ class ModelsController extends Controller
             $model->update([
                 'brand_id' => $request->brand_id,
                 'model_name' => $request->model_name,
-                // Add other fields you want to update here
             ]);
 
             return redirect('models')->with('success', 'Model edited successfully.');
@@ -112,7 +111,6 @@ class ModelsController extends Controller
             Session::flash('success', 'Model Successfully Removed');
             return redirect('models');
         } catch (QueryException $e) {
-            // Check if the exception is due to a foreign key constraint violation
             if ($e->getCode() === '23000') {
                 Session::flash('danger', 'Cannot remove model because it is referenced by other records.');
             } else {

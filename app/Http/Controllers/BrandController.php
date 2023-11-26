@@ -78,7 +78,6 @@ class BrandController extends Controller
             Session::flash('success', 'Brand Successfully Removed');
             return redirect('brands');
         } catch (QueryException $e) {
-            // Check if the exception is due to a foreign key constraint violation
             if ($e->getCode() === '23000') {
                 Session::flash('danger', 'Cannot remove brand because it is referenced by other records.');
             } else {

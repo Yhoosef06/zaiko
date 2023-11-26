@@ -262,25 +262,20 @@ class UserController extends Controller
         $current_user_role = UserRole::where('user_id_number', $id_number)->first();
 
         if (!$current_user_role) {
-            // If no user role exists, create a new one for the user with the selected role
             UserRole::create([
                 'user_id_number' => $request->id_number,
                 'role_id' => $new_role_id,
             ]);
         } else {
-            // If the user role exists, update it only if the role has changed
             if ($current_user_role->role_id !== $new_role_id) {
                 $current_user_role->update(['role_id' => $new_role_id]);
             }
         }
 
-        if ($new_role_id == 3) { // Role ID for 'borrower'
-            // Detach associated departments for the user
+        if ($new_role_id == 3) {
             $user->departments()->detach();
-        } elseif ($new_role_id == 2) { // Role ID for 'manager'
+        } elseif ($new_role_id == 2) { 
             $department_ids = $request->input('department_ids', []);
-
-            // Sync user's departments
             $user->departments()->sync($department_ids);
         }
 
