@@ -33,18 +33,6 @@
                     @endif
                 </div>
 
-                <label for="Model">Part Number:</label>
-                <input type="text" id="part_number" name="part_number" value="{{ old('part_number') }}"
-                    class="form-control  @error('part_number')
-                                        border-danger
-                                        @enderror"
-                    placeholder="Enter a part number. (Leave blank if none)">
-                @error('part_number')
-                    <div class="text-danger">
-                        {{ $message }}
-                    </div>
-                @enderror
-
                 <label for="Model">Serial Number:</label>
                 <input type="text" id="serial_number" name="serial_number" value="{{ old('serial_number') }}"
                     class="form-control  @error('serial_number')
@@ -83,13 +71,17 @@
                     </div>
                 @enderror
 
-                <label for="status">Status:</label>
-                <select id="status" name="status" class="form-control">
-                    <option value="Active">Active</option>
-                    <option value="For Repair">For Repair</option>
-                    <option value="Obsolete">Obsolete</option>
-                    <option value="Lost">Lost</option>
-                </select>
+                <label for="Model">Part Number:</label>
+                <input type="text" id="part_number" name="part_number" value="{{ old('part_number') }}"
+                    class="form-control  @error('part_number')
+                                        border-danger
+                                        @enderror"
+                    placeholder="Enter a part number. (Leave blank if none)">
+                @error('part_number')
+                    <div class="text-danger">
+                        {{ $message }}
+                    </div>
+                @enderror
 
                 {{-- <label for="borrowed or not">Property Sticker:</label> --}}
                 <label for="" class="radio-inline">

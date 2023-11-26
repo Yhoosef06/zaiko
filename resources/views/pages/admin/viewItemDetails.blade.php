@@ -76,11 +76,11 @@
                         Date & Time: {{ date('F j, Y H:i:s', strtotime($itemLog->created_at)) }}<br>
                         Mode: {{ $itemLog->mode }} <br>
                         Quantity: {{ $itemLog->quantity }} <br>
-                        @if ($itemLog->mode == 'transferred')
+                        @if ($itemLog->mode == 'Transferred')
                             Room From: {{ $itemLog->roomFrom->room_name }} <br>
                             Room To: {{ $itemLog->roomTo->room_name }} <br>
                         @endif
-                        @if ($itemLog->mode == 'replacement')
+                        @if ($itemLog->mode == 'Replacement')
                             Replaced Item: {{ $item->replaced_item }} <br>
                         @endif
                         Encoded By: {{ $itemLog->user->first_name }} {{ $itemLog->user->last_name }}
