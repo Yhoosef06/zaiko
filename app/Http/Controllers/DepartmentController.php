@@ -13,8 +13,8 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::paginate(10);
-
-        return view('pages.admin.listOfDepartments', compact('departments'));
+        $colleges = College::with('departments')->get();
+        return view('pages.admin.listOfDepartments', compact('departments', 'colleges'));
     }
 
     public function addDepartment()
@@ -95,7 +95,22 @@ class DepartmentController extends Controller
     public function getDepartments($college_id)
     {
         $departments = Department::where('college_id', $college_id)->get();
-        
+
         return response()->json($departments);
+    }
+
+    public function getFilteredDepartments(Request $request)
+    {
+        $colleges = College::with('departments')->get();
+        $collegeIds = $request->input('college_ids', []);
+        $departments = Department::whereIn('college_id', $collegeIds)->paginate(10);
+        return view('pages.admin.listOfDepartments', compact('departments', 'colleges'));
+    }
+    public function searchDepartment(Request $request)
+    {
+        $colleges = College::with('departments')->get();
+        $searchText = $request->input('search');
+        $departments = Department::where('department_name', 'like', '%' . $searchText . '%')->paginate(10);
+        return view('pages.admin.listOfDepartments', compact('departments','colleges'));
     }
 }

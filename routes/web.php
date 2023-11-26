@@ -190,6 +190,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('edit/department/{id}', [DepartmentController::class, 'editDepartment'])->name('edit_department');
     Route::post('save-edited-department/{id}', [DepartmentController::class, 'saveEditedDepartment'])->name('save_edited_department');
     Route::post('delete-department/{id}', [DepartmentController::class, 'deleteDepartment'])->name('delete_department');
+    Route::get('/get-filtered-departments', [DepartmentController::class, 'getFilteredDepartments'])->name('get_filtered_departments');
+    Route::get('/departments/search', [DepartmentController::class, 'searchDepartment'])->name('departments.search');
+
 
     // FOR ROOM - ADMIN
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');

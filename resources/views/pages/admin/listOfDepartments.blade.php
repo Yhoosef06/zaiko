@@ -36,6 +36,26 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
+                                @if (Auth::user()->roles->contains('name', 'admin'))
+                                    <div class="ml-1 float-md-right">
+                                        <button name="searchFilter" class="btn bg-yellow" data-toggle="modal"
+                                            data-target="#filterModal" data-toggle="tooltip" title="Filter Users"><i
+                                                class="fa fa-filter"></i></button>
+                                    </div>
+                                @endif
+
+                                <div class="search-bar mb-2 float-md-right">
+                                    <form action="{{ route('departments.search') }}" method="GET">
+                                        <div class="input-group">
+                                            <input type="text" name="search" class="form-control"
+                                                placeholder="Search..." value="{{ old('search', request('search')) }}">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn bg-yellow" data-toggle="tooltip"
+                                                    title="Search">Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                                 <table id="listofdepartments" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
@@ -117,7 +137,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editDepartmentModalLabel">Edit Department/Program Information</h5>
+                    <h5 class="modal-title" id="editDepartmentModalLabel">Edit Department Information</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -125,6 +145,42 @@
                 <div class="modal-body">
                     <!-- This is where the content of the edit form will be loaded -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Filter By School</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="filterForm" method="GET" action="{{ route('get_filtered_departments') }}">
+                    <div class="modal-body" style="max-height: 200px; overflow-y: auto;">
+                        <div class="row">
+                            <div class="">
+                                <label for="collegeFilter">Filter By Schools:</label>
+                                <div>
+                                    @foreach ($colleges as $college)
+                                        <div>
+                                            <input type="checkbox" name="college_ids[]" value="{{ $college->id }}">
+                                            {{ $college->college_name }}
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn bg-olive" id="applyFilter">Apply</button>
+                        <a href="#" type="button" id="clearFilters">Clear</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -180,5 +236,11 @@
                 modal.find('.modal-body').html(data);
             });
         }
+
+        $(document).ready(function() {
+            $('#clearFilters').click(function() {
+                $('input[name^="college_ids[]"]').prop('checked', false);
+            });
+        });
     </script>
 @endsection

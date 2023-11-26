@@ -163,13 +163,16 @@
                     <div class="modal-body" style="max-height: 200px; overflow-y: auto;">
                         <div class="row">
                             <div class="">
-                                <label for="brandFilter">Departments:</label>
+                                <label for="departmentFilter">Filter By Departments:</label>
                                 <div>
-                                    @foreach ($departments as $department)
+                                    @foreach ($colleges as $college)
+                                    <strong>{{ $college->college_name }}</strong><br>
+                                    @foreach ($college->departments as $department)
                                         <input type="checkbox" name="department_ids[]" value="{{ $department->id }}"
                                             @if (in_array($department->id, request('department_ids', []))) checked @endif>
                                         {{ $department->department_name }}<br>
                                     @endforeach
+                                @endforeach
                                 </div>
                             </div>
                         </div>
