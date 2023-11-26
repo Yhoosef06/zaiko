@@ -15,160 +15,72 @@
         <div class="container">
             <div class="card" style="background-color: rgba(255, 255, 255, 0.8);">
                 <div class="card-body">
-                    <table id="cart" class="table table-bordered table-striped">
-
-
-                        <thead>
-                            <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
-                                <th style="width:10%" class="text-wrap text-center">Transaction ID</th>
-                                <th style="width:10%" class="text-wrap text-center">Date Submitted</th>
-                                <th style="width:10%" class="text-wrap text-center">View</th>
-                            </tr>
-                        </thead>
-
-                        @if (count($pendingOrder) != 0)
-                            @foreach ($pendingOrder as $order)
-                                <tbody>
-                                    <tr style="background-color: rgba(255, 255, 255, 0.8);">
-
-                                        <td class="text-wrap text-center">{{ $order->id }}</td>
-                                        <td class="text-wrap text-center">{{ date('F j, Y', strToTime($order->date_submitted)) }}</td>
-                                        <td class="text-center">
-                                            <a href="#" class="link-secondary">
-                                                <button type="button" class="btn btn-outline-success btn-sm"
-                                                    data-toggle="modal" data-target="#itemModal">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            @endforeach
-                            </table>
-                            <div class="modal fade bd-example-modal-xl" id="itemModal" tabindex="-1" role="dialog"
-                                    aria-labelledby="itemModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-xl" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header text-dark">
-                                                <h5 class="modal-title" id="itemModalLabel"><b>PENDING ORDER - ORDER ID
-                                                        {{ $order->id }}</b></h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body text-dark">
-                                                <div class="container">
-                                                    <div class="container-fluid px-5 text-justify">
-                                                        <div class="border border-success rounded px-5 py-5">
-                                                            @php
-                                                                $items = $order->orderItemTemp;
-                                                                // dd($items);
-                                                            @endphp
-                                                            <table class="table table-bordered table-striped">
-                                                                <thead>
-                                                                    <tr class="bg-success"
-                                                                        style="background-color: rgba(0, 150, 0, 0.9) !important;">
-                                                                        <th style="width:10%" class="text-wrap">Brand</th>
-                                                                        <th style="width:10%" class="text-wrap">Model</th>
-                                                                        <th style="width:10%" class="text-wrap">Description
-                                                                        </th>
-                                                                        <th style="width:10%" class="text-wrap text-center">
-                                                                            Quantity</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach ($items as $item)
-                                                                        <tr
-                                                                            style="background-color: rgba(255, 255, 255, 0.8);">
-                                                                            <td class="text-wrap">
-                                                                                {{ $item->item->brand->brand_name }}</td>
-                                                                            <td class="text-wrap">
-                                                                                {{ $item->item->model->model_name }}</td>
-                                                                            <td class="text-wrap">
-                                                                                {{ $item->item->description }}</td>
-                                                                            <td class="text-wrap text-center">{{ $item->quantity }}</td>
-                                                                        </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
-
-
+                    @if (count($orders) != 0)
+                        @foreach($orders as $order)
+                            @php
+                                $fordepartment = $items->where('order_id',$order->id)->first();
+                            @endphp
+                            <div class="container h-100 py-5">
+                                <div class="row d-flex justify-content-center align-items-center h-100">
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between align-items-center mb-1 card-header">
+                                            <h3 class="fw-normal mb-0 text-black">Transaction #{{$order->id}} - {{$fordepartment->item->room->department->department_name}}</h3>
+                                        </div>
+                                        @foreach($items as $item)
+                                            @if($item->order_id == $order->id)
+                                            <div class="card rounded-3 mb-1">
+                                                <div class="card-body p-2">
+                                                    <div class="row d-flex justify-content-between align-items-center">
+                                                        <div class="col-md-2 col-lg-2 col-xl-2">
+                                                            @if ($item->item->item_image == null)
+                                                            <div class="img-fluid rounded-3"
+                                                                style="border: 1px solid #000; height: 150px; display: flex; justify-content: center; align-items: center;">
+                                                                <p>No image found.</p>
+                                                            </div>
+                                                            @else
+                                                                <img src="{{ asset('storage/' . $item->item->item_image) }}"
+                                                                    alt="" srcset="" class="img-fluid rounded-3">
+                                                            @endif
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-xl-3">
+                                                            <p class="lead fw-normal mb-2">{{ $item->item->brand->brand_name }}</p>
+                                                            <p><span class="text-muted"> {{ $item->item->model->model_name }} </span></p>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-xl-3">
+                                                            <p><span class="text-muted"> {{ $item->item->description }} </span></p>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3 col-xl-2 d-flex">                          
+                                                            <input id="form1" min="0" name="quantity" value="{{ $item->quantity }}" type="number"
+                                                            class="form-control form-control-sm text-center" disabled />                
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Close</button>
-                                            </div>
-
-                                            <script>
-                                                $(document).ready(function() {
-                                                    $("#modal-link").click(function(e) {
-                                                        e.preventDefault();
-                                                        $("#itemModal").modal("show");
-                                                    });
-                                                });
-                                            </script>
-
+                                            @endif
+                                        @endforeach
+                                        <div class="card">
+                                            <form action="{{route('remove.transaction', $order->id)}}" method="GET" onsubmit="return confirm('Are you sure you want to cancel the transaction? This will remove your transaction details.')">
+                                                @csrf
+                                                <div class="card-body">
+                                                <button type="submit" class="btn btn-warning btn-block btn-lg">Cancel this transaction.</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                        @else
-                            <tbody>
-                                <tr>
-                                    <td colspan="12" class="text-center">
-                                        <a href="{{ route('browse.items') }}" class="btn btn-danger"><i
-                                                class="bi bi-cart-x"></i> No Pending Orders</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        @endif
-                    
-                    
-                </div>
-            </div>
-
-
-            <!-- Modal -->
-
-            <!-- Modal -->
-            {{-- <div class="modal fade bd-example-modal-xl" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header text-dark">
-                        <h5 class="modal-title" id="itemModalLabel"><b>ORDER HISTORY</b></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        </div>
-                        <div class="modal-body text-dark">
-                            <div class="container">
-                                <div class="container-fluid px-5 text-justify">
-                                    <div class="border border-success rounded px-5 py-5">
-
-                                    </div>
-                                </div> 
+                        @endforeach
+                    @else
+                        <div class="container h-100 py-5">
+                            <div class="row d-flex justify-content-center align-items-center h-100">
+                                <div class="text-center">
+                                    <p><span class="h3"> There are no pending transactions. </span></p>
+                                </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                        
-                        <script>
-                            $(document).ready(function() {
-                              $("#modal-link").click(function(e) {
-                                e.preventDefault();
-                                $("#itemModal").modal("show");
-                              });
-                            });
-                        </script>
-                        
-                    </div>
+                    @endif
                 </div>
-            </div> --}}
+            </div>
         </div>
     </div>
 @endsection

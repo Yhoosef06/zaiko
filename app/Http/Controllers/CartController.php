@@ -140,14 +140,12 @@ class CartController extends Controller
     public function browse_cart($id){
 
         $user = Auth::user(); 
-        // $order = Order::where('id',$id)->first();
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
 
         $cartItems = OrderItemTemp::where('order_id',$id)->get();
         
         $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
-        // dd($user_department->department_id);
 
         $user_dept_id = $user_department->department_id;
         $departments = Department::with('college')->get();
@@ -207,6 +205,14 @@ class CartController extends Controller
         return redirect()->back();
     }
 
+    public function remove_transaction($id){
+        
+        Order::where('id',$id)->delete();
+
+        session()->flash('success','Transaction suceessfully cancelled.');
+        return redirect()->back();
+    }
+
     public function update_cart(Request $request,$id){
         // dd($id);
        
@@ -249,28 +255,63 @@ class CartController extends Controller
 
     public function history(){
         
-        $orderHistory = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('date_returned')->get();
+        $releasedOrders = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->get();
+        $orderItems =collect();
+        $items = collect();
+        
+        foreach($releasedOrders as $order){
+            $orderItemsCollect = OrderItem::where('order_id',$order->id)->where('status','returned')->get();
+            $orderItems = $orderItems->merge($orderItemsCollect);
+        }
 
-        // dd($orderHistory);
+        foreach($orderItems as $orderItem){
+            $itemsCollect = Item::where('id',$orderItem->item_id)->get();
+            $items = $items->merge($itemsCollect);
+        }
 
-        return view('pages.students.history')->with(compact('orderHistory'));
+        return view('pages.students.history')->with(compact('releasedOrders','orderItems','items'));
 
     }
     
     public function pending(){
         
-        $pendingOrder = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
+        // $pendingOrder = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
 
         // dd($pendingOrder);
-        return view('pages.students.pending')->with(compact('pendingOrder'));
+        // return view('pages.students.pending')->with(compact('pendingOrder'));
+
+
+        $user = Auth::user(); 
+        $orders = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
+        $items = collect();
+        
+        foreach($orders as $order){
+
+            $orderItemTemps = OrderItemTemp::where('order_id', $order->id)->get();
+            $items = $items->merge($orderItemTemps);
+        }
+       
+        return view('pages.students.pending')->with(compact('orders','items'));
     }
 
     public function borrowed(){
+
+        $releasedOrders = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->whereNull('date_returned')->get();
+        $orderItems =collect();
+        $items = collect();
         
-        $borrowedItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->whereNull('date_returned')->get();
-        // dd($borrowedItems);
-      
-        return view('pages.students.borrowed')->with(compact('borrowedItems'));
+        foreach($releasedOrders as $order){
+            $orderItemsCollect = OrderItem::where('order_id',$order->id)->where('status','borrowed')->get();
+            $orderItems = $orderItems->merge($orderItemsCollect);
+        }
+
+        foreach($orderItems as $orderItem){
+            $itemsCollect = Item::where('id',$orderItem->item_id)->get();
+            $items = $items->merge($itemsCollect);
+        }
+
+            
+        return view('pages.students.borrowed')->with(compact('releasedOrders','orderItems','items'));
     }
 
     
