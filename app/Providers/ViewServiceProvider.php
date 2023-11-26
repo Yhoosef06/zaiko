@@ -37,8 +37,6 @@ class ViewServiceProvider extends ServiceProvider
 
             //BORROWER SIDE NAV
             $pendingItems = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
-            $orderHistory = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('date_returned')->get();
-
             $cartcount = count(Order::where('user_id', $user->id_number)->where('date_submitted', null)->get());
 
             //BORROWED ITEMS
@@ -55,15 +53,12 @@ class ViewServiceProvider extends ServiceProvider
                 $itemsCollect = Item::where('id',$orderItem->item_id)->get();
                 $releaseditems = $releaseditems->merge($itemsCollect);
             }
-
             //END OF BORROWED ITEMS
-            // dd(count($releasedItemsCollect));
             
             $view->with([
                 'cartcount' => $cartcount,
                 "pendingcount" => count($pendingItems),
                 'borrowedcount' => count($releaseditems),
-                'historycount' => count($orderHistory)
             ]);
 
 
