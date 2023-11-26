@@ -255,11 +255,21 @@ class CartController extends Controller
 
     public function history(){
         
-        $orderHistory = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('date_returned')->get();
+        $releasedOrders = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNotNull('approval_date')->get();
+        $orderItems =collect();
+        $items = collect();
+        
+        foreach($releasedOrders as $order){
+            $orderItemsCollect = OrderItem::where('order_id',$order->id)->where('status','returned')->get();
+            $orderItems = $orderItems->merge($orderItemsCollect);
+        }
 
-        // dd($orderHistory);
+        foreach($orderItems as $orderItem){
+            $itemsCollect = Item::where('id',$orderItem->item_id)->get();
+            $items = $items->merge($itemsCollect);
+        }
 
-        return view('pages.students.history')->with(compact('orderHistory'));
+        return view('pages.students.history')->with(compact('releasedOrders','orderItems','items'));
 
     }
     
@@ -299,6 +309,7 @@ class CartController extends Controller
             $itemsCollect = Item::where('id',$orderItem->item_id)->get();
             $items = $items->merge($itemsCollect);
         }
+
             
         return view('pages.students.borrowed')->with(compact('releasedOrders','orderItems','items'));
     }
