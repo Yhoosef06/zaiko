@@ -45,18 +45,14 @@ class UserController extends Controller
         $account_type = $request->input('account_type');
         $sortOrder = 'asc';
 
-        // Fetch all users to prepare unique roles (can be optimized)
         $filterUsers = User::all();
         $uniqueRoles = $filterUsers->flatMap(function ($user) {
             return $user->roles;
         })->unique('id');
 
-        // Start with base query
         $filteredUsers = User::query();
 
-        // Apply filters if they exist
         if (!empty($roleIds)) {
-            // Ensure $roleIds is an array before using it in whereIn
             if (!is_array($roleIds)) {
                 $roleIds = [$roleIds];
             }
@@ -73,7 +69,6 @@ class UserController extends Controller
             $filteredUsers->where('account_type', '=', $account_type);
         }
 
-        // Pagination
         $users = $filteredUsers->paginate(20);
 
         return view('pages.admin.listOfUsers', compact('users', 'uniqueRoles', 'filterUsers'));
@@ -183,7 +178,7 @@ class UserController extends Controller
 
         $user = User::where('id_number', '=', $request->input('id_number'))->first();
         if ($user === null) {
-           $user = User::create([
+            $user = User::create([
                 'id_number' => $request->id_number,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,

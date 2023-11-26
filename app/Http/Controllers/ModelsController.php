@@ -16,11 +16,11 @@ class ModelsController extends Controller
     {
         $dateTime = Carbon::now();
         $models = Models::with('brand')->paginate(10);
-
+        $brands = Brand::orderBy('brand_name', 'asc')->get();
         $models->each(function ($models) {
             $models->brand_name = $models->brand->brand_name;
         });
-        return view('pages.admin.listOfModels')->with(compact('models', 'dateTime'));
+        return view('pages.admin.listOfModels')->with(compact('models', 'dateTime', 'brands'));
     }
 
     public function getModels($brandId)
@@ -28,6 +28,23 @@ class ModelsController extends Controller
         $models = Models::where('brand_id', $brandId)->get();
 
         return response()->json($models);
+    }
+
+    public function getFilteredModels(Request $request)
+    {
+        $brands = Brand::orderBy('brand_name', 'asc')->get();
+        $brandIds = $request->input('brand_ids', []);
+        $models = Models::whereIn('brand_id', $brandIds)->paginate(10); 
+        return view('pages.admin.listOfModels', compact('models','brands'));
+    }
+    public function searchModel(Request $request)
+    {
+        $brands = Brand::orderBy('brand_name', 'asc')->get();
+        $searchText = $request->input('search');
+        $models = Models::where('model_name', 'like', '%' . $searchText . '%')
+                        ->paginate(10);
+
+       return view('pages.admin.listOfModels', compact('models','brands'));
     }
 
     public function addModel()

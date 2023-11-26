@@ -423,6 +423,7 @@ class ItemsController extends Controller
                 ->where(function ($query) use ($search_text) {
                     $query->where('description', 'LIKE', '%' . $search_text . '%')
                         ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
+                        ->orWhere('serial_number', 'LIKE', '%' . $search_text . '%')
                         ->orWhere('part_number', 'LIKE', '%' . $search_text . '%')
                         ->orWhereHas('brand', function ($query) use ($search_text) {
                             $query->where('brand_name', 'LIKE', '%' . $search_text . '%');
@@ -591,7 +592,7 @@ class ItemsController extends Controller
             $itemLog->item_id = $item->id;
             $itemLog->quantity = $quantity;
             $itemLog->encoded_by = Auth::user()->id_number;
-            $itemLog->mode = 'transferred';
+            $itemLog->mode = 'Transferred';
             $itemLog->room_from = $request->room_from;
             $itemLog->room_to = $request->room_to;
             $itemLog->date = now();
@@ -612,7 +613,7 @@ class ItemsController extends Controller
                 $itemLog->item_id = $existingItemTo->id;
                 $itemLog->quantity = $quantity;
                 $itemLog->encoded_by = Auth::user()->id_number;
-                $itemLog->mode = 'transferred';
+                $itemLog->mode = 'Transferred';
                 $itemLog->room_from = $request->room_from;
                 $itemLog->room_to = $request->room_to;
                 $itemLog->date = now();
@@ -626,7 +627,7 @@ class ItemsController extends Controller
                 $itemLog->item_id = $item->id;
                 $itemLog->quantity = $quantity;
                 $itemLog->encoded_by = Auth::user()->id_number;
-                $itemLog->mode = 'transferred';
+                $itemLog->mode = 'Transferred';
                 $itemLog->room_from = $request->room_from;
                 $itemLog->room_to = $request->room_to;
                 $itemLog->date = now();
@@ -667,7 +668,7 @@ class ItemsController extends Controller
                 $itemLog->item_id = $newItem->id;
                 $itemLog->quantity = $quantity;
                 $itemLog->encoded_by = Auth::user()->id_number;
-                $itemLog->mode = 'transferred';
+                $itemLog->mode = 'Transferred';
                 $itemLog->room_from = $request->room_from;
                 $itemLog->room_to = $request->room_to;
                 $itemLog->date = now();
@@ -677,18 +678,18 @@ class ItemsController extends Controller
                 $itemLog->item_id = $item->id;
                 $itemLog->quantity = $quantity;
                 $itemLog->encoded_by = Auth::user()->id_number;
-                $itemLog->mode = 'transferred';
+                $itemLog->mode = 'Transferred';
                 $itemLog->room_from = $request->room_from;
                 $itemLog->room_to = $request->room_to;
                 $itemLog->date = now();
                 $itemLog->save();
 
-                // Update the original item's quantity and delete if needed
+                // Update the original item's quantity 
                 $item->update([
                     'quantity' => $item->quantity - $quantity,
                 ]);
 
-                // Delete item from room_from if its quantity becomes zero or negative
+                // Delete item from room_from if its quantity kong mo zero
                 $existingItemFrom = Item::where('serial_number', $item->serial_number)
                     ->where('location', $request->room_from)
                     ->where('part_number', $item->part_number)
@@ -736,7 +737,7 @@ class ItemsController extends Controller
         $itemLog->item_id = $item->id;
         $itemLog->quantity = $item->quantity;
         $itemLog->encoded_by = Auth::user()->id_number;
-        $itemLog->mode = 'added';
+        $itemLog->mode = 'Added';
         $itemLog->date = now();
         $itemLog->save();
 
@@ -760,13 +761,13 @@ class ItemsController extends Controller
             'location' => $replacedItem->location,
             'category_id' => $replacedItem->category_id,
             'brand_id' => $request->brand ? $request->brand : 1,
-            'model_id' => $request->model ? $request->brand : 1,
+            'model_id' => $request->model ? $request->model : 1,
             'part_number' => $request->part_number,
             'description' => $request->description,
             'aquisition_date' => $request->aquisition_date,
             'inventory_tag' => $replacedItem->inventory_tag,
             'quantity' => $replacedItem->quantity,
-            'status' => $request->status,
+            'status' => 'Active',
             'borrowed' => 'no',
             'replaced_item' => $id,
             'duration' => $replacedItem->duration,
@@ -778,7 +779,7 @@ class ItemsController extends Controller
         $itemLog->item_id = $item->id;
         $itemLog->quantity = $item->quantity;
         $itemLog->encoded_by = Auth::user()->id_number;
-        $itemLog->mode = 'replacement';
+        $itemLog->mode = 'Replacement';
         $itemLog->date = now();
         $itemLog->save();
 

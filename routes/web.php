@@ -216,6 +216,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('edit/model/{id}', [ModelsController::class, 'editModel'])->name('edit_model');
     Route::post('save-edited-model/{id}', [ModelsController::class, 'saveEditedModel'])->name('save_edited_model');
     Route::post('delete-model/{id}', [ModelsController::class, 'deleteModel'])->name('delete_model');
+    Route::get('/get-filtered-models', [ModelsController::class, 'getFilteredModels'])->name('get_filtered_models');
+    Route::get('/models/search', [ModelsController::class, 'searchModel'])->name('models.search');
 
     //TERM - ADMIN
     Route::get('terms', [TermController::class, 'index'])->name('view_terms');

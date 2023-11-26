@@ -304,35 +304,30 @@
 
     <script>
         function deleteButton(itemId) {
-            // Remove previous highlighting
             $('#listofitems tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
-            // Add the highlighted class to the clicked row
             $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', 
+                'background-color': '#A9F5F2' 
             });
         }
 
         function openItemModal(itemId) {
             var modal = $('#modal-item-details');
             var url = "{{ route('view_item_details', ['id' => ':itemId']) }}".replace(':itemId', itemId);
-            // Clear previous content from the modal
             modal.find('.modal-body').html('');
 
-            // Remove previous highlighting
             $('#listofitems tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
-            // Add the highlighted class to the clicked row
             $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)',
+                'background-color': '#A9F5F2'
             });
 
 
@@ -342,30 +337,25 @@
         }
 
         function openNewWindow(event, url) {
-            event.preventDefault(); // Prevent the default link behavior
-            window.open(url, '_blank'); // Open the URL in a new window or tab
+            event.preventDefault();
+            window.open(url, '_blank');
         }
 
         function openTransferItemModal(itemId, route) {
-            // Remove previous highlighting
             $('#listofitems tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
-            // Add the highlighted class to the clicked row
             $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)',
+                'background-color': '#A9F5F2'
             });
 
             var modal = $('#modal-transfer-item');
 
-            // Clear previous content from the modal
             modal.find('.modal-body').html('');
 
-            // Send an AJAX request to fetch the edit view content
-            // for the specific college
             $.get(route, {
                 item_id: itemId
             }, function(data) {
@@ -374,25 +364,21 @@
         }
 
         function openAddSubItemModal(itemId, route) {
-            // Remove previous highlighting
+
             $('#listofitems tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
-            // Add the highlighted class to the clicked row
             $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)',
+                'background-color': '#A9F5F2'
             });
 
             var modal = $('#addSubItemModal');
 
-            // Clear previous content from the modal
             modal.find('.modal-body').html('');
 
-            // Send an AJAX request to fetch the edit view content
-            // for the specific college
             $.get(route, {
                 item_id: itemId
             }, function(data) {
@@ -401,25 +387,20 @@
         }
 
         function openReplaceItemModal(itemId, route) {
-            // Remove previous highlighting
             $('#listofitems tbody tr').css({
                 'box-shadow': 'none',
                 'background-color': 'transparent'
             });
 
-            // Add the highlighted class to the clicked row
             $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', // Adjust the shadow parameters as needed
-                'background-color': '#A9F5F2' // Adjust the color as needed
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)',
+                'background-color': '#A9F5F2'
             });
 
             var modal = $('#modal-replace-item');
 
-            // Clear previous content from the modal
             modal.find('.modal-body').html('');
 
-            // Send an AJAX request to fetch the edit view content
-            // for the specific college
             $.get(route, {
                 item_id: itemId
             }, function(data) {
@@ -428,25 +409,16 @@
         }
 
         $(document).ready(function() {
-            // Listen for the "Clear" button click
+
             $('#clearFilters').click(function() {
-
-                // Uncheck all checkboxes with names starting with "brand_ids[]"
                 $('input[name^="brand_ids[]"]').prop('checked', false);
-
-                // Uncheck all checkboxes with names starting with "model_ids[]"
                 $('input[name^="model_ids[]"]').prop('checked', false);
-
-                // Uncheck all checkboxes with names starting with "category_ids[]"
                 $('input[name^="category_ids[]"]').prop('checked', false);
-
-                // Uncheck all checkboxes with names starting with "room_ids[]"
                 $('input[name^="room_ids[]"]').prop('checked', false);
             });
         });
     </script>
     <style>
-        /* for sort buttons */
         .active {
             background-color: #007bff;
             color: #fff;
