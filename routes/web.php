@@ -210,6 +210,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('edit/brand/{id}', [BrandController::class, 'editBrand'])->name('edit_brand');
     Route::post('save-edited-brand/{id}', [BrandController::class, 'saveEditedBrand'])->name('save_edited_brand');
     Route::post('delete-brand/{id}', [BrandController::class, 'deleteBrand'])->name('delete_brand');
+    Route::get('/brands/search', [BrandController::class, 'searchBrand'])->name('brands.search');
 
     //FOR MODELS - ADMIN
     Route::get('models', [ModelsController::class, 'index'])->name('view_models');

@@ -87,4 +87,12 @@ class BrandController extends Controller
             return redirect('brands');
         }
     }
+
+    public function searchBrand(Request $request)
+    {
+        $searchText = $request->input('search');
+        $brands = Brand::where('brand_name', 'like', '%' . $searchText . '%')->paginate(10);
+
+        return view('pages.admin.listOfBrands', compact('brands'));
+    }
 }

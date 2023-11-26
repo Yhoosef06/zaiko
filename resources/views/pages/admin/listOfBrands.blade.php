@@ -36,6 +36,18 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
+                                <div class="search-bar mb-2 float-md-right">
+                                    <form action="{{ route('brands.search') }}" method="GET">
+                                        <div class="input-group">
+                                            <input type="text" name="search" class="form-control"
+                                                placeholder="Search..." value="{{ old('search', request('search')) }}">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn bg-yellow" data-toggle="tooltip"
+                                                    title="Search">Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                                 <table id="listofbrands" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
