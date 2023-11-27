@@ -70,7 +70,18 @@ class Item extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function orderItems(){
+    public function orderItems()
+    {
         return $this->belongsToMany(OrderItem::class);
+    }
+
+    public function itemLogs()
+    {
+        return $this->hasMany(ItemLog::class, 'item_id');
+    }
+
+    public function itemLog()
+    {
+        return $this->hasOne(ItemLog::class, 'item_id');
     }
 }

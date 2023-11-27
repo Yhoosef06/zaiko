@@ -46,13 +46,25 @@
                                     <div class="col-md-4">
                                         <label for="location">Status: </label>
                                         <select id="status" name="status" class="form-control" required>
-                                            <option value="" disabled selected>Select status</option>
+                                            <option value="" disabled selected>Select a status</option>
                                             <option value="Active">Active</option>
                                             <option value="For Repair">For Repair</option>
                                             <option value="Obsolete">Obsolete</option>
                                             <option value="Missing">Missing</option>
                                             <option value="Transferred">Transferred</option>
                                             <option value="Replacement">Replacement</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="location">Term: </label>
+                                        <select id="term" name="term" class="form-control" required>
+                                            <option value="" disabled selected>Select a term</option>
+                                            @foreach ($terms as $term)
+                                                <option value="{{ $term->id }}">{{ $term->semester }} (
+                                                    {{ date('Y', strtotime($term->start_date)) }} -
+                                                    {{ date('Y', strtotime($term->end_date . ' +1 year')) }} )</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
@@ -63,7 +75,8 @@
                                             <input placeholder="" type="text" id="prepared_by" name="prepared_by"
                                                 value="{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}"
                                                 class="form-control @error('prepared_by')
-                                                        border-danger @enderror">
+                                                        border-danger @enderror"
+                                                required>
                                             @error('prepared_by')
                                                 <div class="text-danger">
                                                     {{ $message }}
@@ -76,7 +89,8 @@
                                             <input placeholder="Enter a name" type="text" id="verified_by"
                                                 name="verified_by" value="{{ old('verified_by') }}"
                                                 class="form-control @error('verified_by')
-                                                border-danger @enderror">
+                                                border-danger @enderror"
+                                                required>
                                             @error('verified_by')
                                                 <div class="text-danger">
                                                     {{ $message }}
@@ -89,7 +103,8 @@
                                             <input placeholder="Enter a name" type="text" id="noted_by" name="noted_by"
                                                 value="{{ old('noted_by') }}"
                                                 class="form-control @error('noted_by')
-                                            border-danger @enderror">
+                                            border-danger @enderror"
+                                                required>
                                             @error('noted_by')
                                                 <div class="text-danger">
                                                     {{ $message }}
@@ -102,7 +117,8 @@
                                             <input placeholder="Enter a name" type="text" id="approved_by"
                                                 name="approved_by" value="{{ old('approved_by') }}"
                                                 class="form-control @error('approved_by')
-                                                border-danger @enderror">
+                                                border-danger @enderror"
+                                                required>
                                             @error('approved_by')
                                                 <div class="text-danger">
                                                     {{ $message }}
@@ -117,7 +133,8 @@
                                             <input placeholder="Enter a position/role" type="text" id="role_1"
                                                 name="role_1" value="{{ old('role_1') }}"
                                                 class="form-control @error('role_1')
-                                                border-danger @enderror">
+                                                border-danger @enderror"
+                                                required>
                                             @error('role_1')
                                                 <div class="text-danger">
                                                     {{ 'This field must not be blank.' }}
@@ -131,7 +148,7 @@
                                                 name="role_2" value="{{ old('role_2') }}"
                                                 class="form-control @error('role_2')
                                                 border-danger @enderror"
-                                                placeholder="Enter a name">
+                                                placeholder="Enter a name" required>
                                             @error('role_2')
                                                 <div class="text-danger">
                                                     {{ 'This field must not be blank.' }}
@@ -145,7 +162,7 @@
                                                 name="role_3" value="{{ old('role_3') }}"
                                                 class="form-control @error('role_3')
                                                 border-danger @enderror"
-                                                placeholder="Enter a name">
+                                                placeholder="Enter a name" required>
                                             @error('role_3')
                                                 <div class="text-danger">
                                                     {{ 'This field must not be blank.' }}
@@ -159,7 +176,7 @@
                                                 name="role_4" value="{{ old('role_4') }}"
                                                 class="form-control @error('role_4')
                                                 border-danger @enderror"
-                                                placeholder="Enter a name">
+                                                placeholder="Enter a name" required>
                                             @error('role_4')
                                                 <div class="text-danger">
                                                     {{ 'This field must not be blank.' }}

@@ -67,6 +67,7 @@
                                 <table id="listofitems" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th>#</th>
                                             <th>Brand</th>
                                             <th>Model</th>
@@ -80,6 +81,10 @@
                                     <tbody>
                                         @forelse ($items as $item)
                                             <tr data-item-id="{{ $item->id }}">
+                                                <td>
+                                                    <input type="checkbox" name="item_ids[]" value="{{ $item->id }}"
+                                                        @if (in_array($item->id, request('item_ids', []))) checked @endif>
+                                                </td>
                                                 <td>{{ $item->id }}</td>
                                                 <td>
                                                     {{ $item->brand_id ? $item->brand->brand_name : 'N/A' }}
@@ -310,8 +315,8 @@
             });
 
             $('#listofitems tbody tr[data-item-id="' + itemId + '"]').css({
-                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)', 
-                'background-color': '#A9F5F2' 
+                'box-shadow': '0 0 10px rgba(0, 0, 0, 0.5)',
+                'background-color': '#A9F5F2'
             });
         }
 

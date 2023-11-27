@@ -66,9 +66,7 @@
         <div class="container" id="intro_details">
             <strong>DATE PREPARED:</strong> {{ now()->format('F j, Y') }} <br>
             <strong>DEPARTMENT / OFFICE:</strong> {{ $department }} <br>
-            <strong>SPECIFIC LOCATION:</strong>{{ $currentLocation->room_name }} <br>
-            <strong>SHOOL YEAR:</strong>{{ $term->semester }} {{ date('Y', strtotime($term->start_date)) }} -
-            {{ date('Y', strtotime($term->end_date . ' +1 year')) }}
+            <strong>SPECIFIC LOCATION:</strong> {{ $currentLocation->room_name }}
         </div>
         <div class="container">
             <table class="table table-bordered">
@@ -79,34 +77,36 @@
                         <th scope="col">Model</th>
                         <th scope="col">Description</th>
                         <th scope="col">QTY</th>
-                        <th scope="col">Acquisiion Date</th>
-                        <th scope="col">Property Sticker</th>
+                        <th scope="col"> Transferred To</th>
+                        <th scope="col">Date Transferred</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($items as $item)
-                        <tr>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->brand->brand_name }}</td>
-                            <td>
-                                @if ($item->model == null)
-                                    No Model
-                                @else
-                                    {{ $item->model->model_name }}
+                    @if ($status == 'Transferred')
+                        @foreach ($items as $item)
+                            @if ($status == 'Transferred')
+                                @if ($item->itemLogs)
+                                    @foreach ($item->itemLogs as $log)
+                                        @if ($log->mode == 'Transferred' && $log->roomTo && $log->roomTo->room_name != $currentLocation->room_name)
+                                            <tr>
+                                                <td>{{ $item->id }}</td>
+                                                <td>{{ $item->brand->brand_name }}</td>
+                                                <td>{{ $item->model->model_name }}</td>
+                                                <td>{{ $item->description }}</td>
+                                                <td>{{ $log->quantity }}</td>
+                                                <td>{{ $log->roomTo->room_name }}</td>
+                                                <td>{{ $log->date }}</td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
                                 @endif
-                            </td>
-                            <td>{{ $item->description }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>{{ $item->aquisition_date }}</td>
-                            <td>{{ $item->inventory_tag }}</td>
-                        </tr>
-                    @empty
+                            @endif
+                        @endforeach
+                    @else
                         <tr>
-                            <td colspan="7">
-                                <strong>No data available.</strong>
-                            </td>
+                            <td>No data available.</td>
                         </tr>
-                    @endforelse
+                    @endif
                 </tbody>
             </table>
 
