@@ -131,9 +131,42 @@ class CartController extends Controller
 
         $user = Auth::user(); 
         $orders = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
-        $itemTemps = OrderItemTemp::all();
+        // $itemTemps = OrderItemTemp::all();
+
+        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+        $missingList = ItemLog::where('mode', 'missing')->get();
+
+        // $cartItems = OrderItemTemp::where('order_id',$id)->get();
+        
+        $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
+
+        $user_dept_id = $user_department->department_id;
+        $departments = Department::with('college')->get();
+        // $departmentID = $cartItems->first()->item->room->department->id;
+
+        // $items = Item::whereHas('room.department', function ($query) use ($departmentID) {
+        //     $query->where('id', $departmentID)->where('borrowed','no');
+        // })->get();
+
+
+        $cartItems =collect();
+        foreach($orders as $order){
+            $cartItemsCollect = OrderItemTemp::where('order_id',$order->id)->get();
+            $cartItems = $cartItems->merge($cartItemsCollect);
+        }
+
+        $items = collect();
+        $cartDepartment = null;
+        foreach($orders as $order){
+            $cartDepartment = $cartItems->where('order_id',$order->id)->first()->item->room->department->id;
+            $itemsCollect = Item::whereHas('room.department', function ($query) use ($cartDepartment) {
+                    $query->where('id', $cartDepartment)->where('borrowed','no');
+                })->get();
+            $items = $items->merge($itemsCollect);
+        }
+        // dd($items);
               
-        return view('pages.students.cartList')->with(compact('orders'));
+        return view('pages.students.cartList')->with(compact('orders','cartItems','items','borrowedList','missingList'));
 
     }   
 
@@ -275,12 +308,6 @@ class CartController extends Controller
     
     public function pending(){
         
-        // $pendingOrder = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
-
-        // dd($pendingOrder);
-        // return view('pages.students.pending')->with(compact('pendingOrder'));
-
-
         $user = Auth::user(); 
         $orders = Order::where('user_id', Auth::user()->id_number)->whereNotNull('date_submitted')->whereNull('date_returned')->whereNull('approval_date')->get();
         $items = collect();
