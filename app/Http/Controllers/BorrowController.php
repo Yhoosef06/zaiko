@@ -29,6 +29,7 @@ class BorrowController extends Controller
     public function borrowed()
     {
         $department = Auth::user()->departments->first();
+        $viewBorrows = collect();
 
         if($department->college_id === 5){
             $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
@@ -43,7 +44,25 @@ class BorrowController extends Controller
             ->groupBy('orders.id')
             ->get();
 
-            return view('pages.admin.borrowed')->with(compact('borrows'));
+            foreach ($borrows as $borrow) {
+
+                $borrowedItems = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+                ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+                ->join('items', 'order_items.item_id', '=', 'items.id')
+                ->join('item_categories', 'items.category_id', 'item_categories.id')
+                ->join('models', 'items.model_id', '=', 'models.id')
+                ->join('brands', 'models.brand_id', '=', 'brands.id')
+                ->select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.id as item_id_borrow', 'item_categories.*', 'items.description as description', 'items.*')
+                ->where('orders.id', $borrow->transactionId)
+                ->where('order_items.status', 'borrowed')
+                ->get();
+
+                $viewBorrows = $viewBorrows->merge($borrowedItems);
+            }
+
+        //    dd($viewBorrows);
+
+            return view('pages.admin.borrowed')->with(compact('borrows','viewBorrows'));
 
         }else{
 
@@ -59,7 +78,25 @@ class BorrowController extends Controller
                 ->groupBy('orders.id')
                 ->get();
 
-            return view('pages.admin.borrowed')->with(compact('borrows'));
+                foreach ($borrows as $borrow) {
+
+                    $borrowedItems = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+                    ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+                    ->join('items', 'order_items.item_id', '=', 'items.id')
+                    ->join('item_categories', 'items.category_id', 'item_categories.id')
+                    ->join('models', 'items.model_id', '=', 'models.id')
+                    ->join('brands', 'models.brand_id', '=', 'brands.id')
+                    ->select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.id as item_id_borrow', 'item_categories.*', 'items.description as description', 'items.*')
+                    ->where('orders.id', $borrow->transactionId)
+                    ->where('order_items.status', 'borrowed')
+                    ->get();
+    
+                    $viewBorrows = $viewBorrows->merge($borrowedItems);
+                }
+    
+               
+    
+                return view('pages.admin.borrowed')->with(compact('borrows','viewBorrows'));
         }
             
        
@@ -552,8 +589,8 @@ class BorrowController extends Controller
             $lastName = $user->last_name;
             $id_number = $user->id_number;
 
-            Item::where('id', '=', $itemIdReturn)->update(['status' => 'Missing']);
-            OrderItem::where('id', $orderItemReturn)->update(['status' => 'lost', 'order_quantity' => $quantity_return, 'remarks' => $item_remark, 'returned_to' => $lastName . ', ' . $firstName]);
+            Item::where('id', '=', $itemIdReturn)->update(['borrowed' => 'Missing']);
+            OrderItem::where('id', $orderItemReturn)->update(['status' => 'Missing', 'order_quantity' => $quantity_return, 'remarks' => $item_remark, 'returned_to' => $lastName . ', ' . $firstName]);
             ItemLog::create([
                 'order_item_id' => $orderItemReturn,
                 'item_id' => $itemIdReturn,
@@ -614,7 +651,8 @@ class BorrowController extends Controller
             $firstName = $user->first_name;
             $lastName = $user->last_name;
             $id_number = $user->id_number;
-            if ($categoryName == 'Tools') {
+            $findItem = Item::find($itemIdReturn);
+            if ($findItem->serial_number == 'N/A') {
                 if ($quantity_return < $borrowOrderQuantity) {
 
                     Item::where('id', '=', $itemIdReturn)->update(['borrowed' => 'no']);
@@ -632,7 +670,7 @@ class BorrowController extends Controller
                         'order_item_id' => $orderItemReturn,
                         'item_id' => $itemIdReturn,
                         'encoded_by' => $id_number,
-                        'quantity' => $borrowOrderQuantity,
+                        'quantity' => $borrowOrderQuantity - $quantity_return,
                         'mode' => 'missing',
                         'date' => Carbon::today(),
 
@@ -666,15 +704,16 @@ class BorrowController extends Controller
         $borrowOrderQuantity = $request->borrowOrderQuantity;
         $item_remark = $request->item_remark;
         $quantity_return = $request->quantity_return;
-        $categoryName = $request->categoryName;
         $user = auth()->user();
-        // dd($orderItemReturn);
+       
 
         if ($user) {
             $firstName = $user->first_name;
             $lastName = $user->last_name;
             $id_number = $user->id_number;
-            if ($categoryName == 'Tools') {
+            $findItem = Item::find($itemIdReturn);
+           
+            if ($findItem->serial_number == 'N/A') {
                 if ($quantity_return < $borrowOrderQuantity) {
 
                     Item::where('id', '=', $itemIdReturn)->update(['borrowed' => 'no']);
@@ -683,7 +722,7 @@ class BorrowController extends Controller
                         'order_item_id' => $orderItemReturn,
                         'item_id' => $itemIdReturn,
                         'encoded_by' => $id_number,
-                        'quantity' => $borrowOrderQuantity,
+                        'quantity' =>$borrowOrderQuantity - $quantity_return,
                         'mode' => 'missing',
                         'date' => Carbon::today(),
 
