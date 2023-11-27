@@ -91,7 +91,7 @@
                         <li class="nav-item">
                             <a href="{{ route('history') }}" class="nav-link">
                                 <i class="fas fa-circle nav-icon"></i>
-                                <p>Returned Items</p>
+                                <p>Transaction History</p>
                             </a>
                         </li>
                         @if (Auth::user()->roles->contains('name', 'manager'))

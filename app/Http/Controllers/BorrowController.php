@@ -552,7 +552,7 @@ class BorrowController extends Controller
             $lastName = $user->last_name;
             $id_number = $user->id_number;
 
-            Item::where('id', '=', $itemIdReturn)->update(['borrowed' => 'lost']);
+            Item::where('id', '=', $itemIdReturn)->update(['status' => 'Missing']);
             OrderItem::where('id', $orderItemReturn)->update(['status' => 'lost', 'order_quantity' => $quantity_return, 'remarks' => $item_remark, 'returned_to' => $lastName . ', ' . $firstName]);
             ItemLog::create([
                 'order_item_id' => $orderItemReturn,
