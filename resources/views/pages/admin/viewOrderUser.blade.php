@@ -249,14 +249,18 @@
                     
                     <!-- /.card-body -->
                   </div>
-                  <div class="row mb-2">
+                  <div class="row mb-6">
                     <div class="col-sm-6">
                       <input type="text" id="student_id_added_user" name="student_id_added_user" value="@foreach($orders as $index => $item)
                     @if($index === 0)
                         {{$item->id_number}}
                     @endif
                 @endforeach" class="form-control" style="display:none;">
-                <button type="submit" class="btn btn-primary btn-lg">Release</button>
+                    </div>
+                    <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                     <button type="submit" class="btn btn-primary btn-lg">Release</button>
+                    </ol>
                     </div>
                    
                   </div>

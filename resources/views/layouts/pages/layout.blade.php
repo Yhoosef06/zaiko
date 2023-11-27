@@ -144,11 +144,17 @@
 
 
 
-
+   
 
     $(function() {
 
         $("#user-overdue").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false
+
+        });
+        $("#released-table").DataTable({
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false

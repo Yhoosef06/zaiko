@@ -56,7 +56,7 @@
                     <tr>
                       <th class="d-none">Transaction ID</th>
                       <th>Description</th>
-                      <th>Serial</th>
+                      <th>Serial </th>
                       <th>Brand</th>
                       <th>Model</th>
                       <th>QTY</th>
@@ -65,13 +65,39 @@
                     </tr>
                   </thead>
                   <tbody>
+                   
+     
                     @foreach ($borrows as $borrow)
-                    @if ($borrow->date_returned > \Carbon\Carbon::now())
+                    @php
+                        $currentDate = \Carbon\Carbon::now();
+                       
+                    @endphp
+                    
+                    @if (\Carbon\Carbon::parse($borrow->date_returned)->isBefore($currentDate))
+                   
+
+                      <tr class="bg-warning">
+                        <td class="d-none"> {{ $borrow->order_id }}</td>
+                        <td >{{ $borrow->description }} {{\Carbon\Carbon::parse($borrow->date_returned)->lt(\Carbon\Carbon::now())}}</td>
+                        <td>{{ $borrow->order_serial_number }}</td>
+                        <td>{{ $borrow->brand }}</td>
+                        <td>{{ $borrow->model }}</td>
+                        <td>{{ $borrow->order_quantity }}</td>
+                        <td>{{ \Carbon\Carbon::parse($borrow->date_returned)->format('F d, Y') }}</td>
+                        <td>
+                          <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-toggle="modal" data-target="#releaseOverdue{{$borrow->order_item_id}}">Return</button>
+                          <button type="button" class="btn btn-danger" id="btn-lost" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-toggle="modal" data-target="#lostItem{{$borrow->order_item_id}}">Replace</button>
+                        </td>
+                      </tr>
+
+                    
+                    @else
+
                     <tr>
                       <td class="d-none"> {{ $borrow->order_id }}</td>
-                      <td>{{ $borrow->description }}</td>
+                      <td>{{ $borrow->description }} </td>
                       <td>{{ $borrow->order_serial_number }}</td>
-                      <td>{{ $borrow->brand }}</td>
+                      <td>{{ $borrow->brand }} </td>
                       <td>{{ $borrow->model }}</td>
                       <td>{{ $borrow->order_quantity }}</td>
                       <td>{{ \Carbon\Carbon::parse($borrow->date_returned)->format('F d, Y') }}</td>
@@ -80,20 +106,7 @@
                         <button type="button" class="btn btn-danger" id="btn-lost" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-toggle="modal" data-target="#lostItem{{$borrow->order_item_id}}">Replace</button>
                       </td>
                     </tr>
-                    @else
-                    <tr class="bg-warning">
-                      <td class="d-none"> {{ $borrow->order_id }}</td>
-                      <td >{{ $borrow->description }}</td>
-                      <td>{{ $borrow->order_serial_number }}</td>
-                      <td>{{ $borrow->brand }}</td>
-                      <td>{{ $borrow->model }}</td>
-                      <td>{{ $borrow->order_quantity }}</td>
-                      <td>{{ \Carbon\Carbon::parse($borrow->date_returned)->format('F d, Y') }}</td>
-                      <td>
-                        <button type="button" class="btn btn-success" id="btn-return" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-toggle="modal" data-target="#releaseOverdue{{$borrow->order_item_id}}">Return</button>
-                        <button type="button" class="btn btn-danger" id="btn-lost" data-id="{{ $borrow->order_item_id }}" data-item="{{ $borrow->item_id_borrow }}" data-toggle="modal" data-target="#lostItem{{$borrow->order_item_id}}">Replace</button>
-                      </td>
-                    </tr>
+                   
 
                     @endif
 
@@ -179,7 +192,6 @@
                             <input type="hidden"  class="form-control" value="{{ $borrow->order_item_id }}" name="orderItemReturn">
                             <input type="hidden"  class="form-control" value="{{ $borrow->item_id_borrow }}" name="itemIdReturn">
                             <input type="hidden"  class="form-control" value="{{ $borrow->order_quantity }}" name="borrowOrderQuantity">
-                            <input type="hidden"  class="form-control" value="{{ $borrow->category_name }}" name="categoryName">
                           <div class="form-group">
                                       <label>Remarks</label>
                                       <textarea class="form-control" rows="3" name="item_remark" placeholder="Enter ..."></textarea>
