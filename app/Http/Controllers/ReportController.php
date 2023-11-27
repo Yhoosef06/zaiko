@@ -61,6 +61,7 @@ class ReportController extends Controller
         $isLog = !itemLog::where('mode', $status)->get()->isEmpty();
         $isStatus = !Item::where('status', $status)->get()->isEmpty();
         $rooms = Room::all();
+        $currentLocation = Room::find($location);
 
         $room = Room::where('id', '=', $location)->get();
 
@@ -82,7 +83,6 @@ class ReportController extends Controller
 
             $department = $department->department_name;
         } else {
-            $currentLocation = Room::find($location);
             if ($status == 'Active') {
                 $items = Item::where('location', $location)->whereBetween('created_at', [$term->start_date, $term->end_date])->get();
                 if ($request->has('download')) {
@@ -105,7 +105,9 @@ class ReportController extends Controller
                     //         'role_4',
                     //         'isLog',
                     //         'isStatus',
-                    //         'itemLog'
+                    //         'itemLog',
+                    //         'term'
+                    //         'currentLocation',
                     //     )
                     // )->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
                     // Reference::create([
@@ -148,7 +150,6 @@ class ReportController extends Controller
                 }
 
             } elseif ($status == 'For Repair' || $status == 'Obsolete') {
-                dd('here');
                 $items = Item::where('location', $location)->whereBetween('updated_at', [$term->start_date, $term->end_date])->get();
                 if ($request->has('download')) {
                     // $pdf = App::make('dompdf.wrapper');
@@ -170,7 +171,9 @@ class ReportController extends Controller
                     //         'role_4',
                     //         'isLog',
                     //         'isStatus',
-                    //         'itemLog'
+                    //         'itemLog',
+                    //         'term',
+                    //         'currentLocation',
                     //     )
                     // )->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
                     // Reference::create([
@@ -213,7 +216,6 @@ class ReportController extends Controller
                 }
             }
 
-
             if ($status == 'Missing') {
                 $missingItemsLog = ItemLog::where('mode', 'Missing')->whereBetween('date', [$term->start_date, $term->end_date])->get();
                 $missingItemIds = $missingItemsLog->pluck('item_id')->toArray();
@@ -239,7 +241,9 @@ class ReportController extends Controller
                     //         'role_4',
                     //         'isLog',
                     //         'isStatus',
-                    //         'itemLog'
+                    //         'itemLog',
+                    //         'term',
+                    //         'currentLocation',
                     //     )
                     // )->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
                     // Reference::create([
@@ -270,7 +274,9 @@ class ReportController extends Controller
                             'role_3',
                             'role_4',
                             'isLog',
-                            'isStatus'
+                            'isStatus',
+                            'term',
+                            'currentLocation',
                         )
                     );
                     foreach ($rooms as $room) {
@@ -307,7 +313,9 @@ class ReportController extends Controller
                     //         'role_4',
                     //         'isLog',
                     //         'isStatus',
-                    //         'itemLog'
+                    //         'itemLog',
+                    //         'term'.
+                    //         'currentLocation',
                     //     )
                     // )->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
                     // Reference::create([
@@ -339,7 +347,8 @@ class ReportController extends Controller
                             'role_3',
                             'role_4',
                             'isLog',
-                            'isStatus'
+                            'isStatus',
+                            'term',
                         )
                     );
                     foreach ($rooms as $room) {
@@ -375,7 +384,9 @@ class ReportController extends Controller
                     //         'role_4',
                     //         'isLog',
                     //         'isStatus',
-                    //         'itemLog'
+                    //         'itemLog',
+                    //         'term',
+                    //         'currentLocation',
                     //     )
                     // )->setOptions(['defaultFont' => 'sans-serif',])->setPaper('a4');
                     // Reference::create([
@@ -406,7 +417,9 @@ class ReportController extends Controller
                             'role_3',
                             'role_4',
                             'isLog',
-                            'isStatus'
+                            'isStatus',
+                            'term',
+                            'currentLocation',
                         )
                     );
                     foreach ($rooms as $room) {

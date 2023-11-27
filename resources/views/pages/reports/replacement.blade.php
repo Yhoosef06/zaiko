@@ -66,12 +66,9 @@
         <div class="container" id="intro_details">
             <strong>DATE PREPARED:</strong> {{ now()->format('F j, Y') }} <br>
             <strong>DEPARTMENT / OFFICE:</strong> {{ $department }} <br>
-            <strong>SPECIFIC LOCATION:</strong>
-            @foreach ($rooms as $room)
-                @if ($room->id == $location)
-                    {{ $room->room_name }}
-                @endif
-            @endforeach
+            <strong>SPECIFIC LOCATION:</strong> {{ $currentLocation->room_name }} <br>
+            <strong>SHOOL YEAR:</strong>{{ $term->semester }} {{ date('Y', strtotime($term->start_date)) }} -
+            {{ date('Y', strtotime($term->end_date . ' +1 year')) }}
         </div>
         <div class="container">
             <table class="table table-bordered">
@@ -97,7 +94,7 @@
                                     @if ($item->brand == null)
                                         No Brand
                                     @else
-                                    {{ $item->brand->brand_name }}
+                                        {{ $item->brand->brand_name }}
                                     @endif
                                 </td>
                                 <td>
