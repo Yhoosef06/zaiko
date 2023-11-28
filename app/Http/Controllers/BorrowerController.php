@@ -63,7 +63,7 @@ class BorrowerController extends Controller
         $selectedDepartment = $request->query('selectedDepartment');
         $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
             $query->where('id', $selectedDepartment);
-        })->where('borrowed','no')->get();
+        })->where('status','Active')->where('borrowed','no')->get();
 
         $categories = ItemCategory::all();
         $departments = Department::all();
@@ -88,16 +88,42 @@ class BorrowerController extends Controller
         if(isset($selectedDepartment,$sessionCat)){
             $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
                 $query->where('id', $selectedDepartment);
-            })->where('category_id', $sessionCat)->where('borrowed','no')->get();
+            })->where('category_id', $sessionCat)->where('status','Active')->where('borrowed','no')->get();
         }else{
             $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
                 $query->where('id', $selectedDepartment);
-            })->where('category_id', $selectedCategory)->where('borrowed','no')->get();
+            })->where('category_id', $selectedCategory)->where('status','Active')->where('borrowed','no')->get();
         }   
 
         return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
     }
 
+    public function browse_test(){
+
+        $itemlogs = ItemLog::all();
+        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+        $missingList = ItemLog::where('mode', 'missing')->get();
+
+        $items = Item::where('status','Active')->where('borrowed','no')->get();
+
+        // $groupedItems = $items->groupBy([
+        //     'brand.brand_name', 
+        //     'model.model_name', 
+        // ]);
+        $groupedItems = $items->groupBy(function ($item) {
+            return $item->brand_id . '-' . $item->model_id;
+        });
+        $departments = collect();
+
+
+
+        // dd($groupedItems->first());
+
+        //WHEN GROUPING I QUERY NA SAME LOCATION, BRAND, MODEL
+        
+
+        return view('pages.students.browse-items')->with(compact('groupedItems'));
+    }
 
 
 

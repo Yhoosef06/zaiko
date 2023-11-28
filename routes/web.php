@@ -301,6 +301,9 @@ Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
         Route::get('/browse-items/department', [BorrowerController::class, 'browseDepartment'])->name('browse.department');
         Route::get('/browse-items/department/category', [BorrowerController::class, 'browseCategory'])->name('browse.category');
 
+        //BROWSE TEST
+        Route::get('/browse-items-test', [BorrowerController::class, 'browse_test'])->name('browse.items.test');
+
         //cart
         Route::get('/browse-cart', [CartController::class, 'browse'])->name('browse.cart');
         Route::get('/browse-cart/{id}', [CartController::class, 'browse_cart'])->name('browse.cart-id');
@@ -313,6 +316,7 @@ Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
         Route::get('/remove-transaction/{id}', [CartController::class, 'remove_transaction'])->name('remove.transaction');
         Route::get('/borrowed-items', [CartController::class, 'borrowed'])->name('borrowed-items');
         Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
+        
 
 
         //agreement
