@@ -153,7 +153,8 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
 
     Route::post('save-new-brand', [BrandController::class, 'saveNewBrand'])->name('save_new_brand');
     Route::post('save-new-model', [ModelsController::class, 'saveNewModel'])->name('save_new_model');
-
+    Route::post('save-new-room', [RoomController::class, 'saveNewRoom'])->name('save_new_room');
+    Route::post('saving-new-category', [ItemCategoryController::class, 'saveNewCategory'])->name('save_new_category');
 
     Route::get('upload-csvfile', [UserController::class, 'uploadCSVFile'])->name('upload_csv_file');
     Route::post('/upload-csv', [CsvController::class, 'store'])->name('store_csv_file');
@@ -196,7 +197,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // FOR ROOM - ADMIN
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
-    Route::post('save-new-room', [RoomController::class, 'saveNewRoom'])->name('save_new_room');
+    
     Route::get('edit/room/{id}', [RoomController::class, 'editRoom'])->name('edit_room');
     Route::post('save-edited-room/{id}', [RoomController::class, 'saveEditedRoom'])->name('save_edited_room');
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
@@ -206,7 +207,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // FOR Item Category -ADMIN
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
     Route::get('edit/item-category/{id}', [ItemCategoryController::class, 'editItemCategory'])->name('edit_item_category');
-    Route::post('saving-new-category', [ItemCategoryController::class, 'saveNewCategory'])->name('save_new_category');
+   
     Route::post('save-edited-item-category/{id}', [ItemCategoryController::class, 'saveEditedItemCategory'])->name('save_edited_item_category');
     Route::post('delete-category/{id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
 
