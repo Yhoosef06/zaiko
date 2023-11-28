@@ -20,9 +20,6 @@ class BorrowerController extends Controller
     {
         $currentDate = Carbon::now();
         $department = Auth::user()->departments->first();
-        
-        // $items = OrderItem::where('user_id',Auth::user()->id_number)->where('date_returned', '<', $currentDate->toDateString())->get();
-        // dd($items);
 
         $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
@@ -43,8 +40,7 @@ class BorrowerController extends Controller
             $dateReturned = Carbon::parse($item->date_returned); 
             $daysOverdue = $dateReturned->diffInDays($currentDate);
             $item->days_overdue = $daysOverdue;
-        }
-        // dd($overdueItems);  
+        } 
         return view('pages.students.home')->with(compact('overdueItems'));
     }
 
@@ -86,13 +82,25 @@ class BorrowerController extends Controller
         $sessionCat = Session::get('category',$selectedCategory);
 
         if(isset($selectedDepartment,$sessionCat)){
-            $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
-                $query->where('id', $selectedDepartment);
-            })->where('category_id', $sessionCat)->where('status','Active')->where('borrowed','no')->get();
+            if($sessionCat == 0){
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('status','Active')->where('borrowed','no')->get();
+            }else{
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('category_id', $sessionCat)->where('status','Active')->where('borrowed','no')->get();
+            }
         }else{
-            $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
-                $query->where('id', $selectedDepartment);
-            })->where('category_id', $selectedCategory)->where('status','Active')->where('borrowed','no')->get();
+            if($sessionCat == 0){
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('status','Active')->where('borrowed','no')->get();
+            }else{
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('category_id', $selectedCategory)->where('status','Active')->where('borrowed','no')->get();
+            }
         }   
 
         return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
@@ -106,23 +114,12 @@ class BorrowerController extends Controller
 
         $items = Item::where('status','Active')->where('borrowed','no')->get();
 
-        // $groupedItems = $items->groupBy([
-        //     'brand.brand_name', 
-        //     'model.model_name', 
-        // ]);
         $groupedItems = $items->groupBy(function ($item) {
             return $item->brand_id . '-' . $item->model_id;
         });
-        $departments = collect();
+        $departments = collect();    
 
-
-
-        // dd($groupedItems->first());
-
-        //WHEN GROUPING I QUERY NA SAME LOCATION, BRAND, MODEL
-        
-
-        return view('pages.students.browse-items')->with(compact('groupedItems'));
+        return view('pages.students.browse-items')->with(compact('groupedItems','itemlogs','borrowedList','missingList'));
     }
 
 
@@ -162,16 +159,6 @@ class BorrowerController extends Controller
         $user->update();
 
         return redirect()->route('cart.list');
-
-
-        // public function pendingItem($serial_number){
-        //     $affectedRows = Order::where('serial_number','=',$serial_number)->update(['order_status' => 'borrowed']);
-
-
-        //     Session::flash('success', 'Borrow has been Approved.');
-
-        //     return redirect('pending');
-        // }
     }
 
     public function overdue()

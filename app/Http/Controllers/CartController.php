@@ -131,23 +131,17 @@ class CartController extends Controller
 
         $user = Auth::user(); 
         $orders = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
-        // $itemTemps = OrderItemTemp::all();
+
 
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
 
-        // $cartItems = OrderItemTemp::where('order_id',$id)->get();
         
         $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
 
         $user_dept_id = $user_department->department_id;
         $departments = Department::with('college')->get();
-        // $departmentID = $cartItems->first()->item->room->department->id;
-
-        // $items = Item::whereHas('room.department', function ($query) use ($departmentID) {
-        //     $query->where('id', $departmentID)->where('borrowed','no');
-        // })->get();
-
+   
 
         $cartItems =collect();
         foreach($orders as $order){
@@ -164,7 +158,6 @@ class CartController extends Controller
                 })->get();
             $items = $items->merge($itemsCollect);
         }
-        // dd($items);
               
         return view('pages.students.cartList')->with(compact('orders','cartItems','items','borrowedList','missingList'));
 
@@ -247,14 +240,13 @@ class CartController extends Controller
     }
 
     public function update_cart(Request $request,$id){
-        // dd($id);
+ 
        
-        $item = OrderItemTemp::find($id); // Replace $cartId with the actual cart ID
+        $item = OrderItemTemp::find($id);
         
             $item->quantity = $request->quantity;
             $item->save();
             
-            // session()->flash('success','Item quantity changed.');
             return redirect()->back();
         
     }
