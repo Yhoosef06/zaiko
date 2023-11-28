@@ -72,6 +72,7 @@
                                             @if (Auth::user()->roles->contains('name', 'admin'))
                                                 <th>Role</th>
                                             @endif
+                                            <th>Deparment(s)</th>
                                             <th>Status</th>
                                             @if (Auth::user()->roles->contains('name', 'admin'))
                                                 <th>Type</th>
@@ -92,6 +93,15 @@
                                                             @endforeach
                                                         </td>
                                                     @endif
+                                                    <td>
+                                                        @if (!$user->departments->isEmpty())
+                                                            @foreach ($user->departments as $department)
+                                                                {{ $department->department_name }} <br>
+                                                            @endforeach
+                                                        @else
+                                                            None
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         @if ($user->isActive)
                                                             <p class="bg-green text-center">Active</p>
