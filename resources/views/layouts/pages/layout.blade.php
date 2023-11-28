@@ -1443,7 +1443,7 @@
         $(".order-user-remove").click(function(e) {
             var orderId = $(this).data("id");
             var currentOrderId = $("#order-user-id").val().trim();
-            // console.log(orderId);
+            console.log(orderId);
             var url = '/order-user-remove/' + orderId;
             Swal.fire({
                 title: 'Are you sure?',

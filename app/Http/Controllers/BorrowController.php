@@ -60,8 +60,6 @@ class BorrowController extends Controller
                 $viewBorrows = $viewBorrows->merge($borrowedItems);
             }
 
-        //    dd($viewBorrows);
-
             return view('pages.admin.borrowed')->with(compact('borrows','viewBorrows'));
 
         }else{
@@ -128,7 +126,7 @@ class BorrowController extends Controller
                 $daysOverdue = $dateReturned->diffInDays($currentDate);
                 $item->days_overdue = $daysOverdue;
             }
-            // dd($overdueItems);
+        
             return view('pages.admin.overdue')->with(compact('overdueItems'));
             
         }else{
@@ -235,8 +233,7 @@ class BorrowController extends Controller
                 ->where('rooms.college_id', $department->college_id)
                 ->where('order_items.status','returned')
                 ->get();
-        
-// dd($forReturns);
+
                   return view('pages.admin.returned', compact('forReturns'));
 
         }else{
@@ -311,21 +308,25 @@ class BorrowController extends Controller
 
     public function orderUserRemove($id)
     {
-
         $item = OrderItemTemp::where('id',$id)->first();
-
-        if( $item->quantity > 1){
-            $newQty = $item->quantity - 1;
-            OrderItemTemp::where('id',$id)->update(['quantity' => $newQty]);
-            return response()->json(['success' => true]);
-        }else{
+        // echo $item->temp_serial_number;
+        // exit;
+        if($item->temp_serial_number === 'N/A'){
             $item->delete();
             return response()->json(['success' => true]);
+        }else{
+            if( $item->quantity > 1){
+                $newQty = $item->quantity - 1;
+                OrderItemTemp::where('id',$id)->update(['quantity' => $newQty]);
+                return response()->json(['success' => true]);
+            }else{
+                $item->delete();
+                return response()->json(['success' => true]);
+            }
         }
+       
 
 
-            
-        
 
     }
 
