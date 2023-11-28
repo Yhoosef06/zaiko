@@ -112,8 +112,7 @@
                                         <div style="display:flex">
                                             <select id="brand" name="brand"
                                                 class="form-control @error('brand') border-danger @enderror">
-                                                <option value="option_select" disabled selected>Select a brand. (Skip if
-                                                    none)</option>
+                                                <option value="option_select" disabled selected>Select a brand</option>
                                                 @foreach ($brands as $brand)
                                                     <option value="{{ $brand->id }}"
                                                         {{ old('brand') == $brand->id ? 'selected' : '' }}>
@@ -135,8 +134,7 @@
                                         <div style="display:flex">
                                             <select id="model" name="model"
                                                 class="form-control @error('model') border-danger @enderror">
-                                                <option value="option_select" disabled selected>Select a model. (Skip if
-                                                    none)</option>
+                                                <option value="option_select" disabled selected>Select a model</option>
 
                                             </select>
                                             <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
