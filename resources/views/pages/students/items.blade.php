@@ -37,6 +37,14 @@
                         @isset($categories)
                             <form action="{{ route('browse.category') }}" method="GET">
                                 @csrf
+                                <div class="form-check pb-3">
+                                    <input type="radio" class="form-check-input" name="category" id="category_all"
+                                        value="0" {{ (!Session::has('category')) ? 'checked' : '' }}
+                                        onclick="this.form.submit()">
+                                    <label for="category_all" class="form-check-label">
+                                        All
+                                    </label>
+                                </div>
                                 @foreach ($categories as $cat)
                                     <div class="form-check pb-3">
                                         <input type="radio" class="form-check-input" name="category" id="category"
