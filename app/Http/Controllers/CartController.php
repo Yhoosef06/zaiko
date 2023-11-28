@@ -60,14 +60,13 @@ class CartController extends Controller
                     if($filteredItems->isEmpty()){
                         //added item not in order yet
                         $item_temp = new OrderItemTemp;
-
                         $item_temp->order_id = $order->id;
                         $item_temp->item_id = $item->id;
                         $item_temp->quantity = $request->quantity;
 
                         $item_temp->save();
                     }else{
-                        //added item not yet in order
+                        //added item in order
                         $borrowedList= OrderItem::where('status', 'borrowed')->get();
                         $missingList = ItemLog::where('mode', 'missing')->get();
 
@@ -93,7 +92,7 @@ class CartController extends Controller
 
                                 //check if quantity does not exceed the available quantity
                                 if($itemTemp->quantity + $request->quantity <= $itemTemp->item->quantity - $totalDeduct){
-                                    $itemTemp->quantity = $itemTemp->quantity + $request->quantity;
+                                    $itemTemp->quantity += $request->quantity;
                                     $itemTemp->save();
                                 }       
                             }
@@ -233,8 +232,6 @@ class CartController extends Controller
         OrderItemTemp::where('id','=',$id)->delete();
 
         $itemTemps = OrderItemTemp::where('order_id',$order->id)->count();
-
-        // dd($itemTemps);
 
         if($itemTemps === 0){
             Order::where('id',$order->id)->delete();

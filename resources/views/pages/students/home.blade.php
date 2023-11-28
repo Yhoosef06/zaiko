@@ -64,7 +64,6 @@
                                                                 <!-- /.card-header -->
                                                                 <div class="card-body p-0" style="max-height:100px; overflow-y: auto;">
                                                                     <ul class="products-list product-list-in-card pl-2 pr-2">
-                                                                    
                                                                         @if($overdueItems->isEmpty())
                                                                             <li class="item">
                                                                                 <div class="container">
@@ -77,9 +76,9 @@
                                                                         <li class="item">
                                                                             <div class="container">
                                                                                 <div class="text-center">
-                                                                                    You have <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">
+                                                                                    Overdue Items: <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">
                                                                                         {{count($overdueItems)}}
-                                                                                    </button> items that are overdue.   
+                                                                                    </button>    
                                                                                 </div>
                                                                             
                                                                                 <!-- Modal -->
@@ -105,6 +104,7 @@
                                                                                                             <th style="width:10%" class="text-wrap">Model</th>
                                                                                                             <th style="width:10%" class="text-wrap">Description</th>
                                                                                                             <th style="width:10%" class="text-wrap text-center">Quantity</th>
+                                                                                                            <th style="width:10%" class="text-wrap text-center">Due Date</th>
                                                                                                             <th style="width:10%" class="text-wrap text-center">Days Overdue</th>
                                                                                                         </tr>
                                                                                                     </thead>
@@ -116,6 +116,7 @@
                                                                                                             <td class="text-wrap">{{ $item->model }}</td>
                                                                                                             <td class="text-wrap">{{ $item->description }}</td>
                                                                                                             <td class="text-wrap text-center">{{ $item->order_quantity }}</td>
+                                                                                                            <td class="text-wrap text-center">{{ \Carbon\Carbon::parse($item->date_returned)->format('F j, Y') }}</td>
                                                                                                             <td class="text-wrap text-center">{{ $item->days_overdue }}</td>
                                                                                                         </tr>
                                                                                                         @endforeach
