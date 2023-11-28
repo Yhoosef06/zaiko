@@ -246,7 +246,7 @@ class ItemsController extends Controller
 
             foreach ($serial_numbers as $serial_number) {
                 $validator = Validator::make(['serial_number' => $serial_number], [
-                    'serial_number' => ['unique:items,serial_number', 'regex:/^[a-zA-Z0-9]*$/'],
+                    'serial_number' => ['unique:items,serial_number'],
                 ]);
 
                 if ($validator->fails()) {
