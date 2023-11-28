@@ -28,6 +28,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 use Database\Seeders\OrderItemTempSeeder;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Framework\Constraint\IsEmpty;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
@@ -181,19 +182,18 @@ class ItemsController extends Controller
         try {
             $item = Item::find($id);
 
-            // Check if the item is currently borrowed
+
             if ($item->borrowed == 'yes') {
                 Session::flash('danger', 'Warning: Unable to remove item that is currently being borrowed.');
                 return redirect('list-of-items');
             }
 
-            // Delete the item
             $item->delete();
 
             Session::flash('success', 'Successfully Removed Item');
             return redirect('list-of-items');
         } catch (QueryException $e) {
-            // Check if the exception is due to a foreign key constraint violation
+
             if ($e->getCode() === '23000') {
                 Session::flash('danger', 'Cannot delete item because it is referenced by other records.');
             } else {
@@ -286,9 +286,11 @@ class ItemsController extends Controller
         } else {
             $existingItem = Item::where('part_number', $request->part_number)
                 ->where('location', $request->location)
-                ->first();
+                ->where('brand_id', $request->brand_id)
+                ->where('model_id', $request->model_id)
+                ->get();
 
-            if ($existingItem) {
+            if ($existingItem == false) {
                 $existingItem->update([
                     'quantity' => $existingItem->quantity + $quantity,
                 ]);
@@ -496,7 +498,6 @@ class ItemsController extends Controller
         $roomIds = $request->input('room_ids', []);
         $sortOrder = 'asc';
 
-        // Use the retrieved filter parameters to query the items
         $filteredItems = Item::query();
 
         if (!empty($brandIds)) {
@@ -584,6 +585,7 @@ class ItemsController extends Controller
         $quantity = $request->quantity !== null && $request->quantity !== '' ? $request->quantity : $item->quantity;
 
         if ($item->serial_number != 'N/A') {
+            dd(1);
             $item->update([
                 'location' => $request->room_to,
             ]);
@@ -600,51 +602,63 @@ class ItemsController extends Controller
 
             return back()->with('success', 'Item #' . $id . ' transferred successfully.');
         } else {
+            // dd(2);
             $existingItemTo = Item::where('location', $request->room_to)
-                ->where('part_number', $item->part_number)
-                ->first();
+                ->where('brand_id', $item->brand_id)
+                ->where('model_id', $item->model_id)
+                ->where(function ($query) use ($item) {
+                    $query->where('part_number', $item->part_numer)
+                        ->orWhere('part_number', 'N/A');
+                })
+                ->get();
 
-            if ($existingItemTo) {
-                $existingItemTo->update([
-                    'quantity' => $existingItemTo->quantity + $quantity,
-                ]);
+            if (!$existingItemTo->isEmpty()) {
+                foreach ($existingItemTo as $existingItem) {
+                    $existingItem->update([
+                        'quantity' => $existingItem->quantity + $quantity,
+                    ]);
+                    $itemLog = new ItemLog();
+                    $itemLog->item_id = $existingItem->id;
+                    $itemLog->quantity = $quantity;
+                    $itemLog->encoded_by = Auth::user()->id_number;
+                    $itemLog->mode = 'Transferred';
+                    $itemLog->room_from = $request->room_from;
+                    $itemLog->room_to = $request->room_to;
+                    $itemLog->date = now();
+                    $itemLog->save();
 
-                $itemLog = new ItemLog();
-                $itemLog->item_id = $existingItemTo->id;
-                $itemLog->quantity = $quantity;
-                $itemLog->encoded_by = Auth::user()->id_number;
-                $itemLog->mode = 'Transferred';
-                $itemLog->room_from = $request->room_from;
-                $itemLog->room_to = $request->room_to;
-                $itemLog->date = now();
-                $itemLog->save();
+                    $itemLog = new ItemLog();
+                    $itemLog->item_id = $item->id;
+                    $itemLog->quantity = $quantity;
+                    $itemLog->encoded_by = Auth::user()->id_number;
+                    $itemLog->mode = 'Transferred';
+                    $itemLog->room_from = $request->room_from;
+                    $itemLog->room_to = $request->room_to;
+                    $itemLog->date = now();
+                    $itemLog->save();
 
-                $item->update([
-                    'quantity' => $item->quantity - $quantity,
-                ]);
-
-                $itemLog = new ItemLog();
-                $itemLog->item_id = $item->id;
-                $itemLog->quantity = $quantity;
-                $itemLog->encoded_by = Auth::user()->id_number;
-                $itemLog->mode = 'Transferred';
-                $itemLog->room_from = $request->room_from;
-                $itemLog->room_to = $request->room_to;
-                $itemLog->date = now();
-                $itemLog->save();
-
-                // Delete item from room_from if its quantity becomes zero or negative
-                $existingItemFrom = Item::where('location', $request->room_from)
-                    ->where('part_number', $item->part_number)
-                    ->first();
-
-                if ($existingItemFrom && $existingItemFrom->quantity <= 0) {
-                    $existingItemFrom->delete();
+                    $item->update([
+                        'quantity' => $item->quantity - $quantity,
+                    ]);
                 }
 
-                return back()->with('success', 'Item #' . $id . ' transferred successfully.');
+                $existingItemsFrom = Item::where('location', $request->room_from)
+                    ->where('brand_id', $item->brand_id)
+                    ->where('model_id', $item->model_id)
+                    ->where(function ($query) use ($item) {
+                        $query->where('part_number', $item->part_numer)
+                            ->orWhere('part_number', 'N/A');
+                    })
+                    ->get();
+                foreach ($existingItemsFrom as $existingItemFrom) {
+                    if ($existingItemFrom->quantity >= 0) {
+                        $existingItemFrom->delete();
+                    }
+                }
+
+                return back()->with('success', $quantity . ' unit(s) of item #' . $id . ' transferred successfully.');
             } else {
-                // Item doesn't exist in the destination room, create a new item
+                // dd(5);
                 $newItem = Item::create([
                     'serial_number' => $item->serial_number ? $item->serial_number : 'N/A',
                     'location' => $request->room_to,
@@ -684,7 +698,7 @@ class ItemsController extends Controller
                 $itemLog->date = now();
                 $itemLog->save();
 
-                // Update the original item's quantity 
+                // Update para original quantity sa item 
                 $item->update([
                     'quantity' => $item->quantity - $quantity,
                 ]);
@@ -695,10 +709,10 @@ class ItemsController extends Controller
                     ->where('part_number', $item->part_number)
                     ->first();
 
-                if ($existingItemFrom && $existingItemFrom->quantity <= 0) {
+                if ($existingItemFrom->quantity <= 0) {
                     $existingItemFrom->delete();
                 }
-                return back()->with('success', 'Item #' . $id . ' transferred successfully.');
+                return back()->with('success', 'Item transferred successfully.');
             }
         }
     }
@@ -757,12 +771,12 @@ class ItemsController extends Controller
         $replacedItem = Item::find($id);
 
         $item = Item::create([
-            'serial_number' => $request->serial_number,
+            'serial_number' => $request->serial_number ? $request->serial_number : 'N/A',
             'location' => $replacedItem->location,
             'category_id' => $replacedItem->category_id,
             'brand_id' => $request->brand ? $request->brand : 1,
             'model_id' => $request->model ? $request->model : 1,
-            'part_number' => $request->part_number,
+            'part_number' => $request->part_number ? $request->part_number : 'N/A',
             'description' => $request->description,
             'aquisition_date' => $request->aquisition_date,
             'inventory_tag' => $replacedItem->inventory_tag,
