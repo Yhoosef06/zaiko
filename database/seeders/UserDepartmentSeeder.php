@@ -20,10 +20,6 @@ class UserDepartmentSeeder extends Seeder
                 'department_id' => 19
             ],
             [
-                'user_id_number' => 1111,
-                'department_id' => 19
-            ],
-            [
                 'user_id_number' => 2016013001,
                 'department_id' => 19
             ],
@@ -34,22 +30,6 @@ class UserDepartmentSeeder extends Seeder
             [
                 'user_id_number' => 2016013001,
                 'department_id' => 20
-            ],
-            [
-                'user_id_number' => 2014036392,
-                'department_id' => 19
-            ],
-            [
-                'user_id_number' => 2012321404,
-                'department_id' => 19
-            ],
-            [
-                'user_id_number' => 2014571321,
-                'department_id' => 19
-            ],
-            [
-                'user_id_number' => 2014175231,
-                'department_id' => 19
             ],
         ];
         DB::table('user_departments')->insert($userDepartment); 
