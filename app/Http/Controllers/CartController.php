@@ -53,7 +53,7 @@ class CartController extends Controller
                 $filteredItems = $itemTemps->filter(function ($itemTemp) use ($itemModel) {
                     return $itemTemp->item->model->model_name === $itemModel;
                 });
-                
+                if($order->first() != null){
                 //check the department of the item
                 if($order->orderItemTemp->first()->item->room->department->id == $department){
                     $orderchecker ++;
@@ -101,9 +101,8 @@ class CartController extends Controller
 
 
                     }
-                    
 
-
+                }
                 }
 
             }
@@ -131,23 +130,17 @@ class CartController extends Controller
 
         $user = Auth::user(); 
         $orders = Order::where('user_id', $user->id_number)->where('date_submitted', null)->get();
-        // $itemTemps = OrderItemTemp::all();
+
 
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
 
-        // $cartItems = OrderItemTemp::where('order_id',$id)->get();
         
         $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
 
-        $user_dept_id = $user_department->department_id;
+        // $user_dept_id = $user_department->department_id;
         $departments = Department::with('college')->get();
-        // $departmentID = $cartItems->first()->item->room->department->id;
-
-        // $items = Item::whereHas('room.department', function ($query) use ($departmentID) {
-        //     $query->where('id', $departmentID)->where('borrowed','no');
-        // })->get();
-
+   
 
         $cartItems =collect();
         foreach($orders as $order){
@@ -157,14 +150,16 @@ class CartController extends Controller
 
         $items = collect();
         $cartDepartment = null;
-        foreach($orders as $order){
-            $cartDepartment = $cartItems->where('order_id',$order->id)->first()->item->room->department->id;
-            $itemsCollect = Item::whereHas('room.department', function ($query) use ($cartDepartment) {
-                    $query->where('id', $cartDepartment)->where('borrowed','no');
-                })->get();
-            $items = $items->merge($itemsCollect);
-        }
-        // dd($items);
+            foreach($orders as $order){
+                    $cartDepartment = $cartItems->where('order_id',$order->id)->first()->item->room->department->id;
+                    $itemsCollect = Item::whereHas('room.department', function ($query) use ($cartDepartment) {
+                            $query->where('id', $cartDepartment)->where('borrowed','no');
+                        })->get();
+                    $items = $items->merge($itemsCollect);
+                }
+               
+        
+           
               
         return view('pages.students.cartList')->with(compact('orders','cartItems','items','borrowedList','missingList'));
 
@@ -178,9 +173,9 @@ class CartController extends Controller
 
         $cartItems = OrderItemTemp::where('order_id',$id)->get();
         
-        $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
+        // $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
 
-        $user_dept_id = $user_department->department_id;
+        // $user_dept_id = $user_department->department_id;
         $departments = Department::with('college')->get();
         $departmentID = $cartItems->first()->item->room->department->id;
 
@@ -193,47 +188,59 @@ class CartController extends Controller
 
 
 
-    public function cart_list(){
+    // public function cart_list(){
 
-        $user = Auth::user(); 
-        $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
-        $borrowedList= OrderItem::where('status', 'borrowed')->get();
-        $missingList = ItemLog::where('mode', 'missing')->get();
+    //     $user = Auth::user(); 
+    //     $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
+    //     $borrowedList= OrderItem::where('status', 'borrowed')->get();
+    //     $missingList = ItemLog::where('mode', 'missing')->get();
 
-        if($order != null){
-            $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
-        }else{
-            $cartItems = null;
+    //     if($order != null){
+    //         $cartItems = OrderItemTemp::where('order_id',$order->id)->get();
+    //     }else{
+    //         $cartItems = null;
 
-        }
+    //     }
         
 
-        $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
-        // dd($user_department->department_id);
+    //     $user_department = UserDepartment::where('user_id_number', $user->id_number)->first();
+    //     // dd($user_department->department_id);
 
-        $user_dept_id = $user_department->department_id;
-        $departments = Department::with('college')->get();
+    //     $user_dept_id = $user_department->department_id;
+    //     $departments = Department::with('college')->get();
     
-        $collegeId = null;
-        foreach ($departments as $department) {
-            if ($department->id == $user_dept_id) {
-                $collegeId =  $department->college->id;
-                break;
-            }
-        }
+    //     $collegeId = null;
+    //     foreach ($departments as $department) {
+    //         if ($department->id == $user_dept_id) {
+    //             $collegeId =  $department->college->id;
+    //             break;
+    //         }
+    //     }
        
-        $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
-            $query->where('id', $collegeId);
-        })->get();
+    //     $items = Item::whereHas('room.department.college', function ($query) use ($collegeId) {
+    //         $query->where('id', $collegeId);
+    //     })->get();
        
-        return view('pages.students.cart-list')->with(compact('cartItems','items','borrowedList','missingList'));
+    //     return view('pages.students.cart-list')->with(compact('cartItems','items','borrowedList','missingList'));
 
-    }
+    // }
 
     public function remove_cart($id){
         
+        $itemTemp = OrderItemTemp::where('id','=',$id)->first();
+        $order = Order::where('id',$itemTemp->order_id)->first();
+
         OrderItemTemp::where('id','=',$id)->delete();
 
+        $itemTemps = OrderItemTemp::where('order_id',$order->id)->count();
+
+        // dd($itemTemps);
+
+        if($itemTemps === 0){
+            Order::where('id',$order->id)->delete();
+            
+        }
+        
         session()->flash('success','Item suceessfully removed.');
         return redirect()->back();
     }
@@ -247,14 +254,13 @@ class CartController extends Controller
     }
 
     public function update_cart(Request $request,$id){
-        // dd($id);
+ 
        
-        $item = OrderItemTemp::find($id); // Replace $cartId with the actual cart ID
+        $item = OrderItemTemp::find($id);
         
             $item->quantity = $request->quantity;
             $item->save();
             
-            // session()->flash('success','Item quantity changed.');
             return redirect()->back();
         
     }

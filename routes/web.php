@@ -153,7 +153,8 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
 
     Route::post('save-new-brand', [BrandController::class, 'saveNewBrand'])->name('save_new_brand');
     Route::post('save-new-model', [ModelsController::class, 'saveNewModel'])->name('save_new_model');
-
+    Route::post('save-new-room', [RoomController::class, 'saveNewRoom'])->name('save_new_room');
+    Route::post('saving-new-category', [ItemCategoryController::class, 'saveNewCategory'])->name('save_new_category');
 
     Route::get('upload-csvfile', [UserController::class, 'uploadCSVFile'])->name('upload_csv_file');
     Route::post('/upload-csv', [CsvController::class, 'store'])->name('store_csv_file');
@@ -196,7 +197,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // FOR ROOM - ADMIN
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
-    Route::post('save-new-room', [RoomController::class, 'saveNewRoom'])->name('save_new_room');
+    
     Route::get('edit/room/{id}', [RoomController::class, 'editRoom'])->name('edit_room');
     Route::post('save-edited-room/{id}', [RoomController::class, 'saveEditedRoom'])->name('save_edited_room');
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
@@ -206,7 +207,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // FOR Item Category -ADMIN
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
     Route::get('edit/item-category/{id}', [ItemCategoryController::class, 'editItemCategory'])->name('edit_item_category');
-    Route::post('saving-new-category', [ItemCategoryController::class, 'saveNewCategory'])->name('save_new_category');
+   
     Route::post('save-edited-item-category/{id}', [ItemCategoryController::class, 'saveEditedItemCategory'])->name('save_edited_item_category');
     Route::post('delete-category/{id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
 
@@ -301,6 +302,9 @@ Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
         Route::get('/browse-items/department', [BorrowerController::class, 'browseDepartment'])->name('browse.department');
         Route::get('/browse-items/department/category', [BorrowerController::class, 'browseCategory'])->name('browse.category');
 
+        //BROWSE TEST
+        Route::get('/browse-items-test', [BorrowerController::class, 'browse_test'])->name('browse.items.test');
+
         //cart
         Route::get('/browse-cart', [CartController::class, 'browse'])->name('browse.cart');
         Route::get('/browse-cart/{id}', [CartController::class, 'browse_cart'])->name('browse.cart-id');
@@ -313,6 +317,7 @@ Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
         Route::get('/remove-transaction/{id}', [CartController::class, 'remove_transaction'])->name('remove.transaction');
         Route::get('/borrowed-items', [CartController::class, 'borrowed'])->name('borrowed-items');
         Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
+        
 
 
         //agreement

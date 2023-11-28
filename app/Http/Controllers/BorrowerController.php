@@ -19,32 +19,31 @@ class BorrowerController extends Controller
     public function index()
     {
         $currentDate = Carbon::now();
-        $department = Auth::user()->departments->first();
-        
-        // $items = OrderItem::where('user_id',Auth::user()->id_number)->where('date_returned', '<', $currentDate->toDateString())->get();
-        // dd($items);
+        // $department = Auth::user()->departments->first();
+        // dd($department);
 
         $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
-            ->join('departments', 'user_departments.department_id', '=', 'departments.id')
+            // ->join('user_departments', 'users.id_number', '=', 'user_departments.user_id_number')
+            // ->join('departments', 'user_departments.department_id', '=', 'departments.id')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location','=','rooms.id')
             ->join('item_categories', 'items.category_id', 'item_categories.id')
             ->join('models', 'items.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
             ->where('order_items.user_id', Auth::user()->id_number)
             ->where('order_items.date_returned', '<', $currentDate->toDateString())
-            ->where('departments.college_id', $department->college_id)
+            // ->where('rooms.college_id', $department->college_id)
             ->where('order_items.status', 'borrowed')
             ->get();
+            // dd($overdueItems);
 
         foreach ($overdueItems as $item) {
             $dateReturned = Carbon::parse($item->date_returned); 
             $daysOverdue = $dateReturned->diffInDays($currentDate);
             $item->days_overdue = $daysOverdue;
-        }
-        // dd($overdueItems);  
+        } 
         return view('pages.students.home')->with(compact('overdueItems'));
     }
 
@@ -63,7 +62,7 @@ class BorrowerController extends Controller
         $selectedDepartment = $request->query('selectedDepartment');
         $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
             $query->where('id', $selectedDepartment);
-        })->where('borrowed','no')->get();
+        })->where('status','Active')->where('borrowed','no')->get();
 
         $categories = ItemCategory::all();
         $departments = Department::all();
@@ -86,18 +85,45 @@ class BorrowerController extends Controller
         $sessionCat = Session::get('category',$selectedCategory);
 
         if(isset($selectedDepartment,$sessionCat)){
-            $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
-                $query->where('id', $selectedDepartment);
-            })->where('category_id', $sessionCat)->where('borrowed','no')->get();
+            if($sessionCat == 0){
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('status','Active')->where('borrowed','no')->get();
+            }else{
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('category_id', $sessionCat)->where('status','Active')->where('borrowed','no')->get();
+            }
         }else{
-            $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
-                $query->where('id', $selectedDepartment);
-            })->where('category_id', $selectedCategory)->where('borrowed','no')->get();
+            if($sessionCat == 0){
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('status','Active')->where('borrowed','no')->get();
+            }else{
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('category_id', $selectedCategory)->where('status','Active')->where('borrowed','no')->get();
+            }
         }   
 
         return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
     }
 
+    public function browse_test(){
+
+        $itemlogs = ItemLog::all();
+        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+        $missingList = ItemLog::where('mode', 'missing')->get();
+
+        $items = Item::where('status','Active')->where('borrowed','no')->get();
+
+        $groupedItems = $items->groupBy(function ($item) {
+            return $item->brand_id . '-' . $item->model_id;
+        });
+        $departments = collect();    
+
+        return view('pages.students.browse-items')->with(compact('groupedItems','itemlogs','borrowedList','missingList'));
+    }
 
 
 
@@ -136,16 +162,6 @@ class BorrowerController extends Controller
         $user->update();
 
         return redirect()->route('cart.list');
-
-
-        // public function pendingItem($serial_number){
-        //     $affectedRows = Order::where('serial_number','=',$serial_number)->update(['order_status' => 'borrowed']);
-
-
-        //     Session::flash('success', 'Borrow has been Approved.');
-
-        //     return redirect('pending');
-        // }
     }
 
     public function overdue()
