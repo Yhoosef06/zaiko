@@ -49,7 +49,11 @@ class BorrowerController extends Controller
 
     public function browse(){
 
-        $departments = Department::all();
+        $departments = Department::whereHas('rooms.item', function ($query) {
+             $query->where('status', '=', 'Active');
+        })->get();
+        // dd($departments);
+        // $departments = Department::all();
 
         return view('pages.students.items')->with(compact('departments'));
     }
@@ -65,7 +69,9 @@ class BorrowerController extends Controller
         })->where('status','Active')->where('borrowed','no')->get();
 
         $categories = ItemCategory::all();
-        $departments = Department::all();
+        $departments = Department::whereHas('rooms.item', function ($query) {
+            $query->where('status', '=', 'Active');
+        })->get();
         Session::put('department',$selectedDepartment);
         
 
@@ -80,7 +86,9 @@ class BorrowerController extends Controller
         $selectedCategory = $request->category;
         $selectedDepartment = Session::get('department');
         $categories = ItemCategory::all();
-        $departments = Department::all();
+        $departments = Department::whereHas('rooms.item', function ($query) {
+            $query->where('status', '=', 'Active');
+        })->get();
         Session::put('category',$selectedCategory);
         $sessionCat = Session::get('category',$selectedCategory);
 
