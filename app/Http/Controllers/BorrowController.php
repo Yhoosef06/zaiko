@@ -1022,50 +1022,28 @@ class BorrowController extends Controller
             return response()->json(['duplicate' => $validator->errors()->all()]);
         }
 
+        $existingItems = Item::whereIn('serial_number', $serialNumbers)
+        ->whereIn('description', $description)
+        ->where('borrowed', 'no')
+        ->get();
 
-        // $existingItems = Item::whereIn('serial_number', $serialNumbers)
-        //     ->whereIn('description', $description)
-        //     ->where('borrowed', 'no')
-        //     ->get();    
-        
-    
-        // foreach ($serialNumbers as $serialNumber) {
-        //         if ($serialNumber !== 'N/A') { 
-                  
-        //             $item = $existingItems->where('serial_number', $serialNumber)->first();
-        //             dd($item);
-        //             if (!$item) {
-        //                 return response()->json(['error' => "Serial number '$serialNumber' does not exist in the item table or does not match the provided description."]);
-        //             }
-        //         }
-        //     }
-
-        $matchedItems = Item::whereIn('serial_number', $serialNumbers)
-    ->whereIn('description', $description)
-    ->where('borrowed', 'no')
-    ->get();
-
-$missingItems = [];
-
-foreach ($serialNumbers as $index => $serialNumber) {
-    if ($serialNumber !== 'N/A') {
-        $matchedItem = $matchedItems->where('serial_number', $serialNumber)->first();
-
-        if (!$matchedItem) {
-            // If no match is found, add the missing item to the $missingItems array
-            $missingItems[] = [
-                'serial_number' => $serialNumber,
-                'description' => $description[$index],
-            ];
+ 
+        foreach ($serialNumbers as $key => $serialNumber) {
+        if ($serialNumber !== 'N/A') {
+            $found = $existingItems->where('serial_number', $serialNumber)
+                ->where('description', $description[$key])
+                ->first();
+               
+            if (!$found) {
+                return response()->json([
+                    'error' => "Serial number '$serialNumber' does not exist in the item table or does not match the provided description."
+                ]);
+            }
         }
     }
-}
 
-if (!empty($missingItems)) {
-    // Handle missing items (optional: return or do something with missingItems)
-    return response()->json(['error' => 'Some items do not match the provided serial numbers and descriptions.', 'missingItems' => $missingItems]);
-}
-        
+     
+   
        
         if ($user) {
             $firstName = $user->first_name;
