@@ -1106,7 +1106,10 @@ class BorrowController extends Controller
         $uniqueSerialNumbers = [];
         $currentDate = Carbon::now();
 
-           
+        
+       
+
+      
         $validator = Validator::make($request->all(), [
             'user_serial_number.*' => [
                 'required',
@@ -1135,10 +1138,12 @@ class BorrowController extends Controller
             ->whereIn('description', $description)
             ->where('borrowed', 'no')
             ->get();
+        
     
         foreach ($serialNumbers as $serialNumber) {
                 if ($serialNumber !== 'N/A') { 
-                    $item = $existingItems->where('serial_number', $serialNumber)->first();
+                    $item = $existingItems->where('serial_number', $serialNumber)->where('description', $description)->first();
+
                     if (!$item) {
                         return response()->json(['error' => "Serial number '$serialNumber' does not exist in the item table or does not match the provided description."]);
                     }

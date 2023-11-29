@@ -111,10 +111,9 @@
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Pending</p>
                                                     @if (session()->has('pending_count'))
-                                                        <span
-                                                            class="badge badge-danger right">{{ session('pending_count') }}</span>
-                                                    @else
+                                                        <span class="badge badge-danger right">{{ session('pending_count') }}</span>
                                                     @endif
+                                
                                                 </div>
                                             </a>
                                         </li>
@@ -123,11 +122,7 @@
                                                 <div class="ml-3">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Released Items</p>
-                                                    {{-- @if (session()->has('borrow_count'))
-                                                    <span
-                                                        class="badge badge-danger right">{{ session('borrow_count') }}</span>
-                                                    @else
-                                                    @endif --}}
+                                                   
 
                                                 </div>
                                             </a>
@@ -138,10 +133,9 @@
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Overdue</p>
                                                     @if (session()->has('overdue_count'))
-                                                        <span
-                                                            class="badge badge-danger right">{{ session('overdue_count') }}</span>
-                                                    @else
-                                                    @endif
+                                                    <span class="badge badge-danger right">{{ session('overdue_count') }}</span>
+                                                     @endif
+                                                   
                                                 </div>
                                             </a>
                                         </li>
