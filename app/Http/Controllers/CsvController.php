@@ -7,8 +7,6 @@ use App\Jobs\CsvImportJob;
 use App\Models\Term;
 use Illuminate\Http\Request;
 use App\Mail\TemporaryPasswordEmail;
-use App\Models\UserDepartment;
-use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CsvController extends Controller
@@ -28,23 +26,12 @@ class CsvController extends Controller
             $file = $request->file('csv_file');
             $filePath = $file->getRealPath();
 
-            // dispatch(new CsvImportJob($filePath));
             Excel::import(new CsvImport,  $filePath);
 
             return redirect()->back()->with('success', 'CSV file uploaded successfully!');
         } catch (\Throwable $th) {
-
-            dd($th);
             return redirect()->back()->with('danger', 'Error during CSV file upload.');
         }
 
     }
 }
- 
-
-
-
-
-
-// dispatch(new CsvImportJob($filePath, $request->input('department_ids')));
- // Excel::import(new CsvImport, $filePath); // 'department_ids' => 'required|array',
