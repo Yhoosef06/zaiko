@@ -16,8 +16,8 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        {{-- action="{{ route('save_new_item') }}"  id="addNewItem" --}}
-                        <form id="addNewItem" method="POST" enctype="multipart/form-data">
+                        <form id="addNewItem" action method="POST" enctype="multipart/form-data">
+                            {{-- <form action="{{ route('save_new_item') }}" action method="POST" enctype="multipart/form-data"> --}}
                             @csrf
                             <div class="card-body">
                                 @if (session('success'))

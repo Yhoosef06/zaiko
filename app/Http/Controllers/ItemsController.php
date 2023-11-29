@@ -284,13 +284,13 @@ class ItemsController extends Controller
             return response()->json(['success' => 'Item(s) added successfully']);
 
         } else {
-            $existingItem = Item::where('part_number', $request->part_number)
-                ->where('location', $request->location)
-                ->where('brand_id', $request->brand_id)
-                ->where('model_id', $request->model_id)
-                ->get();
-
-            if ($existingItem == false) {
+            $existingItem = Item::where('location', $request->location)
+                ->where('brand_id', $request->brand)
+                ->where('model_id', $request->model)
+                ->where('category_id', $request->item_category)
+                ->first();
+            // dd($existingItem);
+            if ($existingItem == true) {
                 $existingItem->update([
                     'quantity' => $existingItem->quantity + $quantity,
                 ]);
