@@ -69,15 +69,36 @@ class BorrowerController extends Controller
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
         $selectedDepartment = $request->query('selectedDepartment');
-        $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
-            $query->where('id', $selectedDepartment);
-        })->where('status','Active')->where('borrowed','no')->get();
-
         $categories = ItemCategory::all();
         $departments = Department::whereHas('rooms.item', function ($query) {
             $query->where('status', '=', 'Active');
         })->get();
         Session::put('department',$selectedDepartment);
+        $sessionDept = Session::get('department',$selectedDepartment);
+
+        if(isset($selectedDepartment,$sessionDept)){
+            if($sessionDept == 0){
+                $items = Item::where('status', 'Active')->where('borrowed', 'no')->get();
+            }else{
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('status','Active')->where('borrowed','no')->get();
+            }
+        }else{
+            if($sessionDept == 0){
+                $items = Item::where('status', 'Active')->where('borrowed', 'no')->get();
+            }else{
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('status','Active')->where('borrowed','no')->get();
+            }
+        }
+
+        // $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+        //     $query->where('id', $selectedDepartment);
+        // })->where('status','Active')->where('borrowed','no')->get();
+
+       
         
 
         return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));

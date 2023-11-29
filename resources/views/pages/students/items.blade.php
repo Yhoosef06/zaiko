@@ -21,6 +21,10 @@
                             <select class="form-select form-select-lg mb-5" aria-label="Default select example"
                                 name="selectedDepartment" onchange="this.form.submit()">
                                 <option selected value="" disabled>Choose Department</option>
+                                <option value="0"
+                                {{ (!Session::has('department')) ? 'selected' : '' }}>
+                                    All
+                                </option>
                                 @foreach ($departments as $dept)
                                     <option value="{{ $dept->id }}"
                                         {{ Session::get('department') == $dept->id ? 'selected' : '' }}>
