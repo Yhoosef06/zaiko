@@ -78,10 +78,15 @@ class BorrowerController extends Controller
         })->get();
         Session::put('department',$selectedDepartment);
         $sessionDept = Session::get('department',$selectedDepartment);
+        $sessionCat = Session::get('category');
 
         if(isset($selectedDepartment,$sessionDept)){
             if($sessionDept == 0){
                 $items = Item::where('status', 'Active')->where('borrowed', 'no')->get();
+            }elseif($sessionCat != null){
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('status','Active')->where('borrowed','no')->where('category_id',$sessionCat)->get();
             }else{
                 $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
                     $query->where('id', $selectedDepartment);
@@ -90,6 +95,10 @@ class BorrowerController extends Controller
         }else{
             if($sessionDept == 0){
                 $items = Item::where('status', 'Active')->where('borrowed', 'no')->get();
+            }elseif($sessionCat != null){
+                $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
+                    $query->where('id', $selectedDepartment);
+                })->where('status','Active')->where('borrowed','no')->where('category_id',$sessionCat)->get();
             }else{
                 $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
                     $query->where('id', $selectedDepartment);
