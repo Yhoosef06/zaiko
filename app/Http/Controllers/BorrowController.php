@@ -1142,9 +1142,8 @@ class BorrowController extends Controller
     
         foreach ($serialNumbers as $serialNumber) {
                 if ($serialNumber !== 'N/A') { 
-                    $item = $existingItems->where('serial_number', $serialNumber)->first();
+                    $item = $existingItems->where('serial_number', $serialNumber)->where('description', $description)->first();
 
-                    
                     if (!$item) {
                         return response()->json(['error' => "Serial number '$serialNumber' does not exist in the item table or does not match the provided description."]);
                     }
@@ -1152,62 +1151,62 @@ class BorrowController extends Controller
             }
         
        
-    //     if ($user) {
-    //         $firstName = $user->first_name;
-    //         $lastName = $user->last_name;
+        if ($user) {
+            $firstName = $user->first_name;
+            $lastName = $user->last_name;
 
-    //         Order::whereIn('id', $orderId)->update([
-    //             'approval_date' => Carbon::today(),
-    //             'approved_by' => $firstName . ' ' . $lastName
-    //         ]);
+            Order::whereIn('id', $orderId)->update([
+                'approval_date' => Carbon::today(),
+                'approved_by' => $firstName . ' ' . $lastName
+            ]);
          
-    //         foreach ($itemId as $index => $id) {
+            foreach ($itemId as $index => $id) {
                
                 
-    //             $item = Item::find($itemId[$index]);
+                $item = Item::find($itemId[$index]);
               
-    //             if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serialNumbers[$index])) {
-    //                 $order = $orderId[$index];
-    //                 $durationDay = $duration[$index];
+                if (isset($itemId[$index]) && isset($quantity[$index]) && isset($serialNumbers[$index])) {
+                    $order = $orderId[$index];
+                    $durationDay = $duration[$index];
 
                 
-    //                 $dateReturn = $currentDate->copy()->addDays($durationDay);
+                    $dateReturn = $currentDate->copy()->addDays($durationDay);
                    
                     
-    //                 if ($item->serial_number === 'N/A') {
-    //                         OrderItem::create([
-    //                             'order_id' => $order,
-    //                             'user_id' => $student_id_added_user,
-    //                             'item_id' => $itemId[$index],
-    //                             'order_quantity' => $quantity[$index],
-    //                             'status' => 'borrowed',
-    //                             'order_serial_number' => $serialNumbers[$index],
-    //                             'date_returned' =>  $dateReturn->format('Y-m-d'),
-    //                             'released_by' => $lastName . ' ' . $firstName
-    //                         ]);
-    //                     } else {
-    //                         Item::where('id', $itemId[$index])->update(['borrowed' => 'yes']);
-    //                         OrderItem::create([
-    //                             'order_id' => $order,
-    //                             'user_id' => $student_id_added_user,
-    //                             'item_id' => $itemId[$index],
-    //                             'order_quantity' => $quantity[$index],
-    //                             'status' => 'borrowed',
-    //                             'order_serial_number' => $serialNumbers[$index],
-    //                             'date_returned' =>  $dateReturn->format('Y-m-d'),
-    //                             'released_by' => $lastName . ' ' . $firstName
-    //                         ]);
+                    if ($item->serial_number === 'N/A') {
+                            OrderItem::create([
+                                'order_id' => $order,
+                                'user_id' => $student_id_added_user,
+                                'item_id' => $itemId[$index],
+                                'order_quantity' => $quantity[$index],
+                                'status' => 'borrowed',
+                                'order_serial_number' => $serialNumbers[$index],
+                                'date_returned' =>  $dateReturn->format('Y-m-d'),
+                                'released_by' => $lastName . ' ' . $firstName
+                            ]);
+                        } else {
+                            Item::where('id', $itemId[$index])->update(['borrowed' => 'yes']);
+                            OrderItem::create([
+                                'order_id' => $order,
+                                'user_id' => $student_id_added_user,
+                                'item_id' => $itemId[$index],
+                                'order_quantity' => $quantity[$index],
+                                'status' => 'borrowed',
+                                'order_serial_number' => $serialNumbers[$index],
+                                'date_returned' =>  $dateReturn->format('Y-m-d'),
+                                'released_by' => $lastName . ' ' . $firstName
+                            ]);
                                         
-    //                 }
+                    }
               
 
-    //             }
+                }
             
-    //     }
+        }
    
 
-    //     return response()->json(['success' => 'Serial numbers are valid.']);
-    // }
+        return response()->json(['success' => 'Serial numbers are valid.']);
+    }
 }
 
 
