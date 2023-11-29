@@ -94,7 +94,7 @@
                                                     <div class="d-flex justify-content-start align-items-end h-100">
                                                         <h5>
                                                             <span class="badge bg-success ms-2">
-                                                                Available
+                                                                {{Str::limit($item->room->department->department_name,25)}}
                                                             </span>
                                                         </h5>
                                                     </div>

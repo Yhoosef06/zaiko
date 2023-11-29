@@ -49,13 +49,18 @@ class BorrowerController extends Controller
 
     public function browse(){
 
+        $itemlogs = ItemLog::all();
+        $borrowedList= OrderItem::where('status', 'borrowed')->get();
+        $missingList = ItemLog::where('mode', 'missing')->get();
         $departments = Department::whereHas('rooms.item', function ($query) {
              $query->where('status', '=', 'Active');
         })->get();
         // dd($departments);
         // $departments = Department::all();
 
-        return view('pages.students.items')->with(compact('departments'));
+        $items = Item::where('status','Active')->get();
+
+        return view('pages.students.items')->with(compact('departments','items','borrowedList','itemlogs','missingList'));
     }
 
     public function browseDepartment(Request $request){
@@ -115,6 +120,14 @@ class BorrowerController extends Controller
         }   
 
         return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
+    }
+
+    public function search($id){
+        $departments = Department::whereHas('rooms.item', function ($query) {
+            $query->where('status', '=', 'Active');
+       })->get();
+
+       return view('pages.students.items')->with(compact('departments'));
     }
 
     public function browse_test(){
