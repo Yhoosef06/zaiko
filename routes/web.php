@@ -299,6 +299,7 @@ Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
 
         //BROWSING
         Route::get('/browse-items', [BorrowerController::class, 'browse'])->name('browse.items');
+        Route::get('/search-items', [BorrowerController::class, 'search'])->name('browse.search');
         Route::get('/browse-items/department', [BorrowerController::class, 'browseDepartment'])->name('browse.department');
         Route::get('/browse-items/department/category', [BorrowerController::class, 'browseCategory'])->name('browse.category');
 
