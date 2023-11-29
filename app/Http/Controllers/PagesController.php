@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\Role;
 use App\Models\Room;
+use App\Models\Term;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\College;
@@ -13,7 +15,6 @@ use App\Models\OrderItem;
 use App\Models\Department;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use function GuzzleHttp\Promise\all;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,7 @@ class PagesController extends Controller
 {
     public function index()
     {
+        $term = Term::where("isCurrent", true)->first();
         $userId = auth()->user()->id_number;
         $department = Auth::user()->departments->first();
         $currentDate = Carbon::now();
@@ -34,7 +36,7 @@ class PagesController extends Controller
             $totalUsers = $users->count();
             $activeUsers = $users->where('isActive', true)->count();
             $inactiveUsers = $users->where('isActive', false)->count();
-            return view('pages.admin.adminDashboard')->with(compact('totalItems', 'inactiveUsers', 'totalUsers', 'activeUsers'));
+            return view('pages.admin.adminDashboard')->with(compact('totalItems', 'inactiveUsers', 'totalUsers', 'activeUsers', 'term'));
         } else if ($user->roles->contains('name', 'manager')) {
             $departmentIds = $user->departments->pluck('id');
             $college = $user->departments->first()->college;

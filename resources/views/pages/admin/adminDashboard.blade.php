@@ -8,7 +8,7 @@
                 </div>
             </div>
         </section>
- 
+
         <section class="content">
             <div class="container-fluid">
                 <div class="row justify-content-center">
@@ -29,7 +29,7 @@
                                     </div>
                                 @endif
                                 <div class="card-title">
-                                    <h3>Welcome {{Auth::user()->first_name}}!</h3>
+                                    <h3>Welcome {{ Auth::user()->first_name }}!</h3>
                                 </div>
                             </div>
                             <div class="container pt-2">
@@ -37,12 +37,14 @@
                                     <div class="col-12 col-sm-12 col-md-3">
                                         <div class="info-box">
                                             <span class="info-box-icon bg-warning elevation-1"><i
-                                                    class="fas fa-box"></i></span>
+                                                    class="fas fa-calendar"></i></span>
 
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Inventory</span>
+                                                <span class="info-box-text">School Term</span>
                                                 <span class="info-box-number">
-                                                    {{ $totalItems }}
+                                                    {{ $term->semester }}
+                                                    {{ date('Y', strtotime($term->start_date)) }} - {{ date('Y', strtotime($term->end_date . ' +1 year')) }}
+                                                   
                                                 </span>
                                             </div>
                                             <!-- /.info-box-content -->
@@ -72,7 +74,7 @@
 
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Active Users</span>
-                                                <span class="info-box-number">{{$activeUsers}}</span>
+                                                <span class="info-box-number">{{ $activeUsers }}</span>
                                             </div>
                                             <!-- /.info-box-content -->
                                         </div>
