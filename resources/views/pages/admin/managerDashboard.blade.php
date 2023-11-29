@@ -29,7 +29,23 @@
                                     </div>
                                 @endif
                                 <div class="card-title">
-                                    <h3>Hello {{ Auth::user()->first_name }}!</h3>
+                                    <div class="form-group">
+                                        <label>Select Department</label>
+                                        <select class="form-control" id="select-department" name="department">
+                                          <option selected="selected" >Select Department</option>
+                                          @foreach ($userDepartments as $userDepartment)
+                                          <option value="{{ $userDepartment->departmentID }}"
+                                            {{ Session::get('departmentID') == $userDepartment->departmentID ? 'selected' : '' }}>
+                                            {{ $userDepartment->department_name }}
+                                        </option>
+                                         
+                                          @endforeach
+                                        
+                                        </select>
+
+                                   
+                                      </div>
+                                    {{-- <h3>Hello {{ Auth::user()->first_name }}!</h3> --}}
                                 </div>
                             </div>
                             <div class="container">
