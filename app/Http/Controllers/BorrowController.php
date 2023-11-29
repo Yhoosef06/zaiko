@@ -210,7 +210,7 @@ class BorrowController extends Controller
         // echo $item->temp_serial_number;
         // exit;
         // dd($item);
-        if($item->temp_serial_number == 'N/A'){
+        if($item->item->serial_number == 'N/A'){
             $item->delete();
             return response()->json(['success' => true]);
         }else{
