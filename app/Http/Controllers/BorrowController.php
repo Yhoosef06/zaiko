@@ -107,6 +107,8 @@ class BorrowController extends Controller
 
     public function pending()
     {
+        
+
             $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
