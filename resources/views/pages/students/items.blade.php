@@ -18,8 +18,8 @@
                     <div class="col-3">
                         <form action=" {{ route('browse.department') }}" method="GET">
                             @csrf
-                            <select class="form-select form-select-lg mb-5" aria-label="Default select example"
-                                name="selectedDepartment" onchange="this.form.submit()">
+                            
+                            <select class="form-control mb-5" aria-label="Default select example" name="selectedDepartment" onchange="this.form.submit()">
                                 <option selected value="" disabled>Choose Department</option>
                                 <option value="0"
                                 {{ (!Session::has('department')) ? 'selected' : '' }}>
