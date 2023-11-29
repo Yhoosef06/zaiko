@@ -78,6 +78,8 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::get('/dashboard', [PagesController::class, 'index'])->name('admin.dashboard');
     // Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');
+    Route::post('selectDepartment', [PagesController::class, 'selectDepartment'])->name('selectDepartment');
+
 
     // FOR ITEMS
     Route::middleware(['permission:manage-inventory'])->group(function () {

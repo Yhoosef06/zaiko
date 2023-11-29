@@ -29,73 +29,41 @@ class BorrowController extends Controller
     public function borrowed()
     {
         $department = Auth::user()->departments->first();
-        $viewBorrows = collect();
-
-        if($department->college_id === 5){
-            $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
-            ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
-            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
-            ->join('rooms', 'items.location', '=', 'rooms.id')
-            ->where('rooms.college_id', $department->college_id)
-            ->WhereNull('orders.order_status')
-            ->whereNotNull('orders.approval_date')
-            ->whereNotNull('orders.approved_by')
-            ->groupBy('orders.id')
-            ->get();
-
-            foreach ($borrows as $borrow) {
-
-                $borrowedItems = Order::join('users', 'orders.user_id', '=', 'users.id_number')
-                ->join('order_items', 'orders.id', '=', 'order_items.order_id')
-                ->join('items', 'order_items.item_id', '=', 'items.id')
-                ->join('item_categories', 'items.category_id', 'item_categories.id')
-                ->join('models', 'items.model_id', '=', 'models.id')
-                ->join('brands', 'models.brand_id', '=', 'brands.id')
-                ->select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.id as item_id_borrow', 'item_categories.*', 'items.description as description', 'items.*')
-                ->where('orders.id', $borrow->transactionId)
-                ->where('order_items.status', 'borrowed')
-                ->get();
-
-                $viewBorrows = $viewBorrows->merge($borrowedItems);
-            }
-
-            return view('pages.admin.borrowed')->with(compact('borrows','viewBorrows'));
-
-        }else{
+       
 
             $borrows = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
                 ->join('users', 'orders.user_id', '=', 'users.id_number')
                 ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
                 ->join('items', 'order_item_temps.item_id', '=', 'items.id')
                 ->join('rooms', 'items.location', '=', 'rooms.id')
-                ->where('rooms.department_id', $department->id)
+                ->where('rooms.department_id', session('departmentID'))
                 ->WhereNull('orders.order_status')
                 ->whereNotNull('orders.approval_date')
                 ->whereNotNull('orders.approved_by')
                 ->groupBy('orders.id')
                 ->get();
 
-                foreach ($borrows as $borrow) {
+              
 
-                    $borrowedItems = Order::join('users', 'orders.user_id', '=', 'users.id_number')
-                    ->join('order_items', 'orders.id', '=', 'order_items.order_id')
-                    ->join('items', 'order_items.item_id', '=', 'items.id')
-                    ->join('item_categories', 'items.category_id', 'item_categories.id')
-                    ->join('models', 'items.model_id', '=', 'models.id')
-                    ->join('brands', 'models.brand_id', '=', 'brands.id')
-                    ->select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.id as item_id_borrow', 'item_categories.*', 'items.description as description', 'items.*')
-                    ->where('orders.id', $borrow->transactionId)
-                    ->where('order_items.status', 'borrowed')
-                    ->get();
-    
-                    $viewBorrows = $viewBorrows->merge($borrowedItems);
-                }
+            $viewBorrows = Order::join('users', 'orders.user_id', '=', 'users.id_number')
+                ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+                ->join('items', 'order_items.item_id', '=', 'items.id')
+                ->join('item_categories', 'items.category_id', 'item_categories.id')
+                ->join('models', 'items.model_id', '=', 'models.id')
+                ->join('brands', 'models.brand_id', '=', 'brands.id')
+                ->select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.id as item_id_borrow', 'item_categories.*', 'items.description as description', 'items.*')
+                // ->where('orders.id', $borrow->transactionId)
+                ->where('order_items.status', 'borrowed')
+                ->get();
+
+                
+
+                
     
                
     
                 return view('pages.admin.borrowed')->with(compact('borrows','viewBorrows'));
-        }
+        
             
        
 
@@ -105,9 +73,7 @@ class BorrowController extends Controller
     public function overdue()
     {
         $currentDate = Carbon::now();
-        $department = Auth::user()->departments->first();
-
-        if($department->college_id === 5){
+       
             $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
@@ -118,48 +84,22 @@ class BorrowController extends Controller
             ->join('brands', 'models.brand_id', '=', 'brands.id')
             ->where('order_items.status', 'borrowed')
             ->where('order_items.date_returned', '<', $currentDate->toDateString())
-            ->where('rooms.college_id', $department->college_id)
+            ->where('rooms.department_id', session('departmentID'))
             ->get();
-
+            
+    
+    
             foreach ($overdueItems as $item) {
                 $dateReturned = Carbon::parse($item->date_returned); 
                 $daysOverdue = $dateReturned->diffInDays($currentDate);
                 $item->days_overdue = $daysOverdue;
             }
+
+            return view('pages.admin.overdue')->with(compact('overdueItems'));
         
-            return view('pages.admin.overdue')->with(compact('overdueItems'));
-            
-        }else{
-            $overdueItems = Order::select('orders.id as order_id', 'users.*', 'brands.brand_name as brand', 'models.model_name as model', 'order_items.id as order_item_id', 'order_items.*', 'items.*', 'item_categories.*')
-            ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
-            ->join('items', 'order_items.item_id', '=', 'items.id')
-            ->join('rooms', 'items.location', '=', 'rooms.id')
-            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-            ->join('models', 'items.model_id', '=', 'models.id')
-            ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->where('order_items.status', 'borrowed')
-            ->where('order_items.date_returned', '<', $currentDate->toDateString())
-            ->where('rooms.department_id', $department->id)
-            ->get();
-            
-    
-    
-            foreach ($overdueItems as $item) {
-                $dateReturned = Carbon::parse($item->date_returned); 
-                $daysOverdue = $dateReturned->diffInDays($currentDate);
-                $item->days_overdue = $daysOverdue;
-            }
-
-            return view('pages.admin.overdue')->with(compact('overdueItems'));
-        }
 
       
-        
-    // echo '<pre>';
-    // print_r($overdueItems);
-    // echo '</pre>';
-    // exit;
+  
 
        
     }
@@ -167,17 +107,12 @@ class BorrowController extends Controller
 
     public function pending()
     {
-        $department = Auth::user()->departments->first();
-
-        // dd($department);
-
-        if($department->college_id === 5){
             $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
             ->join('items', 'order_item_temps.item_id', '=', 'items.id')
             ->join('rooms', 'items.location', '=', 'rooms.id')
-            ->where('rooms.college_id', $department->college_id)
+            ->where('rooms.department_id', session('departmentID'))
             ->whereNotNull('orders.date_submitted')
             ->whereNull('orders.approval_date')
             ->whereNull('orders.approved_by')
@@ -185,43 +120,13 @@ class BorrowController extends Controller
             ->get();
 
             return view('pages.admin.pending')->with(compact('userPendings'));
-
-        }else{
-            $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
-            ->join('users', 'orders.user_id', '=', 'users.id_number')
-            ->join('order_item_temps', 'orders.id', '=', 'order_item_temps.order_id')
-            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
-            ->join('rooms', 'items.location', '=', 'rooms.id')
-            ->where('rooms.department_id', $department->id)
-            ->whereNotNull('orders.date_submitted')
-            ->whereNull('orders.approval_date')
-            ->whereNull('orders.approved_by')
-            ->groupBy('orders.id')
-            ->get();
-
-            return view('pages.admin.pending')->with(compact('userPendings'));
-
-        }
-     
-     
-
-      
-
-        // echo '<pre>';
-        // print_r($userPendings);
-        // echo '</pre>';
-        // exit;
-
       
         
     }
 
     public function returned()
     {
-        $department = Auth::user()->departments->first();
-
-        if($department->college_id === 5){
-
+        
                 $forReturns = OrderItem::select('order_items.date_returned as returndate', 'items.*', 'users.*', 'brands.*', 'models.*', 'item_categories.*', 'orders.*', 'order_items.*')
                 ->join('users', 'order_items.user_id', '=', 'users.id_number')
                 ->join('items', 'order_items.item_id', '=', 'items.id')
@@ -230,29 +135,13 @@ class BorrowController extends Controller
                 ->join('models', 'items.model_id', '=', 'models.id')
                 ->join('brands', 'models.brand_id', '=', 'brands.id')
                 ->join('orders', 'order_items.order_id', '=', 'orders.id')
-                ->where('rooms.college_id', $department->college_id)
-                ->where('order_items.status','returned')
-                ->get();
-
-                  return view('pages.admin.returned', compact('forReturns'));
-
-        }else{
-
-                $forReturns = OrderItem::select('order_items.date_returned as returndate', 'items.*', 'users.*', 'brands.*', 'models.*', 'item_categories.*', 'orders.*', 'order_items.*')
-                ->join('users', 'order_items.user_id', '=', 'users.id_number')
-                ->join('items', 'order_items.item_id', '=', 'items.id')
-                ->join('rooms', 'items.location', '=', 'rooms.id')
-                ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
-                ->join('models', 'items.model_id', '=', 'models.id')
-                ->join('brands', 'models.brand_id', '=', 'brands.id')
-                ->join('orders', 'order_items.order_id', '=', 'orders.id')
-                ->where('rooms.department_id', $department->id)
+                ->where('rooms.department_id', session('departmentID'))
                 ->where('order_items.status','returned')
                 ->get();
         
 
                 return view('pages.admin.returned', compact('forReturns'));
-        }
+        
        
     }
 
@@ -1134,21 +1023,48 @@ class BorrowController extends Controller
         }
 
 
-        $existingItems = Item::whereIn('serial_number', $serialNumbers)
-            ->whereIn('description', $description)
-            ->where('borrowed', 'no')
-            ->get();
+        // $existingItems = Item::whereIn('serial_number', $serialNumbers)
+        //     ->whereIn('description', $description)
+        //     ->where('borrowed', 'no')
+        //     ->get();    
         
     
-        foreach ($serialNumbers as $serialNumber) {
-                if ($serialNumber !== 'N/A') { 
-                    $item = $existingItems->where('serial_number', $serialNumber)->where('description', $description)->first();
+        // foreach ($serialNumbers as $serialNumber) {
+        //         if ($serialNumber !== 'N/A') { 
+                  
+        //             $item = $existingItems->where('serial_number', $serialNumber)->first();
+        //             dd($item);
+        //             if (!$item) {
+        //                 return response()->json(['error' => "Serial number '$serialNumber' does not exist in the item table or does not match the provided description."]);
+        //             }
+        //         }
+        //     }
 
-                    if (!$item) {
-                        return response()->json(['error' => "Serial number '$serialNumber' does not exist in the item table or does not match the provided description."]);
-                    }
-                }
-            }
+        $matchedItems = Item::whereIn('serial_number', $serialNumbers)
+    ->whereIn('description', $description)
+    ->where('borrowed', 'no')
+    ->get();
+
+$missingItems = [];
+
+foreach ($serialNumbers as $index => $serialNumber) {
+    if ($serialNumber !== 'N/A') {
+        $matchedItem = $matchedItems->where('serial_number', $serialNumber)->first();
+
+        if (!$matchedItem) {
+            // If no match is found, add the missing item to the $missingItems array
+            $missingItems[] = [
+                'serial_number' => $serialNumber,
+                'description' => $description[$index],
+            ];
+        }
+    }
+}
+
+if (!empty($missingItems)) {
+    // Handle missing items (optional: return or do something with missingItems)
+    return response()->json(['error' => 'Some items do not match the provided serial numbers and descriptions.', 'missingItems' => $missingItems]);
+}
         
        
         if ($user) {

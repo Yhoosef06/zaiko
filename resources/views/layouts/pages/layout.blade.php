@@ -1662,6 +1662,34 @@
       });
   });
 
+  $(document).ready(function() {
+    $("#select-department").change(function(){
+        var selectedValue = $(this).val();
+        $.ajax({
+            url: "{{ route('selectDepartment') }}",
+            type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            data: {
+                department: selectedValue 
+            },
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire(
+                        'Success',
+                        'Successfully Borrowed',
+                        'success'
+                    );
+                    window.location.href = "{{ url('dashboard') }}";
+                } 
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    }); 
+});
 
 
 

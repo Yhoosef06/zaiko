@@ -55,6 +55,18 @@
                 <img src="dist/img/scs.png" class="img-circle" alt="User Image" width="25">
             </a>
         </li> --}}
+        {{-- @php
+             dd($userDepartments);
+        @endphp
+       
+        <li class="nav-item ">
+            <select name="" id="" class="form-control">
+                @foreach ($departments as $department)
+                    
+                @endforeach
+            </select>
+
+        </li> --}}
         <li class="nav-item text-bold">
 
             <a class="btn nav-link border-right border-1 text-lg text-bold"

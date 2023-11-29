@@ -24,7 +24,18 @@ class PagesController extends Controller
     {
         $userId = auth()->user()->id_number;
         $department = Auth::user()->departments->first();
+  
         $currentDate = Carbon::now();
+
+     
+        $userDepartments = Department::select('departments.id as departmentID', 'departments.*')
+                            ->join('user_departments', 'departments.id','=', 'user_departments.department_id')
+                            ->join('users', 'user_departments.user_id_number', '=', 'users.id_number')
+                            ->where('users.id_number',$userId)
+                            ->get();
+        
+        //  dd($userDepartments);
+        
 
         $user = User::find($userId);
         if ($user->roles->contains('name', 'admin')) {
@@ -102,7 +113,7 @@ class PagesController extends Controller
 
             $totalItems = $items->count();
 
-            return view('pages.admin.managerDashboard')->with(compact('totalItems','pendings','countBorrow', 'overdue'));
+            return view('pages.admin.managerDashboard')->with(compact('userDepartments','totalItems','pendings','countBorrow', 'overdue'));
 
             }else{
                 
@@ -157,12 +168,20 @@ class PagesController extends Controller
 
             $totalItems = $items->count();
 
-            return view('pages.admin.managerDashboard')->with(compact('totalItems','pendings','countBorrow', 'overdue'));
+            return view('pages.admin.managerDashboard')->with(compact('userDepartments','totalItems','pendings','countBorrow', 'overdue'));
             }
 
             
 
         }
+    }
+    public function selectDepartment(Request $request){
+        $departmentID = $request->input('department');
+        session([
+            'departmentID' => $departmentID
+            ]);
+
+            return response()->json(['success' => true]);
     }
 
     public function approve()
