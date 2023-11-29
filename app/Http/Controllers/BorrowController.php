@@ -200,7 +200,7 @@ class BorrowController extends Controller
         $item = OrderItemTemp::where('id',$id)->first();
         // echo $item->temp_serial_number;
         // exit;
-        if($item->temp_serial_number === 'N/A'){
+        if($item->temp_serial_number == 'N/A'){
             $item->delete();
             return response()->json(['success' => true]);
         }else{
@@ -297,7 +297,7 @@ class BorrowController extends Controller
     {
         $department = Auth::user()->departments->first();
         // dd($department);
-        if($department->college_id === 5){
+        if($department->college_id == 5){
 
             $query = $request->input('query');
 
@@ -392,7 +392,7 @@ class BorrowController extends Controller
     {
         $department = Auth::user()->departments->first();
 
-        if($department->college_id === 5){
+        if($department->college_id == 5){
 
             $query = $request->input('query');
 
@@ -1067,7 +1067,7 @@ class BorrowController extends Controller
                     $dateReturn = $currentDate->copy()->addDays($durationDay);
                    
                     
-                    if ($item->serial_number === 'N/A') {
+                    if ($item->serial_number == 'N/A') {
                             OrderItem::create([
                                 'order_id' => $order,
                                 'user_id' => $student_id_added_user,
