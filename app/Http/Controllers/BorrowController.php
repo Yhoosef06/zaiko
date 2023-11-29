@@ -56,19 +56,9 @@ class BorrowController extends Controller
                 ->where('order_items.status', 'borrowed')
                 ->get();
 
-                
-
-                
-    
-               
     
                 return view('pages.admin.borrowed')->with(compact('borrows','viewBorrows'));
-        
-            
-       
 
-
-      
     }
     public function overdue()
     {
@@ -107,6 +97,22 @@ class BorrowController extends Controller
 
     public function pending()
     {
+
+        $countPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('rooms', 'items.location', '=', 'rooms.id')
+            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->where('rooms.department_id', session('departmentID'))
+            ->whereNotNull('orders.date_submitted')
+            ->whereNull('orders.approval_date')
+            ->whereNull('orders.approved_by')
+            ->count();
+
+            // dd($countPendings);
         
 
             $userPendings = Order::select('orders.id as transactionId', 'orders.*', 'users.*', 'items.*', 'rooms.*')
@@ -120,6 +126,7 @@ class BorrowController extends Controller
             ->whereNull('orders.approved_by')
             ->groupBy('orders.id')
             ->get();
+
 
             return view('pages.admin.pending')->with(compact('userPendings'));
       
@@ -202,6 +209,7 @@ class BorrowController extends Controller
         $item = OrderItemTemp::where('id',$id)->first();
         // echo $item->temp_serial_number;
         // exit;
+        // dd($item);
         if($item->temp_serial_number == 'N/A'){
             $item->delete();
             return response()->json(['success' => true]);
@@ -722,6 +730,22 @@ class BorrowController extends Controller
         $missingList = ItemLog::where('mode', 'missing')->get();
      
 
+        $countOrder = Order::select('orders.id as order_id', 'item_categories.category_name', 'order_item_temps.quantity as orderQty', 'items.quantity as itemQty', 'items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name', 'items.serial_number', 'brands.brand_name', 'models.model_name', 'items.description', 'order_item_temps.id as orderItempId','order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
+            ->join('users', 'orders.user_id', '=', 'users.id_number')
+            ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
+            ->join('items', 'order_item_temps.item_id', '=', 'items.id')
+            ->join('item_categories', 'items.category_id', '=', 'item_categories.id')
+            ->join('models', 'items.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->whereNull('orders.approved_by')
+            ->where('orders.id', $id)
+            ->count();
+        if($countOrder === 0){
+            Order::where('id', $id)->delete();
+            return redirect('pending');
+            
+        }
+        
         $orders = Order::select('orders.id as order_id', 'item_categories.category_name', 'order_item_temps.quantity as orderQty', 'items.quantity as itemQty', 'items.id as item_id', 'users.id_number', 'users.first_name', 'users.last_name', 'items.serial_number', 'brands.brand_name', 'models.model_name', 'items.description', 'order_item_temps.id as orderItempId','order_item_temps.quantity as temp_quantity', 'order_item_temps.*')
             ->join('users', 'orders.user_id', '=', 'users.id_number')
             ->join('order_item_temps', 'order_item_temps.order_id', '=', 'orders.id')
@@ -732,6 +756,7 @@ class BorrowController extends Controller
             ->whereNull('orders.approved_by')
             ->where('orders.id', $id)
             ->get();
+        
    
         // dd($borrowedList);
 
