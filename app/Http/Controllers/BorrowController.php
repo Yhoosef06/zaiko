@@ -1058,6 +1058,7 @@ class BorrowController extends Controller
             $found = $existingItems->where('serial_number', $serialNumber)
                 ->where('description', $description[$key])
                 ->first();
+            
                
             if (!$found) {
                 return response()->json([
