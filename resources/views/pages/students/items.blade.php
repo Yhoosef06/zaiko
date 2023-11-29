@@ -34,6 +34,21 @@
                             </select>
                         </form>
                     </div>
+                    <div class="col-9">
+                        <form action=" {{ route('browse.search') }}" method="GET">
+                            @csrf
+                            <div class="container">
+                                <div class="input-group mx-auto">
+                                    <input type="search" class="form-control form-control-lg col-md-6" placeholder="Enter keyword here" name="search" id="search">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-lg btn-default">
+                                        <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 <div class="row">

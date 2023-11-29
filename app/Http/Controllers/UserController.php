@@ -222,7 +222,7 @@ class UserController extends Controller
             Session::flash('success', 'Account ' . $id_number . ' successfully removed.');
             return redirect('list-of-users');
         } catch (QueryException $e) {
-            // Check if the exception is due to a foreign key constraint violation
+
             if ($e->getCode() === '23000') {
                 Session::flash('danger', 'Cannot remove college because it is referenced by other records.');
             } else {
