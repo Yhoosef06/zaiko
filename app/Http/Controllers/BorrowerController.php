@@ -55,12 +55,15 @@ class BorrowerController extends Controller
         $departments = Department::whereHas('rooms.item', function ($query) {
              $query->where('status', '=', 'Active');
         })->get();
+        $categories = ItemCategory::whereHas('items', function ($query) {
+            $query->where('status', '=', 'Active');
+        })->get();
         // dd($departments);
         // $departments = Department::all();
 
         $items = Item::where('status','Active')->get();
 
-        return view('pages.students.items')->with(compact('departments','items','borrowedList','itemlogs','missingList'));
+        return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
     }
 
     public function browseDepartment(Request $request){
@@ -106,13 +109,6 @@ class BorrowerController extends Controller
             }
         }
 
-        // $items = Item::whereHas('room.department', function ($query) use ($selectedDepartment) {
-        //     $query->where('id', $selectedDepartment);
-        // })->where('status','Active')->where('borrowed','no')->get();
-
-       
-        
-
         return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
     }
 
@@ -123,7 +119,6 @@ class BorrowerController extends Controller
         $missingList = ItemLog::where('mode', 'missing')->get();
         $selectedCategory = $request->category;
         $selectedDepartment = Session::get('department');
-        // $categories = ItemCategory::all();
         $categories = ItemCategory::whereHas('items', function ($query) {
             $query->where('status', '=', 'Active');
         })->get();
