@@ -14,11 +14,11 @@
         </div>
         <section class="content">
             <div class="">
-                <div class="row">
+                <div class="row mb-5">
                     <div class="col-3">         
                         <form action=" {{ route('browse.department') }}" method="GET">
-                            @csrf            
-                            <select class="form-control mb-5" aria-label="Default select example" name="selectedDepartment" onchange="this.form.submit()">
+                            @csrf          
+                            <select class="form-select" aria-label="Default select example" name="selectedDepartment" onchange="this.form.submit()">
                                 <option selected value="" disabled>Choose Department</option>
                                 <option value="0"
                                 {{ (!Session::has('department')) ? 'selected' : '' }}>
@@ -36,36 +36,34 @@
                     @isset($categories)
                         <div class="col-3">         
                             <form action="{{ route('browse.category') }}" method="GET">
-                                @csrf            
-                            <select class="form-control mb-5" aria-label="Default select example" name="category" onchange="this.form.submit()">
-                                <option selected value="" disabled>Choose category</option>
-                                <option value="0"
-                                {{ (!Session::has('category')) ? 'selected' : '' }}>
-                                    All Categories
-                                </option>
-                                @foreach ($categories as $cat)
-                                    <option value="{{ $cat->id }}"
-                                        {{ Session::get('category') == $cat->id ? 'selected' : '' }}>
-                                        {{ $cat->category_name }}
+                                @csrf         
+                                <select class="form-select" aria-label="Default select example" name="category" onchange="this.form.submit()">
+                                    <option selected value="" disabled>Choose category</option>
+                                    <option value="0"
+                                    {{ (!Session::has('category')) ? 'selected' : '' }}>
+                                        All Categories
                                     </option>
-                                @endforeach
-                            </select>
+                                    @foreach ($categories as $cat)
+                                        <option value="{{ $cat->id }}"
+                                            {{ Session::get('category') == $cat->id ? 'selected' : '' }}>
+                                            {{ $cat->category_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </form>
                         </div>
                     @endisset
                     <div class="col-6">
                         <form action=" {{ route('browse.search') }}" method="GET">
                             @csrf
-                            <div class="container">
                                 <div class="input-group mx-auto">
-                                    <input type="search" class="form-control form-control-lg col-md-6" placeholder="Enter keyword here" name="search" id="search">
+                                    <input type="search" class="form-control col-md-6" placeholder="Enter keyword here" name="search" id="search">
                                     <div class="input-group-append">
-                                        <button type="submit" class="btn btn-lg btn-default">
+                                        <button type="submit" class="btn btn-default">
                                         <i class="fa fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
-                            </div>
                         </form>
                     </div>
                 </div>
@@ -131,7 +129,7 @@
                                         $totalDeduct = $missingQty + $borrowedQty;
                                     @endphp
                                     @if($totalquantity - $totalDeduct > 0)
-                                        <div class="col-lg-3 col-md-5 mb-4">
+                                        <div class="col-lg-2 col-md-3 mb-3">
                                             <div class="card">
                                                 <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light text-center"
                                                     data-mdb-ripple-color="light">
@@ -141,16 +139,27 @@
                                                             <p style="text-align: center;">No image found.</p>
                                                         </div>
                                                     @else
-                                                        <img src="{{ asset('storage/' . $item->item_image) }}" width="250px"
-                                                            height="250px">
+                                                        <img src="{{ asset('storage/' . $item->item_image) }}" width="200px"
+                                                            height="200px">
                                                     @endif
                                                     <div class="mask">
                                                         <div class="d-flex justify-content-start align-items-end h-100">
                                                             <h5>
-                                                                <span class="badge bg-success ms-2">
-                                                                    {{Str::limit($item->room->department->department_name,25)}}
-                                                                </span>
+                                                                <div class="row">
+                                                                    <span class="badge bg-success ms-2">
+                                                                        {{Str::limit($item->room->department->department_name,25)}}
+                                                                    </span>
+                                                                </div>
                                                             </h5>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="d-flex justify-content-start align-items-end h-100">
+                                                                <div class="col-md-4"></div>
+                                                                <span class="bg-success ms-2 col-md-3">
+                                                                    {{ $totalquantity - $totalDeduct }}
+                                                                </span>
+                                                                <div class="col-md-4"></div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -158,8 +167,8 @@
                                                     <div class="row mx-auto">
                                                         <span
                                                             class="card-title mb-3 font-weight-bold display-3">{{ $item->brand->brand_name }}</span>
-                                                        <h5 class="card-title mb-3">{{ $item->model->model_name }}</h5>
-                                                        <p></p>
+                                                        <h5 class="card-title mb-3">{{ $item->category->category_name }}</h5>
+                                                        <p class="card-title mb-3">{{ Str::limit($item->description,20) }}</p>
                                                     </div>
                                                     <button type="button" class="btn btn-link text-success" data-toggle="modal"
                                                         data-target="#itemModal{{ $item->id }}">
@@ -244,9 +253,6 @@
                                                                     data-dismiss="modal">Close</button>
                                                             </div>
                                                         </form>
-
-                                                        <!-- Add your item information here -->
-                                                        <!-- You can display item details or any other content here -->
                                                     </div>
                                                 </div>
                                             </div>

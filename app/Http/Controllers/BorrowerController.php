@@ -164,6 +164,8 @@ class BorrowerController extends Controller
     public function search(Request $request){
 
         $search = $request->input('search');
+        Session::forget('department');
+        Session::forget('category');
         $itemlogs = ItemLog::all();
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
@@ -173,13 +175,30 @@ class BorrowerController extends Controller
         $categories = ItemCategory::whereHas('items', function ($query) {
             $query->where('status', '=', 'Active');
         })->get();
+        // $items = Item::where('status', 'Active')
+        // ->whereHas('category', function ($query) use ($search) {
+        //     $query->whereRaw('LOWER(category_name) LIKE ?', ['%' . strtolower($search) . '%']);
+        // })
+        // ->get();
+
         $items = Item::where('status', 'Active')
-        ->whereHas('category', function ($query) use ($search) {
-            $query->whereRaw('LOWER(category_name) LIKE ?', ['%' . strtolower($search) . '%']);
+        ->where(function ($query) use ($search) {
+            $query->orWhereHas('brand', function ($subquery) use ($search) {
+                $subquery->where('brand_name', 'LIKE', '%' . $search . '%');
+            })
+            ->orWhereHas('model', function ($subquery) use ($search) {
+                $subquery->where('model_name', 'LIKE', '%' . $search . '%');
+            })
+            ->orWhere('description', 'LIKE', '%' . $search . '%')
+            // Add more fields as needed
+            ->orWhereHas('category', function ($subquery) use ($search) {
+                $subquery->where('category_name', 'LIKE', '%' . $search . '%');
+            });
         })
         ->get();
-        $selectedCategory = $items->isNotEmpty() ? $items->first()->category->id : null;
-        Session::put('category',$selectedCategory);
+
+        // $selectedCategory = $items->isNotEmpty() ? $items->first()->category->id : null;
+        // Session::put('category',$selectedCategory);
 
        return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
     }
