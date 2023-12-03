@@ -303,15 +303,13 @@ class BorrowController extends Controller
 
     public function searchForSerial(Request $request)
     {
-        $department = Auth::user()->departments->first();
-        // dd($department);
-        if($department->college_id == 5){
+      
 
             $query = $request->input('query');
 
             $items = Item::select('items.id as itemID', 'items.*')
             ->join('rooms', 'items.location', '=', 'rooms.id')
-            ->where('rooms.college_id', $department->college_id)
+            ->where('rooms.department_id', session('departmentID'))
             ->where('borrowed', 'no')
                 ->where(function ($queryBuilder) use ($query) {
                     $queryBuilder->where('serial_number', 'LIKE', $query . '%')
@@ -335,37 +333,7 @@ class BorrowController extends Controller
     
             return response()->json($response);
 
-        }else{
-
-            $query = $request->input('query');
-
-            $items = Item::select('items.id as itemID', 'items.*')
-            ->join('rooms', 'items.location', '=', 'rooms.id')
-            ->where('rooms.department_id', $department->id)
-            ->where('borrowed', 'no')
-                ->where(function ($queryBuilder) use ($query) {
-                    $queryBuilder->where('serial_number', 'LIKE', $query . '%')
-                        ->orWhere('description', 'LIKE', $query . '%');
-                })->take(10)->get();
-    
-    
-            $response = $items->map(function ($item) {
-                $category = ItemCategory::find($item->category_id);
-                return [
-                    'value' => $item->serial_number . ' - ' . $item->description,
-                    'item_category' => $category ? $category->category_name : null,
-                    'serialNumber' => $item->serial_number,
-                    'duration' => $item->duration,
-                    'brand' => $item->brand,
-                    'model' => $item->model,
-                    'description' => $item->description,
-                    'itemID' => $item->itemID
-                ];
-            });
-    
-            return response()->json($response);
-
-        }
+        
       
     }
 
@@ -398,14 +366,11 @@ class BorrowController extends Controller
 
     public function searchItemForUser(Request $request)
     {
-        $department = Auth::user()->departments->first();
-
-        if($department->college_id == 5){
-
+        
             $query = $request->input('query');
 
             $items = Item::select('items.id as itemID', 'items.*')->join('rooms', 'items.location', '=', 'rooms.id')
-            ->where('rooms.college_id', $department->college_id)
+            ->where('rooms.department_id', session('departmentID'))
             ->where('borrowed', 'no')
             ->where(function ($queryBuilder) use ($query) {
                 $queryBuilder->where('serial_number', 'LIKE', $query . '%')
@@ -434,41 +399,7 @@ class BorrowController extends Controller
     
             return response()->json($response);
 
-        }else{
-
-            $query = $request->input('query');
-
-            $items = Item::select('items.id as itemID', 'items.*')->join('rooms', 'items.location', '=', 'rooms.id')
-            ->where('rooms.department_id', $department->id)
-            ->where('borrowed', 'no')
-            ->where(function ($queryBuilder) use ($query) {
-                $queryBuilder->where('serial_number', 'LIKE', $query . '%')
-                    ->orWhere('description', 'LIKE', $query . '%');
-            })
-            
-            ->take(10)
-            ->get();
         
-    
-    
-            $response = $items->map(function ($item) {
-                $category = ItemCategory::find($item->category_id);
-                return [
-                    'value' => $item->serial_number . ' - ' . $item->description,
-                    'item_category' => $category ? $category->category_name : null,
-                    'id' => $item->itemID,
-                    'serialNumber' => $item->serial_number,
-                    'brand' => $item->brand,
-                    'model' => $item->model,
-                    'description' => $item->description,
-                    'duration' => $item->duration,
-                    'itemID' => $item->itemID
-                ];
-            });
-    
-            return response()->json($response);
-
-        }
     
 
    
@@ -1019,11 +950,8 @@ class BorrowController extends Controller
         $user = auth()->user();
         $uniqueSerialNumbers = [];
         $currentDate = Carbon::now();
-
-        
-       
-
       
+
         $validator = Validator::make($request->all(), [
             'user_serial_number.*' => [
                 'required',
@@ -1052,23 +980,31 @@ class BorrowController extends Controller
         ->where('borrowed', 'no')
         ->get();
 
- 
-        foreach ($serialNumbers as $key => $serialNumber) {
-        if ($serialNumber !== 'N/A') {
-            $found = $existingItems->where('serial_number', $serialNumber)
-                ->where('description', $description[$key])
-                ->first();
-            
-               
-            if (!$found) {
+        foreach ($quantity as $qty) {
+            if($qty == 0){
                 return response()->json([
-                    'error' => "Serial number '$serialNumber' does not exist in the item table or does not match the provided description."
+                    'notavailable' => "Not Available"
                 ]);
             }
         }
-    }
 
-     
+ 
+        foreach ($serialNumbers as $key => $serialNumber) {
+            if ($serialNumber !== 'N/A') {
+                $found = $existingItems->where('serial_number', $serialNumber)
+                    ->where('description', $description[$key])
+                    ->first();
+                
+                
+                if (!$found) {
+                    return response()->json([
+                        'error' => "Serial number '$serialNumber' does not exist in the item table or does not match the provided description."
+                    ]);
+                }
+            }
+        }
+
+  
    
        
         if ($user) {

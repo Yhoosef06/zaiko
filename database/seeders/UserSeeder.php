@@ -40,6 +40,17 @@ class UserSeeder extends Seeder
                 'answer' => 'default',
                 'password_updated' => 1,
             ],
+            [
+                'id_number' => 2014036392,
+                'first_name' => 'Peter',
+                'last_name' => 'Alao',
+                'password' => Hash::make('usjrscs-123'),
+                'account_type' => 'borrower',
+                'isActive' => true,
+                'security_question_id' => '1',
+                'answer' => 'default',
+                'password_updated' => 1,
+            ],
         ];
         DB::table('users')->insert($user); 
     }

@@ -15,8 +15,20 @@
         class="brand-link">
         <span class="brand-text text-center font-weight-light">
             <H1>Zaiko.</H1>
+           
         </span>
     </a>
+    <select class="form-control select2" id="select-department" name="department">
+        <option selected="selected" >Select Department</option>
+        @foreach ($userDepartments as $userDepartment)
+        <option value="{{ $userDepartment->departmentID }}"
+          {{ Session::get('departmentID') == $userDepartment->departmentID ? 'selected' : '' }}>
+          {{ $userDepartment->department_name }}
+      </option>
+       
+        @endforeach
+      
+      </select>
 
     <!-- Sidebar -->
     @if (Auth::user()->password_updated == true && Auth::user()->security_question_id != null)
@@ -110,9 +122,9 @@
                                                 <div class="ml-3">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Pending</p>
-                                                    @if (session()->has('pending_count'))
+                                                    {{-- @if (session()->has('pending_count'))
                                                         <span class="badge badge-danger right">{{ session('pending_count') }}</span>
-                                                    @endif
+                                                    @endif --}}
                                 
                                                 </div>
                                             </a>
@@ -132,10 +144,10 @@
                                                 <div class="ml-3">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Overdue</p>
-                                                    @if (session()->has('overdue_count'))
+                                                    {{-- @if (session()->has('overdue_count'))
                                                     <span class="badge badge-danger right">{{ session('overdue_count') }}</span>
                                                      @endif
-                                                   
+                                                    --}}
                                                 </div>
                                             </a>
                                         </li>

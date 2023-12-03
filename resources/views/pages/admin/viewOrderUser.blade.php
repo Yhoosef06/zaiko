@@ -151,7 +151,7 @@
                           
                                   
                              @elseif($item->serial_number === 'N/A')
-                                  <tr>
+                                  <tr >
                                     <td class="d-none">
                                       <input type="text" name="orderItemTemp" value="{{ $item->orderItempId }}">
                                     </td>
@@ -189,7 +189,10 @@
                                       $availableQty = $item->itemQty - ($borrowedQty + $missingQty);
                                      @endphp
                               
-                                  
+                                      @if ($availableQty == 0)
+                                      <input type="hidden" value="0" name="quantity[]">
+                                      <span class="badge bg-warning" >Not Available</span>
+                                      @else
                                       <select name="quantity[]" class="form-control">
                                         @for ($i = 1; $i <= $availableQty; $i++)
                                         <option value="{{ $i }}" {{ $i == $item->orderQty ? 'selected' : '' }}>
@@ -197,6 +200,8 @@
                                         </option>
                                         @endfor
                                       </select>
+                                      @endif
+                                      
                                     </td>
                                     <td>
                                       <a  data-id="{{ $item->orderItempId }}" class="btn btn-danger order-user-remove">Remove</a>

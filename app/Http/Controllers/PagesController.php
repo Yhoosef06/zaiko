@@ -30,11 +30,11 @@ class PagesController extends Controller
         $currentDate = Carbon::now();
 
      
-        $userDepartments = Department::select('departments.id as departmentID', 'departments.*')
-                            ->join('user_departments', 'departments.id','=', 'user_departments.department_id')
-                            ->join('users', 'user_departments.user_id_number', '=', 'users.id_number')
-                            ->where('users.id_number',$userId)
-                            ->get();
+        // $userDepartments = Department::select('departments.id as departmentID', 'departments.*')
+        //                     ->join('user_departments', 'departments.id','=', 'user_departments.department_id')
+        //                     ->join('users', 'user_departments.user_id_number', '=', 'users.id_number')
+        //                     ->where('users.id_number',$userId)
+        //                     ->get();
         
         //  dd($userDepartments);
         
@@ -115,7 +115,7 @@ class PagesController extends Controller
 
             $totalItems = $items->count();
 
-            return view('pages.admin.managerDashboard')->with(compact('userDepartments','totalItems','pendings','countBorrow', 'overdue'));
+            return view('pages.admin.managerDashboard')->with(compact('totalItems','pendings','countBorrow', 'overdue'));
 
             }else{
                 
@@ -177,6 +177,7 @@ class PagesController extends Controller
 
         }
     }
+ 
     public function selectDepartment(Request $request){
         $departmentID = $request->input('department');
         session([

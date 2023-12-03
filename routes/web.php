@@ -75,7 +75,9 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
-    Route::get('/dashboard', [PagesController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [PagesController::class, 'index'])->name('admin.dashboard'); 
+
+    
     // Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');
     Route::post('selectDepartment', [PagesController::class, 'selectDepartment'])->name('selectDepartment');

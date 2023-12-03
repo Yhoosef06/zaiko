@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Department;
 use App\Models\OrderItemTemp;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,15 @@ class ViewServiceProvider extends ServiceProvider
     {
         View::composer('layouts.pages.sidenav', function($view){
             $user = Auth::user();
+            $userId = auth()->user()->id_number;
+      
+
+     
+            $userDepartments = Department::select('departments.id as departmentID', 'departments.*')
+                                ->join('user_departments', 'departments.id','=', 'user_departments.department_id')
+                                ->join('users', 'user_departments.user_id_number', '=', 'users.id_number')
+                                ->where('users.id_number',$userId)
+                                ->get();
 
             $order = Order::where('user_id', $user->id_number)->where('date_submitted', null)->first();
 
@@ -56,6 +66,7 @@ class ViewServiceProvider extends ServiceProvider
             //END OF BORROWED ITEMS
             
             $view->with([
+                'userDepartments' =>$userDepartments,
                 'cartcount' => $cartcount,
                 "pendingcount" => count($pendingItems),
                 'borrowedcount' => count($releaseditems),

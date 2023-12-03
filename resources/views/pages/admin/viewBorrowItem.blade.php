@@ -134,7 +134,16 @@
                           </div>
                           <div class="form-group">
                             <label>Payment Per Day</label>
-                            <input type="number"  class="form-control" id="payment_per_day"  name="payment_per_day" value="{{ $borrow->penalty_fee }}" readonly>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">PHP</span>
+                              </div>
+                              <input type="number"  class="form-control" id="payment_per_day"  name="payment_per_day" value="{{ $borrow->penalty_fee }}" readonly>
+                              <div class="input-group-append">
+                                <span class="input-group-text">.00</span>
+                              </div>
+                            </div>
+
                                  
                         </div>
                         @php
@@ -142,7 +151,16 @@
                       @endphp
                         <div class="form-group">
                           <label>Total</label>
-                          <input type="number"  class="form-control" id="total_amoun" value="{{ $total }}" name="total_amount" readonly required>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">PHP</span>
+                            </div>
+                            <input type="number"  class="form-control" id="total_amount" value="{{ $total }}" name="total_amount" readonly required>
+                            <div class="input-group-append">
+                              <span class="input-group-text">.00</span>
+                            </div>
+                          </div>
+                         
                                
                       </div>
                           <div class="form-group">

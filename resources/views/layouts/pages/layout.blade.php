@@ -12,9 +12,7 @@
         }
 
 
-        /* .pending-yellow{
-            col
-        } */
+       
     </style>
 
 
@@ -39,6 +37,9 @@
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet"
         href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+        <link rel="stylesheet" href={{ asset('plugins/select2/css/select2.min.css') }}>
+        <link rel="stylesheet" href={{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}>
+  
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <!-- JQVMap -->
@@ -125,6 +126,8 @@
 <script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
 <!-- overlayScrollbars -->
 <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
@@ -144,6 +147,7 @@
 
 
 
+  
    
 
     $(function() {
@@ -184,6 +188,8 @@
             "autoWidth": false
 
         });
+
+        $('.select2').select2()
         // $("#listofitems").DataTable({
         //     "responsive": true,
         //     "lengthChange": false,
@@ -1098,8 +1104,14 @@
                             type: 'GET',
                             success: function(response) {
                                 console.log(response);
-                                
-                                $('#viewOrderUserShowTable').show();
+                                if( response.availableQuantity == 0){
+                                    Swal.fire({
+                                    title: "Not Available",
+                                    text: "Items not Available",
+                                    icon: "warning"
+                                    });
+                                }else{
+                                    $('#viewOrderUserShowTable').show();
                                 var tableRow = $('<tr>');
                                 $('<td class="d-none">').text(userID).appendTo(
                                     tableRow);
@@ -1202,6 +1214,9 @@
                                     $('#viewOrderUserShowTable').hide();
 
                                 });
+                                }
+                                
+                               
                             },
 
                             error: function(xhr) {
@@ -1527,6 +1542,12 @@
                                     'The serial number is duplicated.',
                                     'error'
                                 );
+                            }else if(response.notavailable){
+                                Swal.fire(
+                                    'Error',
+                                    'One item on the list isnt available to borrow.',
+                                    'error'
+                                );
                             }
                         },
                         error: function(xhr, status, error) {
@@ -1676,12 +1697,8 @@
             },
             success: function(response) {
                 if (response.success) {
-                    Swal.fire(
-                        'Success',
-                        'Successfully Borrowed',
-                        'success'
-                    );
-                    window.location.href = "{{ url('dashboard') }}";
+                  
+                    window.location.reload();
                 } 
             },
             error: function(xhr, status, error) {
@@ -1690,6 +1707,8 @@
         });
     }); 
 });
+
+
 
 
 
