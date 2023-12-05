@@ -18,8 +18,11 @@
            
         </span>
     </a>
+    @if (Auth::user()->roles->contains('name', 'manager'))
+    @if (Auth::user()->hasPermission('manage-borrowings'))
+  
+ 
     <select class="form-control select2" id="select-department" name="department">
-        <option selected="selected" >Select Department</option>
         @foreach ($userDepartments as $userDepartment)
         <option value="{{ $userDepartment->departmentID }}"
           {{ Session::get('departmentID') == $userDepartment->departmentID ? 'selected' : '' }}>
@@ -29,6 +32,8 @@
         @endforeach
       
       </select>
+      @endif
+      @endif
 
     <!-- Sidebar -->
     @if (Auth::user()->password_updated == true && Auth::user()->security_question_id != null)
