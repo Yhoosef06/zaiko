@@ -164,8 +164,10 @@ class BorrowerController extends Controller
     public function search(Request $request){
 
         $search = $request->input('search');
-        Session::forget('department');
-        Session::forget('category');
+        // Session::forget('department');
+        $sessionDepartment = Session::get('department');
+        // Session::forget('category');
+        $sessionCategory = Session::get('category');
         $itemlogs = ItemLog::all();
         $borrowedList= OrderItem::where('status', 'borrowed')->get();
         $missingList = ItemLog::where('mode', 'missing')->get();
@@ -180,27 +182,94 @@ class BorrowerController extends Controller
         //     $query->whereRaw('LOWER(category_name) LIKE ?', ['%' . strtolower($search) . '%']);
         // })
         // ->get();
+        // dd(Session::get('category'));
+        $items = null;
+        if(Session::get('department') != null && Session::get('category') != null){
+            $searchedItems = Item::where('status', 'Active')
+                ->where(function ($query) use ($search) {
+                $query->orWhereHas('brand', function ($subquery) use ($search) {
+                    $subquery->where('brand_name', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhereHas('model', function ($subquery) use ($search) {
+                    $subquery->where('model_name', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhere('description', 'LIKE', '%' . $search . '%')
+                // Add more fields as needed
+                ->orWhereHas('category', function ($subquery) use ($search) {
+                    $subquery->where('category_name', 'LIKE', '%' . $search . '%');
+                });
+                })->whereHas('room.department', function ($query) use ($sessionDepartment) {
+                    $query->where('id', $sessionDepartment);
+                })->where('category_id', $sessionCategory)->get();
 
-        $items = Item::where('status', 'Active')
-        ->where(function ($query) use ($search) {
-            $query->orWhereHas('brand', function ($subquery) use ($search) {
-                $subquery->where('brand_name', 'LIKE', '%' . $search . '%');
-            })
-            ->orWhereHas('model', function ($subquery) use ($search) {
-                $subquery->where('model_name', 'LIKE', '%' . $search . '%');
-            })
-            ->orWhere('description', 'LIKE', '%' . $search . '%')
-            // Add more fields as needed
-            ->orWhereHas('category', function ($subquery) use ($search) {
-                $subquery->where('category_name', 'LIKE', '%' . $search . '%');
-            });
-        })
-        ->get();
+            if(count($searchedItems) == 0){
+                $items = Item::where('status', 'Active')
+                ->where(function ($query) use ($search) {
+                $query->orWhereHas('brand', function ($subquery) use ($search) {
+                    $subquery->where('brand_name', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhereHas('model', function ($subquery) use ($search) {
+                    $subquery->where('model_name', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhere('description', 'LIKE', '%' . $search . '%');
+                })->where('category_id', $sessionCategory)->get();
+            } 
+        }elseif(Session::get('department') != null){
+            $searchedItems = Item::where('status', 'Active')
+                ->where(function ($query) use ($search) {
+                $query->orWhereHas('brand', function ($subquery) use ($search) {
+                    $subquery->where('brand_name', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhereHas('model', function ($subquery) use ($search) {
+                    $subquery->where('model_name', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhere('description', 'LIKE', '%' . $search . '%')
+                // Add more fields as needed
+                ->orWhereHas('category', function ($subquery) use ($search) {
+                    $subquery->where('category_name', 'LIKE', '%' . $search . '%');
+                });
+                })->whereHas('room.department', function ($query) use ($sessionDepartment) {
+                    $query->where('id', $sessionDepartment);
+                })->get();
+            // dd($items);
+            if(count($searchedItems) == 0){
+                $items = Item::where('status', 'Active')
+                ->where(function ($query) use ($search) {
+                $query->orWhereHas('brand', function ($subquery) use ($search) {
+                    $subquery->where('brand_name', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhereHas('model', function ($subquery) use ($search) {
+                    $subquery->where('model_name', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhere('description', 'LIKE', '%' . $search . '%')
+                // Add more fields as needed
+                ->orWhereHas('category', function ($subquery) use ($search) {
+                    $subquery->where('category_name', 'LIKE', '%' . $search . '%');
+                }); })->get();
+               
+            } 
+        }
+
+        // $items = Item::where('status', 'Active')
+        // ->where(function ($query) use ($search) {
+        //     $query->orWhereHas('brand', function ($subquery) use ($search) {
+        //         $subquery->where('brand_name', 'LIKE', '%' . $search . '%');
+        //     })
+        //     ->orWhereHas('model', function ($subquery) use ($search) {
+        //         $subquery->where('model_name', 'LIKE', '%' . $search . '%');
+        //     })
+        //     ->orWhere('description', 'LIKE', '%' . $search . '%')
+        //     // Add more fields as needed
+        //     ->orWhereHas('category', function ($subquery) use ($search) {
+        //         $subquery->where('category_name', 'LIKE', '%' . $search . '%');
+        //     });
+        // })
+        // ->get();
 
         // $selectedCategory = $items->isNotEmpty() ? $items->first()->category->id : null;
         // Session::put('category',$selectedCategory);
 
-       return view('pages.students.items')->with(compact('departments','categories','items','borrowedList','itemlogs','missingList'));
+       return view('pages.students.items')->with(compact('departments','categories','searchedItems','items','borrowedList','itemlogs','missingList'));
     }
 
     public function browse_test(){
