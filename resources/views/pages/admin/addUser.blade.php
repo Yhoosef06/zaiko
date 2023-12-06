@@ -16,7 +16,8 @@
             <div class="row justify-content-center">
                 <div class="col-12" style="max-width: 1000px">
                     <div class="card">
-                        <form action="{{ route('save_new_user') }}" method="POST">
+                        <form id="addNewUser" method="POST">
+                            {{-- <form action="{{route('save_new_user')}}" method="POST"> --}}
                             @csrf
                             <div class="card-body">
                                 @if (session('success'))
@@ -39,7 +40,7 @@
                                             class="form-control col-sm- @error('id_number')
                                         border-danger
                                         @enderror"
-                                            placeholder="I.D. Number">
+                                            placeholder="I.D. Number" required>
                                         @error('id_number')
                                             <div class="text-danger">
                                                 {{ $message }}
@@ -50,7 +51,7 @@
                                         <input type="text" id="first_name" name="first_name"
                                             class="form-control @error('first_name')
                                         border-danger @enderror"
-                                            value="{{ old('first_name') }}" placeholder="First Name">
+                                            value="{{ old('first_name') }}" placeholder="First Name" required>
                                         @error('first_name')
                                             <div class="text-danger">
                                                 {{ $message }}
@@ -58,7 +59,7 @@
                                         @enderror
 
                                         <label for="account status">Role:</label>
-                                        <select name="role_id[]" class="form-control">
+                                        <select name="role_id[]" class="form-control" required>
                                             <option selected disabled>Select a role</option>
                                             @foreach ($roles as $role)
                                                 <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -88,7 +89,7 @@
 
                                     <div class="col">
                                         <label for="account type">Account Type:</label>
-                                        <select id="account_type" name="account_type" class="form-control">
+                                        <select id="account_type" name="account_type" class="form-control" required>
                                             <option selected disabled>Select an account type</option>
                                             <option value="student">student</option>
                                             <option value="faculty">faculty</option>
@@ -99,7 +100,7 @@
                                         <input type="text" id="last_name" name="last_name"
                                             class="form-control @error('last_name')
                                         border-danger @enderror"
-                                            value="{{ old('last_name') }}" placeholder="Last Name">
+                                            value="{{ old('last_name') }}" placeholder="Last Name" required>
                                         @error('last_name')
                                             <div class="text-danger">
                                                 {{ $message }}
@@ -110,19 +111,15 @@
                                         <input type="text" id="email" name="email"
                                             class="form-control @error('email')
                                         border-danger @enderror"
-                                            value="{{ old('email') }}" placeholder="Email Address">
+                                            value="{{ old('email') }}" placeholder="Email Address" required>
                                         @error('email')
                                             <div class="text-danger">
                                                 {{ $message }}
                                             </div>
                                         @enderror
-
-
-
                                         <hr>
                                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Cancel</a>
-                                        <Button type="submit" class="btn btn-success"
-                                            onclick="return confirm('Please review all entries before proceeding. Do you wish to continue?')">Save</Button>
+                                        <Button type="submit" class="btn btn-success">Save</Button>
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +137,72 @@
 
     <script>
         $(document).ready(function() {
-            // Function to toggle department selection based on role
+            $('#addNewUser').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+
+                Swal.fire({
+                    title: 'Please review all entries before proceeding.',
+                    text: 'Do you wish to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('save_new_user') }}",
+                            type: "POST",
+                            data: formData,
+                            success: function(response) {
+                                console.log(response); 
+                                if (response.success) {
+                                    Swal.fire(
+                                        'Success',
+                                        'User Successfully Added.',
+                                        'success'
+                                    ).then(() => {
+                                        window.location.href =
+                                            "{{ url('add-new-user') }}";
+                                    });
+                                } else if (response.error) {
+                                    Swal.fire(
+                                        'Error',
+                                        response.error,
+                                        'error'
+                                    );
+                                } else if (response.emptyRole || response
+                                    .emptyAccountType) {
+                                    Swal.fire(
+                                        'Error',
+                                        response.emptyRole || response
+                                        .emptyAccountType,
+                                        'error'
+                                    );
+                                } else if (response.duplicate) {
+                                    Swal.fire(
+                                        'Error',
+                                        response.duplicate,
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(xhr.responseText);
+                                Swal.fire(
+                                    'Error',
+                                    'An error occurred while processing the request.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
             function toggleDepartmentSelection() {
                 var selectedRole = $('select[name="role_id[]"]').val();
                 var departmentSection = $('.scrollable-container');
@@ -148,23 +210,19 @@
 
                 if (selectedRole === '2' || selectedRole === 'manager') {
                     departmentSection.show();
-                    label.show(); // Show the department selection
+                    label.show();
                 } else {
                     departmentSection.hide();
-                    label.hide(); // Hide the department selection
+                    label.hide();
                 }
             }
 
-            // Initially hide the department selection
             toggleDepartmentSelection();
 
-            // Listen for changes in the role select
             $('select[name="role_id[]"]').change(function() {
-                toggleDepartmentSelection(); // Toggle department selection on role change
+                toggleDepartmentSelection();
             });
 
-            // Additional code for checkbox functionality...
-            // (Your existing checkbox functionality remains unchanged)
             $('.college-checkbox').change(function() {
                 var collegeName = $(this).data('college');
                 var isChecked = $(this).prop('checked');

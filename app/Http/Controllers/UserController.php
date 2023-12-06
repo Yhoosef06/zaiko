@@ -159,30 +159,95 @@ class UserController extends Controller
         // return view('pages.admin.uploadCSV');
     }
 
+    // public function saveNewUser(Request $request)
+    // {
+    //     dd($request);
+    //     $password = Str::random(7);
+    //     $role_ids = $request->input('role_id');
+    //     $department_ids = $request->input('department_ids', []);
+
+    //     $this->validate(
+    //         $request,
+    //         [
+    //             'id_number' => 'required|unique:users,id_number',
+    //             'first_name' => 'required',
+    //             'last_name' => 'required',
+    //             'account_type' => 'required',
+    //             // 'email' => 'required',
+    //         ]
+    //     );
+
+    //     $user = User::where('id_number', '=', $request->input('id_number'))->first();
+    //     if ($user === null) {
+    //         $user = User::create([
+    //             'id_number' => $request->id_number,
+    //             'first_name' => $request->first_name,
+    //             'last_name' => $request->last_name,
+    //             'email' => $request->email,
+    //             'isActive' => true,
+    //             'account_type' => $request->account_type,
+    //             'password' => Hash::make($password),
+    //             'password_updated' => 0,
+    //         ]);
+
+    //         foreach ($department_ids as $department_id) {
+    //             UserDepartment::create([
+    //                 'user_id_number' => $request->id_number,
+    //                 'department_id' => $department_id
+    //             ]);
+    //         }
+
+    //         foreach ($role_ids as $role_id) {
+    //             UserRole::create([
+    //                 'user_id_number' => $request->id_number,
+    //                 'role_id' => $role_id,
+    //             ]);
+    //         }
+
+    //         dispatch(new SendTemporaryPasswordEmailJob($user, $password));
+    //         // Session::flash('success', 'User Successfully Added. Do you want to add another user?');
+    //         return response()->json(['success' => true], 200);
+    //         // return redirect('add-new-user');
+    //     } else {
+    //         // Session::flash('danger', 'I.D. Number has already been used.');
+    //         // return redirect('add-new-user');
+    //         return response()->json(['error' => 'I.D. Number has already been used.'], 409);
+    //     }
+
+    // }
     public function saveNewUser(Request $request)
     {
         $password = Str::random(7);
         $role_ids = $request->input('role_id');
         $department_ids = $request->input('department_ids', []);
+        $user = User::where('id_number', $request->input('id_number'))->first();
 
-        $this->validate(
-            $request,
-            [
-                'id_number' => 'required|unique:users,id_number',
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'account_type' => 'required',
-                'email' => 'required',
-            ]
-        );
+        if ($role_ids == null) {
+            return response()->json(['emptyRole' => 'Please select a role.']);
+        }
 
-        $user = User::where('id_number', '=', $request->input('id_number'))->first();
+        if ($request->input('account_type') == null) {
+            return response()->json(['emptyAccountType' => 'Please select a account type.']);
+        }
+
+        if($user){
+            return response()->json(['duplicate' => 'I.D. Number has already been used.']);
+        }
+
+        $this->validate($request, [
+            'id_number' => 'required|unique:users,id_number',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'account_type' => 'required',
+            'email' => 'required|email|unique:users,email',
+        ]);
+
         if ($user === null) {
             $user = User::create([
                 'id_number' => $request->id_number,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
-                'email' => $request->email,
+                'email' => $request->email, 
                 'isActive' => true,
                 'account_type' => $request->account_type,
                 'password' => Hash::make($password),
@@ -204,13 +269,11 @@ class UserController extends Controller
             }
 
             dispatch(new SendTemporaryPasswordEmailJob($user, $password));
-            Session::flash('success', 'User Successfully Added. Do you want to add another user?');
-            return redirect('add-new-user');
-        } else {
-            Session::flash('danger', 'I.D. Number has already been used.');
-            return redirect('add-new-user');
-        }
+
+            return response()->json(['success' => true], 200);
+        } 
     }
+
 
     public function deleteUser($id_number)
     {
@@ -274,7 +337,7 @@ class UserController extends Controller
 
         if ($new_role_id == 3) {
             $user->departments()->detach();
-        } elseif ($new_role_id == 2) { 
+        } elseif ($new_role_id == 2) {
             $department_ids = $request->input('department_ids', []);
             $user->departments()->sync($department_ids);
         }

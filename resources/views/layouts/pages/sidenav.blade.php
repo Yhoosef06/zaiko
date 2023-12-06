@@ -145,7 +145,7 @@
                                         <li class="nav-item">
                                             <a href="{{ route('overdue') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="fa fa-clock nav-icon"></i>
+                                                    <i class="fa fa-hourglass-half nav-icon"></i>
                                                     <p>Overdue</p>
                                                     {{-- @if (session()->has('overdue_count'))
                                                     <span class="badge badge-danger right">{{ session('overdue_count') }}</span>

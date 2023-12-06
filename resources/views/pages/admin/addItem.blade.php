@@ -73,7 +73,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                            <a class="btn text-blue text-lg" href="#"><i class="fa fa-plus-circle"
                                                     data-toggle="modal" data-target="#addRoomModal" data-toggle="tooltip"
                                                     title='Add a room' data-toggle="modal"></i></a>
                                         </div>
@@ -98,7 +98,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                            <a class="btn text-blue text-lg" href="#"><i class="fa fa-plus-circle"
                                                     data-toggle="modal" data-target="#addItemCategoryModal"
                                                     data-toggle="tooltip" title='Add a category'></i></a>
                                         </div>
@@ -120,7 +120,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                            <a class="btn text-blue text-lg" href="#"><i class="fa fa-plus-circle"
                                                     data-toggle="modal" data-target="#addBrandModal" data-toggle="tooltip"
                                                     title='Add a brand'></i></a>
                                         </div>
@@ -137,7 +137,7 @@
                                                 <option value="option_select" disabled selected>Select a model</option>
 
                                             </select>
-                                            <a class="btn text-blue" href="#"><i class="fa fa-plus-circle"
+                                            <a class="btn text-blue text-lg" href="#"><i class="fa fa-plus-circle"
                                                     data-toggle="modal" data-target="#addModelModal" data-toggle="tooltip"
                                                     title='Add a model'></i></a>
                                         </div>
@@ -509,27 +509,19 @@
         });
 
         $(document).ready(function() {
-            // Reference to the model select dropdown
             var modelSelect = $('#model');
 
-            // Listen for changes in the brand select dropdown
             $('#brand').change(function() {
-                // Get the selected brand's ID
                 var selectedBrandId = $(this).val();
-
-                // Send an AJAX request to fetch models associated with the selected brand
                 $.ajax({
-                    url: '/get-models/' + selectedBrandId, // Replace with the actual route
+                    url: '/get-models/' + selectedBrandId,
                     type: 'GET',
                     success: function(data) {
-                        // Clear existing model options
                         modelSelect.empty();
 
-                        // Add the static "N/A" option
                         modelSelect.append(
                             '<option value="1">Select a model. (Skip if none.)</option>');
 
-                        // Populate the model select dropdown with new options
                         $.each(data, function(index, model) {
                             modelSelect.append('<option value="' + model.id + '">' +
                                 model.model_name + '</option>');

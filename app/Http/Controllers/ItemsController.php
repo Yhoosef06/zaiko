@@ -332,7 +332,6 @@ class ItemsController extends Controller
                 $itemLog->save();
             }
 
-            Session::flash('success', 'Do you want to add another one?');
             return response()->json(['success' => 'Item(s) added successfully']);
         }
     }
