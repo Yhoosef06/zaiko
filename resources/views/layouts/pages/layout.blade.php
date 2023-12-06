@@ -137,6 +137,8 @@
 
 <script src="{{ asset('dist/js/bootstrap.bundle.min.js') }}"></script>
 
+{{-- sweet alert --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script> -->
 <!-- <script src="sweetalert2/dist/sweetalert2.min.js"></script> -->
@@ -243,14 +245,14 @@
 
 
 
-    $(document).ready(function() {
-        $(document).on('click', '#btn-return', function() {
-            var dataId = $(this).attr("data-id");
-            var dataSerial = $(this).attr("data-serial");
-            $("#idreturn").val(dataId);
-            $("#serialreturn").val(dataSerial);
+        $(document).ready(function() {
+            $(document).on('click', '#btn-return', function() {
+                var dataId = $(this).attr("data-id");
+                var dataSerial = $(this).attr("data-serial");
+                $("#idreturn").val(dataId);
+                $("#serialreturn").val(dataSerial);
+            });
         });
-    });
 
     $(document).ready(function() {
 
@@ -289,31 +291,31 @@
                     var userID = ui.item.value;
                     var url = '/check-userID/' + userID;
 
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        success: function(response) {
-                            if (response.exists) {
-                                Swal.fire(
-                                    ui.item.lastName + ', ' + ui.item.firstName,
-                                    'Has already pending borrowing. Please go to the pending table to update. Thank you.',
-                                    'error'
-                                );
-                                $('#idNumber').val('');
-                                // User ID exists
-                                // Handle the case when the user ID already exists
-                            } else {
-                                $('#search-serial-desc').show();
-                                $('#student_id').val(ui.item.value);
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function(response) {
+                                if (response.exists) {
+                                    Swal.fire(
+                                        ui.item.lastName + ', ' + ui.item.firstName,
+                                        'Has already pending borrowing. Please go to the pending table to update. Thank you.',
+                                        'error'
+                                    );
+                                    $('#idNumber').val('');
+                                    // User ID exists
+                                    // Handle the case when the user ID already exists
+                                } else {
+                                    $('#search-serial-desc').show();
+                                    $('#student_id').val(ui.item.value);
 
 
+                                }
+                            },
+                            error: function(xhr) {
+                                // Handle the error
+                                console.log(xhr.responseText);
                             }
-                        },
-                        error: function(xhr) {
-                            // Handle the error
-                            console.log(xhr.responseText);
-                        }
-                    });
+                        });
 
 
                 }

@@ -21,7 +21,8 @@ use function PHPUnit\Framework\isEmpty;
 class CartController extends Controller
 {
     public function add_cart(Request $request, $id){
-        
+
+        // dd($request);
         $user = Auth::user(); 
         $item = Item::find($id);
         $department = $item->room->department->id;

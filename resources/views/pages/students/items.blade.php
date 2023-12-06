@@ -176,7 +176,7 @@
                                                     <div class="row mx auto">
                                                         <div class="col">
                                                             <button type="button" class="btn btn-link text-success" data-toggle="modal"
-                                                            data-target="#itemModal{{ $item->id }}">
+                                                            data-target="#itemModal{{ $item->id }} ">
                                                             More info <i class="bi bi-search"></i>
                                                             </button>
                                                         
@@ -232,13 +232,14 @@
                                                                 <strong>Status:</strong> {{ $item->status }}
                                                             </div>
                                                         </div>
-                                                        <form action="{{ route('add.cart', $item->id) }}" method="POST"
-                                                            onsubmit="return confirm('Are you sure you want to add this item to your cart?');">
+                                                        <form action="{{ route('add.cart', ['id' => $item->id]) }}" method="POST" id="add-to-cart-form" onsubmit="return showSweetAlert({{ $item->id }})">
                                                             @csrf
+                                                            <input type="hidden" name="item_id" id="item_id_input" value="{{ $item->id }}">
+                                                            <input type="hidden" name="quantity" id="quantity_input" value="1">
                                                             <label for="quantity">Quantity:</label>
                                                             <div class="form-group col-2">
 
-                                                                <select class="form-control" id="quantity" name="quantity">
+                                                                <select class="form-control" id="quantity" name="quantity" onchange="updateQuantity()">
                                                                     @php
                                                                         $missingQty = 0;
                                                                         $borrowedQty = 0;
@@ -266,10 +267,9 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 @if($totalquantity - $totalDeduct != 0)
-                                                                    <i class="fas fa-cart-plus"></i><input type="submit"
-                                                                    class="btn btn-success" value="Add to cart">
-                                                                    <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Close</button>
+                                                                    <i class="fas fa-cart-plus"></i>
+                                                                    <input type="submit" class="btn btn-success" value="Add to cart">
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                                                 @else
                                                                     <button type="button" class="btn btn-danger"
                                                                     data-dismiss="modal">Close</button>
@@ -291,7 +291,36 @@
             </div>
             
         </section>
-       
+        <script>
+            function showSweetAlert(itemId) {
+                // Using SweetAlert to show a confirmation dialog
+                var selectedQuantity = document.getElementById('quantity').value;
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you want to add this item to your cart?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, add it!'
+                }).then((result) => {
+                    // If the user clicks "Yes, add it!", proceed with form submission
+                    if (result.isConfirmed) {
+                        console.log(itemId);
+                        document.getElementById('quantity_input').value = selectedQuantity;
+                        document.getElementById('item_id_input').value = itemId;
+                        document.getElementById('add-to-cart-form').submit();
+                       
+                }
+                });
+                
+                // Prevent form submission before user interaction with SweetAlert
+                return false;
+            }
+            function updateQuantity() {
+               //
+            }
+        </script>
 
     </div>
 
