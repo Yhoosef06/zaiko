@@ -170,7 +170,7 @@ class PagesController extends Controller
 
             $totalItems = $items->count();
 
-            return view('pages.admin.managerDashboard')->with(compact('userDepartments','totalItems','pendings','countBorrow', 'overdue'));
+            return view('pages.admin.managerDashboard')->with(compact('totalItems','pendings','countBorrow', 'overdue'));
             }
 
             
