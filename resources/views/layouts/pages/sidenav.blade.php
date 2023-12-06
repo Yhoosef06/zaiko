@@ -115,7 +115,7 @@
                             @if (Auth::user()->hasPermission('manage-borrowings'))
                                 <li class="nav-item">
                                     <a href="#" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
+                                        <i class="fas fa-hand-holding nav-icon"></i>
                                         <p>
                                             Manage Borrowings
                                             <i class="right fas fa-angle-left"></i>
@@ -125,7 +125,7 @@
                                         <li class="nav-item">
                                             <a href="{{ route('pending') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="fa fa-spinner nav-icon"></i>
                                                     <p>Pending</p>
                                                     {{-- @if (session()->has('pending_count'))
                                                         <span class="badge badge-danger right">{{ session('pending_count') }}</span>
@@ -137,17 +137,15 @@
                                         <li class="nav-item">
                                             <a href="{{ route('borrowed') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="fa fa-arrow-circle-right nav-icon"></i>
                                                     <p>Released Items</p>
-                                                   
-
                                                 </div>
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="{{ route('overdue') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="fa fa-clock nav-icon"></i>
                                                     <p>Overdue</p>
                                                     {{-- @if (session()->has('overdue_count'))
                                                     <span class="badge badge-danger right">{{ session('overdue_count') }}</span>
@@ -160,7 +158,7 @@
                                         <li class="nav-item">
                                             <a href="{{ route('returned') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="fa fa-arrow-circle-left nav-icon"></i>
                                                     <p>Returned</p>
                                                 </div>
                                             </a>
@@ -174,7 +172,7 @@
                         @if (Auth::user()->roles->contains('name', 'admin'))
                             <li class="nav-item">
                                 <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
+                                    <i class="fa fa-digital-tachograph nav-icon"></i>
                                     <p>Dashboard</p>
                                 </a>
                             </li>
@@ -183,7 +181,7 @@
                         @if (Auth::user()->hasPermission('manage-inventory'))
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-circle"></i>
+                                    <i class="nav-icon fa fa-box-open"></i>
                                     <p>
                                         Inventory
                                         <i class="right fas fa-angle-left"></i>
@@ -194,7 +192,7 @@
                                         <li class="nav-item">
                                             <a href="{{ route('add_item') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="fa fa-plus-square nav-icon"></i>
                                                     Add New Item
                                                 </div>
                                             </a>
@@ -204,7 +202,7 @@
                                         <li class="nav-item">
                                             <a href="{{ route('view_items') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="fa fa-list nav-icon"></i>
                                                     <p>View All Items</p>
                                                 </div>
                                             </a>
@@ -214,7 +212,7 @@
                                         <li class="nav-item">
                                             <a href="{{ route('generate_report') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="fa fa-file nav-icon"></i>
                                                     <p>Generate Report</p>
                                                 </div>
                                             </a>
@@ -227,7 +225,7 @@
                         @if (Auth::user()->hasPermission('manage-users'))
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-circle"></i>
+                                    <i class="nav-icon fa fa-users"></i>
                                     <p>
                                         Manage Users
                                         <i class="right fas fa-angle-left"></i>
@@ -238,7 +236,7 @@
                                         <li class="nav-item">
                                             <a href="{{ route('add_user') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="fa fa-user-plus nav-icon"></i>
                                                     <p>Add New User</p>
                                                 </div>
                                             </a>
@@ -248,7 +246,7 @@
                                         <li class="nav-item">
                                             <a href="{{ route('view_users') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="far fa-address-book nav-icon"></i>
                                                     <p>View All Users</p>
                                                 </div>
                                             </a>
@@ -259,7 +257,7 @@
                                         <li class="nav-item">
                                             <a href="{{ route('upload_csv_file') }}" class="nav-link">
                                                 <div class="ml-3">
-                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <i class="fa fa-file-import nav-icon"></i>
                                                     <p>Upload a CSV File</p>
                                                 </div>
                                             </a>
@@ -272,7 +270,7 @@
                         @if (Auth::user()->hasPermission('manage-settings'))
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
+                                    <i class="fas fa-wrench nav-icon"></i>
                                     <p>
                                         Settings
                                         <i class="right fas fa-angle-left"></i>
@@ -282,7 +280,7 @@
                                     <li class="nav-item">
                                         <a href="{{ route('view_terms') }}" class="nav-link">
                                             <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
+                                                <i class="far fa-calendar nav-icon"></i>
                                                 <p>Term</p>
                                             </div>
                                         </a>
@@ -290,7 +288,7 @@
                                     <li class="nav-item">
                                         <a href="{{ route('view_colleges') }}" class="nav-link">
                                             <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
+                                                <i class="fa fa-graduation-cap nav-icon"></i>
                                                 <p>Colleges</p>
                                             </div>
                                         </a>
@@ -298,7 +296,7 @@
                                     <li class="nav-item">
                                         <a href="{{ route('view_departments') }}" class="nav-link">
                                             <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
+                                                <i class="fa fa-table nav-icon"></i>
                                                 <p>Departments</p>
                                             </div>
                                         </a>
@@ -307,7 +305,7 @@
                                     <li class="nav-item">
                                         <a href="{{ route('view_rooms') }}" class="nav-link">
                                             <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
+                                                <i class="fa fa-door-open nav-icon"></i>
                                                 <p>Rooms</p>
                                             </div>
                                         </a>
@@ -315,7 +313,7 @@
                                     <li class="nav-item">
                                         <a href="{{ route('view_item_categories') }}" class="nav-link">
                                             <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
+                                                <i class="fa fa-layer-group nav-icon"></i>
                                                 <p>Item Categories</p>
                                             </div>
                                         </a>
@@ -323,7 +321,7 @@
                                     <li class="nav-item">
                                         <a href="{{ route('view_brands') }}" class="nav-link">
                                             <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
+                                                <i class="fa fa-certificate nav-icon"></i>
                                                 <p>Brands</p>
                                             </div>
                                         </a>
@@ -331,7 +329,7 @@
                                     <li class="nav-item">
                                         <a href="{{ route('view_models') }}" class="nav-link">
                                             <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
+                                                <i class="fa fa-code-branch nav-icon"></i>
                                                 <p>Models</p>
                                             </div>
                                         </a>
@@ -339,7 +337,7 @@
                                     <li class="nav-item">
                                         <a href="{{ route('view_roles') }}" class="nav-link">
                                             <div class="ml-3">
-                                                <i class="far fa-circle nav-icon"></i>
+                                                <i class="fa fa-clipboard-check nav-icon"></i>
                                                 <p>Roles & Permissions</p>
                                             </div>
                                         </a>

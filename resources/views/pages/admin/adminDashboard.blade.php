@@ -42,9 +42,12 @@
                                             <div class="info-box-content">
                                                 <span class="info-box-text">School Term</span>
                                                 <span class="info-box-number">
-                                                    {{ $term->semester }}
+                                                    @if(empty($term->semester) && empty($term->start_date))
+                                                    Term not found
+                                                @else
+                                                    {{ \Illuminate\Support\Str::limit($term->semester, 7) }}
                                                     {{ date('Y', strtotime($term->start_date)) }} - {{ date('Y', strtotime($term->end_date . ' +1 year')) }}
-                                                   
+                                                @endif
                                                 </span>
                                             </div>
                                             <!-- /.info-box-content -->
