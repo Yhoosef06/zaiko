@@ -474,7 +474,7 @@ class BorrowController extends Controller
         $number_of_day_overdue = $request->number_of_day_overdue;
         $user = auth()->user();
 
-      
+
 
         if ($user) {
             $firstName = $user->first_name;
@@ -1005,6 +1005,7 @@ class BorrowController extends Controller
         }
 
   
+
    
        
         if ($user) {

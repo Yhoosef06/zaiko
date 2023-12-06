@@ -66,6 +66,7 @@ class ViewServiceProvider extends ServiceProvider
             //END OF BORROWED ITEMS
             
             $view->with([
+                'countuserDepartments' =>  count($userDepartments),
                 'userDepartments' =>$userDepartments,
                 'cartcount' => $cartcount,
                 "pendingcount" => count($pendingItems),

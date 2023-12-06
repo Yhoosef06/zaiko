@@ -112,7 +112,7 @@
 
 
                     <div class="modal fade" id="releaseOverdue{{$borrow->order_item_id}}">
-                      <div class="modal-dialog modal-sm">
+                      <div class="modal-dialog">
                         <div class="modal-content">
                           <div class="modal-header">
                             <h4 class="modal-title">Return Overdue Item</h4>
@@ -127,42 +127,31 @@
                             <input type="hidden"  class="form-control" value="{{ $borrow->item_id_borrow }}" name="itemIdReturn">
                             <input type="hidden"  class="form-control" value="{{ $borrow->order_quantity }}" name="borrowOrderQuantity">
                             <input type="hidden"  class="form-control" value="{{ $borrow->category_name }}" name="categoryName">
-                          <div class="form-group">
-                                <label>Number Of Day Overdue</label>
-                                <input type="number"  class="form-control" id="number_of_day_overdue" name="number_of_day_overdue" value="{{ $borrow->days_overdue }}"readonly>
-                                     
-                          </div>
-                          <div class="form-group">
-                            <label>Payment Per Day</label>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text">PHP</span>
-                              </div>
-                              <input type="number"  class="form-control" id="payment_per_day"  name="payment_per_day" value="{{ $borrow->penalty_fee }}" readonly>
-                              <div class="input-group-append">
-                                <span class="input-group-text">.00</span>
-                              </div>
-                            </div>
+                           
+                          
+      
+                              
+                              
+                            <ul class="list-group list-group-unbordered mb-3">
+                              <li class="list-group-item">
+                                <b>Overdue:</b> <a class="float-right">{{ $borrow->days_overdue }} Days</a>
+                                <input type="hidden"  class="form-control" id="number_of_day_overdue" name="number_of_day_overdue" value="{{ $borrow->days_overdue }}"readonly>
+                              </li>
+                              <li class="list-group-item">
+                                <b>Payment:</b> <a class="float-right">PHP {{ $borrow->penalty_fee }}.00</a>
+                                <input type="hidden"  class="form-control" id="payment_per_day"  name="payment_per_day" value="{{ $borrow->penalty_fee }}" readonly>
+                              </li>
+                              @php
+                              $total = $borrow->penalty_fee * $borrow->days_overdue;
+                              $final = $total * $borrow->order_quantity;
+                          @endphp
+                              <li class="list-group-item">
+                                <b>Total:</b> <a class="float-right">PHP {{$final}}.00</a>
+                                <input type="hidden"  class="form-control" id="total_amount" value="{{ $final }}" name="total_amount" readonly required>
+                              </li>
+                            </ul>
+                          
 
-                                 
-                        </div>
-                        @php
-                          $total = $borrow->penalty_fee * $borrow->days_overdue;
-                      @endphp
-                        <div class="form-group">
-                          <label>Total</label>
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">PHP</span>
-                            </div>
-                            <input type="number"  class="form-control" id="total_amount" value="{{ $total }}" name="total_amount" readonly required>
-                            <div class="input-group-append">
-                              <span class="input-group-text">.00</span>
-                            </div>
-                          </div>
-                         
-                               
-                      </div>
                           <div class="form-group">
                             <label>Quantity</label>
                             <select name="quantity_return" class="form-control">

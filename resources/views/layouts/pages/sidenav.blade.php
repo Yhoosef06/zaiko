@@ -18,8 +18,11 @@
            
         </span>
     </a>
+    @if (Auth::user()->roles->contains('name', 'manager'))
+    @if (Auth::user()->hasPermission('manage-borrowings'))
+  
+ 
     <select class="form-control select2" id="select-department" name="department">
-        <option selected="selected" >Select Department</option>
         @foreach ($userDepartments as $userDepartment)
         <option value="{{ $userDepartment->departmentID }}"
           {{ Session::get('departmentID') == $userDepartment->departmentID ? 'selected' : '' }}>
@@ -29,6 +32,8 @@
         @endforeach
       
       </select>
+      @endif
+      @endif
 
     <!-- Sidebar -->
     @if (Auth::user()->password_updated == true && Auth::user()->security_question_id != null)
@@ -43,7 +48,7 @@
                         @else
                             href="{{ route('borrower.dashboard') }}" @endif
                                 class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
+                                <i class="bi bi-clipboard-heart-fill nav-icon"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
@@ -51,7 +56,7 @@
                             <li class="nav-item">
                                 <a href="{{ route('browse.category', ['_token' => csrf_token(), 'category' => Session::get('category')]) }}"
                                     class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
+                                    <i class="bi bi-search nav-icon"></i>
                                     <p>Browse Items</p>
                                 </a>
                             </li>
@@ -59,14 +64,14 @@
                             <li class="nav-item">
                                 <a href="{{ route('browse.department', ['_token' => csrf_token(), 'selectedDepartment' => Session::get('department')]) }}"
                                     class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
+                                    <i class="bi bi-search nav-icon"></i>
                                     <p>Browse Items</p>
                                 </a>
                             </li>
                         @else
                             <li class="nav-item">
                                 <a href="{{ route('browse.items') }}" class="nav-link">
-                                    <i class="fas fa-circle nav-icon"></i>
+                                    <i class="bi bi-search nav-icon"></i>
                                     <p>Browse Items</p>
                                 </a>
                             </li>
@@ -74,8 +79,8 @@
 
                         <li class="nav-item">
                             <a href="{{ route('browse.cart') }}" class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
-                                <p>Cart</p>
+                                <i class="bi bi-basket3 nav-icon"></i>
+                                <p>For Borrowing</p>
                                 @if ($cartcount != 0)
                                     <span class="badge badge-danger right">{{ $cartcount }}</span>
                                 @endif
@@ -84,8 +89,8 @@
 
                         <li class="nav-item">
                             <a href="{{ route('pending-order') }}" class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
-                                <p>Pending</p>
+                                <i class="bi bi-bag-check nav-icon"></i>
+                                <p>For Approval</p>
                                 @if ($pendingcount != 0)
                                     <span class="badge badge-danger right">{{ $pendingcount }}</span>
                                 @endif
@@ -93,7 +98,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('borrowed-items') }}" class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
+                                <i class="bi bi-list-check nav-icon"></i>
                                 <p>Borrowed Items</p>
                                 @if ($borrowedcount != 0)
                                     <span class="badge badge-danger right">{{ $borrowedcount }}</span>
@@ -102,7 +107,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('history') }}" class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
+                                <i class="bi bi-alarm nav-icon"></i>
                                 <p>Transaction History</p>
                             </a>
                         </li>

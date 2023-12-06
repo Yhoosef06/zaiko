@@ -54,7 +54,7 @@
                         </div>
                     @endisset
                     <div class="col-6">
-                        <form action=" {{ route('browse.search') }}" method="GET">
+                        <form action=" {{ route('browse.search') }}" method="GET" id="searchForm">
                             @csrf
                                 <div class="input-group mx-auto">
                                     <input type="search" class="form-control col-md-6" placeholder="Enter keyword here" name="search" id="search">
@@ -69,90 +69,93 @@
                 </div>
 
                 <div class="row">
-                    {{-- <div class="col-2">
-                        @isset($categories)
-                            <form action="{{ route('browse.category') }}" method="GET">
-                                @csrf
-                                <div class="form-check pb-3">
-                                    <input type="radio" class="form-check-input" name="category" id="category_all"
-                                        value="0" {{ (!Session::has('category')) ? 'checked' : '' }}
-                                        onclick="this.form.submit()">
-                                    <label for="category_all" class="form-check-label">
-                                        All Categories
-                                    </label>
-                                </div>
-                                @foreach ($categories as $cat)
-                                    <div class="form-check pb-3">
-                                        <input type="radio" class="form-check-input" name="category" id="category"
-                                            value="{{ $cat->id }}"
-                                            {{ Session::get('category') == $cat->id ? 'checked' : '' }}
-                                            onclick="this.form.submit()">
-                                        <label for="category" class="form-check-label">
-                                            {{ $cat->category_name }}
-                                        </label>
-                                    </div>
-                                @endforeach
-                            </form>
-                        @endisset
-                    </div> --}}
                     <div class="col-12">
-                        @isset($items)
+                        @if (isset($items) || isset($searchedItems))
                             @php
-                                $groupedItems = $items->groupBy(function ($item) {
-                                    return $item->brand_id . '-' . $item->model_id;
+                            if(isset($items)){
+                                if(count($items) != 0){
+                                    $groupedItems = $items->groupBy(function ($item) {
+                                        return $item->brand_id . '-' . $item->model_id;
+                                    });
+                                }
+                            }
+                            if(isset($searchedItems)){
+                                if(count($searchedItems) != 0){
+                                    $groupedItems = $searchedItems->groupBy(function ($item) {
+                                        return $item->brand_id . '-' . $item->model_id;
                                 });
+                                }
+                            }
+                            
                             @endphp
+                            @if(!isset($groupedItems))
+                                <div class="row">
+                                    <div class="container-fluid mt-3 mb-3">
+                                        <label>No results found.</label><br>
+                                    </div>
+                                </div>
+                            @elseif(isset($searchedItems))
+                                @if(count($searchedItems) == 0)
+                                    <div class="row">
+                                        <div class="container-fluid mt-3 mb-3">
+                                            <label>No results based on search</label><br>
+                                            <label>Displaying other items</label>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endif
+                            
                             <div class="row">
-                                @foreach ($groupedItems as $groupedItem)
-                                    @php
-                                        $totalquantity = 0;
-                                        if (count($groupedItem) != 0) {
-                                            foreach ($groupedItem as $item) {
-                                                $totalquantity += $item->quantity;
+                                @if(isset($groupedItems))
+                                    @foreach ($groupedItems as $groupedItem)
+                                        @php
+                                            $totalquantity = 0;
+                                            if (count($groupedItem) != 0) {
+                                                foreach ($groupedItem as $item) {
+                                                    $totalquantity += $item->quantity;
+                                                }
+                                                $item = $groupedItem->first();
                                             }
-                                            $item = $groupedItem->first();
-                                        }
-                                        $missingQty = 0;
-                                        $borrowedQty = 0;
-                                        $totalDeduct = 0;
-                                        foreach ($borrowedList as $borrowed) {
-                                            if ($borrowed->item_id == $item->id) {
-                                                $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                            $missingQty = 0;
+                                            $borrowedQty = 0;
+                                            $totalDeduct = 0;
+                                            foreach ($borrowedList as $borrowed) {
+                                                if ($borrowed->item_id == $item->id) {
+                                                    $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                }
                                             }
-                                        }
 
-                                        foreach ($missingList as $missing) {
-                                            if ($missing->item_id == $item->id) {
-                                                $missingQty = $missingQty + $missing->quantity;
+                                            foreach ($missingList as $missing) {
+                                                if ($missing->item_id == $item->id) {
+                                                    $missingQty = $missingQty + $missing->quantity;
+                                                }
                                             }
-                                        }
-                                        $totalDeduct = $missingQty + $borrowedQty;
-                                    @endphp
-                                    @if($totalquantity - $totalDeduct > 0)
+                                            $totalDeduct = $missingQty + $borrowedQty;
+                                        @endphp
                                         <div class="col-lg-2 col-md-3 mb-3">
                                             <div class="card">
                                                 <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light text-center"
                                                     data-mdb-ripple-color="light">
                                                     @if ($item->item_image == null)
                                                         <div class="container border border-2"
-                                                            style="width: 250px; height: 250px; display: flex; justify-content: center; align-items: center;">
+                                                            style="width: 200px; height: 200px; display: flex; justify-content: center; align-items: center;">
                                                             <p style="text-align: center;">No image found.</p>
                                                         </div>
                                                     @else
                                                         <img src="{{ asset('storage/' . $item->item_image) }}" width="200px"
                                                             height="200px">
                                                     @endif
-                                                    <div class="mask">
-                                                        <div class="d-flex justify-content-start align-items-end h-100">
+                                                    <div class="">
                                                             <h5>
-                                                                <div class="row">
-                                                                    <span class="badge bg-success ms-2">
-                                                                        {{Str::limit($item->room->department->department_name,25)}}
-                                                                    </span>
+                                                                <div class="row mx-auto">
+                                                                    <div class="col-12">
+                                                                        <span class="badge bg-success ms-2">
+                                                                            {{Str::limit($item->room->department->department_abbre,25)}}
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                             </h5>
-                                                        </div>
-                                                        <div class="row">
+                                                        {{-- <div class="row">
                                                             <div class="d-flex justify-content-start align-items-end h-100">
                                                                 <div class="col-md-4"></div>
                                                                 <span class="bg-success ms-2 col-md-3">
@@ -160,20 +163,35 @@
                                                                 </span>
                                                                 <div class="col-md-4"></div>
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                 </div>
                                                 <div class="card-body text-center">
                                                     <div class="row mx-auto">
                                                         <span
                                                             class="card-title mb-3 font-weight-bold display-3">{{ $item->brand->brand_name }}</span>
-                                                        <h5 class="card-title mb-3">{{ $item->category->category_name }}</h5>
+                                                        {{-- <h5 class="card-title mb-3">{{ $item->category->category_name }}</h5> --}}
                                                         <p class="card-title mb-3">{{ Str::limit($item->description,20) }}</p>
                                                     </div>
-                                                    <button type="button" class="btn btn-link text-success" data-toggle="modal"
-                                                        data-target="#itemModal{{ $item->id }}">
-                                                        More info <i class="bi bi-search"></i>
-                                                    </button>
+                                                    <div class="row mx auto">
+                                                        <div class="col">
+                                                            <button type="button" class="btn btn-link text-success" data-toggle="modal"
+                                                            data-target="#itemModal{{ $item->id }}">
+                                                            More info <i class="bi bi-search"></i>
+                                                            </button>
+                                                        
+                                                        
+                                                            @if($totalquantity - $totalDeduct == 0)
+                                                                <button type="button" class="btn btn-link text-danger" disabled>
+                                                                Out of Stock
+                                                                </button>
+                                                            @else
+                                                                <button type="button" class="btn btn-link text-success text-sm-end" disabled>
+                                                                Available: {{ $totalquantity - $totalDeduct }} pc/s
+                                                                </button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -247,26 +265,33 @@
 
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <i class="fas fa-cart-plus"></i><input type="submit"
+                                                                @if($totalquantity - $totalDeduct != 0)
+                                                                    <i class="fas fa-cart-plus"></i><input type="submit"
                                                                     class="btn btn-success" value="Add to cart">
-                                                                <button type="button" class="btn btn-danger"
+                                                                    <button type="button" class="btn btn-danger"
                                                                     data-dismiss="modal">Close</button>
+                                                                @else
+                                                                    <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Close</button>
+                                                                @endif
                                                             </div>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endif
-                                @endforeach
+                                    @endforeach
+                                @endif
                             </div>
-                        @endisset
+                        @endif
                     </div>
                 </div>
 
 
             </div>
+            
         </section>
+       
 
     </div>
 
