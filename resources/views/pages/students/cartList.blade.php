@@ -107,7 +107,7 @@
                                                             </form>     
                                                         </div>  
                                                         <div class="col-md-3 col-lg-3 col-xl-2 d-flex">                          
-                                                            <a class="border-0 text-danger text-decoration-underline" onclick="return confirm('Are you sure you want to remove item?')" href="{{ route('remove.cart', $cartItem->id)}}">Remove</a>             
+                                                            <a class="border-0 text-danger text-decoration-underline" onclick="return showSweetAlert('{{ route('remove.cart', $cartItem->id)}}')" href="#">Remove</a>        
                                                         </div>
                                                     </div>
                                                 </div>
@@ -240,9 +240,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark" id="addToCartButton" disabled>
-                        <a href="{{ route('order.cart') }}"
-                            onclick="return confirm('Are you sure you want to borrow items in cart?')"><i
-                                class="fa fa-arrow-right"></i> Proceed</a>
+                        <a onclick="return showSweetOrder('{{ route('order.cart')}}')" href="#">
+                            <i class="fa fa-arrow-right"></i> 
+                            Proceed
+                        </a>
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -254,7 +255,67 @@
                     agreementCheckbox.addEventListener('change', function() {
                         addToCartButton.disabled = !agreementCheckbox.checked;
                     });
+
+                    function showSweetAlert(removeUrl) {
+                        Swal.fire({
+                            title: "Are you sure you want to remove the list?",
+                            showDenyButton: true,
+                            // showCancelButton: true,
+                            confirmButtonText: "Yes, remove it",
+                            denyButtonText: `No, cancel`
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // If the user clicks "Yes, remove it", navigate to the remove URL
+                                Swal.fire({
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 1500,
+                                title: "Successfully Removed!",
+                                icon: "success"
+                            }).then(() => {
+                                window.location.href = removeUrl;
+                            });
+                               
+                            } else if (result.isDenied) {
+                                Swal.fire("Action canceled", "", "info");
+                            }
+                        });
+
+                        // Prevent the default link behavior
+                        return false;
+                    }
+
+                    function showSweetOrder(orderSubmit) {
+                        Swal.fire({
+                            title: "Are you sure you want to proceed the transaction?",
+                            showDenyButton: true,
+                            // showCancelButton: true,
+                            confirmButtonText: "Yes, proceed",
+                            denyButtonText: `No, cancel`
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // If the user clicks "Yes, remove it", navigate to the remove URL
+                                Swal.fire({
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 1500,
+                                title: "Success!",
+                                icon: "success"
+                            }).then(() => {
+                                window.location.href = orderSubmit;
+                            });
+                               
+                            } else if (result.isDenied) {
+                                Swal.fire("Action canceled", "", "info");
+                            }
+                        });
+
+                        // Prevent the default link behavior
+                        return false;
+                    }
+
                 </script>
+                
 
             </div>
         </div>

@@ -232,8 +232,7 @@
                                                                 <strong>Status:</strong> {{ $item->status }}
                                                             </div>
                                                         </div>
-                                                        <form action="{{ route('add.cart', $item->id) }}" method="POST"
-                                                            onsubmit="return confirm('Are you sure you want to add this item to your cart?');">
+                                                        <form action="{{ route('add.cart', $item->id) }}" method="POST" onsubmit="return showSweetAlert(this);">
                                                             @csrf
                                                             <label for="quantity">Quantity:</label>
                                                             <div class="form-group col-2">
@@ -291,7 +290,35 @@
             </div>
             
         </section>
-       
+        <script>
+            function showSweetAlert(form) {
+                Swal.fire({
+                    title: "Do you want to add the item to the borrowing list?",
+                    showDenyButton: true,
+                    // showCancelButton: true,
+                    confirmButtonText: "Add to Cart",
+                    denyButtonText: `Cancel`
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 1500,
+                                title: "Successfully Added!",
+                                icon: "success"
+                            }).then(() => {
+                            form.submit();
+                        });
+                    } else if (result.isDenied) {
+                    Swal.fire("Action canceled", "", "info");
+                }
+                });
+        
+                // Prevent the default form submission
+                return false;
+            }
+        </script>
 
     </div>
 

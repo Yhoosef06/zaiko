@@ -77,7 +77,7 @@
                         <div class="container h-100 py-5">
                             <div class="row d-flex justify-content-center align-items-center h-100">
                                 <div class="text-center">
-                                    <p><span class="h3"> There are no pending transactions. </span></p>
+                                    <p><span class="h3"> No items borrowed. </span></p>
                                 </div>
                             </div>
                         </div>

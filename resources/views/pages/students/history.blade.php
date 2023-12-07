@@ -80,7 +80,7 @@
                         <div class="container h-100 py-5">
                             <div class="row d-flex justify-content-center align-items-center h-100">
                                 <div class="text-center">
-                                    <p><span class="h3"> There are no history of returned items. </span></p>
+                                    <p><span class="h3"> No history. </span></p>
                                 </div>
                             </div>
                         </div>
