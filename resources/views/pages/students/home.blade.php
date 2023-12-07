@@ -99,25 +99,30 @@
                                                                                                 <table class="table table-bordered table-striped">
                                                                                                     <thead>
                                                                                                         <tr class="bg-success" style="background-color: rgba(0, 150, 0, 0.9) !important;">
-                                                                                                            <th style="width:10%" class="text-wrap">Order ID</th>
-                                                                                                            <th style="width:10%" class="text-wrap">Brand</th>
-                                                                                                            <th style="width:10%" class="text-wrap">Model</th>
-                                                                                                            <th style="width:10%" class="text-wrap">Description</th>
+                                                                                                            <th style="width:15%" class="text-wrap text-center">Transaction ID</th>
+                                                                                                            <th style="width:10%" class="text-wrap text-center">Brand</th>
+                                                                                                            <th style="width:10%" class="text-wrap text-center">Model</th>
+                                                                                                            <th style="width:10%" class="text-wrap text-center">Description</th>
                                                                                                             <th style="width:10%" class="text-wrap text-center">Quantity</th>
-                                                                                                            <th style="width:10%" class="text-wrap text-center">Due Date</th>
+                                                                                                            <th style="width:20%" class="text-wrap text-center">Due Date</th>
                                                                                                             <th style="width:10%" class="text-wrap text-center">Days Overdue</th>
+                                                                                                            <th style="width:10%" class="text-wrap text-center">Penalty</th>
                                                                                                         </tr>
                                                                                                     </thead>
                                                                                                     <tbody>
                                                                                                         @foreach($overdueItems as $item)
+                                                                                                        @php
+                                                                                                            $penalty = $item->penalty_fee * $item->days_overdue * $item->order_quantity;
+                                                                                                        @endphp
                                                                                                         <tr style="background-color: rgba(255, 255, 255, 0.8);">
                                                                                                             <td class="text-wrap text-center">{{ $item->order_id }}</td>
-                                                                                                            <td class="text-wrap">{{ $item->brand }}</td>
-                                                                                                            <td class="text-wrap">{{ $item->model }}</td>
-                                                                                                            <td class="text-wrap">{{ $item->description }}</td>
+                                                                                                            <td class="text-wrap text-center">{{ $item->brand }}</td>
+                                                                                                            <td class="text-wrap text-center">{{ $item->model }}</td>
+                                                                                                            <td class="text-wrap text-center">{{ $item->description }}</td>
                                                                                                             <td class="text-wrap text-center">{{ $item->order_quantity }}</td>
                                                                                                             <td class="text-wrap text-center">{{ \Carbon\Carbon::parse($item->date_returned)->format('F j, Y') }}</td>
                                                                                                             <td class="text-wrap text-center">{{ $item->days_overdue }}</td>
+                                                                                                            <td class="text-wrap text-center">₱{{ $penalty }}</td>
                                                                                                         </tr>
                                                                                                         @endforeach
                                                                                                     </tbody>

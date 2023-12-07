@@ -55,10 +55,10 @@
                                                                 <div class="col-md-3 col-lg-3 col-xl-3">
                                                                     <p><span class="text-muted"> {{ $item->description }} </span></p>
                                                                     <p><span>Serial:</span><span class="text-muted"> {{ $item->serial_number }} </span></p>
-                                                                    <p><span class="text-muted"> {{ \Carbon\Carbon::parse($orderItem->date_returned)->format('F j, Y') }} </span></p>
+                                                                    <p><span>Due Date:</span><span class="text-muted"> {{ \Carbon\Carbon::parse($orderItem->date_returned)->format('F j, Y') }} </span></p>
                                                                 </div>
                                                                 <div class="col-md-3 col-lg-3 col-xl-2 d-flex">                          
-                                                                    <input id="form1" min="0" name="quantity" value="{{ $orderItem->order_quantity }}" type="number"
+                                                                    <input id="form1" min="0" name="quantity" value="{{ $orderItem->order_quantity }} pc/s " type="text"
                                                                     class="form-control form-control-sm text-center" disabled />                
                                                                 </div>
                                                             </div>
