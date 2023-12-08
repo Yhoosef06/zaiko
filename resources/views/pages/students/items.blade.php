@@ -218,51 +218,56 @@
                                                                     <img src="{{ asset('storage/' . $item->item_image) }}"
                                                                         alt="" srcset="" width="200px" height="200px">
                                                                 @endif
+                                                            </div>
+                                                            <div class="col">
                                                                 <strong>Brand:</strong> {{ $item->brand->brand_name }}
                                                                 <br>
                                                                 <strong>Model:</strong> {{ $item->model->model_name }}
                                                                 <br>
-                                                            
-                                                                <strong>Available:</strong>
-                                                                {{ $totalquantity - $totalDeduct }} <br>
-                                                            </div>
-                                                            <div class="col">
                                                                 <strong>Description:</strong> {{ $item->description }}
                                                                 <br>
                                                                 <strong>Status:</strong> {{ $item->status }}
+                                                                {{-- <strong>Available:</strong>
+                                                                {{ $totalquantity - $totalDeduct }} <br> --}}
                                                             </div>
                                                         </div>
                                                         <form action="{{ route('add.cart', $item->id) }}" method="POST" onsubmit="return showSweetAlert(this);">
                                                             @csrf
-                                                            <label for="quantity">Quantity:</label>
-                                                            <div class="form-group col-2">
-
-                                                                <select class="form-control" id="quantity" name="quantity">
-                                                                    @php
-                                                                        $missingQty = 0;
-                                                                        $borrowedQty = 0;
-                                                                        $totalDeduct = 0;
-                                                                        foreach ($borrowedList as $borrowed) {
-                                                                            if ($borrowed->item_id == $item->id) {
-                                                                                $borrowedQty = $borrowedQty + $borrowed->order_quantity;
-                                                                            }
-                                                                        }
-
-                                                                        foreach ($missingList as $missing) {
-                                                                            if ($missing->item_id == $item->id) {
-                                                                                $missingQty = $missingQty + $missing->quantity;
-                                                                            }
-                                                                        }
-                                                                        $totalDeduct = $missingQty + $borrowedQty;
-
-                                                                    @endphp
-                                                                    @for ($i = 1; $i <= $totalquantity - $totalDeduct; $i++)
-                                                                        <option value="{{ $i }}">
-                                                                            {{ $i }}</option>
-                                                                    @endfor
-                                                                </select>
-
+                                                            <div class="form-row mt-5">
+                                                                <div class="form-group col">
+                                                                    <div class="form-group col-md-6">
+                                                                        <label class="d-inline-block" for="quantity">Quantity:</label>
+                                                                        <select class="form-control form-control-sm d-inline-block" style="width: 25%;" id="quantity" name="quantity">
+                                                                            @php
+                                                                                $missingQty = 0;
+                                                                                $borrowedQty = 0;
+                                                                                $totalDeduct = 0;
+                                                                                foreach ($borrowedList as $borrowed) {
+                                                                                    if ($borrowed->item_id == $item->id) {
+                                                                                        $borrowedQty = $borrowedQty + $borrowed->order_quantity;
+                                                                                    }
+                                                                                }
+        
+                                                                                foreach ($missingList as $missing) {
+                                                                                    if ($missing->item_id == $item->id) {
+                                                                                        $missingQty = $missingQty + $missing->quantity;
+                                                                                    }
+                                                                                }
+                                                                                $totalDeduct = $missingQty + $borrowedQty;
+        
+                                                                            @endphp
+                                                                            @for ($i = 1; $i <= $totalquantity - $totalDeduct; $i++)
+                                                                                <option value="{{ $i }}">
+                                                                                    {{ $i }}</option>
+                                                                            @endfor
+                                                                        </select>
+        
+                                                                    </div>
+                                                                    
+                                                                </div>
                                                             </div>
+                                                            
+                                                            
                                                             <div class="modal-footer">
                                                                 @if($totalquantity - $totalDeduct != 0)
                                                                     <i class="fas fa-cart-plus"></i><input type="submit"
