@@ -115,7 +115,7 @@
                                         @endif
                                     @endforeach
                                     <div class="card">
-                                        <a href="{{ route('order.cart') }}" class="btn btn-success" data-toggle="modal" data-target="#itemModal"><i class="fa fa-arrow-right"></i> Borrow Items</a>
+                                        <a class="btn btn-success" onclick="return showSweetOrder('{{ route('order.cart')}}')" href="#"><i class="fa fa-arrow-right"></i> Borrow Items</a>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +144,7 @@
                 @endif
             </div>
         </div>
-        <div class="modal fade bd-example-modal-xl" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade bd-example-modal-xl" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header text-dark">
@@ -246,79 +246,76 @@
                         </a>
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-
-                <script>
-                    const agreementCheckbox = document.getElementById('agreementCheckbox');
-                    const addToCartButton = document.getElementById('addToCartButton');
-
-                    agreementCheckbox.addEventListener('change', function() {
-                        addToCartButton.disabled = !agreementCheckbox.checked;
-                    });
-
-                    function showSweetAlert(removeUrl) {
-                        Swal.fire({
-                            title: "Are you sure you want to remove the list?",
-                            showDenyButton: true,
-                            // showCancelButton: true,
-                            confirmButtonText: "Yes, remove it",
-                            denyButtonText: `No, cancel`
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // If the user clicks "Yes, remove it", navigate to the remove URL
-                                Swal.fire({
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 1500,
-                                title: "Successfully Removed!",
-                                icon: "success"
-                            }).then(() => {
-                                window.location.href = removeUrl;
-                            });
-                               
-                            } else if (result.isDenied) {
-                                Swal.fire("Action canceled", "", "info");
-                            }
-                        });
-
-                        // Prevent the default link behavior
-                        return false;
-                    }
-
-                    function showSweetOrder(orderSubmit) {
-                        Swal.fire({
-                            title: "Are you sure you want to proceed the transaction?",
-                            showDenyButton: true,
-                            // showCancelButton: true,
-                            confirmButtonText: "Yes, proceed",
-                            denyButtonText: `No, cancel`
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // If the user clicks "Yes, remove it", navigate to the remove URL
-                                Swal.fire({
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 1500,
-                                title: "Success!",
-                                icon: "success"
-                            }).then(() => {
-                                window.location.href = orderSubmit;
-                            });
-                               
-                            } else if (result.isDenied) {
-                                Swal.fire("Action canceled", "", "info");
-                            }
-                        });
-
-                        // Prevent the default link behavior
-                        return false;
-                    }
-
-                </script>
-                
-
+                </div> 
             </div>
-        </div>
+        </div> --}}
+        <script>
+            const agreementCheckbox = document.getElementById('agreementCheckbox');
+            const addToCartButton = document.getElementById('addToCartButton');
+
+            agreementCheckbox.addEventListener('change', function() {
+                addToCartButton.disabled = !agreementCheckbox.checked;
+            });
+
+            function showSweetAlert(removeUrl) {
+                Swal.fire({
+                    title: "Are you sure you want to remove the list?",
+                    showDenyButton: true,
+                    // showCancelButton: true,
+                    confirmButtonText: "Yes, remove it",
+                    denyButtonText: `No, cancel`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If the user clicks "Yes, remove it", navigate to the remove URL
+                        Swal.fire({
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        title: "Successfully Removed!",
+                        icon: "success"
+                    }).then(() => {
+                        window.location.href = removeUrl;
+                    });
+                       
+                    } else if (result.isDenied) {
+                        Swal.fire("Action canceled", "", "info");
+                    }
+                });
+
+                // Prevent the default link behavior
+                return false;
+            }
+
+            function showSweetOrder(orderSubmit) {
+                Swal.fire({
+                    title: "Proceed to borrowing items?",
+                    showDenyButton: true,
+                    // showCancelButton: true,
+                    confirmButtonText: "Yes, proceed",
+                    denyButtonText: `No, cancel`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If the user clicks "Yes, remove it", navigate to the remove URL
+                        Swal.fire({
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        title: "Success!",
+                        icon: "success"
+                    }).then(() => {
+                        window.location.href = orderSubmit;
+                    });
+                       
+                    } else if (result.isDenied) {
+                        Swal.fire("Action canceled", "", "info");
+                    }
+                });
+
+                // Prevent the default link behavior
+                return false;
+            }
+
+        </script>
     </div>
 </div>
 

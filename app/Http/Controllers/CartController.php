@@ -284,7 +284,7 @@ class CartController extends Controller
         $order->date_submitted = now();
         $order->save();
 
-        session()->flash('success','Your borrowing order is already in process.. Please go to the department borrowed within 1 day to proceed to your borrowing process');          
+        session()->flash('success','Your borrowing transaction is already in process.. Please go to the respective department within 1 day to continue your transaction.');          
 
         return redirect()->route('borrower.dashboard');
     }
