@@ -15,6 +15,7 @@ use Illuminate\Validation\ValidationException;
 class CsvImport implements ToModel
 {
     public static $user;
+    protected $errors = [];
     public function model(array $row)
     {
         $role = Role::find(3);
@@ -28,16 +29,26 @@ class CsvImport implements ToModel
         $lastName = isset($row[2]) ? $row[2] : null;
         $email = isset($row[3]) ? $row[3] : null;
 
-        $validator = validator()->make($row, [
-            'id_number' => 'required|unique:users,id_number',
+        $validator = Validator::make([
+            'email' => $email,
+            'idNumber' => $idNumber,
+        ], [
             'email' => 'required|email|unique:users,email',
+            'idNumber' => 'required|unique:users,id_number',
+        ], [
+            'email.required' => 'Email is required.',
+            'email.email' => 'Invalid email format.',
+            'email.unique' => 'Email already exists.',
+            'idNumber.required' => 'ID number is required.',
+            'idNumber.unique' => 'ID number already exists.',
         ]);
 
         if ($validator->fails()) {
-            $failures = $validator->errors()->toArray(); 
-            dd($failures);
-            return response()->json(['error' => 'Error during CSV file upload.', 'errors' => $failures], 422);
+            $errors = $validator->errors()->all();
+            $this->errors[] = ['row_data' => $row, 'errors' => $errors];
+            return null; // Return null for rows with errors
         }
+
         $user = User::firstOrCreate(
             ['id_number' => $idNumber],
             [
@@ -61,6 +72,11 @@ class CsvImport implements ToModel
         }
 
         return $user;
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
 }

@@ -27,14 +27,29 @@ class CsvController extends Controller
             $file = $request->file('csv_file');
             $filePath = $file->getRealPath();
 
-            Excel::import(new CsvImport(), $filePath);
+            $import = new CsvImport();
+            Excel::import($import, $filePath);
+
+            $importErrors = $import->getErrors();
+
+            if (!empty($importErrors)) {
+                return response()->json(['error' => 'Error during CSV file upload.', 'errors' => $importErrors], 422);
+            }
 
             return response()->json(['success' => 'CSV file uploaded successfully!']);
         } catch (ValidationException $e) {
-            // Handle validation errors specifically
             $failures = $e->failures();
-            // Process and return specific error messages for validation failures
-            return response()->json(['error' => 'Error during CSV file upload.', 'errors' => $failures], 422);
+
+            $errorMessages = [];
+            foreach ($failures as $failure) {
+                $errorMessages[] = 'Row ' . $failure->row() . ', Column ' . $failure->attribute() . ': ' . $failure->errors()[0];
+            }
+
+            if (!empty($errorMessages)) {
+                return response()->json(['error' => 'Error during CSV file upload.', 'errors' => $errorMessages], 422);
+            } else {
+                return response()->json(['error' => 'Error during CSV file upload.'], 422);
+            }
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error during CSV file upload.', 'exception' => $th->getMessage()], 500);
         }

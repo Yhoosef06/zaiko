@@ -32,8 +32,8 @@
                                     </div>
                                 @endif
                             </div>
-                            {{-- <form id="csvForm" method="POST" enctype="multipart/form-data"> --}}
-                            <form action="{{ route('store_csv_file') }}" method="POST" enctype="multipart/form-data">
+                            <form id="csvForm" method="POST" enctype="multipart/form-data">
+                                {{-- <form action="{{ route('store_csv_file') }}" method="POST" enctype="multipart/form-data"> --}}
                                 @csrf
                                 <label for="csv_file">Add your file here:</label><br>
                                 <input type="file" name="csv_file" id="csv_file">
@@ -74,26 +74,37 @@
                             contentType: false,
                             success: function(response) {
                                 if (response.success) {
-                                    Swal.fire('Success', response.success, 'success');
+                                    Swal.fire('Success', response.success, 'success')
+                                        .then(() => {
+                                            $('#csv_file').val(
+                                            '');
+                                        });;
                                 } else if (response.error) {
-                                    if (Array.isArray(response.errors) && response
-                                        .errors.length > 0) {
-                                        Swal.fire('Error', response.errors.join('<br>'),
-                                            'error');
-                                    } else if (response.errorCSV) {
-                                        Swal.fire('Error', response.error, 'error');
-                                    }
+                                    displayError(response.error);
                                 }
                             },
                             error: function(xhr, status, error) {
-                                if (xhr.responseJSON && xhr.responseJSON.errors && xhr
-                                    .responseJSON.errors.length > 0) {
-                                    Swal.fire('Error', xhr.responseJSON.errors.join(
-                                        '<br>'), 'error');
+                                var response = xhr.responseJSON;
+                                if (response && response.errors && Array.isArray(
+                                        response.errors)) {
+                                    var errorMessages = response.errors.map(function(
+                                        errorItem) {
+                                        var rowData = errorItem.row_data;
+                                        var errors = errorItem.errors.join(
+                                            '<br>');
+                                        return 'Row: ' + JSON.stringify(
+                                                rowData) + '<br>' +
+                                            'Error Message: ' +
+                                            errors;
+                                    });
+
+                                    displayError(errorMessages.join('<br><br>'));
+                                } else if (response && response.error) {
+                                    displayError(response.error);
                                 } else {
-                                    Swal.fire('Error',
-                                        response.errors,
-                                        'error');
+                                    displayError(
+                                        'An error occurred while processing the file.'
+                                    );
                                 }
                             },
                             complete: function() {
@@ -105,6 +116,10 @@
                 });
             });
         });
+
+        function displayError(message) {
+            Swal.fire('Error', message, 'error');
+        }
     </script>
     <style>
         .scrollable-container {
