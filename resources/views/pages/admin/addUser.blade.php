@@ -156,7 +156,7 @@
                             type: "POST",
                             data: formData,
                             success: function(response) {
-                                console.log(response); 
+                                console.log(response);
                                 if (response.success) {
                                     Swal.fire(
                                         'Success',
@@ -190,11 +190,20 @@
                             },
                             error: function(xhr, status, error) {
                                 console.error(xhr.responseText);
-                                Swal.fire(
-                                    'Error',
-                                    'An error occurred while processing the request.',
-                                    'error'
-                                );
+                                var errors = xhr.responseJSON.errors;
+                                if (errors && errors.email) {
+                                    Swal.fire(
+                                        'Error',
+                                        errors.email[0],
+                                        'error'
+                                    );
+                                } else {
+                                    Swal.fire(
+                                        'Error',
+                                        'An error occurred while processing the request.',
+                                        'error'
+                                    );
+                                }
                             }
                         });
                     }

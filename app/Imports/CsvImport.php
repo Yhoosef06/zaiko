@@ -6,11 +6,11 @@ use App\Models\Role;
 use App\Models\Term;
 use App\Models\User;
 use Illuminate\Support\Str;
-use App\Models\UserDepartment;
-use App\Mail\TemporaryPasswordEmail;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Facades\Validator;
 use App\Jobs\SendTemporaryPasswordEmailJob;
+use Illuminate\Validation\ValidationException;
 
 class CsvImport implements ToModel
 {
@@ -28,6 +28,16 @@ class CsvImport implements ToModel
         $lastName = isset($row[2]) ? $row[2] : null;
         $email = isset($row[3]) ? $row[3] : null;
 
+        $validator = validator()->make($row, [
+            'id_number' => 'required|unique:users,id_number',
+            'email' => 'required|email|unique:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            $failures = $validator->errors()->toArray(); 
+            dd($failures);
+            return response()->json(['error' => 'Error during CSV file upload.', 'errors' => $failures], 422);
+        }
         $user = User::firstOrCreate(
             ['id_number' => $idNumber],
             [
@@ -47,25 +57,10 @@ class CsvImport implements ToModel
         } else {
             $user->save();
             $user->roles()->attach($role);
-           dispatch(new SendTemporaryPasswordEmailJob($user, $password));
+            dispatch(new SendTemporaryPasswordEmailJob($user, $password));
         }
 
         return $user;
     }
 
 }
-
-
-// foreach ($this->departmentIds as $departmentId) {
-//     UserDepartment::create([
-//         'user_id_number' => $user->id_number,
-//         'department_id' => $departmentId,
-//     ]);
-// }
-
-// Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
-
-// Mail::send(new TemporaryPasswordEmail($user, $password), [], function ($message) use ($user) {
-//     $message->to($user->email);
-// });
-// dispatch(new SendTemporaryPasswordEmailJob($user, $password));
