@@ -6,15 +6,16 @@ use App\Models\Role;
 use App\Models\Term;
 use App\Models\User;
 use Illuminate\Support\Str;
-use App\Models\UserDepartment;
-use App\Mail\TemporaryPasswordEmail;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Facades\Validator;
 use App\Jobs\SendTemporaryPasswordEmailJob;
+use Illuminate\Validation\ValidationException;
 
 class CsvImport implements ToModel
 {
     public static $user;
+    protected $errors = [];
     public function model(array $row)
     {
         $role = Role::find(3);
@@ -27,6 +28,26 @@ class CsvImport implements ToModel
         $firstName = isset($row[1]) ? $row[1] : null;
         $lastName = isset($row[2]) ? $row[2] : null;
         $email = isset($row[3]) ? $row[3] : null;
+
+        $validator = Validator::make([
+            'email' => $email,
+            'idNumber' => $idNumber,
+        ], [
+            'email' => 'required|email|unique:users,email',
+            'idNumber' => 'required|unique:users,id_number',
+        ], [
+            'email.required' => 'Email is required.',
+            'email.email' => 'Invalid email format.',
+            'email.unique' => 'Email already exists.',
+            'idNumber.required' => 'ID number is required.',
+            'idNumber.unique' => 'ID number already exists.',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $this->errors[] = ['row_data' => $row, 'errors' => $errors];
+            return null; // Return null for rows with errors
+        }
 
         $user = User::firstOrCreate(
             ['id_number' => $idNumber],
@@ -47,25 +68,15 @@ class CsvImport implements ToModel
         } else {
             $user->save();
             $user->roles()->attach($role);
-           dispatch(new SendTemporaryPasswordEmailJob($user, $password));
+            dispatch(new SendTemporaryPasswordEmailJob($user, $password));
         }
 
         return $user;
     }
 
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
 }
-
-
-// foreach ($this->departmentIds as $departmentId) {
-//     UserDepartment::create([
-//         'user_id_number' => $user->id_number,
-//         'department_id' => $departmentId,
-//     ]);
-// }
-
-// Mail::to($user->email)->send(new TemporaryPasswordEmail($user, $password));
-
-// Mail::send(new TemporaryPasswordEmail($user, $password), [], function ($message) use ($user) {
-//     $message->to($user->email);
-// });
-// dispatch(new SendTemporaryPasswordEmailJob($user, $password));

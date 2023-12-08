@@ -5,7 +5,6 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    {{-- <h1 class="text-decoration-underline">Adding New {{ Auth::user()->account_type == 'faculty' ? 'Student' : 'User' }}</h1> --}}
                     <h1 class="text-decoration-underline">Upload CSV File</h1>
                 </div>
             </div>
@@ -18,9 +17,6 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            {{-- <div id="loader" class="spinner-border text-primary" role="status" style="display: none;">
-                                <span class="sr-only">Loading...</span>
-                            </div> --}}
                             <div>
                                 @if (session('success'))
                                     <div class="alert alert-success alert-dismissible">
@@ -36,27 +32,11 @@
                                     </div>
                                 @endif
                             </div>
-                            <form id="csvForm" action="{{ route('store_csv_file') }}" method="POST"
-                                enctype="multipart/form-data">
+                            <form id="csvForm" method="POST" enctype="multipart/form-data">
+                                {{-- <form action="{{ route('store_csv_file') }}" method="POST" enctype="multipart/form-data"> --}}
                                 @csrf
                                 <label for="csv_file">Add your file here:</label><br>
                                 <input type="file" name="csv_file" id="csv_file">
-                                {{-- <label for="Item name">Select a department(s):</label><br> --}}
-                                {{-- <div class="scrollable-container">
-                                    @foreach ($departments->groupBy('college_name') as $collegeName => $departmentsGroup)
-                                        <h5 class="text-decoration-underline">
-                                            <input type="checkbox" class="college-checkbox" data-college="{{ $collegeName }}">
-                                            {{ $collegeName }}
-                                        </h5>
-                                        <div class="department-container">
-                                            @foreach ($departmentsGroup as $department)
-                                                <input type="checkbox" class="department-checkbox" name="department_ids[]"
-                                                       data-college="{{ $collegeName }}" value="{{ $department->id }}">
-                                                {{ $department->department_name }}<br>
-                                            @endforeach
-                                        </div>
-                                    @endforeach
-                                </div> --}}
                                 <button type="submit" id="uploadBtton" class="btn bg-olive mt-1">Upload</button>
                             </form>
                         </div>
@@ -68,50 +48,88 @@
     </section>
 
     <script>
-        document.getElementById('csvForm').addEventListener('submit', function() {
-            // Show the spinner and disable the button when the form is submitted
-            document.getElementById('uploadBtton').disabled = true;
-            document.getElementById('uploadBtton').innerHTML =
-                '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Uploading...';
-        });
-
         $(document).ready(function() {
-            $('.college-checkbox').change(function() {
-                var collegeName = $(this).data('college');
-                var isChecked = $(this).prop('checked');
+            $('#csvForm').submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
 
-                $('.department-checkbox[data-college="' + collegeName + '"]').prop('checked', isChecked);
-            });
+                Swal.fire({
+                    title: 'Uploading CSV File Right Now.',
+                    text: 'Do you wish to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#uploadBtton').prop('disabled', true).html(
+                            '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Uploading...'
+                        );
+                        $.ajax({
+                            url: "{{ route('store_csv_file') }}",
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Success', response.success, 'success')
+                                        .then(() => {
+                                            $('#csv_file').val(
+                                            '');
+                                        });;
+                                } else if (response.error) {
+                                    displayError(response.error);
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                var response = xhr.responseJSON;
+                                if (response && response.errors && Array.isArray(
+                                        response.errors)) {
+                                    var errorMessages = response.errors.map(function(
+                                        errorItem) {
+                                        var rowData = errorItem.row_data;
+                                        var errors = errorItem.errors.join(
+                                            '<br>');
+                                        return 'Row: ' + JSON.stringify(
+                                                rowData) + '<br>' +
+                                            'Error Message: ' +
+                                            errors;
+                                    });
 
-            // Update the college checkbox state based on department checkboxes
-            $('.department-checkbox').change(function() {
-                var collegeName = $(this).data('college');
-                var departmentCheckboxes = $('.department-checkbox[data-college="' + collegeName + '"]');
-                var collegeCheckbox = $('.college-checkbox[data-college="' + collegeName + '"]');
-
-                collegeCheckbox.prop('checked', departmentCheckboxes.length === departmentCheckboxes.filter(
-                    ':checked').length);
+                                    displayError(errorMessages.join('<br><br>'));
+                                } else if (response && response.error) {
+                                    displayError(response.error);
+                                } else {
+                                    displayError(
+                                        'An error occurred while processing the file.'
+                                    );
+                                }
+                            },
+                            complete: function() {
+                                $('#uploadBtton').prop('disabled', false).html(
+                                    'Upload');
+                            }
+                        });
+                    }
+                });
             });
         });
 
-        document.getElementById('department').addEventListener('click', function() {
-            document.getElementById('checkbox-container').style.display = 'block';
-        });
+        function displayError(message) {
+            Swal.fire('Error', message, 'error');
+        }
     </script>
     <style>
         .scrollable-container {
             border: 1px solid #ccc;
-            /* Border style */
             max-height: 300px;
-            /* Set the maximum height for the scrollable container */
             overflow-y: auto;
-            /* Enable vertical scroll when content exceeds the container height */
             padding: 10px;
-            /* Optional padding for better appearance */
         }
 
         .department-container {
-            /* If you want to add some space between college groups, you can add margin-bottom here */
             margin-bottom: 10px;
         }
     </style>
