@@ -7,6 +7,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class CollegeController extends Controller
 {
@@ -25,23 +26,30 @@ class CollegeController extends Controller
     public function saveNewCollege(Request $request)
     {
         try {
-            $this->validate(
+            $validator = $this->validate(
                 $request,
                 [
                     'college_name' => 'required|unique:colleges,college_name',
                 ],
+                [
+                    'college_name.required' => 'College name is required.',
+                    'college_name.unique' => 'College name already exists.',
+                ]
             );
 
             College::create([
                 'college_name' => $request->college_name,
             ]);
-            return redirect()->route('view_colleges')->with('success', 'College added successfully!');
-        } catch (\Exception $e) {
 
-            return redirect()->route('view_colleges')->with('danger', 'An error occurred while adding the college.');
+            return response()->json(['success' => true, 'message' => 'New college has been added.']);
+        } catch (ValidationException $e) {
+            // Validation failed
+            $errors = $e->validator->errors()->messages();
+            return response()->json(['success' => false, 'errors' => $errors], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Encountered an error while adding college.'], 500);
         }
     }
-
     public function editCollege($id)
     {
         $college = College::find($id);
@@ -59,33 +67,27 @@ class CollegeController extends Controller
 
             $college->update([
                 'college_name' => $request->college_name,
-                // Add other fields you want to update here
             ]);
 
-            return redirect('colleges')->with('success', 'College edited successfully.');
+            return redirect('colleges')->with('success', 'College edited successfully');
         } catch (\Exception $e) {
-            return redirect('colleges')->with('danger', 'An error occurred while editing the college.');
+            return redirect('colleges')->with('danger', 'An error occurred while editing the college');
         }
     }
-
-
     public function deleteCollege($id)
     {
         try {
             $college = College::find($id);
-
             $college->delete();
 
-            Session::flash('success', 'College successfully removed');
-            return redirect('colleges');
+            return response()->json(['success' => true, 'message' => 'College successfully removed']);
         } catch (QueryException $e) {
-            // Check if the exception is due to a foreign key constraint violation
             if ($e->getCode() === '23000') {
-                Session::flash('danger', 'Cannot remove college because it is referenced by other records.');
+                return response()->json(['success' => false, 'message' => 'Cannot remove college because it is referenced by other records']);
             } else {
-                Session::flash('danger', 'An error occurred.');
+                return response()->json(['success' => false, 'message' => 'An error occurred']);
             }
-            return redirect('colleges');
         }
     }
+
 }

@@ -24,6 +24,15 @@
         {{ $role->name === 'manager' ? 'Manager' : 'Borrower' }}
     @endforeach
     <br>
+    @if ($user->isActive == false)
+        <strong>Last Enrolled Semester:</strong>
+        @foreach ($terms as $term)
+            @if ($term->id == $user->term_id)
+                {{ $term->semester }} {{ date('Y', strtotime($term->start_date)) }} -
+                {{ date('Y', strtotime($term->end_date . ' +1 year')) }}
+            @endif
+        @endforeach
+    @endif
     <hr>
     <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
         Close

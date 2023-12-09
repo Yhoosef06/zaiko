@@ -239,7 +239,7 @@
     <!-- Modal for Filtering -->
     <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="filterModalLabel">Filter Items</h5>
@@ -248,46 +248,67 @@
                     </button>
                 </div>
                 <form id="filterForm" method="GET" action="{{ route('get_filtered_items') }}">
-                    <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                    <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-3">
-                                <label for="brandFilter">Brand:</label>
-                                <div>
-                                    @foreach ($filterItems->unique('brand.brand_name') as $item)
-                                        <input type="checkbox" name="brand_ids[]" value="{{ $item->brand_id }}"
-                                            @if (in_array($item->brand_id, request('brand_ids', []))) checked @endif>
-                                        {{ $item->brand->brand_name }}<br>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="locationFilter">Model:</label>
-                                <div>
-                                    @foreach ($filterItems->unique('model.model_name') as $item)
-                                        <input type="checkbox" name="model_ids[]" value="{{ $item->model_id }}"
-                                            @if (in_array($item->model_id, request('model_ids', []))) checked @endif>
-                                        {{ $item->model->model_name }}<br>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="categoryFilter">Category:</label>
-                                <div>
-                                    @foreach ($filterItems->unique('category.category_name') as $item)
-                                        <input type="checkbox" name="category_ids[]" value="{{ $item->category_id }}"
-                                            @if (in_array($item->category_id, request('category_ids', []))) checked @endif>
-                                        {{ $item->category->category_name }}<br>
-                                    @endforeach
-                                </div>
-                            </div>
                             <div class="col-md-3">
                                 <label for="locationFilter">Location:</label>
                                 <div>
-                                    @foreach ($filterItems->unique('room.room_name') as $item)
-                                        <input type="checkbox" name="room_ids[]" value="{{ $item->location }}"
-                                            @if (in_array($item->location, request('room_ids', []))) checked @endif>
-                                        {{ $item->room->room_name }}<br>
-                                    @endforeach
+                                    <select class="form-control" name="room_ids">
+                                        <option value="" @unless (request()->filled('room_ids')) selected @endunless>
+                                            --All--
+                                        </option>
+                                        @foreach ($filterItems->unique('room.room_name') as $item)
+                                            <option value="{{ $item->location }}"
+                                                @if (request('room_ids') !== null && in_array($item->location, (array) request('room_ids'))) selected @endif>
+                                                {{ $item->room->room_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="categoryFilter">Category:</label>
+                                <div>
+                                    <select class="form-control" name="category_ids">
+                                        <option value="" @unless (request()->filled('category_ids')) selected @endunless>
+                                            --All--
+                                        </option>
+                                        @foreach ($filterItems->unique('category.category_name') as $item)
+                                            <option value="{{ $item->category_id }}"
+                                                @if (request('category_ids') !== null && in_array($item->category_id, (array) request('category_ids'))) selected @endif>
+                                                {{ $item->category->category_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="brandFilter">Brand:</label>
+                                <div>
+                                    <select class="form-control" name="brand_ids">
+                                        <option value="" @unless (request()->filled('brand_ids')) selected @endunless>
+                                            --All--
+                                        </option>
+                                        @foreach ($filterItems->unique('brand.brand_name') as $item)
+                                            <option value="{{ $item->brand_id }}"
+                                                @if (request('brand_ids') !== null && in_array($item->brand_id, (array) request('brand_ids'))) selected @endif>
+                                                {{ $item->brand->brand_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="locationFilter">Model:</label>
+                                <div>
+                                    <select class="form-control" name="model_ids" id="modelDropdown">
+                                        <option value="" @unless (request()->filled('model_ids')) selected @endunless>
+                                            --All--
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -409,12 +430,35 @@
         }
 
         $(document).ready(function() {
-
             $('#clearFilters').click(function() {
-                $('input[name^="brand_ids[]"]').prop('checked', false);
-                $('input[name^="model_ids[]"]').prop('checked', false);
-                $('input[name^="category_ids[]"]').prop('checked', false);
-                $('input[name^="room_ids[]"]').prop('checked', false);
+                $('select[name="brand_ids"]').val('');
+                $('select[name="model_ids"]').val('');
+                $('select[name="category_ids"]').val('');
+                $('select[name="room_ids"]').val('');
+            });
+        });
+
+        $(document).ready(function() {
+            console.log("Script loaded");
+            $('select[name="brand_ids"]').on('change', function() {
+                var brandId = $(this).val();
+                var $modelDropdown = $('#modelDropdown');
+
+                // Make an AJAX request to fetch models for the selected brand
+                $.ajax({
+                    url: '/get-models-by-brand/' + brandId,
+                    method: 'GET',
+                    success: function(data) {
+                        $modelDropdown.empty().append('<option value="">--All--</option>');
+                        $.each(data.models, function(index, model) {
+                            $modelDropdown.append('<option value="' + model.model_id +
+                                '">' + model.model_name + '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
             });
         });
     </script>

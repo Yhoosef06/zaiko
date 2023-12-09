@@ -70,15 +70,14 @@
                                                         <i class="fa fa-edit"></i>
                                                     </button>
                                                     @if ($brand->models_count == 0)
-                                                        <form class="form_delete_btn" method="POST"
+                                                        <form id="deleteBrand" class="form_delete_btn" method="POST"
                                                             action="{{ route('delete_brand', $brand->id) }}">
                                                             @csrf
-                                                            <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                             <button type="submit"
                                                                 class="btn btn-sm btn-danger show-alert-delete-item"
-                                                                data-toggle="tooltip" title='Delete'
-                                                                onclick="deleteButton({{ $brand->id }})"><i
-                                                                    class="fa fa-trash"></i></button>
+                                                                data-toggle="tooltip" title='Delete'>
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </form>
                                                     @endif
                                                 </td>
@@ -116,13 +115,25 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Content will be loaded here -->
+                    <form id="addingBrand" action="{{ route('save_new_brand') }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <label for="">Brand Name:</label>
+                        <input type="text" name="brand_name" id="brand_name" placeholder="Enter a brand name"
+                            class="form-control @error('brand_name') border-danger @enderror" required>
+                        <hr>
+                        <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
+                            Close
+                        </button>
+                        <Button type="submit" class="btn btn-success">Save</Button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="addCollegeModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -139,11 +150,95 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('#addBrandModal').on('show.bs.modal', function(event) {
-                var modal = $(this);
+            $('#deleteBrand').submit(function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to delete this brand. This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: $(this).attr('method'),
+                            data: $(this).serialize(),
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Deleted!', response.message, 'success')
+                                        .then(() => {
+                                            location
+                                        .reload(); // Reload the page after successful deletion
+                                        });
+                                } else {
+                                    Swal.fire('Error!', response.message, 'error');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error!',
+                                    'An error occurred while deleting the brand',
+                                    'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+        
+        $(document).ready(function() {
+            $('#addingBrand').submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
 
-                $.get("{{ route('add_brand') }}", function(data) {
-                    modal.find('.modal-body').html(data);
+                Swal.fire({
+                    title: 'Adding a Brand',
+                    text: 'Do you wish to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('button[type="submit"]').prop('disabled', true).html(
+                            '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Adding...'
+                        );
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Success', response.message, 'success')
+                                        .then(() => {
+                                            location.reload();
+                                        });
+                                } else {
+                                    displayError('An unknown error occurred.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                    var errors = xhr.responseJSON.errors;
+                                    var errorMessage = Object.values(errors).flat()
+                                        .join('<br>');
+                                    Swal.fire('Error', errorMessage, 'error').then(
+                                        () => {
+                                            location.reload();
+                                        });
+                                } else {
+                                    displayError(
+                                        'An error occurred while processing the request'
+                                    );
+                                }
+                            },
+                        });
+                    }
                 });
             });
         });

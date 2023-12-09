@@ -20,6 +20,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CollegeController;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\BorrowerController;
+use App\Http\Controllers\AgreementController;
 use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PermissionController;
@@ -59,6 +60,8 @@ Route::get('/verify-security-question/{id_number}', [SecurityQuestionController:
 Route::post('/reset-password/{id_number}', [SecurityQuestionController::class, 'resetPassword'])->name('reset_password');
 Route::get('/setup-security-question-{id_number}', [SecurityQuestionController::class, 'setupSecurityQuestion'])->name('setup_security_question');
 Route::post('/store-security-question-{id_number}', [SecurityQuestionController::class, 'storeSecurityQuestion'])->name('store_security_question');
+Route::get('/agreement/form', [AgreementController::class, 'show'])->name('agreement_show');
+Route::put('/agreement/agreed', [AgreementController::class, 'agreed'])->name('agreed');
 
 //common
 Route::get('change-user-{id_number}-password', [UserController::class, 'changeUserPassword'])->name('change_user_password');
@@ -75,9 +78,9 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::controller(PagesController::class)->group(function () {
         Route::get('/admin-dashboard', 'index')->name('admin.dashboard');
     });
-    Route::get('/dashboard', [PagesController::class, 'index'])->name('admin.dashboard'); 
+    Route::get('/dashboard', [PagesController::class, 'index'])->name('admin.dashboard');
 
-    
+
     // Route::get('adding-new-item', [PagesController::class, 'addItem'])->name('add_item');
     Route::get('pdf-view', [PagesController::class, 'printPDF'])->name('pdf_view');
     Route::post('selectDepartment', [PagesController::class, 'selectDepartment'])->name('selectDepartment');
@@ -98,6 +101,7 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
             Route::get('/items/sort/{order}', [ItemsController::class, 'sortItems'])->name('sort_items');
             Route::get('/get-filtered-items', [ItemsController::class, 'getFilteredItems'])->name('get_filtered_items');
             Route::get('/get-part-numbers', [ItemsController::class, 'getPartNumber']);
+            Route::get('/get-models-by-brand/{brandId}', [ItemsController::class, 'getModelsByBrand']);
         });
         Route::middleware(['permission:generate-report'])->group(function () {
             Route::get('generate-report', [ReportController::class, 'generateReportPage'])->name('generate_report');
@@ -175,7 +179,6 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
     Route::get('/get-models/{brandId}', [ModelsController::class, 'getModels'])->name('get_models');
     Route::get('add-model', [ModelsController::class, 'addModel'])->name('add_model');
     Route::get('/download-qr-code/{itemId}', [ItemsController::class, 'downloadQRCode'])->name('download_qr_code');
-
 });
 
 //ADMIN
@@ -201,7 +204,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // FOR ROOM - ADMIN
     Route::get('rooms', [RoomController::class, 'index'])->name('view_rooms');
-    
+
     Route::get('edit/room/{id}', [RoomController::class, 'editRoom'])->name('edit_room');
     Route::post('save-edited-room/{id}', [RoomController::class, 'saveEditedRoom'])->name('save_edited_room');
     Route::post('delete-room/{id}', [RoomController::class, 'deleteRoom'])->name('delete_room');
@@ -211,7 +214,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // FOR Item Category -ADMIN
     Route::get('item-categories', [ItemCategoryController::class, 'index'])->name('view_item_categories');
     Route::get('edit/item-category/{id}', [ItemCategoryController::class, 'editItemCategory'])->name('edit_item_category');
-   
+
     Route::post('save-edited-item-category/{id}', [ItemCategoryController::class, 'saveEditedItemCategory'])->name('save_edited_item_category');
     Route::post('delete-category/{id}', [ItemCategoryController::class, 'deleteCategory'])->name('delete_category');
 
@@ -241,11 +244,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('roles', [RoleController::class, 'index'])->name('view_roles');
     Route::post('adding-permission', [RoleController::class, 'store'])->name('store_permission');
     Route::delete('removing-permission-{id}', [RoleController::class, 'delete'])->name('delete_permission');
+
+    Route::get('/agreement/index', [AgreementController::class, 'index'])->name('agreement_index');
+    Route::post('/agreement/save', [AgreementController::class, 'store'])->name('agreement_store');
+
 });
 
 //MANAGER
 Route::middleware(['auth', 'role:manager'])->group(function () {
-    //FOR Manage Borrowings
+    //FOR Manage Borrowingss
     Route::middleware(['permission:manage-borrowings'])->group(function () {
         Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');
         Route::get('overdue', [BorrowController::class, 'overdue'])->name('overdue');
@@ -291,7 +298,7 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 });
 
 //student
-Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
+Route::middleware(['auth', 'role:manager,borrower', 'agreement'])->group(function () {
     //student
     Route::middleware(['permission:borrow-items'])->group(function () {
 
@@ -322,7 +329,7 @@ Route::middleware(['auth', 'role:manager,borrower'])->group(function () {
         Route::get('/remove-transaction/{id}', [CartController::class, 'remove_transaction'])->name('remove.transaction');
         Route::get('/borrowed-items', [CartController::class, 'borrowed'])->name('borrowed-items');
         Route::post('/update-cart/{id}', [CartController::class, 'update_cart'])->name('cart.update');
-        
+
 
 
         //agreement

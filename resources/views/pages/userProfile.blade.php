@@ -99,7 +99,7 @@
                             @if (Auth::user()->roles->contains('name', 'admin') || Auth::user()->roles->contains('name', 'manager'))
                                 <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-dark">Back</a>
                             @else
-                                <a href="{{ route('student.dashboard') }}" class="btn btn-outline-dark">Back</a>
+                                <a href="{{ route('borrower.dashboard') }}" class="btn btn-outline-dark">Back</a>
                             @endif
 
                         </div>

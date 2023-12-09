@@ -57,15 +57,14 @@
                                                         <i class="fa fa-edit"></i>
                                                     </button>
                                                     @if ($category->items_count == 0)
-                                                        <form class="form_delete_btn" method="POST"
+                                                        <form id="deleteCategory" class="form_delete_btn" method="POST"
                                                             action="{{ route('delete_category', $category->id) }}">
                                                             @csrf
-                                                            <!-- <input name="_method" type="hidden" value="DELETE">  -->
                                                             <button type="submit"
                                                                 class="btn btn-sm btn-danger show-alert-delete-item"
-                                                                data-toggle="tooltip" title='Delete'
-                                                                onclick="deleteButton({{ $category->id }})"><i
-                                                                    class="fa fa-trash"></i></button>
+                                                                data-toggle="tooltip" title='Delete'>
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </form>
                                                     @endif
                                                 </td>
@@ -104,7 +103,18 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Content will be loaded here -->
+                    <form id="addingCategory" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <label for="">Item Category Name:</label>
+                        <input type="text" name="category_name" id="category_name"
+                            placeholder="Enter a item category name"
+                            class="form-control @error('category_name') border-danger @enderror" required>
+                        <hr>
+                        <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
+                            Close
+                        </button>
+                        <Button type="submit" class="btn btn-success">Save</Button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -128,12 +138,146 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            $('#addItemCategoryModal').on('show.bs.modal', function(event) {
-                var modal = $(this);
+        // $(document).ready(function() {
+        //     $('#addingCategory').submit(function(event) {
+        //         event.preventDefault();
+        //         var formData = new FormData(this);
 
-                $.get("{{ route('add_item_category') }}", function(data) {
-                    modal.find('.modal-body').html(data);
+        //         Swal.fire({
+        //             title: 'Adding a Category',
+        //             text: 'Do you wish to continue?',
+        //             icon: 'warning',
+        //             showCancelButton: true,
+        //             confirmButtonColor: '#3085d6',
+        //             cancelButtonColor: '#d33',
+        //             confirmButtonText: 'Yes'
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
+        //                 $('Button[type="submit"]').prop('disabled', true).html(
+        //                     '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Adding...'
+        //                 );
+        //                 $.ajax({
+        //                     url: "{{ route('save_new_category') }}",
+        //                     type: "POST",
+        //                     data: formData,
+        //                     processData: false,
+        //                     contentType: false,
+        //                     success: function(response) {
+        //                         if (response.success) {
+        //                             Swal.fire('Success', response.message, 'success')
+        //                                 .then(() => {
+        //                                     location.reload();
+        //                                 });
+        //                         } else {
+        //                             displayError('An unknown error occurred.');
+        //                         }
+        //                     },
+        //                     error: function(xhr, status, error) {
+        //                         var errorResponse = xhr.responseJSON;
+        //                         if (errorResponse && errorResponse.error) {
+        //                             displayError(errorResponse.error);
+        //                         } else {
+        //                             displayError(
+        //                                 'An error occurred while processing the request'
+        //                                 );
+        //                         }
+        //                     },
+        //                 });
+        //             }
+        //         });
+        //     });
+        // });
+
+        $(document).ready(function() {
+            $('#deleteCategory').submit(function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to delete this category. This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: $(this).attr('method'),
+                            data: $(this).serialize(),
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Deleted!', response.message, 'success')
+                                        .then(() => {
+                                            location
+                                        .reload(); // Reload the page after successful deletion
+                                        });
+                                } else {
+                                    Swal.fire('Error!', response.message, 'error');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error!',
+                                    'An error occurred while deleting the category',
+                                    'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            $('#addingCategory').submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+
+                Swal.fire({
+                    title: 'Adding a Category',
+                    text: 'Do you wish to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('button[type="submit"]').prop('disabled', true).html(
+                            '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Adding...'
+                        );
+                        $.ajax({
+                            url: "{{ route('save_new_category') }}",
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Success', response.message, 'success')
+                                        .then(() => {
+                                            location.reload();
+                                        });
+                                } else {
+                                    displayError('An unknown error occurred.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                    var errors = xhr.responseJSON.errors;
+                                    var errorMessage = Object.values(errors).flat()
+                                        .join('<br>');
+                                    Swal.fire('Error', errorMessage, 'error').then(
+                                        () => {
+                                            location.reload();
+                                        });
+                                } else {
+                                    displayError(
+                                        'An error occurred while processing the request'
+                                    );
+                                }
+                            },
+                        });
+                    }
                 });
             });
         });

@@ -55,11 +55,13 @@ class SignInController extends Controller
                         return redirect()->route('change_user_password', ['id_number' => auth()->user()->id_number]);
                     } elseif (auth()->user()->security_question_id == null) {
                         return redirect()->route('setup_security_question', ['id_number' => auth()->user()->id_number]);
+                    } else if (auth()->user()->isAgreed == false) {
+                        return redirect()->route('agreement_show');
                     } else {
                         return redirect()->route('borrower.dashboard');
                     }
                 }
-            }else{
+            } else {
                 return back()->with('status', 'Your account has been deactivated.');
             }
         } else {

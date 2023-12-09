@@ -66,14 +66,25 @@
                                                 </td>
                                                 <td>
                                                     @if ($term->id != $currentTermId)
-                                                        <form class="form_delete_btn" method="POST"
-                                                            action="{{ route('delete_term', $term->id) }}">
+                                                        {{-- <form id="deleteTerm" method="POST">
                                                             @csrf
                                                             <button type="submit"
                                                                 class="btn btn-sm btn-danger show-alert-delete-item"
                                                                 data-toggle="tooltip" title='Delete'
                                                                 onclick="deleteButton({{ $term->id }})"><i
                                                                     class="fa fa-trash"></i></button>
+                                                        </form> --}}
+                                                        {{-- <form action="{{ route('delete_term', ['id' => $term->id]) }}"
+                                                            method="POST"> --}}
+                                                        <form id="deleteTerm" method="POST"
+                                                            action="{{ route('delete_term', ['id' => $term->id]) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <input type="hidden" name="term_id"
+                                                                value="{{ $term->id }}">
+                                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </form>
                                                     @endif
                                                 </td>
@@ -109,7 +120,28 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Content will be loaded here -->
+                    <form id="addTerm" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <label for="">Semester:</label>
+                        <select class="form-control text-center" name="semester" id="semester">
+                            <option value="1st Semester">1st Semester</option>
+                            <option value="2nd Semester">2nd Semester</option>
+                            <option value="Summer">Summer</option>
+                        </select>
+
+                        <label for="">Start Date:</label>
+                        <input type="date" name="start_date" id="start_date"
+                            class="form-control text-center @error('start_date') border-danger @enderror" required>
+
+                        <label for="">End Date:</label>
+                        <input type="date" name="end_date" id="end_date"
+                            class="form-control text-center @error('end_date') border-danger @enderror" required>
+                        <hr>
+                        <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
+                            Close
+                        </button>
+                        <Button type="submit" class="btn btn-success">Save</Button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -117,11 +149,92 @@
 
     <script>
         $(document).ready(function() {
-            $('#addTermModal').on('show.bs.modal', function(event) {
-                var modal = $(this);
+            $('#deleteTerm').submit(function(event) {
+                event.preventDefault();
+                var termId = $(this).find('input[name="term_id"]').val();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to delete this term. This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: $(this).attr('method'),
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Deleted!', response.message, 'success')
+                                        .then(() => {
+                                            location
+                                                .reload(); // Reload the page after successful deletion
+                                        });
+                                } else {
+                                    Swal.fire('Error!', response.message, 'error');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error!',
+                                    'An error occurred while deleting the term',
+                                    'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
 
-                $.get("{{ route('add_term') }}", function(data) {
-                    modal.find('.modal-body').html(data);
+        $(document).ready(function() {
+            $('#addTerm').submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+
+                Swal.fire({
+                    title: 'Adding a Term.',
+                    text: 'Do you wish to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('Button[type="submit"]').prop('disabled', true).html(
+                            '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Adding...'
+                        );
+                        $.ajax({
+                            url: "{{ route('save_new_term') }}",
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Success', response.message, 'success')
+                                        .then(() => {
+                                            location.reload();
+                                        });
+                                } else {
+                                    if (response.errors) {
+                                        displayError(response.errors);
+                                    } else {
+                                        displayError('An unknown error occurred.');
+                                    }
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                displayError(
+                                    'An error occurred while processing the request'
+                                );
+                            },
+                        });
+                    }
                 });
             });
         });

@@ -58,7 +58,7 @@
                                                         <i class="fa fa-edit"></i>
                                                     </button>
                                                     @if ($college->departments_count == 0)
-                                                        <form class="form_delete_btn" method="POST"
+                                                        {{-- <form class="form_delete_btn" method="POST"
                                                             action="{{ route('delete_college', $college->id) }}">
                                                             @csrf
                                                             <!-- <input name="_method" type="hidden" value="DELETE">  -->
@@ -67,6 +67,16 @@
                                                                 data-toggle="tooltip" title='Delete'
                                                                 onclick="deleteButton({{ $college->id }})"><i
                                                                     class="fa fa-trash"></i></button>
+                                                        </form> --}}
+                                                        <form id="deleteCollege" class="form_delete_btn" method="POST"
+                                                            action="{{ route('delete_college', $college->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <input type="hidden" name="college_id"
+                                                                value="{{ $college->id }}">
+                                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </form>
                                                     @endif
                                                 </td>
@@ -99,7 +109,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Content will be loaded here -->
+                    {{-- <form class="form-signin" action="{{ route('save_new_college') }}" method="POST"
+                    enctype="multipart/form-data"> --}}
+                    <form id="addingCollege" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <label for="">College Name:</label>
+                        <input type="text" name="college_name" id="college_name" placeholder="Enter a college name"
+                            class="form-control @error('college_name') border-danger @enderror" required>
+                        <hr>
+                        <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">
+                            Close
+                        </button>
+                        <Button type="submit" class="btn btn-success">Save</Button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -123,11 +145,97 @@
 
     <script>
         $(document).ready(function() {
-            $('#addCollegeModal').on('show.bs.modal', function(event) {
-                var modal = $(this);
+            $('#deleteCollege').submit(function(event) {
+                event.preventDefault();
+                var termId = $(this).find('input[name="college_id"]').val();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to delete this School. This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: $(this).attr('method'),
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Deleted!', response.message, 'success')
+                                        .then(() => {
+                                            location
+                                                .reload(); // Reload the page after successful deletion
+                                        });
+                                } else {
+                                    Swal.fire('Error!', response.message, 'error');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error!',
+                                    'An error occurred while deleting the term',
+                                    'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
 
-                $.get("{{ route('add_college') }}", function(data) {
-                    modal.find('.modal-body').html(data);
+        $(document).ready(function() {
+            $('#addingCollege').submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+
+                Swal.fire({
+                    title: 'Adding a College.',
+                    text: 'Do you wish to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('button[type="submit"]').prop('disabled', true).html(
+                            '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Adding...'
+                        );
+                        $.ajax({
+                            url: "{{ route('save_new_college') }}",
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Success', response.message, 'success')
+                                        .then(() => {
+                                            location.reload();
+                                        });
+                                } else {
+                                    displayError('An unknown error occurred.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                    var errors = xhr.responseJSON.errors;
+                                    var errorMessage = Object.values(errors).flat()
+                                        .join('<br>');
+                                    Swal.fire('Error', errorMessage, 'error').then(() => {
+                                location.reload();
+                            });
+                                } else {
+                                    displayError(
+                                        'An error occurred while processing the request'
+                                        );
+                                }
+                            },
+                        });
+                    }
                 });
             });
         });

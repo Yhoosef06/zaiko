@@ -54,7 +54,7 @@
                 var formData = new FormData(this);
 
                 Swal.fire({
-                    title: 'Uploading CSV File Right Now.',
+                    title: 'Uploading CSV File Right Now',
                     text: 'Do you wish to continue?',
                     icon: 'warning',
                     showCancelButton: true,

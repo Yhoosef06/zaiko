@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\Term;
 use App\Models\User;
 use App\Models\College;
 use App\Models\UserRole;
@@ -96,14 +97,8 @@ class UserController extends Controller
     public function viewUserInfo($id_number)
     {
         $user = User::find($id_number);
-
-        // $department = $user->departments->department_name;
-
-        // $user['department'] = $department;
-
-        // dd($user);
-        // return response()->json($user);
-        return view('pages.admin.viewUserInfo')->with(compact('user'));
+        $terms = Term::all();
+        return view('pages.admin.viewUserInfo')->with(compact('user','terms'));
     }
 
     public function addUser()
@@ -217,6 +212,8 @@ class UserController extends Controller
     // }
     public function saveNewUser(Request $request)
     {
+        $activeTerm = Term::where('isCurrent', true)->first();
+        $termId = $activeTerm->id;
         $password = Str::random(7);
         $role_ids = $request->input('role_id');
         $department_ids = $request->input('department_ids', []);
@@ -251,7 +248,9 @@ class UserController extends Controller
                 'isActive' => true,
                 'account_type' => $request->account_type,
                 'password' => Hash::make($password),
-                'password_updated' => 0,
+                'password_updated' => false,
+                'isAgreed' => false,
+                'term_id' => $termId
             ]);
 
             foreach ($department_ids as $department_id) {

@@ -41,6 +41,7 @@ class User extends Authenticatable
         'email',
         'last_login_at',
         'password_updated',
+        'isAgreed',
         'term_id'
     ];
 

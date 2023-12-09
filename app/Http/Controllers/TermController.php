@@ -15,7 +15,7 @@ class TermController extends Controller
         $terms = Term::all();
         $currentTerm = Term::where('isCurrent', true)->first();
         return view('pages.admin.listOfTerms', ['currentTermId' => $currentTerm ? $currentTerm->id : null])->with(compact('terms'));
-    
+
     }
 
     public function addTerm()
@@ -40,28 +40,21 @@ class TermController extends Controller
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
             ]);
-            return redirect()->route('view_terms')->with('success', 'Term added successfully!');
+            return response()->json(['success' => true, 'message' => 'Term added successfully']);
         } catch (\Exception $e) {
             // dd($e);
-            return redirect()->route('view_terms')->with('danger', 'An error occurred while adding the term.');
+            return response()->json(['success' => false, 'message' => 'An error occurred while adding the term']);
         }
     }
-
     public function deleteTerm($id)
     {
         try {
             $term = Term::find($id);
             $term->delete();
 
-            Session::flash('success', 'Term Successfully Removed');
-            return redirect('terms');
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000') {
-                Session::flash('danger', 'Cannot remove term because it is referenced by other records.');
-            } else {
-                Session::flash('danger', 'An error occurred.');
-            }
-            return redirect('terms');
+            return response()->json(['success' => true, 'message' => 'Term Successfully Removed']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An error occurred while deleting the term']);
         }
     }
 
@@ -70,6 +63,6 @@ class TermController extends Controller
         $termId = $request->input('termId');
         Term::where('id', '<>', $termId)->update(['isCurrent' => false]);
         Term::where('id', $termId)->update(['isCurrent' => true]);
-        return response()->json(['message' => 'Term updated successfully']);
+        return response()->json(['message' => 'Current Term Changed.']);
     }
 }

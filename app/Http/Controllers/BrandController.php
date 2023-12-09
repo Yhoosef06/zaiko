@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class BrandController extends Controller
 {
@@ -27,22 +28,30 @@ class BrandController extends Controller
     public function saveNewBrand(Request $request)
     {
         try {
-            $this->validate(
+            $validator = $this->validate(
                 $request,
                 [
                     'brand_name' => 'required|unique:brands,brand_name',
                 ],
+                [
+                    'brand_name.required' => 'Brand name is required.',
+                    'brand_name.unique' => 'Brand name already exists.',
+                ]
             );
 
             Brand::create([
                 'brand_name' => $request->brand_name,
             ]);
 
-            return back()->with('success', 'Brand name added successfully!');
+            return response()->json(['success' => true, 'message' => 'New brand name has been added.']);
+        } catch (ValidationException $e) {
+            // Validation failed
+            return response()->json(['success' => false, 'errors' => $e->validator->errors()], 422);
         } catch (\Exception $e) {
-            return back()->with('danger', 'An error occurred while adding the brand name.');
+            return response()->json(['success' => false, 'message' => 'An error occurred while adding the brand name.'], 500);
         }
     }
+
 
     public function editBrand($id)
     {
@@ -75,15 +84,13 @@ class BrandController extends Controller
             $brand = Brand::find($id);
             $brand->delete();
 
-            Session::flash('success', 'Brand Successfully Removed');
-            return redirect('brands');
+            return response()->json(['success' => true, 'message' => 'Brand successfully removed']);
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') {
-                Session::flash('danger', 'Cannot remove brand because it is referenced by other records.');
+                return response()->json(['success' => false, 'message' => 'Cannot remove brand because it is referenced by other records']);
             } else {
-                Session::flash('danger', 'An error occurred.');
+                return response()->json(['success' => false, 'message' => 'An error occurred']);
             }
-            return redirect('brands');
         }
     }
 

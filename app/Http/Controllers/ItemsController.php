@@ -30,6 +30,7 @@ use Database\Seeders\OrderItemTempSeeder;
 use Illuminate\Support\Facades\Validator;
 use PHPUnit\Framework\Constraint\IsEmpty;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use PhpOffice\PhpSpreadsheet\Calculation\Category;
 
 
 class ItemsController extends Controller
@@ -52,6 +53,10 @@ class ItemsController extends Controller
             $sortOrder = 'asc';
             $canManageInventory = $role->permissions->contains('id', 1);
             if ($canManageInventory) {
+                $brands = Brand::all();
+                $models = Models::all();
+                $categories = ItemCategory::all();
+                $locations = Room::all();
                 $userId = auth()->user()->id_number;
                 $user = User::find($userId);
                 $departmentIds = $user->departments->pluck('id');
@@ -59,7 +64,7 @@ class ItemsController extends Controller
                 $roomIds = $rooms->pluck('id');
                 $items = Item::whereIn('location', $roomIds)->paginate(20);
                 $filterItems = Item::whereIn('location', $roomIds)->get();
-                return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder', 'filterItems'));
+                return view('pages.admin.listOfItems')->with(compact('items', 'sortOrder', 'filterItems', 'brands', 'models', 'categories', 'locations'));
             } else {
                 return redirect('/admin-dashboard')->with('danger', 'Access have been denied.');
             }
@@ -491,28 +496,33 @@ class ItemsController extends Controller
 
     public function getFilteredItems(Request $request)
     {
-        $brandIds = $request->input('brand_ids', []);
-        $modelIds = $request->input('model_ids', []);
-        $categoryIds = $request->input('category_ids', []);
-        $roomIds = $request->input('room_ids', []);
+        $brands = Brand::all();
+        $models = Models::all();
+        $categories = ItemCategory::all();
+        $locations = Room::all();
+
+        $brandId = $request->input('brand_ids');
+        $modelId = $request->input('model_ids');
+        $categoryId = $request->input('category_ids');
+        $roomId = $request->input('room_ids');
         $sortOrder = 'asc';
 
         $filteredItems = Item::query();
 
-        if (!empty($brandIds)) {
-            $filteredItems->whereIn('brand_id', $brandIds);
+        if ($brandId !== null) {
+            $filteredItems->where('brand_id', $brandId);
         }
 
-        if (!empty($modelIds)) {
-            $filteredItems->whereIn('model_id', $modelIds);
+        if ($modelId !== null) {
+            $filteredItems->where('model_id', $modelId);
         }
 
-        if (!empty($categoryIds)) {
-            $filteredItems->whereIn('category_id', $categoryIds);
+        if ($categoryId !== null) {
+            $filteredItems->where('category_id', $categoryId);
         }
 
-        if (!empty($roomIds)) {
-            $filteredItems->whereIn('location', $roomIds);
+        if ($roomId !== null) {
+            $filteredItems->where('location', $roomId);
         }
 
         $items = $filteredItems->paginate(20);
@@ -527,8 +537,15 @@ class ItemsController extends Controller
             $roomIds = $rooms->pluck('id');
             $filterItems = Item::whereIn('location', $roomIds)->get();
         }
-        return view('pages.admin.listOfItems', compact('items', 'sortOrder', 'filterItems'));
+        return view('pages.admin.listOfItems', compact('items', 'sortOrder', 'filterItems', 'categories', 'brands', 'models', 'locations'));
     }
+
+    public function getModelsByBrand($brandId)
+    {
+        $models = Models::where('brand_id', $brandId)->get();
+        return response()->json(['models' => $models]);
+    }
+
 
     public function getBrand()
     {

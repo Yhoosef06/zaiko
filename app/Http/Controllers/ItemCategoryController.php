@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class ItemCategoryController extends Controller
 {
@@ -17,7 +18,7 @@ class ItemCategoryController extends Controller
         $categories = ItemCategory::withCount('items')
             ->orderBy('category_name', 'asc')
             ->paginate(10);
-            
+
         return view('pages.admin.listOfItemCategories')->with(compact('categories'));
     }
 
@@ -54,39 +55,29 @@ class ItemCategoryController extends Controller
 
     public function saveNewCategory(Request $request)
     {
-        $categories = ItemCategory::all();
         try {
-            // Validate the input
-            $request->validate([
-                'category_name' => 'required|unique:item_categories,category_name',
-            ]);
+            $validator = $this->validate(
+                $request,
+                [
+                    'category_name' => 'required|unique:item_categories,category_name',
+                ],
+                [
+                    'category_name.required' => 'Category name is required.',
+                    'category_name.unique' => 'Category name already exists.',
+                ]
+            );
 
             ItemCategory::create([
                 'category_name' => $request->category_name,
             ]);
 
-            return back()->with('success', 'New item category has been added.');
+            return response()->json(['success' => true, 'message' => 'New item category has been added.']);
+        } catch (ValidationException $e) {
+            // Validation failed
+            return response()->json(['success' => false, 'errors' => $e->validator->errors()->messages()], 422);
         } catch (\Exception $e) {
-            return back()->with('danger', 'An error has occured while adding the new item category.');
+            return response()->json(['success' => false, 'message' => 'Encountered an error when adding category.'], 500);
         }
-    }
-
-    public function storeNewCategory(Request $request)
-    {
-        // Validate the input
-        $request->validate([
-            'category_name' => 'required',
-        ]);
-
-        $category = ItemCategory::where('category_name', '=', $request->input('category_name'))->first();
-        if ($category) {
-            return response()->json(['error' => 'Category has already been added.'], 400);
-        }
-
-        ItemCategory::create([
-            'category_name' => $request->category_name,
-        ]);
-        return response()->json(['success' => $request->category_name . ' category successfully added.'], 200);
     }
 
     public function deleteCategory($id)
@@ -95,16 +86,14 @@ class ItemCategoryController extends Controller
             $category = ItemCategory::find($id);
             $category->delete();
 
-            Session::flash('success', 'Item category successfully removed.');
-            return redirect('item-categories');
+            return response()->json(['success' => true, 'message' => 'Item category successfully removed']);
         } catch (QueryException $e) {
-            // Check if the exception is due to a foreign key constraint violation
             if ($e->getCode() === '23000') {
-                Session::flash('danger', 'Cannot remove item category because it is referenced by other records.');
+                return response()->json(['success' => false, 'message' => 'Cannot remove item category because it is referenced by other records']);
             } else {
-                Session::flash('danger', 'An error occurred.');
+                return response()->json(['success' => false, 'message' => 'An error occurred']);
             }
-            return redirect('item-categories');
         }
     }
+
 }

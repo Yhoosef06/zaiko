@@ -59,6 +59,7 @@ class CsvImport implements ToModel
                 'email' => $email,
                 'isActive' => true,
                 'password_updated' => false,
+                'isAgreed' => false,
                 'term_id' => $termId
             ]
         );
