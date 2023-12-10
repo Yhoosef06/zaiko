@@ -50,11 +50,16 @@ class TermController extends Controller
     {
         try {
             $term = Term::find($id);
+
+            if (!$term) {
+                return response()->json(['success' => false, 'message' => 'Term not found'], 404);
+            }
+
             $term->delete();
 
             return response()->json(['success' => true, 'message' => 'Term Successfully Removed']);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'An error occurred while deleting the term']);
+            return response()->json(['success' => false, 'message' => 'An error occurred while deleting the term', 'error' => $e->getMessage()], 500);
         }
     }
 
