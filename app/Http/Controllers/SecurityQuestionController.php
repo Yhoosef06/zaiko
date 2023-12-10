@@ -97,10 +97,9 @@ class SecurityQuestionController extends Controller
         $userRole = $userRoles->pluck('name')->first();
 
         if ($userRole == 'borrower') {
-            if (Auth::user()->isAgreed == false)
-            {
+            if (Auth::user()->isAgreed == false) {
                 return redirect()->route('agreement_show');
-            }else {
+            } else {
                 return redirect()->route('borrower.dashboard')->with('success', 'Security Settings Updated Successfully.');
             }
         } else {

@@ -19,7 +19,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{ route('save_user_new_password', ['id_number' => Auth::user()->id_number]) }}"
+                        <form id="changePassword" action="{{ route('save_user_new_password', ['id_number' => Auth::user()->id_number]) }}"
                             method="POST">
                             @csrf
                             <div class="card-body">
@@ -53,10 +53,10 @@
                                             class="btn btn-outline-dark">Back</a>
                                     @endif
                                     <Button type="submit" class="btn btn-success"
-                                        onclick="return confirm('Do you wish to continue changing your password?')">Save Changes</Button>
+                                        onclick="return confirm('Do you wish to continue changing your password?')">Save
+                                        Changes</Button>
                                 @else
-                                    <Button type="submit" class="btn btn-success"
-                                        onclick="return confirm('Do you wish to continue?')">Save & continue</Button>
+                                    <button id="changePassword" class="btn btn-success">Save Changes</button>
                                 @endif
                             </div>
                             <!-- /.card-body -->
@@ -66,4 +66,28 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const specificForm = document.getElementById('changePassword');
+
+            specificForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Confirmation',
+                    text: 'Do you wish to continue changing your password?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        specificForm.submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
