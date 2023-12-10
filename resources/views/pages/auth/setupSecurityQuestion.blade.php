@@ -15,17 +15,17 @@
                 <div class="col-12" style="max-width: 500px">
                     <div class="card">
                         <div class="card-header">
-                            @if (session('password_updated'))
+                            {{-- @if (session('password_updated'))
                                 <div class="alert alert-success alert-dismissible">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('password_updated') }}</p>
                                 </div>
-                            @endif
+                            @endif --}}
                             <h3>Setup Security Question</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{ route('store_security_question', ['id_number' => Auth::user()->id_number]) }}"
+                        <form id="setupSecurityQuestion" action="{{ route('store_security_question', ['id_number' => Auth::user()->id_number]) }}"
                             method="POST">
                             @csrf
                             <div class="card-body">
@@ -55,8 +55,7 @@
                                     </div>
                                 @enderror
                                 <hr>
-                                <Button type="submit" class="btn btn-success"
-                                    onclick="return confirm('Do you wish to continue?')">Save & continue</Button>
+                                <Button type="submit" class="btn btn-success">Save & continue</Button>
                             </div>
                             <!-- /.card-body -->
                         </form>
@@ -65,4 +64,27 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const specificForm = document.getElementById('setupSecurityQuestion');
+            specificForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Confirmation',
+                    text: 'Finish setting up your security question?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        specificForm.submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
