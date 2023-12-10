@@ -38,7 +38,7 @@
                                         <p><i class="icon fas fa-exclamation-triangle"></i>{{ session('danger') }}</p>
                                     </div>
                                 @endif
-                                <table id="listofusers"
+                                <table id="listofterms"
                                     class="table table-bordered table-hover dataTable dtr-inline collapsed">
                                     <thead>
                                         <tr>
@@ -66,23 +66,12 @@
                                                 </td>
                                                 <td>
                                                     @if ($term->id != $currentTermId)
-                                                        {{-- <form id="deleteTerm" method="POST">
-                                                            @csrf
-                                                            <button type="submit"
-                                                                class="btn btn-sm btn-danger show-alert-delete-item"
-                                                                data-toggle="tooltip" title='Delete'
-                                                                onclick="deleteButton({{ $term->id }})"><i
-                                                                    class="fa fa-trash"></i></button>
-                                                        </form> --}}
-                                                        {{-- <form action="{{ route('delete_term', ['id' => $term->id]) }}"
-                                                            method="POST"> --}}
-                                                        <form id="deleteTerm" method="POST"
-                                                            action="{{ route('delete_term', ['id' => $term->id]) }}">
+                                                        <form action="{{ route('delete_term', ['id' => $term->id]) }}"
+                                                            method="POST" class="delete-form">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <input type="hidden" name="term_id"
-                                                                value="{{ $term->id }}">
-                                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                            <button type="submit" class="btn btn-danger delete-term-btn"
+                                                                data-term-id="{{ $term->id }}">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
                                                         </form>
@@ -148,44 +137,67 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            $('#deleteTerm').submit(function(event) {
-                event.preventDefault();
-                var termId = $(this).find('input[name="term_id"]').val();
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'You are about to delete this term. This action cannot be undone!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: $(this).attr('action'),
-                            type: $(this).attr('method'),
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
-                                if (response.success) {
-                                    Swal.fire('Deleted!', response.message, 'success')
-                                        .then(() => {
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.delete-term-btn');
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const termId = e.target.dataset.termId;
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You are about to delete this term.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const form = e.target.closest('form');
+                            fetch(form.action, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}', // Replace with your CSRF token
+                                    },
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success!',
+                                            text: data.message,
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        }).then(() => {
                                             location
-                                                .reload(); // Reload the page after successful deletion
+                                        .reload(); // Reload the page after success message
                                         });
-                                } else {
-                                    Swal.fire('Error!', response.message, 'error');
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                Swal.fire('Error!',
-                                    'An error occurred while deleting the term',
-                                    'error');
-                            }
-                        });
-                    }
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error!',
+                                            text: data.message
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: 'An error occurred while processing your request.'
+                                    });
+                                });
+                        }
+                    });
                 });
             });
         });

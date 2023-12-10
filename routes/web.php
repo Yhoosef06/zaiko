@@ -237,7 +237,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('terms', [TermController::class, 'index'])->name('view_terms');
     Route::get('add-term', [TermController::class, 'addTerm'])->name('add_term');
     Route::post('save-new-term', [TermController::class, 'saveNewTerm'])->name('save_new_term');
-    Route::post('delete-term/{id}', [TermController::class, 'deleteTerm'])->name('delete_term');
+    Route::delete('delete-term/{id}', [TermController::class, 'deleteTerm'])->name('delete_term');
     Route::post('current-term/{id}', [TermController::class, 'currentTerm'])->name('current_term');
 
     //Roles
