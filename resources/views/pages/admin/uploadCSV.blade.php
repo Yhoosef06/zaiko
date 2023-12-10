@@ -32,13 +32,20 @@
                                     </div>
                                 @endif
                             </div>
-                            <form id="csvForm" method="POST" enctype="multipart/form-data">
-                                {{-- <form action="{{ route('store_csv_file') }}" method="POST" enctype="multipart/form-data"> --}}
-                                @csrf
-                                <label for="csv_file">Add your file here:</label><br>
-                                <input type="file" name="csv_file" id="csv_file">
-                                <button type="submit" id="uploadBtton" class="btn bg-olive mt-1">Upload</button>
-                            </form>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <form id="csvForm" method="POST" enctype="multipart/form-data">
+                                        {{-- <form action="{{ route('store_csv_file') }}" method="POST" enctype="multipart/form-data"> --}}
+                                        @csrf
+                                        <label for="csv_file">Add your file here:</label><br>
+                                        <input type="file" name="csv_file" id="csv_file" required>
+                                        <button type="submit" id="uploadBtton" class="btn bg-olive mt-1">Upload</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-8">
+                                    <div id="errorContainer"></div>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -77,7 +84,7 @@
                                     Swal.fire('Success', response.success, 'success')
                                         .then(() => {
                                             $('#csv_file').val(
-                                            '');
+                                                '');
                                         });;
                                 } else if (response.error) {
                                     displayError(response.error);
@@ -87,18 +94,7 @@
                                 var response = xhr.responseJSON;
                                 if (response && response.errors && Array.isArray(
                                         response.errors)) {
-                                    var errorMessages = response.errors.map(function(
-                                        errorItem) {
-                                        var rowData = errorItem.row_data;
-                                        var errors = errorItem.errors.join(
-                                            '<br>');
-                                        return 'Row: ' + JSON.stringify(
-                                                rowData) + '<br>' +
-                                            'Error Message: ' +
-                                            errors;
-                                    });
-
-                                    displayError(errorMessages.join('<br><br>'));
+                                    displayErrorInTable(response.errors);
                                 } else if (response && response.error) {
                                     displayError(response.error);
                                 } else {
@@ -118,19 +114,60 @@
         });
 
         function displayError(message) {
-            Swal.fire('Error', message, 'error');
+            $('#errorContainer').html('<div>' + message + '</div>');
+        }
+
+        function displayErrorInTable(errors) {
+            var table =
+                '<div class="alert alert-dismissible">' +
+                '<div class="error-header">' +
+                '<h5><i class="icon fas fa-exclamation-triangle"></i> Error Encountered While Uploading CSV File</h5>' +
+                '</div>' +
+                '<div class="scrollable-container">' +
+                '<table class="table">' +
+                '<thead class="sticky-header">' +
+                '<tr>' +
+                '<th>ID Number</th>' +
+                '<th>First Name</th>' +
+                '<th>Last Name</th>' +
+                '<th>Email Address</th>' +
+                '<th>Remark</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
+
+            // Error data rows
+            $.each(errors, function(index, error) {
+                table += '<tr>' +
+                    '<td>' + error[0] + '</td>' +
+                    '<td>' + error[1] + '</td>' +
+                    '<td>' + error[2] + '</td>' +
+                    '<td>' + error[3] + '</td>' +
+                    '<td>' + error[4] + '</td>' +
+                    '</tr>';
+            });
+
+            table += '</tbody></table></div>';
+
+            $('#errorContainer').html(table).addClass('border border-danger');
+            
+            $('.error-header').css({
+                'color': 'red'
+            });
+
+            $('.sticky-header').css({
+                'position': 'sticky',
+                'top': '0',
+                'background-color': '#fff',
+                'z-index': '1'
+            });
         }
     </script>
     <style>
-        .scrollable-container {
-            border: 1px solid #ccc;
-            max-height: 300px;
+        /* .scrollable-container {
+            max-height: 600px;
             overflow-y: auto;
             padding: 10px;
-        }
-
-        .department-container {
-            margin-bottom: 10px;
-        }
+        } */
     </style>
 @endsection

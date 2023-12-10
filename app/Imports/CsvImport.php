@@ -45,8 +45,9 @@ class CsvImport implements ToModel
 
         if ($validator->fails()) {
             $errors = $validator->errors()->all();
-            $this->errors[] = ['row_data' => $row, 'errors' => $errors];
-            return null; // Return null for rows with errors
+            $row[] =  $errors[0]; 
+            $this->errors[] = $row;
+            return null;
         }
 
         $user = User::firstOrCreate(
