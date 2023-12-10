@@ -138,9 +138,9 @@
 <script src="{{ asset('dist/js/bootstrap.bundle.min.js') }}"></script>
 
 
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script> 
- <script src="sweetalert2/dist/sweetalert2.min.js"></script> 
-{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script> -->
+<!-- <script src="sweetalert2/dist/sweetalert2.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -1713,6 +1713,6 @@
 
 
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 </html

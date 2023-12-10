@@ -229,7 +229,7 @@
                                             </div>
                                         </div>
                                         <label for="duration">Set Penalty Fee (in PHP):</label>
-                                        <input type="number" id="penalty_fee" name="penalty_fee"
+                                        <input type="text" id="penalty_fee" name="penalty_fee"
                                             value="{{ old('penalty_fee') }}" placeholder="0.00"
                                             class="form-control @error('penalty_fee') border-danger @enderror"
                                             style="width: 100px;" step="0.01" min="0.00" required>
