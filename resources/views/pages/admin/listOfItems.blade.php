@@ -97,7 +97,7 @@
                                                         title='View' onclick="openItemModal('{{ $item->id }}')">
                                                         <i class="fa fa-eye"></i>
                                                     </button>
-
+{{-- 
                                                     @if (Auth::user()->hasPermission('add-sub-items'))
                                                         <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                             data-target="#addSubItemModal" data-toggle="tooltip"
@@ -106,7 +106,7 @@
                                                             onclick="openAddSubItemModal({{ $item->id }}, $(this).data('route'))">
                                                             <i class="fa fa-plus-square"></i>
                                                         </button>
-                                                    @endif
+                                                    @endif --}}
 
                                                     @if (Auth::user()->hasPermission('transfer-items'))
                                                         <button class="btn btn-sm btn-primary" data-toggle="modal"
