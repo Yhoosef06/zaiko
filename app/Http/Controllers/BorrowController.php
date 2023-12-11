@@ -84,6 +84,7 @@ class BorrowController extends Controller
                 $daysOverdue = $dateReturned->diffInDays($currentDate);
                 $item->days_overdue = $daysOverdue;
             }
+          
 
             return view('pages.admin.overdue')->with(compact('overdueItems'));
         
@@ -511,6 +512,7 @@ class BorrowController extends Controller
                     OrderItem::where('id', $orderItemReturn)->update(['status' => 'returned', 'order_quantity' => $quantity_return, 'remarks' => $item_remark, 'returned_to' => $lastName . ', ' . $firstName, 'number_of_day_overdue' => $number_of_day_overdue,
                     'overdue_payment' => $overduepayment]);
                     Session::flash('success', 'Successfuly Return.');
+                    
                     return redirect('borrowed');
                 }
             } else {
@@ -1197,6 +1199,16 @@ class BorrowController extends Controller
                 return response()->json(['error' => 'Error: Date not provided.']);
             }
         }
+    }
+    public function selectDateRange(Request $request){
+        $dateRange = $request->selectDate;
+
+        // dd($dateRange);
+        session([
+            'dateRange' => $dateRange
+            ]);
+
+            return response()->json(['success' => true]);
     }
 
   

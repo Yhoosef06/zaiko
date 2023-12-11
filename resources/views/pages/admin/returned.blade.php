@@ -22,9 +22,34 @@
               @csrf
               <div class="card">
                 <div class="card-header row">
+                  <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Date range:</label>
+  
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="far fa-calendar-alt"></i>
+                        </span>
+                      </div>
+                    
+                      <input type="text" class="form-control float-right" name="select_date_range" id="reservation" value="{{session('dateRange')}} ">
+                      <div class="input-group-append">
+                        <span class="input-group-append">
+                          <button type="button" id="select-date-range" class="btn btn-success btn-flat">Submit</button>
+                        </span>
+                      </div>
+                    
+                    </div>
+                    <!-- /.input group -->
+                  </div>
+                </div>
+
+                
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
+                 
                   <table id="returned" class="table table-bordered table-striped">
                     <thead>
                     <tr>
@@ -41,6 +66,17 @@
                     <tbody>
                   
                     @foreach ($forReturns as $forReturn)
+                    @php
+                    $dateRange = session('dateRange');
+                    list($startDate, $endDate) = explode(' - ', $dateRange);
+                    $startDate = \Carbon\Carbon::createFromFormat('m/d/Y', $startDate);
+                    $endDate = \Carbon\Carbon::createFromFormat('m/d/Y', $endDate);
+
+                    $dateReturned =\Carbon\Carbon::parse($forReturn->returndate);
+
+                   
+                    @endphp 
+                    @if ( $dateReturned->between($startDate, $endDate))
                     <tr>
                       <td class="d-none">{{ $forReturn->id }}</td>
                       <td>{{ $forReturn->user_id }}</td>
@@ -133,6 +169,12 @@
                       </div>
                       <!-- /.modal-dialog -->
                     </div>
+                   
+
+                    @endif
+                   
+
+                    
                     
                     @endforeach
                     </tbody>

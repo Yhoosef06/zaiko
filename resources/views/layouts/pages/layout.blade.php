@@ -37,8 +37,9 @@
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet"
         href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-        <link rel="stylesheet" href={{ asset('plugins/select2/css/select2.min.css') }}>
-        <link rel="stylesheet" href={{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}>
+        <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
+        <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
   
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
@@ -128,6 +129,7 @@
 <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
@@ -151,6 +153,7 @@
    
 
     $(function() {
+        $('#reservation').daterangepicker()
 
         $("#user-overdue").DataTable({
             "responsive": true,
@@ -1694,6 +1697,32 @@
             },
             data: {
                 department: selectedValue 
+            },
+            success: function(response) {
+                if (response.success) {
+                  
+                    window.location.reload();
+                } 
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    }); 
+});
+
+$(document).ready(function() {
+    $("#select-date-range").click(function(){
+        var selectDate = $("#reservation").val(); 
+         console.log(selectDate);
+        $.ajax({
+            url: "{{ route('selectDateRange') }}",
+            type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            data: {
+                selectDate: selectDate 
             },
             success: function(response) {
                 if (response.success) {

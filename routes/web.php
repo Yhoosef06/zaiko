@@ -254,10 +254,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:manager'])->group(function () {
     //FOR Manage Borrowingss
     Route::middleware(['permission:manage-borrowings'])->group(function () {
+      
         Route::get('borrowed', [BorrowController::class, 'borrowed'])->name('borrowed');
         Route::get('overdue', [BorrowController::class, 'overdue'])->name('overdue');
         Route::get('pending', [BorrowController::class, 'pending'])->name('pending');
         Route::get('returned', [BorrowController::class, 'returned'])->name('returned');
+        Route::post('selectDateRange', [BorrowController::class, 'selectDateRange'])->name('selectDateRange');
 
         // Route::get('pending-item/{id}/{serial_number}', [BorrowController::class, 'pendingItem'])->name('pending_item');
         // Route::get('borrow-item/{id}/{serial_number}', [BorrowController::class, 'borrowItem'])->name('borrow_item');

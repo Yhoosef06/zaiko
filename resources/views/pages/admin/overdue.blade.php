@@ -68,7 +68,7 @@
                                                         <td>
                                                            
                                                             <button type="button" class="btn btn-success" id="btn-return-overdue" data-id="{{ $overdueItem->order_item_id }}" data-item="{{ $overdueItem->item_id_borrow }}" data-toggle="modal" data-target="#returnOverdue{{$overdueItem->order_item_id}}">Return</button>
-                                                            <button type="button" class="btn btn-danger" id="btn-lost-overdue" data-id="{{ $overdueItem->order_item_id }}" data-item="{{ $overdueItem->item_id_borrow }}" data-toggle="modal" data-target="#lostOverdue{{$overdueItem->order_item_id}}">Replace</button>
+                                                            <button type="button" class="btn btn-danger" id="btn-lost-overdue" data-id="{{ $overdueItem->order_item_id }}" data-item="{{ $overdueItem->item_id_borrow }}" data-toggle="modal" data-target="#lostOverdue{{$overdueItem->order_item_id}}">Replace </button>
                                                         </td>
                                                     </tr>
 
@@ -87,7 +87,7 @@
                                                             <form method="POST" action="{{ route('returnOverdueItem') }}">
                                                               @csrf
                                                               <input type="hidden"  class="form-control" value="{{ $overdueItem->order_item_id }}" name="orderItemReturn">
-                                                              <input type="hidden"  class="form-control" value="{{ $overdueItem->item_id_borrow }}" name="itemIdReturn">
+                                                              <input type="hidden"  class="form-control" value="{{ $overdueItem->item_id }}" name="itemIdReturn">
                                                               <input type="hidden"  class="form-control" value="{{ $overdueItem->order_quantity }}" name="borrowOrderQuantity">
                                                               <input type="hidden"  class="form-control" value="{{ $overdueItem->category_name }}" name="categoryName">
                                                         
