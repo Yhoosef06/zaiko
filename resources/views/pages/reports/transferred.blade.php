@@ -74,7 +74,8 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Item #</th>
+                        <th scope="col">Serial Number</th>
+                        <th scope="col">Part Number</th>
                         <th scope="col">Brand</th>
                         <th scope="col">Model</th>
                         <th scope="col">Description</th>
@@ -91,7 +92,8 @@
                                     @foreach ($item->itemLogs as $log)
                                         @if ($log->mode == 'Transferred' && $log->roomTo && $log->roomTo->room_name != $currentLocation->room_name)
                                             <tr>
-                                                <td>{{ $item->id }}</td>
+                                                <td>{{ $item->serial_number ? $item->serial_number : 'N/A' }}</td>
+                                                <td>{{ $item->part_number ? $item->part_number : 'N/A' }}</td>
                                                 <td>{{ $item->brand->brand_name }}</td>
                                                 <td>{{ $item->model->model_name }}</td>
                                                 <td>{{ $item->description }}</td>

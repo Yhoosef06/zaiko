@@ -46,7 +46,7 @@
                                     <div class="col-md-4">
                                         <label for="location">Status: </label>
                                         <select id="status" name="status" class="form-control" required>
-                                            <option value="" disabled selected>Select a status</option>
+                                            <option value="All" selected>--All--</option>
                                             <option value="Active">Active</option>
                                             <option value="For Repair">For Repair</option>
                                             <option value="Obsolete">Obsolete</option>
