@@ -96,7 +96,7 @@ class SecurityQuestionController extends Controller
 
         $userRole = $userRoles->pluck('name')->first();
 
-        if ($userRole == 'borrower') {
+        if ($userRole != 'admin') {
             if (Auth::user()->isAgreed == false) {
                 return redirect()->route('agreement_show');
             } else {

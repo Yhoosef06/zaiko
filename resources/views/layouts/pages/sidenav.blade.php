@@ -20,22 +20,22 @@
 
         </span>
     </a>
-    @if (Auth::user()->roles->contains('name', 'manager'))
-        @if (Auth::user()->hasPermission('manage-borrowings'))
-            <select class="form-control select2" id="select-department" name="department">
-                @foreach ($userDepartments as $userDepartment)
-                    <option value="{{ $userDepartment->departmentID }}"
-                        {{ Session::get('departmentID') == $userDepartment->departmentID ? 'selected' : '' }}>
-                        {{ $userDepartment->department_name }}
-                    </option>
-                @endforeach
-            </select>
-        @endif
-    @endif
 
     <!-- Sidebar -->
     @if (Auth::user()->password_updated == true && Auth::user()->security_question_id != null)
         <div class="sidebar sidebar-dark-olive" style="height: calc(100vh - 100px); overflow: auto;">
+            @if (Auth::user()->roles->contains('name', 'manager'))
+            @if (Auth::user()->hasPermission('manage-borrowings'))
+                <select class="form-control select2" id="select-department" name="department">
+                    @foreach ($userDepartments as $userDepartment)
+                        <option value="{{ $userDepartment->departmentID }}"
+                            {{ Session::get('departmentID') == $userDepartment->departmentID ? 'selected' : '' }}>
+                            {{ $userDepartment->department_name }}
+                        </option>
+                    @endforeach
+                </select>
+            @endif
+        @endif
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
